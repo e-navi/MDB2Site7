@@ -1,0 +1,307 @@
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+
+namespace Site7DbEditor.Services
+{
+    public static class EditorMapRenderer
+    {
+        public static void DrawMapCanvas(
+            Graphics g,
+            Size canvasSize,
+            EditorMapViewController vc,
+            EditorDbManager db,
+            long selectedIkouId,
+            long selectedLid,
+            int selectedPointIndex,
+            long selectedIbutuId,
+            long selectedKikaiId,
+            int activeTabIndex,
+            bool chkShowIkou,
+            bool chkShowIbutu,
+            bool chkShowKikai,
+            bool chkShowCurve,
+            bool chkShowGrid,
+            bool chkColorByIkou,
+            Func<int, bool>? isLayerVisible = null,
+            bool showIkouName = false,
+            bool showIbutuName = false,
+            bool showKikaiName = true,
+            bool isDarkBackground = true)
+        {
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.Clear(isDarkBackground ? Color.FromArgb(16, 16, 20) : Color.FromArgb(248, 249, 250));
+
+            int width = canvasSize.Width;
+            int height = canvasSize.Height;
+            if (width <= 0 || height <= 0) return;
+
+            // 1. Update/Cache bounds ONCE per frame (O(N))
+            vc.UpdateMapBounds(canvasSize, db.IkouLList, db.IbutuList);
+
+            PointF ToCanvasPoint(double surveyX, double surveyY)
+            {
+                return vc.ToCanvasPoint(surveyX, surveyY, canvasSize);
+            }
+
+            // 0. Draw Mesh/Grid (メッシュ)
+            if (chkShowGrid)
+            {
+                using (var gridPen = new Pen(isDarkBackground ? Color.FromArgb(35, 120, 120, 140) : Color.FromArgb(220, 222, 225), 1f) { DashStyle = DashStyle.Dot })
+                {
+                    int gridStep = 10;
+                    double startGridX = Math.Floor(vc.PosXMin / gridStep) * gridStep;
+                    double endGridX = Math.Ceiling(vc.PosXMax / gridStep) * gridStep;
+                    double startGridY = Math.Floor(vc.PosYMin / gridStep) * gridStep;
+                    double endGridY = Math.Ceiling(vc.PosYMax / gridStep) * gridStep;
+
+                    for (double gx = startGridX; gx <= endGridX; gx += gridStep)
+                    {
+                        PointF p1 = ToCanvasPoint(vc.PosYMin, gx);
+                        PointF p2 = ToCanvasPoint(vc.PosYMax, gx);
+                        g.DrawLine(gridPen, p1, p2);
+                    }
+                    for (double gy = startGridY; gy <= endGridY; gy += gridStep)
+                    {
+                        PointF p1 = ToCanvasPoint(gy, vc.PosXMin);
+                        PointF p2 = ToCanvasPoint(gy, vc.PosXMax);
+                        g.DrawLine(gridPen, p1, p2);
+                    }
+                }
+            }
+
+            // 1. Draw Features (遺構L)
+            if (chkShowIkou)
+            {
+                var spline = new Xross_Spline();
+
+                foreach (var line in db.IkouLList)
+                {
+                    int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                    if (isLayerVisible != null && !isLayerVisible(layerIdx)) continue;
+
+                    var pts = SqliteManager.ParsePrecsText(line.Precs);
+                    if (pts.Count == 0) continue;
+
+                    int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                    var layer = db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
+                    bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                    bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
+
+                    PointF[] screenPts;
+                    if (drawAsCurve)
+                    {
+                        var curvePoints = (line.Mode == 1)
+                            ? spline.Calc3DCloseCurvePoints(pts, 5)
+                            : spline.Calc3DCurvePoints(pts, 5);
+                        screenPts = curvePoints.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
+                    }
+                    else
+                    {
+                        screenPts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
+                    }
+
+                    bool isSelectedFeature = (line.Id == selectedIkouId);
+
+                    int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                    Color color = chkColorByIkou
+                        ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
+                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList);
+
+                    if (screenPts.Length > 1)
+                    {
+                        if (isSelectedFeature)
+                        {
+                            using (var linePen = new Pen(color, 2.8f))
+                                g.DrawLines(linePen, screenPts);
+                        }
+                        else
+                        {
+                            float penWidth = (layer != null && layer.Width > 0) ? (float)layer.Width : 1.5f;
+                            using (var linePen = new Pen(color, penWidth))
+                                g.DrawLines(linePen, screenPts);
+                        }
+                    }
+                }
+            }
+
+            // 2. Draw Artifacts (遺物)
+            if (chkShowIbutu)
+            {
+                using (var glowPen = new Pen(Color.FromArgb(180, 255, 0, 128), 3f))
+                {
+                    foreach (var ibutu in db.IbutuList)
+                    {
+                        PointF pt = ToCanvasPoint(ibutu.X, ibutu.Y);
+                        Color ibutuColor = EditorLayerService.GetLayerColor(ibutu.Layer, db.LayerList);
+
+                        using (var ibutuBrush = new SolidBrush(ibutuColor))
+                        {
+                            if (ibutu.Id == selectedIbutuId)
+                            {
+                                g.DrawEllipse(glowPen, pt.X - 7f, pt.Y - 7f, 14f, 14f);
+                                g.FillEllipse(ibutuBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                                g.DrawEllipse(Pens.White, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                            }
+                            else
+                            {
+                                g.FillEllipse(ibutuBrush, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 3. Draw Control Points (基準点)
+            if (chkShowKikai)
+            {
+                using (var kikaiBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
+                using (var kikaiPen = new Pen(Color.Yellow, 1.5f))
+                using (var selectPen = new Pen(Color.FromArgb(0, 225, 255), 3f))
+                {
+                    foreach (var kikai in db.KikaiList)
+                    {
+                        PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
+                        g.FillEllipse(kikaiBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                        g.DrawEllipse(kikai.Id == selectedKikaiId ? selectPen : kikaiPen, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                    }
+                }
+            }
+
+            // 4. Draw Map Labels
+            using (var labelFont = new Font("Yu Gothic UI", 8.0F, FontStyle.Bold))
+            using (var ikouLabelBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(0, 225, 255) : Color.FromArgb(0, 120, 200)))
+            using (var kikaiLabelBrush = new SolidBrush(isDarkBackground ? Color.White : Color.DarkBlue))
+            {
+                if (showIkouName || activeTabIndex == 0)
+                {
+                    if (chkShowIkou)
+                    {
+                        var ikouDict = db.IkouList.ToDictionary(k => k.Id, k => k.Name);
+
+                        foreach (var line in db.IkouLList)
+                        {
+                            int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                            if (isLayerVisible != null && !isLayerVisible(layerIdx)) continue;
+
+                            var pts = SqliteManager.ParsePrecsText(line.Precs);
+                            if (pts.Count == 0) continue;
+
+                            ikouDict.TryGetValue(line.Id, out string? ikouName);
+                            ikouName ??= "";
+
+                            string lineName = line.Name ?? "";
+                            string labelText = "";
+
+                            if (!string.IsNullOrEmpty(ikouName) && !string.IsNullOrEmpty(lineName))
+                                labelText = $"{ikouName}:{lineName}";
+                            else if (!string.IsNullOrEmpty(ikouName))
+                                labelText = ikouName;
+                            else if (!string.IsNullOrEmpty(lineName))
+                                labelText = lineName;
+
+                            if (string.IsNullOrEmpty(labelText)) continue;
+
+                            PointF midPt = ToCanvasPoint(pts[pts.Count / 2].X, pts[pts.Count / 2].Y);
+                            SizeF textSize = g.MeasureString(labelText, labelFont);
+
+                            g.DrawString(labelText, labelFont, ikouLabelBrush, midPt.X + 4, midPt.Y - textSize.Height / 2f);
+                        }
+                    }
+                }
+
+                if (showIbutuName || activeTabIndex == 1)
+                {
+                    if (chkShowIbutu)
+                    {
+                        foreach (var ibutu in db.IbutuList)
+                        {
+                            string nameText = "";
+                            if (!string.IsNullOrEmpty(ibutu.Syubetu))
+                            {
+                                nameText = ibutu.No > 0 ? $"{ibutu.Syubetu}{ibutu.No}" : ibutu.Syubetu;
+                            }
+                            else if (ibutu.No > 0)
+                            {
+                                nameText = $"No.{ibutu.No}";
+                            }
+                            else
+                            {
+                                nameText = $"遺物{ibutu.Id}";
+                            }
+
+                            PointF pt = ToCanvasPoint(ibutu.X, ibutu.Y);
+                            SizeF textSize = g.MeasureString(nameText, labelFont);
+                            Color ibutuColor = EditorLayerService.GetLayerColor(ibutu.Layer, db.LayerList);
+
+                            using (var ibutuLabelBrush = new SolidBrush(ibutuColor))
+                            {
+                                g.DrawString(nameText, labelFont, ibutuLabelBrush, pt.X + 6, pt.Y - textSize.Height / 2f);
+                            }
+                        }
+                    }
+                }
+
+                if (showKikaiName || activeTabIndex == 2)
+                {
+                    if (chkShowKikai)
+                    {
+                        foreach (var kikai in db.KikaiList)
+                        {
+                            string nameText = string.IsNullOrEmpty(kikai.Name) ? $"K{kikai.Id}" : kikai.Name;
+
+                            PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
+                            SizeF textSize = g.MeasureString(nameText, labelFont);
+
+                            g.DrawString(nameText, labelFont, kikaiLabelBrush, pt.X + 6, pt.Y - textSize.Height / 2f);
+                        }
+                    }
+                }
+            }
+
+            // 5. 選択中の遺構線のマーク(〇)と点番号(PID)を一番最後に最前面描画
+            if (chkShowIkou)
+            {
+                var selectedLine = db.IkouLList.FirstOrDefault(l => l.Id == selectedIkouId && l.Lid == selectedLid);
+                if (selectedLine != null)
+                {
+                    var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+                    if (pts.Count > 0)
+                    {
+                        using (var vertexPen = new Pen(Color.FromArgb(255, 220, 0), 1.5f))
+                        using (var vertexBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
+                        using (var pidFont = new Font("Yu Gothic UI", 8.0F, FontStyle.Bold))
+                        using (var pidBrush = new SolidBrush(Color.FromArgb(255, 220, 0)))
+                        {
+                            for (int i = 0; i < pts.Count; i++)
+                            {
+                                var pt = pts[i];
+                                PointF vp = ToCanvasPoint(pt.X, pt.Y);
+                                string pidText = pt.Pid > 0 ? pt.Pid.ToString() : (i + 1).ToString();
+
+                                g.FillEllipse(vertexBrush, vp.X - 3.5f, vp.Y - 3.5f, 7f, 7f);
+                                g.DrawEllipse(vertexPen, vp.X - 3.5f, vp.Y - 3.5f, 7f, 7f);
+
+                                g.DrawString(pidText, pidFont, pidBrush, vp.X + 5f, vp.Y - 12f);
+                            }
+                        }
+
+                        if (selectedPointIndex >= 0 && selectedPointIndex < pts.Count)
+                        {
+                            PointF targetPt = ToCanvasPoint(pts[selectedPointIndex].X, pts[selectedPointIndex].Y);
+                            using (var targetPen = new Pen(Color.FromArgb(255, 214, 10), 2.5f))
+                            using (var dotBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
+                            {
+                                g.DrawEllipse(targetPen, targetPt.X - 9f, targetPt.Y - 9f, 18f, 18f);
+                                g.DrawLine(targetPen, targetPt.X - 13f, targetPt.Y, targetPt.X + 13f, targetPt.Y);
+                                g.DrawLine(targetPen, targetPt.X, targetPt.Y - 13f, targetPt.X, targetPt.Y + 13f);
+                                g.FillEllipse(dotBrush, targetPt.X - 4f, targetPt.Y - 4f, 8f, 8f);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

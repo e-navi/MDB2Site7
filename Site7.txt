@@ -1,0 +1,782 @@
+SQLiteフォーマット
+
+遺構
+CREATE TABLE '遺構' (ID INTEGER, NAME TEXT, X REAL, Y REAL, Z REAL, DATE TEXT, PRIMARY KEY(ID))
+
+遺構L
+CREATE TABLE '遺構L' (ID INTEGER, LID INTEGER, NAME TEXT, MODE INTEGER, X REAL, Y REAL, Z REAL, LAYER INTEGER, DATE TEXT, PRECS TEXT, PRIMARY KEY(ID, LID))
+
+Precs  座標リスト　タブ区切り　改行
+        public void PList2Str() {
+            PRecs = "";
+            int pid = 0;
+            foreach (IkouPRec prec in PList) {
+                pid++;
+                string str = pid.ToString() + "\t" + prec.X.ToString("0.000") + "\t" + prec.Y.ToString("0.000") + "\t" + prec.Z.ToString("0.000");
+                str += "\t" + prec.Date + "\t" + prec.S.ToString("0.000") + "\t" + prec.V.ToString("0.000") + "\t" + prec.H.ToString("0.000");
+                str += "\t" + prec.KPName + "\t" + prec.BPName + "\t" + prec.KPH.ToString("0.000") + "\t" + prec.MRH.ToString("0.000");
+
+                if (pid == 1) {
+                    PRecs = str;
+                } else {
+                    PRecs += "\n" + str;
+                }
+            }
+        }
+
+遺物
+CREATE TABLE '遺物' (ID INTEGER, CHIKU TEXT, SOUI TEXT, SYUBETU TEXT, No INTEGER, X REAL, Y REAL, Z REAL, LAYER INTEGER, DATE TEXT, S REAL, V REAL, H REAL, KPNAME TEXT, BPNAME TEXT, KPH REAL, MRH REAL, PRIMARY KEY(ID))
+
+基準点
+CREATE TABLE '基準点' (ID INTEGER, NAME TEXT, X REAL, Y REAL, Z REAL, LAYER INTEGER, DATE TEXT, S REAL, V REAL, H REAL, KPNAME TEXT, BPNAME TEXT, KPH REAL, MRH REAL, PRIMARY KEY(ID))
+
+LAYER
+CREATE TABLE 'LAYER' (ID INTEGER PRIMARY KEY, NAME TEXT, COLOR INTEGER, MARK INTEGER, SIZE REAL, WIDTH INTEGER, LTYPE INTEGER)
+
+0:Dummy
+1-16: 遺物
+17-32: 基準点
+33-48: 作図
+49-64: 遺構
+
+Color: 1-16
+Mark: 点種（基準点・遺物のみ）1:〇 2:□ 3:△ 4:⦿ 
+Size:　点の大きさ（基準点・遺物のみ）1-20
+Width: 線の太さ（遺構のみ）1-5
+LTYPE: 線の種類（遺構のみ）1:折れ線 2:曲線
+
+曲線で頂点数が３以上の場合は、事前に曲線を作成
+            if (3 <= PList.Count) {
+                IsClose = PList[0].equal(PList[PList.Count - 1]);
+                if (IsClose) {
+                    //SetHeigo(true);
+                }
+                int div = 5;
+                Xross_Spline sp = new Xross_Spline();
+
+                if (IsClose) {
+                    CVList = sp.Calc3DCloseCurvePoints(PList, div);
+                } else {
+                    CVList = sp.Calc3DCurvePoints(PList, div);
+                }
+            }
+３次元スプライン曲線は以下のクラスを使用しています。
+    /// <summary>
+    /// 3次元スプライン曲線を計算するクラス
+    /// </summary>
+    public class Xross_Spline {
+        private int N;
+        private double[] _parameterP;
+
+        /// <summary>
+        /// スプライン補間用のテーブルを作成する
+        /// </summary>
+        private void CurveMakeTable(double[] x, double[] y, ref double[] z) {
+            int n = x.Length;
+            double[] h = new double[n];
+            double[] d = new double[n];
+            double t;
+
+            z[0] = 0;
+            z[n - 1] = 0;
+
+            for (int i = 0; i < n - 1; i++) {
+                // 前後のパラメータが同じ場合は微小移動して計算不能を避ける
+                if (Math.Abs(x[i + 1] - x[i]) < 1E-12) {
+                    x[i + 1] += 1E-08;
+                }
+                h[i] = x[i + 1] - x[i];
+                d[i + 1] = (y[i + 1] - y[i]) / h[i];
+            }
+
+            z[1] = d[2] - d[1] - h[0] * z[0];
+            d[1] = 2 * (x[2] - x[0]);
+
+            for (int i = 1; i < n - 2; i++) {
+                t = h[i] / d[i];
+                z[i + 1] = d[i + 2] - d[i + 1] - z[i] * t;
+                d[i + 1] = 2 * (x[i + 2] - x[i]) - h[i] * t;
+            }
+
+            z[n - 2] -= h[n - 2] * z[n - 1];
+
+            for (int i = n - 2; i > 0; i--) {
+                z[i] = (z[i] - h[i] * z[i + 1]) / d[i];
+            }
+        }
+
+        /// <summary>
+        /// 閉曲線用の補間テーブルを作成する
+        /// </summary>
+        private void CloseCurveMakeTable(double[] x, double[] y, ref double[] z) {
+            int n = x.Length - 1;
+            double[] h = new double[n + 1];
+            double[] d = new double[n + 1];
+            double[] w = new double[n + 1];
+            double t;
+
+            for (int i = 0; i < n; i++) {
+                if (Math.Abs(x[i + 1] - x[i]) < 1E-12) {
+                    x[i + 1] += 1E-08;
+                }
+                h[i] = x[i + 1] - x[i];
+                w[i] = (y[i + 1] - y[i]) / h[i];
+            }
+
+            w[n] = w[0];
+
+            for (int i = 1; i < n; i++) {
+                d[i] = 2 * (x[i + 1] - x[i - 1]);
+            }
+            d[n] = 2 * (h[n - 1] + h[0]);
+
+            for (int i = 1; i <= n; i++) {
+                z[i] = w[i] - w[i - 1];
+            }
+
+            w[1] = h[0];
+            w[n - 1] = h[n - 1];
+            w[n] = d[n];
+
+            for (int i = 2; i < n - 1; i++)
+                w[i] = 0;
+
+            for (int i = 1; i < n; i++) {
+                t = h[i] / d[i];
+                z[i + 1] -= z[i] * t;
+                d[i + 1] -= h[i] * t;
+                w[i + 1] -= w[i] * t;
+            }
+
+            w[0] = w[n];
+            z[0] = z[n];
+
+            for (int i = n - 2; i >= 0; i--) {
+                t = h[i] / d[i + 1];
+                z[i] -= z[i + 1] * t;
+                w[i] -= w[i + 1] * t;
+            }
+
+            t = z[0] / w[0];
+            z[0] = t;
+            z[n] = t;
+
+            for (int i = 1; i < n; i++) {
+                z[i] = (z[i] - w[i] * t) / d[i];
+            }
+        }
+
+        /// <summary>
+        /// 任意点 t におけるスプライン値を計算する
+        /// </summary>
+        public double GetSplineValue(double t, double[] x, double[] y, double[] z) {
+            int n = x.Length;
+            int i = 0;
+            int j = n - 1;
+
+            while (i < j) {
+                int k = (i + j) / 2;
+                if (x[k] < t)
+                    i = k + 1;
+                else
+                    j = k;
+            }
+
+            if (i > 0)
+                i--;
+
+            double h = x[i + 1] - x[i];
+            double d = t - x[i];
+
+            return (((z[i + 1] - z[i]) * d / h + z[i] * 3) * d + ((y[i + 1] - y[i]) / h - (z[i] * 2 + z[i + 1]) * h)) * d + y[i];
+        }
+
+        /// <summary>
+        /// 閉曲線における任意点 t のスプライン値を計算する
+        /// </summary>
+        public double GetCloseSplineValue(double t, double[] x, double[] y, double[] z) {
+            int n = x.Length - 1;
+            double period = x[n] - x[0];
+            while (t > x[n])
+                t -= period;
+            while (t < x[0])
+                t += period;
+
+            int i = 0;
+            int j = n;
+
+            while (i < j) {
+                int k = (i + j) / 2;
+                if (x[k] < t)
+                    i = k + 1;
+                else
+                    j = k;
+            }
+
+            if (i > 0)
+                i--;
+
+            double h = x[i + 1] - x[i];
+            double d = t - x[i];
+
+            return (((z[i + 1] - z[i]) * d / h + z[i] * 3) * d + ((y[i + 1] - y[i]) / h - (z[i] * 2 + z[i + 1]) * h)) * d + y[i];
+        }
+
+        /// <summary>
+        /// 3D曲線の点群を計算する（開曲線）
+        /// </summary>
+        public List<XYZ> Calc3DCurvePoints(List<IkouPRec> points, int divideStep) {
+            if (points == null || points.Count < 2)
+                return new List<XYZ>();
+
+            int n = points.Count;
+            double[] x = new double[n];
+            double[] y = new double[n];
+            double[] z = new double[n];
+            _parameterP = new double[n];
+
+            for (int i = 0; i < n; i++) {
+                x[i] = points[i].X;
+                y[i] = points[i].Y;
+                z[i] = points[i].Z;
+            }
+
+            // 弦長パラメトリック補間のためのパラメータ計算
+            _parameterP[0] = 0;
+            for (int i = 1; i < n; i++) {
+                double dx = x[i] - x[i - 1];
+                double dy = y[i] - y[i - 1];
+                double dz = z[i] - z[i - 1];
+                _parameterP[i] = _parameterP[i - 1] + Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            }
+
+            // パラメータを 0.0 ~ 1.0 に正規化
+            double totalLength = _parameterP[n - 1];
+            if (totalLength > 0) {
+                for (int i = 0; i < n; i++)
+                    _parameterP[i] /= totalLength;
+            }
+
+            double[] tx = new double[n];
+            double[] ty = new double[n];
+            double[] tz = new double[n];
+
+            CurveMakeTable(_parameterP, x, ref tx);
+            CurveMakeTable(_parameterP, y, ref ty);
+            CurveMakeTable(_parameterP, z, ref tz);
+
+            List<XYZ> result = new List<XYZ>();
+            int createCount = (n - 1) * divideStep;
+            for (int i = 0; i <= createCount; i++) {
+                double t = (double)i / createCount;
+                double px = GetSplineValue(t, _parameterP, x, tx);
+                double py = GetSplineValue(t, _parameterP, y, ty);
+                double pz = GetSplineValue(t, _parameterP, z, tz);
+                result.Add(new XYZ(px, py, pz));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 3D曲線の点群を計算する（閉曲線）
+        /// </summary>
+        public List<XYZ> Calc3DCloseCurvePoints(List<IkouPRec> points, int divideStep) {
+            if (points == null || points.Count < 3)
+                return new List<XYZ>();
+
+            int n = points.Count - 1;
+            double[] x = new double[points.Count];
+            double[] y = new double[points.Count];
+            double[] z = new double[points.Count];
+            _parameterP = new double[points.Count];
+
+            for (int i = 0; i < points.Count; i++) {
+                x[i] = points[i].X;
+                y[i] = points[i].Y;
+                z[i] = points[i].Z;
+            }
+
+            _parameterP[0] = 0;
+            for (int i = 1; i <= n; i++) {
+                double dx = x[i] - x[i - 1];
+                double dy = y[i] - y[i - 1];
+                double dz = z[i] - z[i - 1];
+                _parameterP[i] = _parameterP[i - 1] + Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            }
+
+            double totalLength = _parameterP[n];
+            if (totalLength > 0) {
+                for (int i = 0; i <= n; i++)
+                    _parameterP[i] /= totalLength;
+            }
+
+            double[] tx = new double[n + 1];
+            double[] ty = new double[n + 1];
+            double[] tz = new double[n + 1];
+
+            CloseCurveMakeTable(_parameterP, x, ref tx);
+            CloseCurveMakeTable(_parameterP, y, ref ty);
+            CloseCurveMakeTable(_parameterP, z, ref tz);
+
+            List<XYZ> result = new List<XYZ>();
+            int createCount = n * divideStep;
+            for (int i = 0; i <= createCount; i++) {
+                double t = (double)i / createCount;
+                double px = GetCloseSplineValue(t, _parameterP, x, tx);
+                double py = GetCloseSplineValue(t, _parameterP, y, ty);
+                double pz = GetCloseSplineValue(t, _parameterP, z, tz);
+                result.Add(new XYZ(px, py, pz));
+            }
+
+            return result;
+        }
+    }
+
+■遺構図面の作成について
+
+真上が真北の全図から遺構を切り出して、遺構図面へ配置する。
+単一遺構と遺構範囲(複数遺構)の2種類ある。
+　　単一遺構は、遺構を指定してそのデータのみが対象となる
+　　遺構範囲は、その範囲に含まれるすべての遺構が対象となる。
+3点を支持して切り出すのはどちらも同じ。
+1点目は左下、2点目は右下、3点目は上方向。
+これにより矩形と回転角が得られる。
+方位は、回転角から求める。
+
+断面についての説明は後ほどまとめます。
+
+用紙サイズ
+A0 1189x841
+A1 841x594
+A2 594x420
+A3 420x297
+A4 297x210
+A5 210x148
+
+
+図面
+CREATE TABLE '図面' ( 'ZID' INTEGER, 'TYPE' INTEGER, 'NAME' TEXT, 'PAPERSIZE' INTEGER, 'SCALE' INTEGER, PRIMARY KEY('ZID'))
+
+        public int ZID { get; set; }
+        public int Type { get; set; }     // 0:全図 1: 部分図
+        public string Name { get; set; }
+        public int PaperSize { get; set; }   // 0:A0 1:A1 2:A2 3:A3 4:A4 5:A5
+        public int Scale { get; set; }       // 1 / Scale
+
+図面遺構
+CREATE TABLE '図面遺構' ( 'ZID' INTEGER, 'IID' INTEGER, 'NAME' TEXT, 'X1' REAL, 'Y1' REAL, 'X2' REAL, 'Y2' REAL, 'X3' REAL, 'Y3' REAL, 'PX' REAL, 'PY' REAL, 'LLISTSTR' TEXT, 'DMLISTSTR' TEXT, PRIMARY KEY('ZID','IID'))
+
+        public int ZID { get; set; }
+        public int IID { get; set; }
+        public string Name { get; set; }
+        public XYZ p1 { get; set; } // 左下
+        public XYZ p2 { get; set; } // 右下
+        public XYZ p3 { get; set; } // 上方向
+        public Point3D pp { get; set; } // 配置点(用紙座標)
+        public string LListStr;
+        public string DmListStr;
+
+        public List<ZIkouLRec> LList = new List<ZIkouLRec>();
+
+            public class ZIkouLRec {
+                public int LID { get; set; }
+                public int Layer;
+                public int Flag;  // 0:直線 1:曲線 2:点
+                public string PRecs;
+                public List<Point3D> Pnts;
+
+                public ZIkouLRec(int lid, int lay, int flag, List<Point3D> pnts) {
+                    LID = lid;
+                    Layer = lay;
+                    Flag = flag;
+                    Pnts = pnts;
+                }
+                public ZIkouLRec(string strs) {
+                    string[] items = strs.Split('\t');
+                    LID = int.Parse(items[0]);
+                    Layer = int.Parse(items[1]);
+                    Flag = int.Parse(items[2]);
+                    Pnts = new List<Point3D>();
+                    int no = (items.Length - 3) / 3;
+                    for (int i = 0; i < no; i++) {
+                        double x = double.Parse(items[3 + i * 3 + 0]);
+                        double y = double.Parse(items[3 + i * 3 + 1]);
+                        double z = double.Parse(items[3 + i * 3 + 2]);
+                        Pnts.Add(new Point3D(x, y, z));
+                    }
+                }
+                public string ToStrs() {
+                    string str = LID.ToString() + "\t" + Layer.ToString() + "\t" + Flag.ToString();
+                    for (int i = 0; i < Pnts.Count; i++) {
+                        Point3D p = Pnts[i];
+                        str += "\t" + p.X.ToString("0.000") + "\t" + p.Y.ToString("0.000") + "\t" + p.Z.ToString("0.000");
+                    }
+                    return str;
+                }
+            }
+
+        public int isShowDirection { get; set; }    //方位を表示するかどうか？ 0:しない 1:する
+        public Point3D pDirection;  //方位の表示位置(配置点)
+        public List<DanmenRec> DmList = new List<DanmenRec>();
+            public class DanmenRec {
+                //public int ZID { get; set; }
+                //public int IID { get; set; }
+                public int DID { get; set; }
+
+                public string Name { get; set; }
+                public XYZ Sp { get; set; } // 始点
+                public XYZ Ep { get; set; } // 終点
+                public XYZ Dp { get; set; } // 断面表示位置
+                public List<DanmenPRec> DmpList { get; set; }
+                public int MaxID { get; set; }
+                public DanmenRec() : this(0, "", new XYZ(), new XYZ(), new XYZ()) {
+                
+                }
+                public DanmenRec(int did, string name, XYZ sp, XYZ ep, XYZ dp) {
+                    //ZID = zid;
+                    //IID = wid;
+                    DID = did;
+                    Name = name;
+                    Sp = new XYZ(sp);
+                    Ep = new XYZ(ep);
+                    Dp = new XYZ(dp);
+                    DmpList = new List<DanmenPRec>();
+                    MaxID = 0;
+                }
+                public DanmenRec(string strs) {
+                    //ZID = zid;
+                    //IID = iid;
+                    string[] items = strs.Split('\t');
+                    int ii = 0;
+                    DID = int.Parse(items[ii++]);
+                    Name = items[ii++];
+                    Sp = new XYZ(double.Parse(items[ii++]), double.Parse(items[ii++]));
+                    Ep = new XYZ(double.Parse(items[ii++]), double.Parse(items[ii++]));
+                    Dp = new XYZ(double.Parse(items[ii++]), double.Parse(items[ii++]));
+                    DmpList = new List<DanmenPRec>();
+                    int no = (items.Length - 8) / 2;
+                    for (int i = 0; i < no; i++) {
+                        double len = double.Parse(items[8 + i * 2 + 0]);
+                        double h = double.Parse(items[8 + i * 2 + 1]);
+                        DmpList.Add(new DanmenPRec(len, h));
+                    }
+                }
+                public double GetBaseH() {
+                    double h = -1000;
+                    for (int i = 0; i < DmpList.Count; i++) {
+                        if (h < DmpList[i].H) {
+                            h = DmpList[i].H;
+                        }
+                    }
+                    h *= 10;
+                    h = Math.Ceiling(h);
+                    h /= 10;
+                    return h;
+                }
+                public string ToStrs() {
+                    string str = DID.ToString() + "\t" + Name;
+                    str += "\t" + Sp.X.ToString("0.000") + "\t" + Sp.Y.ToString("0.000");
+                    str += "\t" + Ep.X.ToString("0.000") + "\t" + Ep.Y.ToString("0.000");
+                    str += "\t" + Dp.X.ToString("0.000") + "\t" + Dp.Y.ToString("0.000");
+                    for (int i = 0; i < DmpList.Count; i++) {
+                        DanmenPRec dp = DmpList[i];
+                        str += "\t" + dp.Len.ToString("0.000") + "\t" + dp.H.ToString("0.000");
+                    }
+                    return str;
+                }
+            }
+            public class DanmenPRec : IEquatable<DanmenPRec>, IComparable<DanmenPRec> {
+                public double Len;
+                public double H;
+                public DanmenPRec(double len, double h) {
+                    Len = len;
+                    H = h;
+                }
+
+                public int CompareTo(DanmenPRec other) {
+                    return other.Len < Len ? 1 : -1;
+                }
+
+                public bool Equals(DanmenPRec other) {
+                    return Len == other.Len;
+                }
+            }
+
+        遺構の描画データと断面の描画データは、文字列としてDBへ格納
+        public void Str2LList(string strs) {
+            if (strs == null || strs.Length == 0)
+                return;
+            string[] lines = strs.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            LList.Clear();
+            foreach (string line in lines) {
+                LList.Add(new ZIkouLRec(line));
+            }
+        }
+        public void Str2DmList(string strs) {
+            isShowDirection = 0;
+            pDirection = new Point3D(0, 0, 0);
+            DmList.Clear();
+            if (strs == null || strs.Length == 0)
+                return;
+            string[] lines = strs.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            try {
+                string line = lines[0];
+                string[] items = line.Split('\t');
+                isShowDirection = int.Parse(items[0]);
+                pDirection.X = double.Parse(items[1]);
+                pDirection.Y = double.Parse(items[2]);
+            } catch (Exception e) {
+            }
+            for (int i = 1; i < lines.Length; i++) {
+                DmList.Add(new DanmenRec(lines[i]));
+            }
+        }
+        public string LList2Str() {
+            string str = "";
+
+            for (int i = 0; i < LList.Count; i++) {
+                if (0 < i)
+                    str += "\n";
+                str += LList[i].ToStrs();
+            }
+            return str;
+        }
+        public string DmList2Str() {
+            string str = "";
+            str = isShowDirection.ToString() + "\t" + pDirection.X.ToString("0.000") + "\t" + pDirection.Y.ToString("0.000");
+            str += "\n";
+            for (int i = 0; i < DmList.Count; i++) {
+                if (0 < i)
+                    str += "\n";
+                str += DmList[i].ToStrs();
+            }
+            return str;
+        }
+
+断面について
+断面指定ボタンにより、遺構3Dのダイアログを表示します。
+使用しているコードです。参考にしてください。
+
+    public class GridMesh
+    {
+        public List<Point3D> Positions { get; } = new List<Point3D>();
+        public List<int> TriangleIndices { get; } = new List<int>();
+        public int ResolutionX { get; set; }
+        public int ResolutionY { get; set; }
+    }
+    public class Danmen {
+        public Point3D sp;
+        public Point3D ep;
+        public Point3D dp;
+        public int cnt = 0;
+        public List<(double Distance, double Elevation)> danmen = new List<(double, double)>();
+        public List<Point3D> CalcDanmenP3() {
+            double dx = (ep.X - sp.X) / cnt;
+            double dy = (ep.Y - sp.Y) / cnt;
+            List<Point3D> list = new List<Point3D>();
+
+            for (int i = 0; i < cnt; i++) {
+                list.Add(new Point3D(sp.X + dx * i, sp.Y + dy * i, danmen[i].Elevation));
+            }
+            return list;
+        }
+        public List<Point3D> CalcDanmenP2() {
+            double dx = (ep.X - sp.X) / cnt;
+            double dy = (ep.Y - sp.Y) / cnt;
+            double len = Math.Sqrt(Math.Pow(ep.X - sp.X, 2) + Math.Pow(ep.Y - sp.Y, 2));
+            double dx2 = (ep.X - sp.X) / len;
+            double dy2 = (ep.Y - sp.Y) / len;
+            List<Point3D> list = new List<Point3D>();
+
+            double se = danmen[0].Elevation;
+            for (int i = 0; i < cnt; i++) {
+                double e = danmen[i].Elevation - se;
+                double x = dp.X + dx * i - dy2 * e;
+                double y = dp.Y + dy * i + dx2 * e;
+
+                list.Add(new Point3D(x, y, 0));
+            }
+            return list;
+        }
+    }
+
+    public static class GridAlgorithm
+    {
+        public static List<Point3D> LoadPointsFromTsv(string filePath)
+        {
+            var points = new List<Point3D>();
+            if (!File.Exists(filePath)) return points;
+
+            var lines = File.ReadAllLines(filePath);
+            int startLine = (lines.Length > 0 && lines[0].Contains("X")) ? 1 : 0;
+
+            for (int i = startLine; i < lines.Length; i++)
+            {
+                var parts = lines[i].Split('\t');
+                if (parts.Length >= 3 &&
+                    double.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double x) &&
+                    double.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double y) &&
+                    double.TryParse(parts[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double z))
+                {
+                    points.Add(new Point3D(x, y, z));
+                }
+            }
+            return points;
+        }
+
+        public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 40, int resolutionY = 40, double power = 5.0)
+        {
+            var mesh = new GridMesh();
+            mesh.ResolutionX = resolutionX;
+            mesh.ResolutionY = resolutionY;
+            if (sourcePoints.Count == 0) return mesh;
+
+            /*
+            double minX = sourcePoints.Min(p => p.X);
+            double maxX = sourcePoints.Max(p => p.X);
+            double minY = sourcePoints.Min(p => p.Y);
+            double maxY = sourcePoints.Max(p => p.Y);
+
+            //追加
+            double dX = maxX - minX;
+            double dY = maxY - minY;
+            minX -= dX * 0.2;
+            minY -= dY * 0.2;
+            maxX += dX * 0.2;
+            maxY += dY * 0.2;
+            */
+            double minX = minp.X;
+            double maxX = maxp.X;
+            double minY = minp.Y;
+            double maxY = maxp.Y;
+
+
+            double stepX = (maxX - minX) / (resolutionX - 1);
+            double stepY = (maxY - minY) / (resolutionY - 1);
+
+            // Calculate a heuristic smoothing factor (e.g. 5% of average step)
+            double smoothing = Math.Sqrt(stepX * stepX + stepY * stepY) * 0.5;
+
+            for (int j = 0; j < resolutionY; j++)
+            {
+                for (int i = 0; i < resolutionX; i++)
+                {
+                    double x = minX + i * stepX;
+                    double y = minY + j * stepY;
+                    double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing);
+                    mesh.Positions.Add(new Point3D(x, y, z));
+                }
+            }
+
+            for (int j = 0; j < resolutionY - 1; j++)
+            {
+                for (int i = 0; i < resolutionX - 1; i++)
+                {
+                    int i0 = j * resolutionX + i;
+                    int i1 = i0 + 1;
+                    int i2 = i0 + resolutionX;
+                    int i3 = i2 + 1;
+
+                    // Counter-clockwise
+                    mesh.TriangleIndices.Add(i0);
+                    mesh.TriangleIndices.Add(i2);
+                    mesh.TriangleIndices.Add(i1);
+
+                    mesh.TriangleIndices.Add(i1);
+                    mesh.TriangleIndices.Add(i2);
+                    mesh.TriangleIndices.Add(i3);
+                }
+            }
+
+            return mesh;
+        }
+
+        private static double CalculateIdw(Point3D target, List<Point3D> points, double power = 2.0, double smoothing = 0.0)
+        {
+            double sumWeights = 0;
+            double sumWeightedValues = 0;
+
+            foreach (var p in points)
+            {
+                double dx = target.X - p.X;
+                double dy = target.Y - p.Y;
+                double distSq = dx * dx + dy * dy;
+                
+                // If smoothing is > 0, we use (dist^2 + smoothing^2)
+                // This prevents the weight from going to infinity and smooths peaks
+                double d = Math.Sqrt(distSq + smoothing * smoothing);
+                
+                if (d < 0.0001) return p.Z;
+
+                double weight = 1.0 / Math.Pow(d, power);
+                sumWeights += weight;
+                sumWeightedValues += weight * p.Z;
+            }
+
+            return sumWeightedValues / (sumWeights + 1e-12);
+        }
+        public static List<(double Distance, double Elevation)> SampleProfile(
+            Point3D start,
+            Point3D end,
+            List<Point3D> sourcePoints,
+            int sampleCount = 100,
+            double power = 2.0) {
+            var profile = new List<(double, double)>();
+            if (sourcePoints.Count == 0)
+                return profile;
+
+            double dx = end.X - start.X;
+            double dy = end.Y - start.Y;
+            double totalDist = Math.Sqrt(dx * dx + dy * dy);
+
+            // Heuristic smoothing for profile
+            double smoothing = totalDist / (sampleCount > 1 ? sampleCount - 1 : 1) * 0.5;
+
+            for (int i = 0; i < sampleCount; i++) {
+                double t = (double)i / (sampleCount - 1);
+                double x = start.X + dx * t;
+                double y = start.Y + dy * t;
+                double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing);
+                profile.Add((t * totalDist, z));
+            }
+
+            return profile;
+        }
+        public static Danmen CalcDanmen(
+            Point3D start,
+            Point3D end,
+            Point3D dp,
+            List<Point3D> sourcePoints,
+            int cnt = 100,
+            double power = 5.0) {
+            var danmen = new Danmen();
+            if (sourcePoints.Count == 0)
+                return danmen;
+
+            double dx = end.X - start.X;
+            double dy = end.Y - start.Y;
+            double totalDist = Math.Sqrt(dx * dx + dy * dy);
+
+            // Heuristic smoothing for profile
+            double smoothing = totalDist / (cnt > 1 ? cnt - 1 : 1) * 0.5;
+
+            for (int i = 0; i < cnt; i++) {
+                double t = (double)i / (cnt - 1);
+                double x = start.X + dx * t;
+                double y = start.Y + dy * t;
+                double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing);
+                danmen.danmen.Add((t * totalDist, z));
+            }
+            danmen.sp = start;
+            danmen.ep = end;
+            danmen.dp = dp;
+            danmen.cnt = cnt;
+            return danmen;
+        }
+    }
+
+
+        
+
+
