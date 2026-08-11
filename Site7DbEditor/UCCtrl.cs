@@ -329,16 +329,8 @@ namespace Site7DbEditor
                                         continue;
 
                                     string portName = portNameObj.ToString()!;
-
-                                    string direction = "不明";
-                                    if (typeKeyName.IndexOf("_LOCALMFG", StringComparison.OrdinalIgnoreCase) >= 0)
-                                        direction = "着信";
-                                    else if (typeKeyName.IndexOf("_DEV_", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                             typeKeyName.IndexOf("_VID&", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                             typeKeyName.IndexOf("_PID&", StringComparison.OrdinalIgnoreCase) >= 0)
-                                        direction = "発信";
-
                                     string displayName = "";
+
                                     using (var parentInstanceKey = typeKey.OpenSubKey(instanceKeyName))
                                     {
                                         string? friendlyName = parentInstanceKey?.GetValue("FriendlyName")?.ToString();
@@ -350,6 +342,8 @@ namespace Site7DbEditor
                                             if (parts.Length > 1)
                                                 serviceDesc = parts[parts.Length - 1];
                                         }
+
+                                        string direction = DetermineDirection(typeKeyName, instanceKeyName, friendlyName ?? "", serviceDesc ?? "");
 
                                         bool isGenericFriendly = !string.IsNullOrEmpty(friendlyName) &&
                                                                (friendlyName.Contains("(COM") || friendlyName.Contains("Bluetooth リンク"));
@@ -379,15 +373,16 @@ namespace Site7DbEditor
                                                 displayName = serviceDesc ?? friendlyName ?? "Outgoing";
                                             }
                                         }
-                                    }
-                                    if (direction == "発信")
-                                    {
-                                        result.Add(new BluetoothComPortInfo
+
+                                        if (direction == "発信")
                                         {
-                                            PortName = portName,
-                                            Direction = direction,
-                                            DisplayName = displayName
-                                        });
+                                            result.Add(new BluetoothComPortInfo
+                                            {
+                                                PortName = portName,
+                                                Direction = direction,
+                                                DisplayName = displayName
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -488,6 +483,33 @@ namespace Site7DbEditor
                 return match.Groups[1].Value;
 
             return null;
+        }
+
+        private static string DetermineDirection(string typeKeyName, string instanceKeyName, string friendlyName, string serviceDesc)
+        {
+            string combinedText = $"{friendlyName} {serviceDesc}";
+            if (combinedText.IndexOf("Incoming", StringComparison.OrdinalIgnoreCase) >= 0 || combinedText.Contains("着信"))
+            {
+                return "着信";
+            }
+            if (combinedText.IndexOf("Outgoing", StringComparison.OrdinalIgnoreCase) >= 0 || combinedText.Contains("発信"))
+            {
+                return "発信";
+            }
+
+            string? mac = ExtractMac(typeKeyName);
+            if (string.IsNullOrEmpty(mac))
+                mac = ExtractMac(instanceKeyName);
+
+            if (!string.IsNullOrEmpty(mac))
+            {
+                if (mac == "000000000000")
+                    return "着信";
+
+                return "発信";
+            }
+
+            return "着信";
         }
 
         private static int ExtractNumber(string text)
