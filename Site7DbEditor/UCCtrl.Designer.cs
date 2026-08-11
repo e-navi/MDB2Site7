@@ -110,7 +110,7 @@ namespace Site7DbEditor
             this.tabControl4.Alignment = System.Windows.Forms.TabAlignment.Top;
             this.tabControl4.Controls.Add(this.tabTS);
             this.tabControl4.Controls.Add(this.tabGPS);
-            this.tabControl4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl4.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tabControl4.Location = new System.Drawing.Point(0, 0);
             this.tabControl4.Multiline = true;
