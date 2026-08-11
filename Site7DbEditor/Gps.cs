@@ -108,11 +108,15 @@ namespace Site7DbEditor
                 string line = serialPort.ReadLine();
                 if (string.IsNullOrEmpty(line)) return;
 
-                if (line.StartsWith("$GPGGA") || line.StartsWith("$GNGGA"))
+                if (line.StartsWith("$GPGGA") || line.StartsWith("$GNGGA") || line.StartsWith("$GAGGA"))
                 {
                     string[] strs = line.Split(',');
                     if (strs.Length > 9)
                     {
+                        gpsStatus = St7Lib.CheckInt(strs[6], 0);
+                        gpsSatelite = St7Lib.CheckInt(strs[7], 0);
+                        gpsDOP = St7Lib.CheckDouble(strs[8], 0.0);
+
                         double lat = St7Lib.CheckAng(strs[2], 0.0);
                         double lng = St7Lib.CheckAng(strs[4], 0.0);
                         gpsBL = new BL(lat, lng);
@@ -126,6 +130,20 @@ namespace Site7DbEditor
                 }
             }
             catch { }
+        }
+
+        public string GetGpsStatusText()
+        {
+            return gpsStatus switch
+            {
+                1 => "単独測位",
+                2 => "DGPS",
+                4 => "RTK-Fix",
+                5 => "RTK-Float",
+                6 => "推測航法",
+                0 => "未取得",
+                _ => $"Status={gpsStatus}"
+            };
         }
     }
 }

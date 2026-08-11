@@ -98,10 +98,9 @@ namespace Site7DbEditor
             textBoxZ.Text = z.ToString("0.000");
             btnUpdPos.Enabled = true;
 
-            CoordinateReceived?.Invoke(x, y, z);
-
             if (btnUpdPos.Enabled && chkAutoSet.Checked)
             {
+                CoordinateReceived?.Invoke(x, y, z);
                 if (gbl.FormMain != null)
                 {
                     gbl.FormMain.SetCXYZ(x, y, z);
@@ -301,6 +300,12 @@ namespace Site7DbEditor
             {
                 gbl.Gps.isChangePos = false;
                 SetTextBoxPos(gbl.Gps.curPos.X, gbl.Gps.curPos.Y, gbl.Gps.curPos.Z);
+            }
+
+            if (gbl.Gps != null && gbl.Gps.isOpen)
+            {
+                labelGPS1.Text = $"取得状況：{gbl.Gps.GetGpsStatusText()}";
+                labelGPS2.Text = $"HDOP:{gbl.Gps.gpsDOP:F1} 衛星数：{gbl.Gps.gpsSatelite}";
             }
         }
 
