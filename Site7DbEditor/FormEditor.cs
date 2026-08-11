@@ -1400,6 +1400,15 @@ namespace Site7DbEditor
                     }
                     dgvIkouL.Refresh();
                 }
+
+                if (_selectedPointIndex >= 0 && _selectedPointIndex < pts.Count)
+                {
+                    var pt = pts[_selectedPointIndex];
+                    txtCoordX.Text = pt.X.ToString("F3");
+                    txtCoordY.Text = pt.Y.ToString("F3");
+                    txtCoordZ.Text = pt.Z.ToString("F3");
+                }
+
                 picMapCanvas.Invalidate();
             }
         }
@@ -2595,6 +2604,10 @@ namespace Site7DbEditor
                     dgvKikai.Refresh();
                 }
             }
+
+            txtCoordX.Text = x.ToString("F3");
+            txtCoordY.Text = y.ToString("F3");
+            txtCoordZ.Text = z.ToString("F3");
 
             lblDbStatus.Text = $"📡 測量値取り込み: X={x:F3}, Y={y:F3}, Z={z:F3}";
             picMapCanvas.Invalidate();
