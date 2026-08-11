@@ -276,6 +276,18 @@ namespace Site7DbEditor
                 }
                 CoordinateReceived?.Invoke(x, y, z);
             }
+            else if (gbl.Gps != null && (gbl.Gps.curPos.X != 0.0 || gbl.Gps.curPos.Y != 0.0))
+            {
+                double gx = gbl.Gps.curPos.X;
+                double gy = gbl.Gps.curPos.Y;
+                double gz = gbl.Gps.curPos.Z;
+                SetTextBoxPos(gx, gy, gz);
+                if (gbl.FormMain != null)
+                {
+                    gbl.FormMain.SetCXYZ(gx, gy, gz);
+                }
+                CoordinateReceived?.Invoke(gx, gy, gz);
+            }
         }
 
         private void timer1_Tick(object? sender, EventArgs e)
