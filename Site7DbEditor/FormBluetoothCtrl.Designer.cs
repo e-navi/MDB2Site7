@@ -58,7 +58,7 @@ namespace Site7DbEditor
             // FormBluetoothCtrl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(264, 386);
+            this.ClientSize = new System.Drawing.Size(264, 482);
             this.Controls.Add(this.panelBthContent);
             this.Controls.Add(this.panelDockHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
