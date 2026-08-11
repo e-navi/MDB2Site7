@@ -2543,74 +2543,11 @@ namespace Site7DbEditor
 
             if (_db == null) return;
 
-            if (tabControlData.SelectedTab == tabIkou)
-            {
-                if (dgvPrecs.Visible && dgvPrecs.CurrentRow != null && !dgvPrecs.CurrentRow.IsNewRow)
-                {
-                    var row = dgvPrecs.CurrentRow;
-                    if (row.DataBoundItem is IkouPointRecord pt)
-                    {
-                        pt.X = x;
-                        pt.Y = y;
-                        pt.Z = z;
-                    }
-                    else
-                    {
-                        if (row.Cells["X"] != null) row.Cells["X"].Value = x;
-                        if (row.Cells["Y"] != null) row.Cells["Y"].Value = y;
-                        if (row.Cells["Z"] != null) row.Cells["Z"].Value = z;
-                    }
-                    dgvPrecs.Refresh();
-                    dgvPrecs_CellValueChanged(dgvPrecs, new DataGridViewCellEventArgs(0, row.Index));
-                }
-            }
-            else if (tabControlData.SelectedTab == tabIbutu)
-            {
-                if (dgvIbutu.CurrentRow != null && !dgvIbutu.CurrentRow.IsNewRow)
-                {
-                    var row = dgvIbutu.CurrentRow;
-                    if (row.DataBoundItem is IbutuModel ibutu)
-                    {
-                        ibutu.X = x;
-                        ibutu.Y = y;
-                        ibutu.H = z;
-                    }
-                    else
-                    {
-                        if (row.Cells["X"] != null) row.Cells["X"].Value = x;
-                        if (row.Cells["Y"] != null) row.Cells["Y"].Value = y;
-                        if (row.Cells["H"] != null) row.Cells["H"].Value = z;
-                    }
-                    dgvIbutu.Refresh();
-                }
-            }
-            else if (tabControlData.SelectedTab == tabKikai)
-            {
-                if (dgvKikai.CurrentRow != null && !dgvKikai.CurrentRow.IsNewRow)
-                {
-                    var row = dgvKikai.CurrentRow;
-                    if (row.DataBoundItem is KikaiModel kikai)
-                    {
-                        kikai.X = x;
-                        kikai.Y = y;
-                        kikai.H = z;
-                    }
-                    else
-                    {
-                        if (row.Cells["X"] != null) row.Cells["X"].Value = x;
-                        if (row.Cells["Y"] != null) row.Cells["Y"].Value = y;
-                        if (row.Cells["H"] != null) row.Cells["H"].Value = z;
-                    }
-                    dgvKikai.Refresh();
-                }
-            }
-
             txtCoordX.Text = x.ToString("F3");
             txtCoordY.Text = y.ToString("F3");
             txtCoordZ.Text = z.ToString("F3");
 
             lblDbStatus.Text = $"📡 測量値取り込み: X={x:F3}, Y={y:F3}, Z={z:F3}";
-            picMapCanvas.Invalidate();
         }
 
         #endregion
