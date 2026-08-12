@@ -29,6 +29,7 @@ namespace Site7DbEditor
             // Main Splitter Container (Top: Map Canvas, Bottom: Data & Edit Controls)
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.panelMapHeader = new System.Windows.Forms.Panel();
+            this.btnDetachLeftPanel = new System.Windows.Forms.Button();
             this.lblMapTitle = new System.Windows.Forms.Label();
             this.btnResetMapZoom = new System.Windows.Forms.Button();
             this.panelMapLeft = new System.Windows.Forms.Panel();
@@ -394,6 +395,7 @@ namespace Site7DbEditor
             // panelMapHeader
             this.panelMapHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
             this.panelMapHeader.Controls.Add(this.lblMapTitle);
+            this.panelMapHeader.Controls.Add(this.btnDetachLeftPanel);
             this.panelMapHeader.Controls.Add(this.btnResetMapZoom);
             this.panelMapHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelMapHeader.Location = new System.Drawing.Point(0, 0);
@@ -410,6 +412,19 @@ namespace Site7DbEditor
             this.lblMapTitle.Size = new System.Drawing.Size(175, 17);
             this.lblMapTitle.TabIndex = 0;
             this.lblMapTitle.Text = "🗺 2D 測量平面図 (CAD表示)";
+
+            // btnDetachLeftPanel
+            this.btnDetachLeftPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDetachLeftPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnDetachLeftPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDetachLeftPanel.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnDetachLeftPanel.ForeColor = System.Drawing.Color.White;
+            this.btnDetachLeftPanel.Location = new System.Drawing.Point(1215, 5);
+            this.btnDetachLeftPanel.Name = "btnDetachLeftPanel";
+            this.btnDetachLeftPanel.Size = new System.Drawing.Size(125, 26);
+            this.btnDetachLeftPanel.TabIndex = 2;
+            this.btnDetachLeftPanel.Text = "↗ 左パネル分離";
+            this.btnDetachLeftPanel.UseVisualStyleBackColor = false;
 
             // btnResetMapZoom
             this.btnResetMapZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -2162,6 +2177,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.CheckBox chkShowIbutuName;
         private System.Windows.Forms.CheckBox chkShowIkouName;
         private System.Windows.Forms.CheckBox chkShowKikaiName;
+        public System.Windows.Forms.Button btnDetachLeftPanel;
         public System.Windows.Forms.Panel panelMapRight;
         public System.Windows.Forms.Panel panelRightHeader;
         public System.Windows.Forms.Label lblRightTitle;

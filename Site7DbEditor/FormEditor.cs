@@ -33,6 +33,8 @@ namespace Site7DbEditor
 
         private UCCtrl _ucCtrl = new UCCtrl();
         private FormBluetoothCtrl? _dlgBth = null;
+        private FormLeftPanelCtrl? _dlgLeft = null;
+        private bool _isLeftPanelFloating = false;
 
         public class DbItem
         {
@@ -377,6 +379,8 @@ namespace Site7DbEditor
                 SetBluetoothDisplayMode(true);
             };
 
+            btnDetachLeftPanel.Click += (s, e) => SetLeftPanelDisplayMode(!_isLeftPanelFloating);
+
             btnLayerSettings.Click += (s, e) =>
             {
                 using (var form = new FormLayerSettings(_db))
@@ -519,6 +523,74 @@ namespace Site7DbEditor
                 panelMapRight.Visible = true;
                 picMapCanvas.Invalidate();
             }
+        }
+
+        public void SetLeftPanelDisplayMode(bool isFloatingForm)
+        {
+            _isLeftPanelFloating = isFloatingForm;
+
+            if (isFloatingForm)
+            {
+                Point targetLoc = panelMapLeft.PointToScreen(Point.Empty);
+                if (targetLoc.X <= 0 || targetLoc.Y <= 0)
+                {
+                    targetLoc = new Point(this.Location.X + 20, this.Location.Y + 80);
+                }
+
+                if (_dlgLeft == null || _dlgLeft.IsDisposed)
+                {
+                    _dlgLeft = new FormLeftPanelCtrl();
+                    _dlgLeft.DockToPanelRequested += (s, e) => SetLeftPanelDisplayMode(false);
+                    _dlgLeft.FormClosing += (s, e) =>
+                    {
+                        if (_isLeftPanelFloating)
+                        {
+                            SetLeftPanelDisplayMode(false);
+                        }
+                    };
+                    _dlgLeft.FormClosed += (s, e) => { _dlgLeft = null; };
+                }
+
+                if (splitContainerMain.Panel1.Controls.Contains(panelMapLeft))
+                {
+                    splitContainerMain.Panel1.Controls.Remove(panelMapLeft);
+                }
+
+                panelMapLeft.Dock = DockStyle.Fill;
+                if (!_dlgLeft.panelLeftContent.Controls.Contains(panelMapLeft))
+                {
+                    _dlgLeft.panelLeftContent.Controls.Add(panelMapLeft);
+                }
+
+                _dlgLeft.StartPosition = FormStartPosition.Manual;
+                _dlgLeft.Location = targetLoc;
+                _dlgLeft.Show(this);
+                btnDetachLeftPanel.Text = "↙ 左パネル復帰";
+            }
+            else
+            {
+                if (_dlgLeft != null && !_dlgLeft.IsDisposed)
+                {
+                    if (_dlgLeft.panelLeftContent.Controls.Contains(panelMapLeft))
+                    {
+                        _dlgLeft.panelLeftContent.Controls.Remove(panelMapLeft);
+                    }
+                    _dlgLeft.Close();
+                    _dlgLeft = null;
+                }
+
+                panelMapLeft.Dock = DockStyle.Left;
+                if (!splitContainerMain.Panel1.Controls.Contains(panelMapLeft))
+                {
+                    splitContainerMain.Panel1.Controls.Add(panelMapLeft);
+                }
+
+                btnDetachLeftPanel.Text = "↗ 左パネル分離";
+            }
+
+            _vc.InvalidateBoundsCache();
+            UpdatePanelWidthsDisplay();
+            picMapCanvas.Invalidate();
         }
 
         private void UpdatePanelWidthsDisplay()
