@@ -344,10 +344,12 @@ namespace Site7DbEditor
             this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainerMain.Panel1 (Top Map View)
-            // 
-            this.splitContainerMain.Panel1.Controls.Add(this.picMapCanvas);
-            this.splitContainerMain.Panel1.Controls.Add(this.panelMapRight);
+            // Dock レイアウトのルール: Fill は最後に追加すること
+            // 追加順: Top → Left → Right → Fill
+            this.splitContainerMain.Panel1.Controls.Add(this.panelMapHeader);
             this.splitContainerMain.Panel1.Controls.Add(this.panelMapLeft);
+            this.splitContainerMain.Panel1.Controls.Add(this.panelMapRight);
+            this.splitContainerMain.Panel1.Controls.Add(this.picMapCanvas);
             // 
             // splitContainerMain.Panel2 (Bottom Data Grids & Edit)
             // 
