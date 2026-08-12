@@ -240,6 +240,10 @@ namespace Site7DbEditor
         private void WireEvents()
         {
             this.Load += FormEditor_Load;
+            this.Resize += (s, e) => UpdatePanelWidthsDisplay();
+            this.panelMapLeft.Resize += (s, e) => UpdatePanelWidthsDisplay();
+            this.panelMapRight.Resize += (s, e) => UpdatePanelWidthsDisplay();
+            this.panelMapRight.VisibleChanged += (s, e) => UpdatePanelWidthsDisplay();
             this.btnOpenDb.Click += btnOpenDb_Click;
             this.cmbQuickDbSelect.SelectedIndexChanged += cmbQuickDbSelect_SelectedIndexChanged;
             this.btnSaveDb.Click += btnSaveDb_Click;
@@ -516,6 +520,16 @@ namespace Site7DbEditor
             }
         }
 
+        private void UpdatePanelWidthsDisplay()
+        {
+            int formW = this.Width;
+            int leftW = panelMapLeft.Visible ? panelMapLeft.Width : 0;
+            int rightW = panelMapRight.Visible ? panelMapRight.Width : 0;
+            int mapW = picMapCanvas.Width;
+
+            lblMapTitle.Text = $"🗺 2D 測量平面図 (Form: {formW}px | LeftPanel: {leftW}px | MapCanvas: {mapW}px | RightPanel: {rightW}px)";
+        }
+
         private void FormEditor_Load(object? sender, EventArgs e)
         {
             PopulateQuickDbList();
@@ -527,6 +541,8 @@ namespace Site7DbEditor
             {
                 splitContainerMain.SplitterDistance = (int)(splitContainerMain.Height * 0.58);
             }
+
+            UpdatePanelWidthsDisplay();
         }
 
 
