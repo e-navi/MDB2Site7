@@ -344,13 +344,13 @@ namespace Site7DbEditor
             this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainerMain.Panel1 (Top Map View)
-            // WinForms Dock ルール: 奥（最初追加）から順にドック処理される。
-            // panelMapRight（Right）を奥に → 最初にドック → x=0 からキャンバスを右から押す
-            // picMapCanvas（Fill）を中間 → Right の後にドック → x=0 から始まる
-            // panelMapLeft（Dock=None）を手前 → ドック計算外、x=0 にオーバーレイ表示
+            // WinForms Controls.Add は末尾追加。Controls[0]=最前面(最上位表示)、Controls[n-1]=最背面。
+            // panelMapLeft（Dock=None）を最初 → index=0 → 最前面 → キャンバス上にオーバーレイ表示
+            // panelMapRight（Right）を次  → index=1 → ドック処理あり → 右端 264px を確保
+            // picMapCanvas（Fill）を最後  → index=2 → 最背面 → Right 確保後の残領域を Fill
+            this.splitContainerMain.Panel1.Controls.Add(this.panelMapLeft);
             this.splitContainerMain.Panel1.Controls.Add(this.panelMapRight);
             this.splitContainerMain.Panel1.Controls.Add(this.picMapCanvas);
-            this.splitContainerMain.Panel1.Controls.Add(this.panelMapLeft);
             // 
             // splitContainerMain.Panel2 (Bottom Data Grids & Edit)
             // 
