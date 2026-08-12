@@ -27,6 +27,7 @@ namespace Site7DbEditor
         private void WireHeaderDragEvents()
         {
             this.panelDockHeader.MouseDown += Header_MouseDown;
+            this.lblTitle.MouseDown += Header_MouseDown;
         }
 
         private void Header_MouseDown(object? sender, MouseEventArgs e)

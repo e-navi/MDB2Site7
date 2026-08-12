@@ -53,11 +53,11 @@ namespace Site7DbEditor
             this.btnDockToPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDockToPanel.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDockToPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDockToPanel.Location = new System.Drawing.Point(1350, 3);
+            this.btnDockToPanel.Location = new System.Drawing.Point(1400, 3);
             this.btnDockToPanel.Name = "btnDockToPanel";
-            this.btnDockToPanel.Size = new System.Drawing.Size(124, 24);
+            this.btnDockToPanel.Size = new System.Drawing.Size(74, 24);
             this.btnDockToPanel.TabIndex = 1;
-            this.btnDockToPanel.Text = "↙ ドック復帰";
+            this.btnDockToPanel.Text = "↙ 復帰";
             this.btnDockToPanel.UseVisualStyleBackColor = false;
             this.btnDockToPanel.Click += new System.EventHandler(this.btnDockToPanel_Click);
             // 
