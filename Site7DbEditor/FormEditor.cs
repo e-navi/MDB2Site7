@@ -605,10 +605,12 @@ namespace Site7DbEditor
 
             if (isFloatingForm)
             {
+                int targetWidth = this.Width;
+                int targetHeight = 362; // 30px header + 332px content
                 Point targetLoc = panelMapBottom.PointToScreen(Point.Empty);
                 if (targetLoc.X <= 0 || targetLoc.Y <= 0)
                 {
-                    targetLoc = new Point(this.Location.X + 20, this.Location.Y + this.Height - 450);
+                    targetLoc = new Point(this.Location.X, this.Location.Y + this.Height - targetHeight);
                 }
 
                 if (_dlgBottom == null || _dlgBottom.IsDisposed)
@@ -641,6 +643,7 @@ namespace Site7DbEditor
 
                 _dlgBottom.StartPosition = FormStartPosition.Manual;
                 _dlgBottom.Location = targetLoc;
+                _dlgBottom.Size = new System.Drawing.Size(targetWidth, targetHeight);
                 _dlgBottom.Show(this);
             }
             else

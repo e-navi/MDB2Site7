@@ -72,7 +72,7 @@ namespace Site7DbEditor
             // FormBottomPanelCtrl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1480, 420);
+            this.ClientSize = new System.Drawing.Size(1480, 362);
             this.Controls.Add(this.panelBottomContent);
             this.Controls.Add(this.panelDockHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
