@@ -615,7 +615,8 @@ namespace Site7DbEditor
 
             if (splitContainerMain.Height > 400)
             {
-                splitContainerMain.SplitterDistance = (int)(splitContainerMain.Height * 0.58);
+                int targetBottomHeight = 330; // 遺構 GroupBox (高さ320px) にピッタリ合わせたジャストサイズ
+                splitContainerMain.SplitterDistance = Math.Max(100, splitContainerMain.Height - targetBottomHeight);
             }
 
             UpdatePanelWidthsDisplay();
