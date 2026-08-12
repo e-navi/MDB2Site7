@@ -843,9 +843,9 @@ namespace Site7DbEditor
             // splitContainerBottom (Left: Data Tab, Right: Property Edit Panel)
             // 
             this.splitContainerBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitContainerBottom.Location = new System.Drawing.Point(0, 505);
+            this.splitContainerBottom.Location = new System.Drawing.Point(0, 468);
             this.splitContainerBottom.Name = "splitContainerBottom";
-            this.splitContainerBottom.Size = new System.Drawing.Size(1480, 295);
+            this.splitContainerBottom.Size = new System.Drawing.Size(1480, 332);
             // 
             // splitContainerBottom.Panel1 (Left Data Tabs)
             // 
