@@ -25,7 +25,6 @@ namespace Site7DbEditor
             this.lblQuickDb = new System.Windows.Forms.Label();
             this.btnSaveDb = new System.Windows.Forms.Button();
             this.lblDbStatus = new System.Windows.Forms.Label();
-            this.btnBluetoothCtrl = new System.Windows.Forms.Button();
 
             // Main Splitter Container (Top: Map Canvas, Bottom: Data & Edit Controls)
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
@@ -37,7 +36,6 @@ namespace Site7DbEditor
             this.panelRightHeader = new System.Windows.Forms.Panel();
             this.lblRightTitle = new System.Windows.Forms.Label();
             this.btnDetachWindow = new System.Windows.Forms.Button();
-            this.btnCloseRight = new System.Windows.Forms.Button();
             this.panelRightContent = new System.Windows.Forms.Panel();
             this.btnBgSettings = new System.Windows.Forms.Button();
             this.btnEnvSettings = new System.Windows.Forms.Button();
@@ -233,7 +231,6 @@ namespace Site7DbEditor
             // panelHeader
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(28)))), ((int)(((byte)(46)))));
-            this.panelHeader.Controls.Add(this.btnBluetoothCtrl);
             this.panelHeader.Controls.Add(this.lblDbStatus);
             this.panelHeader.Controls.Add(this.btnSaveDb);
             this.panelHeader.Controls.Add(this.lblQuickDb);
@@ -299,18 +296,6 @@ namespace Site7DbEditor
             this.cmbQuickDbSelect.Size = new System.Drawing.Size(240, 23);
             this.cmbQuickDbSelect.TabIndex = 4;
 
-            // btnBluetoothCtrl
-            this.btnBluetoothCtrl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(150)))), ((int)(((byte)(214)))));
-            this.btnBluetoothCtrl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBluetoothCtrl.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnBluetoothCtrl.ForeColor = System.Drawing.Color.White;
-            this.btnBluetoothCtrl.Location = new System.Drawing.Point(825, 23);
-            this.btnBluetoothCtrl.Name = "btnBluetoothCtrl";
-            this.btnBluetoothCtrl.Size = new System.Drawing.Size(180, 30);
-            this.btnBluetoothCtrl.TabIndex = 5;
-            this.btnBluetoothCtrl.Text = "📡 測量機器(Bluetooth)";
-            this.btnBluetoothCtrl.UseVisualStyleBackColor = false;
-
             // btnSaveDb
             this.btnSaveDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSaveDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(176)))), ((int)(((byte)(0)))));
@@ -365,7 +350,6 @@ namespace Site7DbEditor
             this.panelRightHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
             this.panelRightHeader.Controls.Add(this.lblRightTitle);
             this.panelRightHeader.Controls.Add(this.btnDetachWindow);
-            this.panelRightHeader.Controls.Add(this.btnCloseRight);
             this.panelRightHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelRightHeader.Location = new System.Drawing.Point(0, 0);
             this.panelRightHeader.Name = "panelRightHeader";
@@ -380,27 +364,17 @@ namespace Site7DbEditor
             this.lblRightTitle.Size = new System.Drawing.Size(120, 15);
             this.lblRightTitle.Text = "📡 測量機器制御";
 
+            this.btnDetachWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDetachWindow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
             this.btnDetachWindow.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetachWindow.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnDetachWindow.ForeColor = System.Drawing.Color.White;
-            this.btnDetachWindow.Location = new System.Drawing.Point(164, 3);
+            this.btnDetachWindow.Location = new System.Drawing.Point(195, 3);
             this.btnDetachWindow.Name = "btnDetachWindow";
             this.btnDetachWindow.Size = new System.Drawing.Size(64, 24);
             this.btnDetachWindow.TabIndex = 1;
             this.btnDetachWindow.Text = "↗ 分離";
             this.btnDetachWindow.UseVisualStyleBackColor = false;
-
-            this.btnCloseRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
-            this.btnCloseRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCloseRight.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnCloseRight.ForeColor = System.Drawing.Color.White;
-            this.btnCloseRight.Location = new System.Drawing.Point(231, 3);
-            this.btnCloseRight.Name = "btnCloseRight";
-            this.btnCloseRight.Size = new System.Drawing.Size(28, 24);
-            this.btnCloseRight.TabIndex = 2;
-            this.btnCloseRight.Text = "✖";
-            this.btnCloseRight.UseVisualStyleBackColor = false;
 
             this.panelRightContent.AutoScroll = true;
             this.panelRightContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -416,8 +390,7 @@ namespace Site7DbEditor
             this.panelMapRight.Name = "panelMapRight";
             this.panelMapRight.Size = new System.Drawing.Size(264, 450);
             this.panelMapRight.TabIndex = 2;
-            this.panelMapRight.Visible = false;
-            this.panelMapRight.Visible = false;
+            this.panelMapRight.Visible = true;
 
             // panelMapHeader
             this.panelMapHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
@@ -2166,7 +2139,6 @@ namespace Site7DbEditor
 
         private System.Windows.Forms.Button btnBgSettings;
         private System.Windows.Forms.Button btnEnvSettings;
-        public System.Windows.Forms.Button btnBluetoothCtrl;
         private System.Windows.Forms.Button btnUndo;
         private System.Windows.Forms.Button btnRedo;
         private System.Windows.Forms.Label lblIkouLayerGrpHeader;
@@ -2198,7 +2170,6 @@ namespace Site7DbEditor
         public System.Windows.Forms.Panel panelRightHeader;
         public System.Windows.Forms.Label lblRightTitle;
         public System.Windows.Forms.Button btnDetachWindow;
-        public System.Windows.Forms.Button btnCloseRight;
         public System.Windows.Forms.Panel panelRightContent;
     }
 }

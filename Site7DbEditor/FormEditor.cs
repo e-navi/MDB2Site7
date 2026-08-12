@@ -367,31 +367,9 @@ namespace Site7DbEditor
                 SetCXYZ(x, y, z);
             };
 
-            btnBluetoothCtrl.Click += (s, e) =>
-            {
-                EnsureUCCtrlValid();
-                if (panelMapRight.Visible)
-                {
-                    panelMapRight.Visible = false;
-                }
-                else if (_dlgBth != null && !_dlgBth.IsDisposed && _dlgBth.Visible)
-                {
-                    _dlgBth.Hide();
-                }
-                else
-                {
-                    SetBluetoothDisplayMode(false);
-                }
-            };
-
             btnDetachWindow.Click += (s, e) =>
             {
                 SetBluetoothDisplayMode(true);
-            };
-
-            btnCloseRight.Click += (s, e) =>
-            {
-                panelMapRight.Visible = false;
             };
 
             btnLayerSettings.Click += (s, e) =>
@@ -542,6 +520,8 @@ namespace Site7DbEditor
         {
             PopulateQuickDbList();
             InitBatchUpdateControls();
+
+            SetBluetoothDisplayMode(false);
 
             if (splitContainerMain.Height > 400)
             {
