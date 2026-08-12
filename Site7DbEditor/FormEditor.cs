@@ -533,9 +533,6 @@ namespace Site7DbEditor
                 }
                 _ucCtrl.BringToFront();
 
-                panelMapRight.SendToBack();
-                panelMapLeft.SendToBack();
-                picMapCanvas.BringToFront();
                 panelMapRight.Visible = true;
                 picMapCanvas.Invalidate();
             }

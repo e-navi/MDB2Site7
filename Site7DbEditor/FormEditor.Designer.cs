@@ -344,12 +344,13 @@ namespace Site7DbEditor
             this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainerMain.Panel1 (Top Map View)
-            // Dock レイアウトのルール: Fill は最後に追加すること
-            // 追加順: Top → Left → Right → Fill
-            this.splitContainerMain.Panel1.Controls.Add(this.panelMapHeader);
-            this.splitContainerMain.Panel1.Controls.Add(this.panelMapLeft);
+            // WinForms Dock ルール: 奥（最初追加）から順にドック処理される。
+            // panelMapRight（Right）を奥に → 最初にドック → x=0 からキャンバスを右から押す
+            // picMapCanvas（Fill）を中間 → Right の後にドック → x=0 から始まる
+            // panelMapLeft（Dock=None）を手前 → ドック計算外、x=0 にオーバーレイ表示
             this.splitContainerMain.Panel1.Controls.Add(this.panelMapRight);
             this.splitContainerMain.Panel1.Controls.Add(this.picMapCanvas);
+            this.splitContainerMain.Panel1.Controls.Add(this.panelMapLeft);
             // 
             // splitContainerMain.Panel2 (Bottom Data Grids & Edit)
             // 
@@ -485,8 +486,11 @@ namespace Site7DbEditor
             this.panelMapLeft.Controls.Add(this.chkShowIkouName);
             this.panelMapLeft.Controls.Add(this.chkShowKikai);
             this.panelMapLeft.Controls.Add(this.chkShowKikaiName);
-            this.panelMapLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelMapLeft.Location = new System.Drawing.Point(0, 35);
+            this.panelMapLeft.Dock = System.Windows.Forms.DockStyle.None;
+            this.panelMapLeft.Anchor = System.Windows.Forms.AnchorStyles.Top
+                | System.Windows.Forms.AnchorStyles.Left
+                | System.Windows.Forms.AnchorStyles.Bottom;
+            this.panelMapLeft.Location = new System.Drawing.Point(0, 0);
             this.panelMapLeft.Name = "panelMapLeft";
             this.panelMapLeft.Size = new System.Drawing.Size(130, 405);
             this.panelMapLeft.TabIndex = 1;
