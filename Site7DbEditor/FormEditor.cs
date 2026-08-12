@@ -244,6 +244,7 @@ namespace Site7DbEditor
             this.panelMapLeft.Resize += (s, e) => UpdatePanelWidthsDisplay();
             this.panelMapRight.Resize += (s, e) => UpdatePanelWidthsDisplay();
             this.panelMapRight.VisibleChanged += (s, e) => UpdatePanelWidthsDisplay();
+            this.picMapCanvas.SizeChanged += (s, e) => { _vc.InvalidateBoundsCache(); UpdatePanelWidthsDisplay(); picMapCanvas.Invalidate(); };
             this.btnOpenDb.Click += btnOpenDb_Click;
             this.cmbQuickDbSelect.SelectedIndexChanged += cmbQuickDbSelect_SelectedIndexChanged;
             this.btnSaveDb.Click += btnSaveDb_Click;
@@ -1125,6 +1126,13 @@ namespace Site7DbEditor
 
         #region DataGridView Double Click Map Centering
 
+        private void CenterMapOnPoint(double surveyX, double surveyY)
+        {
+            _vc.UpdateMapBounds(picMapCanvas.ClientSize, _db.IkouLList, _db.IbutuList);
+            _vc.CenterOnPoint(surveyX, surveyY, picMapCanvas.ClientSize);
+            picMapCanvas.Invalidate();
+        }
+
         private void dgvIkou_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -1145,8 +1153,7 @@ namespace Site7DbEditor
                 }
                 if (count > 0)
                 {
-                    _vc.CenterOnPoint(sumX / count, sumY / count, picMapCanvas.ClientSize);
-                    picMapCanvas.Invalidate();
+                    CenterMapOnPoint(sumX / count, sumY / count);
                 }
             }
         }
@@ -1161,8 +1168,7 @@ namespace Site7DbEditor
                 {
                     double sumX = pts.Average(p => p.X);
                     double sumY = pts.Average(p => p.Y);
-                    _vc.CenterOnPoint(sumX, sumY, picMapCanvas.ClientSize);
-                    picMapCanvas.Invalidate();
+                    CenterMapOnPoint(sumX, sumY);
                 }
             }
         }
@@ -1173,8 +1179,7 @@ namespace Site7DbEditor
             if (dgvPrecs.DataSource is BindingList<IkouPointRecord> pts && e.RowIndex < pts.Count)
             {
                 var pt = pts[e.RowIndex];
-                _vc.CenterOnPoint(pt.X, pt.Y, picMapCanvas.ClientSize);
-                picMapCanvas.Invalidate();
+                CenterMapOnPoint(pt.X, pt.Y);
             }
         }
 
@@ -1183,8 +1188,7 @@ namespace Site7DbEditor
             if (e.RowIndex < 0) return;
             if (GetSelectedDataBoundItem<IbutuModel>(dgvIbutu) is IbutuModel selected)
             {
-                _vc.CenterOnPoint(selected.X, selected.Y, picMapCanvas.ClientSize);
-                picMapCanvas.Invalidate();
+                CenterMapOnPoint(selected.X, selected.Y);
             }
         }
 
@@ -1193,8 +1197,7 @@ namespace Site7DbEditor
             if (e.RowIndex < 0) return;
             if (GetSelectedDataBoundItem<KikaiModel>(dgvKikai) is KikaiModel selected)
             {
-                _vc.CenterOnPoint(selected.X, selected.Y, picMapCanvas.ClientSize);
-                picMapCanvas.Invalidate();
+                CenterMapOnPoint(selected.X, selected.Y);
             }
         }
 
