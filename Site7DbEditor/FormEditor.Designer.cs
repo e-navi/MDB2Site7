@@ -27,6 +27,11 @@ namespace Site7DbEditor
             this.lblDbStatus = new System.Windows.Forms.Label();
 
             this.panelMapArea = new System.Windows.Forms.Panel();
+            this.panelMapBottom = new System.Windows.Forms.Panel();
+            this.panelBottomHeader = new System.Windows.Forms.Panel();
+            this.lblBottomTitle = new System.Windows.Forms.Label();
+            this.btnDetachBottomPanel = new System.Windows.Forms.Button();
+            this.panelBottomContent = new System.Windows.Forms.Panel();
             this.panelMapHeader = new System.Windows.Forms.Panel();
             this.btnDetachLeftPanel = new System.Windows.Forms.Button();
             this.lblMapTitle = new System.Windows.Forms.Label();
@@ -840,10 +845,66 @@ namespace Site7DbEditor
             this.picMapCanvas.TabStop = false;
 
             // 
+            // panelBottomHeader
+            // 
+            this.panelBottomHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
+            this.panelBottomHeader.Controls.Add(this.lblBottomTitle);
+            this.panelBottomHeader.Controls.Add(this.btnDetachBottomPanel);
+            this.panelBottomHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelBottomHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelBottomHeader.Name = "panelBottomHeader";
+            this.panelBottomHeader.Size = new System.Drawing.Size(1480, 30);
+            this.panelBottomHeader.TabIndex = 0;
+
+            // lblBottomTitle
+            this.lblBottomTitle.AutoSize = true;
+            this.lblBottomTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblBottomTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblBottomTitle.Location = new System.Drawing.Point(10, 7);
+            this.lblBottomTitle.Name = "lblBottomTitle";
+            this.lblBottomTitle.Size = new System.Drawing.Size(140, 15);
+            this.lblBottomTitle.TabIndex = 0;
+            this.lblBottomTitle.Text = "📋 データ・編集テーブル";
+
+            // btnDetachBottomPanel
+            this.btnDetachBottomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDetachBottomPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
+            this.btnDetachBottomPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDetachBottomPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnDetachBottomPanel.ForeColor = System.Drawing.Color.White;
+            this.btnDetachBottomPanel.Location = new System.Drawing.Point(1350, 3);
+            this.btnDetachBottomPanel.Name = "btnDetachBottomPanel";
+            this.btnDetachBottomPanel.Size = new System.Drawing.Size(124, 24);
+            this.btnDetachBottomPanel.TabIndex = 1;
+            this.btnDetachBottomPanel.Text = "↗ 分離";
+            this.btnDetachBottomPanel.UseVisualStyleBackColor = false;
+
+            // 
+            // panelBottomContent
+            // 
+            this.panelBottomContent.Controls.Add(this.splitContainerBottom);
+            this.panelBottomContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelBottomContent.Location = new System.Drawing.Point(0, 30);
+            this.panelBottomContent.Name = "panelBottomContent";
+            this.panelBottomContent.Size = new System.Drawing.Size(1480, 332);
+            this.panelBottomContent.TabIndex = 1;
+
+            // 
+            // panelMapBottom
+            // 
+            this.panelMapBottom.Controls.Add(this.panelBottomContent);
+            this.panelMapBottom.Controls.Add(this.panelBottomHeader);
+            this.panelMapBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelMapBottom.Location = new System.Drawing.Point(0, 438);
+            this.panelMapBottom.Name = "panelMapBottom";
+            this.panelMapBottom.Size = new System.Drawing.Size(1480, 362);
+            this.panelMapBottom.TabIndex = 2;
+
+            // 
             // splitContainerBottom (Left: Data Tab, Right: Property Edit Panel)
             // 
-            this.splitContainerBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitContainerBottom.Location = new System.Drawing.Point(0, 468);
+            this.splitContainerBottom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerBottom.Location = new System.Drawing.Point(0, 0);
             this.splitContainerBottom.Name = "splitContainerBottom";
             this.splitContainerBottom.Size = new System.Drawing.Size(1480, 332);
             // 
@@ -1980,7 +2041,7 @@ namespace Site7DbEditor
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Normal;
             this.Controls.Add(this.panelMapArea);
-            this.Controls.Add(this.splitContainerBottom);
+            this.Controls.Add(this.panelMapBottom);
             this.Controls.Add(this.panelHeader);
             this.Name = "FormEditor";
             this.Text = "SITE7 SQLite Database Editor (2D CAD & Data Editor)";
@@ -2189,5 +2250,10 @@ namespace Site7DbEditor
         public System.Windows.Forms.Button btnDetachWindow;
         public System.Windows.Forms.Panel panelRightContent;
         public System.Windows.Forms.Panel panelMapArea;
+        public System.Windows.Forms.Panel panelMapBottom;
+        public System.Windows.Forms.Panel panelBottomHeader;
+        public System.Windows.Forms.Label lblBottomTitle;
+        public System.Windows.Forms.Button btnDetachBottomPanel;
+        public System.Windows.Forms.Panel panelBottomContent;
     }
 }

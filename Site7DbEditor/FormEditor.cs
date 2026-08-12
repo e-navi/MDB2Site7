@@ -35,6 +35,8 @@ namespace Site7DbEditor
         private FormBluetoothCtrl? _dlgBth = null;
         private FormLeftPanelCtrl? _dlgLeft = null;
         private bool _isLeftPanelFloating = false;
+        private FormBottomPanelCtrl? _dlgBottom = null;
+        private bool _isBottomPanelFloating = false;
 
         public class DbItem
         {
@@ -380,6 +382,7 @@ namespace Site7DbEditor
             };
 
             btnDetachLeftPanel.Click += (s, e) => SetLeftPanelDisplayMode(!_isLeftPanelFloating);
+            btnDetachBottomPanel.Click += (s, e) => SetBottomPanelDisplayMode(!_isBottomPanelFloating);
 
             btnLayerSettings.Click += (s, e) =>
             {
@@ -589,6 +592,77 @@ namespace Site7DbEditor
                 {
                     panelMapArea.Controls.Add(panelMapLeft);
                 }
+            }
+
+            _vc.InvalidateBoundsCache();
+            UpdatePanelWidthsDisplay();
+            picMapCanvas.Invalidate();
+        }
+
+        public void SetBottomPanelDisplayMode(bool isFloatingForm)
+        {
+            _isBottomPanelFloating = isFloatingForm;
+
+            if (isFloatingForm)
+            {
+                Point targetLoc = panelMapBottom.PointToScreen(Point.Empty);
+                if (targetLoc.X <= 0 || targetLoc.Y <= 0)
+                {
+                    targetLoc = new Point(this.Location.X + 20, this.Location.Y + this.Height - 450);
+                }
+
+                if (_dlgBottom == null || _dlgBottom.IsDisposed)
+                {
+                    _dlgBottom = new FormBottomPanelCtrl();
+                    _dlgBottom.DockToPanelRequested += (s, e) => SetBottomPanelDisplayMode(false);
+                    _dlgBottom.FormClosing += (s, e) =>
+                    {
+                        if (_isBottomPanelFloating)
+                        {
+                            SetBottomPanelDisplayMode(false);
+                        }
+                    };
+                    _dlgBottom.FormClosed += (s, e) => { _dlgBottom = null; };
+                }
+
+                if (panelBottomContent.Controls.Contains(splitContainerBottom))
+                {
+                    panelBottomContent.Controls.Remove(splitContainerBottom);
+                }
+
+                panelBottomHeader.Visible = false;
+                panelMapBottom.Visible = false;
+
+                splitContainerBottom.Dock = DockStyle.Fill;
+                if (!_dlgBottom.panelBottomContent.Controls.Contains(splitContainerBottom))
+                {
+                    _dlgBottom.panelBottomContent.Controls.Add(splitContainerBottom);
+                }
+
+                _dlgBottom.StartPosition = FormStartPosition.Manual;
+                _dlgBottom.Location = targetLoc;
+                _dlgBottom.Show(this);
+            }
+            else
+            {
+                if (_dlgBottom != null && !_dlgBottom.IsDisposed)
+                {
+                    if (_dlgBottom.panelBottomContent.Controls.Contains(splitContainerBottom))
+                    {
+                        _dlgBottom.panelBottomContent.Controls.Remove(splitContainerBottom);
+                    }
+                    _dlgBottom.Close();
+                    _dlgBottom = null;
+                }
+
+                splitContainerBottom.Dock = DockStyle.Fill;
+                if (!panelBottomContent.Controls.Contains(splitContainerBottom))
+                {
+                    panelBottomContent.Controls.Add(splitContainerBottom);
+                }
+
+                panelBottomHeader.Visible = true;
+                panelMapBottom.Visible = true;
             }
 
             _vc.InvalidateBoundsCache();
