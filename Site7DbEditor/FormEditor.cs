@@ -484,6 +484,10 @@ namespace Site7DbEditor
                             _ucCtrl.Dock = DockStyle.Fill;
                             panelRightContent.Controls.Add(_ucCtrl);
                         }
+                        panelMapRight.Visible = true;
+                        _vc.InvalidateBoundsCache();
+                        UpdatePanelWidthsDisplay();
+                        picMapCanvas.Invalidate();
                     };
                     _dlgBth.FormClosed += (s, e) => { _dlgBth = null; };
                 }
