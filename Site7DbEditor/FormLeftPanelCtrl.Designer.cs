@@ -61,7 +61,7 @@ namespace Site7DbEditor
             this.ClientSize = new System.Drawing.Size(130, 480);
             this.Controls.Add(this.panelLeftContent);
             this.Controls.Add(this.panelDockHeader);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormLeftPanelCtrl";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "レイヤ・表示設定";
