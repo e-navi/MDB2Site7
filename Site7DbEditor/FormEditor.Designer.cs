@@ -26,8 +26,7 @@ namespace Site7DbEditor
             this.btnSaveDb = new System.Windows.Forms.Button();
             this.lblDbStatus = new System.Windows.Forms.Label();
 
-            // Main Splitter Container (Top: Map Canvas, Bottom: Data & Edit Controls)
-            this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.panelMapArea = new System.Windows.Forms.Panel();
             this.panelMapHeader = new System.Windows.Forms.Panel();
             this.btnDetachLeftPanel = new System.Windows.Forms.Button();
             this.lblMapTitle = new System.Windows.Forms.Label();
@@ -199,10 +198,7 @@ namespace Site7DbEditor
             this.pnlKikaiRight = new System.Windows.Forms.Panel();
 
             this.panelHeader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
-            this.splitContainerMain.Panel1.SuspendLayout();
-            this.splitContainerMain.Panel2.SuspendLayout();
-            this.splitContainerMain.SuspendLayout();
+            this.panelMapArea.SuspendLayout();
             this.panelMapHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMapCanvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottom)).BeginInit();
@@ -324,27 +320,18 @@ namespace Site7DbEditor
             this.lblDbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 
             // 
-            // splitContainerMain (Top: Map Canvas, Bottom: Data & Edit)
+            // panelMapArea (Top Map View - Fill)
+            // Controls.Add order: picMapCanvas (Fill), panelMapLeft (Left), panelMapRight (Right), panelMapHeader (Top)
             // 
-            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerMain.Location = new System.Drawing.Point(0, 75);
-            this.splitContainerMain.Name = "splitContainerMain";
-            this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerMain.Panel1 (Top Map View)
-            // Controls.Add order: picMapCanvas (Fill) first, then panelMapLeft (Left) and panelMapRight (Right).
-            // This ensures panelMapLeft and panelMapRight consume left and right spaces, and picMapCanvas fills the remaining center space.
-            // 
-            this.splitContainerMain.Panel1.Controls.Add(this.picMapCanvas);
-            this.splitContainerMain.Panel1.Controls.Add(this.panelMapLeft);
-            this.splitContainerMain.Panel1.Controls.Add(this.panelMapRight);
-            // 
-            // splitContainerMain.Panel2 (Bottom Data Grids & Edit)
-            // 
-            this.splitContainerMain.Panel2.Controls.Add(this.splitContainerBottom);
-            this.splitContainerMain.Size = new System.Drawing.Size(1480, 800);
-            this.splitContainerMain.SplitterDistance = 440;
-            this.splitContainerMain.TabIndex = 1;
+            this.panelMapArea.Controls.Add(this.picMapCanvas);
+            this.panelMapArea.Controls.Add(this.panelMapLeft);
+            this.panelMapArea.Controls.Add(this.panelMapRight);
+            this.panelMapArea.Controls.Add(this.panelMapHeader);
+            this.panelMapArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMapArea.Location = new System.Drawing.Point(0, 56);
+            this.panelMapArea.Name = "panelMapArea";
+            this.panelMapArea.Size = new System.Drawing.Size(1480, 414);
+            this.panelMapArea.TabIndex = 1;
 
             // 
             // panelRightHeader
@@ -855,9 +842,10 @@ namespace Site7DbEditor
             // 
             // splitContainerBottom (Left: Data Tab, Right: Property Edit Panel)
             // 
-            this.splitContainerBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerBottom.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitContainerBottom.Location = new System.Drawing.Point(0, 470);
             this.splitContainerBottom.Name = "splitContainerBottom";
+            this.splitContainerBottom.Size = new System.Drawing.Size(1480, 330);
             // 
             // splitContainerBottom.Panel1 (Left Data Tabs)
             // 
@@ -1992,17 +1980,15 @@ namespace Site7DbEditor
             this.MinimumSize = new System.Drawing.Size(1280, 780);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Normal;
-            this.Controls.Add(this.splitContainerMain);
+            this.Controls.Add(this.panelMapArea);
+            this.Controls.Add(this.splitContainerBottom);
             this.Controls.Add(this.panelHeader);
             this.Name = "FormEditor";
             this.Text = "SITE7 SQLite Database Editor (2D CAD & Data Editor)";
 
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
-            this.splitContainerMain.Panel1.ResumeLayout(false);
-            this.splitContainerMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
-            this.splitContainerMain.ResumeLayout(false);
+            this.panelMapArea.ResumeLayout(false);
             this.panelMapHeader.ResumeLayout(false);
             this.panelMapHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMapCanvas)).EndInit();
@@ -2047,7 +2033,6 @@ namespace Site7DbEditor
         private System.Windows.Forms.Button btnSaveDb;
         private System.Windows.Forms.Label lblDbStatus;
 
-        private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.Panel panelMapHeader;
         private System.Windows.Forms.Label lblMapTitle;
         private System.Windows.Forms.Button btnResetMapZoom;
@@ -2204,5 +2189,6 @@ namespace Site7DbEditor
         public System.Windows.Forms.Label lblRightTitle;
         public System.Windows.Forms.Button btnDetachWindow;
         public System.Windows.Forms.Panel panelRightContent;
+        public System.Windows.Forms.Panel panelMapArea;
     }
 }

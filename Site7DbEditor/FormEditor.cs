@@ -555,9 +555,9 @@ namespace Site7DbEditor
                     _dlgLeft.FormClosed += (s, e) => { _dlgLeft = null; };
                 }
 
-                if (splitContainerMain.Panel1.Controls.Contains(panelMapLeft))
+                if (panelMapArea.Controls.Contains(panelMapLeft))
                 {
-                    splitContainerMain.Panel1.Controls.Remove(panelMapLeft);
+                    panelMapArea.Controls.Remove(panelMapLeft);
                 }
 
                 panelLeftHeader.Visible = false;
@@ -585,9 +585,9 @@ namespace Site7DbEditor
 
                 panelLeftHeader.Visible = true;
                 panelMapLeft.Dock = DockStyle.Left;
-                if (!splitContainerMain.Panel1.Controls.Contains(panelMapLeft))
+                if (!panelMapArea.Controls.Contains(panelMapLeft))
                 {
-                    splitContainerMain.Panel1.Controls.Add(panelMapLeft);
+                    panelMapArea.Controls.Add(panelMapLeft);
                 }
             }
 
@@ -612,12 +612,6 @@ namespace Site7DbEditor
             InitBatchUpdateControls();
 
             SetBluetoothDisplayMode(false);
-
-            if (splitContainerMain.Height > 400)
-            {
-                int targetBottomHeight = 330; // 遺構 GroupBox (高さ320px) にピッタリ合わせたジャストサイズ
-                splitContainerMain.SplitterDistance = Math.Max(100, splitContainerMain.Height - targetBottomHeight);
-            }
 
             UpdatePanelWidthsDisplay();
         }
