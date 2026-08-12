@@ -15,7 +15,6 @@ namespace Site7DbEditor
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.ClientSize = new System.Drawing.Size(1480, 362);
         }
 
         private void btnDockToPanel_Click(object sender, EventArgs e)

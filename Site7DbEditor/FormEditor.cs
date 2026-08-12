@@ -642,9 +642,9 @@ namespace Site7DbEditor
                 }
 
                 _dlgBottom.StartPosition = FormStartPosition.Manual;
+                _dlgBottom.Show(this);
                 _dlgBottom.Location = targetLoc;
                 _dlgBottom.Size = new System.Drawing.Size(targetWidth, targetHeight);
-                _dlgBottom.Show(this);
             }
             else
             {
