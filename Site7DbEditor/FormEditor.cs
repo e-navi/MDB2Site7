@@ -556,6 +556,7 @@ namespace Site7DbEditor
                     splitContainerMain.Panel1.Controls.Remove(panelMapLeft);
                 }
 
+                panelLeftHeader.Visible = false;
                 panelMapLeft.Dock = DockStyle.Fill;
                 if (!_dlgLeft.panelLeftContent.Controls.Contains(panelMapLeft))
                 {
@@ -565,7 +566,6 @@ namespace Site7DbEditor
                 _dlgLeft.StartPosition = FormStartPosition.Manual;
                 _dlgLeft.Location = targetLoc;
                 _dlgLeft.Show(this);
-                btnDetachLeftPanel.Text = "↙ 左パネル復帰";
             }
             else
             {
@@ -579,13 +579,12 @@ namespace Site7DbEditor
                     _dlgLeft = null;
                 }
 
+                panelLeftHeader.Visible = true;
                 panelMapLeft.Dock = DockStyle.Left;
                 if (!splitContainerMain.Panel1.Controls.Contains(panelMapLeft))
                 {
                     splitContainerMain.Panel1.Controls.Add(panelMapLeft);
                 }
-
-                btnDetachLeftPanel.Text = "↗ 左パネル分離";
             }
 
             _vc.InvalidateBoundsCache();

@@ -33,6 +33,8 @@ namespace Site7DbEditor
             this.lblMapTitle = new System.Windows.Forms.Label();
             this.btnResetMapZoom = new System.Windows.Forms.Button();
             this.panelMapLeft = new System.Windows.Forms.Panel();
+            this.panelLeftHeader = new System.Windows.Forms.Panel();
+            this.panelLeftContent = new System.Windows.Forms.Panel();
             this.panelMapRight = new System.Windows.Forms.Panel();
             this.panelRightHeader = new System.Windows.Forms.Panel();
             this.lblRightTitle = new System.Windows.Forms.Label();
@@ -395,7 +397,6 @@ namespace Site7DbEditor
             // panelMapHeader
             this.panelMapHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
             this.panelMapHeader.Controls.Add(this.lblMapTitle);
-            this.panelMapHeader.Controls.Add(this.btnDetachLeftPanel);
             this.panelMapHeader.Controls.Add(this.btnResetMapZoom);
             this.panelMapHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelMapHeader.Location = new System.Drawing.Point(0, 0);
@@ -413,19 +414,6 @@ namespace Site7DbEditor
             this.lblMapTitle.TabIndex = 0;
             this.lblMapTitle.Text = "🗺 2D 測量平面図 (CAD表示)";
 
-            // btnDetachLeftPanel
-            this.btnDetachLeftPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDetachLeftPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnDetachLeftPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDetachLeftPanel.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnDetachLeftPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDetachLeftPanel.Location = new System.Drawing.Point(1215, 5);
-            this.btnDetachLeftPanel.Name = "btnDetachLeftPanel";
-            this.btnDetachLeftPanel.Size = new System.Drawing.Size(125, 26);
-            this.btnDetachLeftPanel.TabIndex = 2;
-            this.btnDetachLeftPanel.Text = "↗ 左パネル分離";
-            this.btnDetachLeftPanel.UseVisualStyleBackColor = false;
-
             // btnResetMapZoom
             this.btnResetMapZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnResetMapZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
@@ -439,40 +427,71 @@ namespace Site7DbEditor
             this.btnResetMapZoom.Text = "🔍 全体表示リセット";
             this.btnResetMapZoom.UseVisualStyleBackColor = false;
 
+            // panelLeftHeader
+            this.panelLeftHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
+            this.panelLeftHeader.Controls.Add(this.btnDetachLeftPanel);
+            this.panelLeftHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelLeftHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelLeftHeader.Name = "panelLeftHeader";
+            this.panelLeftHeader.Size = new System.Drawing.Size(130, 30);
+            this.panelLeftHeader.TabIndex = 0;
+
+            // btnDetachLeftPanel
+            this.btnDetachLeftPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
+            this.btnDetachLeftPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDetachLeftPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnDetachLeftPanel.ForeColor = System.Drawing.Color.White;
+            this.btnDetachLeftPanel.Location = new System.Drawing.Point(3, 3);
+            this.btnDetachLeftPanel.Name = "btnDetachLeftPanel";
+            this.btnDetachLeftPanel.Size = new System.Drawing.Size(124, 24);
+            this.btnDetachLeftPanel.TabIndex = 0;
+            this.btnDetachLeftPanel.Text = "↗ 分離";
+            this.btnDetachLeftPanel.UseVisualStyleBackColor = false;
+
+            // panelLeftContent
+            this.panelLeftContent.AutoScroll = true;
+            this.panelLeftContent.Controls.Add(this.btnBgSettings);
+            this.panelLeftContent.Controls.Add(this.btnEnvSettings);
+            this.panelLeftContent.Controls.Add(this.btnUndo);
+            this.panelLeftContent.Controls.Add(this.btnRedo);
+            this.panelLeftContent.Controls.Add(this.lblIkouLayerGrpHeader);
+            this.panelLeftContent.Controls.Add(this.chkLayer01);
+            this.panelLeftContent.Controls.Add(this.chkLayer02);
+            this.panelLeftContent.Controls.Add(this.chkLayer03);
+            this.panelLeftContent.Controls.Add(this.chkLayer04);
+            this.panelLeftContent.Controls.Add(this.chkLayer05);
+            this.panelLeftContent.Controls.Add(this.chkLayer06);
+            this.panelLeftContent.Controls.Add(this.chkLayer07);
+            this.panelLeftContent.Controls.Add(this.chkLayer08);
+            this.panelLeftContent.Controls.Add(this.chkLayer09);
+            this.panelLeftContent.Controls.Add(this.chkLayer10);
+            this.panelLeftContent.Controls.Add(this.chkLayer11);
+            this.panelLeftContent.Controls.Add(this.chkLayer12);
+            this.panelLeftContent.Controls.Add(this.chkLayer13);
+            this.panelLeftContent.Controls.Add(this.chkLayer14);
+            this.panelLeftContent.Controls.Add(this.chkLayer15);
+            this.panelLeftContent.Controls.Add(this.chkLayer16);
+            this.panelLeftContent.Controls.Add(this.btnLayerAllOn);
+            this.panelLeftContent.Controls.Add(this.btnLayerAllOff);
+            this.panelLeftContent.Controls.Add(this.btnLayerSettings);
+            this.panelLeftContent.Controls.Add(this.btnBatchUpdateModal);
+            this.panelLeftContent.Controls.Add(this.lblEntityNameHeader);
+            this.panelLeftContent.Controls.Add(this.chkShowIbutu);
+            this.panelLeftContent.Controls.Add(this.chkShowIbutuName);
+            this.panelLeftContent.Controls.Add(this.chkShowIkou);
+            this.panelLeftContent.Controls.Add(this.chkShowIkouName);
+            this.panelLeftContent.Controls.Add(this.chkShowKikai);
+            this.panelLeftContent.Controls.Add(this.chkShowKikaiName);
+            this.panelLeftContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelLeftContent.Location = new System.Drawing.Point(0, 30);
+            this.panelLeftContent.Name = "panelLeftContent";
+            this.panelLeftContent.Size = new System.Drawing.Size(130, 375);
+            this.panelLeftContent.TabIndex = 1;
+
             // panelMapLeft
             this.panelMapLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(242)))));
-            this.panelMapLeft.Controls.Add(this.btnBgSettings);
-            this.panelMapLeft.Controls.Add(this.btnEnvSettings);
-            this.panelMapLeft.Controls.Add(this.btnUndo);
-            this.panelMapLeft.Controls.Add(this.btnRedo);
-            this.panelMapLeft.Controls.Add(this.lblIkouLayerGrpHeader);
-            this.panelMapLeft.Controls.Add(this.chkLayer01);
-            this.panelMapLeft.Controls.Add(this.chkLayer02);
-            this.panelMapLeft.Controls.Add(this.chkLayer03);
-            this.panelMapLeft.Controls.Add(this.chkLayer04);
-            this.panelMapLeft.Controls.Add(this.chkLayer05);
-            this.panelMapLeft.Controls.Add(this.chkLayer06);
-            this.panelMapLeft.Controls.Add(this.chkLayer07);
-            this.panelMapLeft.Controls.Add(this.chkLayer08);
-            this.panelMapLeft.Controls.Add(this.chkLayer09);
-            this.panelMapLeft.Controls.Add(this.chkLayer10);
-            this.panelMapLeft.Controls.Add(this.chkLayer11);
-            this.panelMapLeft.Controls.Add(this.chkLayer12);
-            this.panelMapLeft.Controls.Add(this.chkLayer13);
-            this.panelMapLeft.Controls.Add(this.chkLayer14);
-            this.panelMapLeft.Controls.Add(this.chkLayer15);
-            this.panelMapLeft.Controls.Add(this.chkLayer16);
-            this.panelMapLeft.Controls.Add(this.btnLayerAllOn);
-            this.panelMapLeft.Controls.Add(this.btnLayerAllOff);
-            this.panelMapLeft.Controls.Add(this.btnLayerSettings);
-            this.panelMapLeft.Controls.Add(this.btnBatchUpdateModal);
-            this.panelMapLeft.Controls.Add(this.lblEntityNameHeader);
-            this.panelMapLeft.Controls.Add(this.chkShowIbutu);
-            this.panelMapLeft.Controls.Add(this.chkShowIbutuName);
-            this.panelMapLeft.Controls.Add(this.chkShowIkou);
-            this.panelMapLeft.Controls.Add(this.chkShowIkouName);
-            this.panelMapLeft.Controls.Add(this.chkShowKikai);
-            this.panelMapLeft.Controls.Add(this.chkShowKikaiName);
+            this.panelMapLeft.Controls.Add(this.panelLeftContent);
+            this.panelMapLeft.Controls.Add(this.panelLeftHeader);
             this.panelMapLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMapLeft.Location = new System.Drawing.Point(0, 0);
             this.panelMapLeft.Name = "panelMapLeft";
@@ -2178,6 +2197,8 @@ namespace Site7DbEditor
         private System.Windows.Forms.CheckBox chkShowIkouName;
         private System.Windows.Forms.CheckBox chkShowKikaiName;
         public System.Windows.Forms.Button btnDetachLeftPanel;
+        public System.Windows.Forms.Panel panelLeftHeader;
+        public System.Windows.Forms.Panel panelLeftContent;
         public System.Windows.Forms.Panel panelMapRight;
         public System.Windows.Forms.Panel panelRightHeader;
         public System.Windows.Forms.Label lblRightTitle;
