@@ -125,7 +125,11 @@ namespace Site7DbEditor
                         gpsH = St7Lib.CheckDouble(strs[9], 0.0) - kh;
                         gpsP = new XYZ(p2.Y, p2.X, gpsH);
                         curPos = gpsP;
-                        isChangePos = true;
+                        // 精度が設定しきい値以上の場合のみ座標更新フラグを立てる
+                        if (IsQualitySufficient(gpsStatus, gpsStatusMode))
+                        {
+                            isChangePos = true;
+                        }
                     }
                 }
             }
@@ -144,6 +148,35 @@ namespace Site7DbEditor
                 0 => "未取得",
                 _ => $"Status={gpsStatus}"
             };
+        }
+
+        /// <summary>
+        /// NMEAのgpsStatus値を精度ランクに変換する。
+        /// ランク0が最高精度（RTK-Fix）、数字が大きいほど低精度。
+        /// cBoxGPSStatus の選択インデックスと同じ順序。
+        /// </summary>
+        private static int GetQualityRank(int status)
+        {
+            return status switch
+            {
+                4 => 0,  // RTK-Fix
+                5 => 1,  // RTK-Float
+                2 => 2,  // DGPS
+                1 => 3,  // 単独測位
+                _ => 99  // 未取得・不明は最低ランク
+            };
+        }
+
+        /// <summary>
+        /// 現在のGPS精度が必要最低精度（gpsStatusMode）以上かどうか判定する。
+        /// gpsStatusMode は cBoxGPSStatus.SelectedIndex と同じ：
+        ///   0=RTK-Fix以上, 1=RTK-Float以上, 2=DGPS以上, 3=単独測位以上
+        /// </summary>
+        public static bool IsQualitySufficient(int currentStatus, int requiredMode)
+        {
+            int currentRank = GetQualityRank(currentStatus);
+            // ランクが requiredMode 以下 (= 同等以上の精度) なら OK
+            return currentRank <= requiredMode;
         }
     }
 }

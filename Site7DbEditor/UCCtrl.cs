@@ -32,6 +32,7 @@ namespace Site7DbEditor
             if (Env.GPS >= 0 && Env.GPS < cBoxGPS.Items.Count) cBoxGPS.SelectedIndex = Env.GPS;
             if (Env.KeiNum - 1 >= 0 && Env.KeiNum - 1 < cBoxKei.Items.Count) cBoxKei.SelectedIndex = Env.KeiNum - 1;
             if (Env.GPSStatus >= 0 && Env.GPSStatus < cBoxGPSStatus.Items.Count) cBoxGPSStatus.SelectedIndex = Env.GPSStatus;
+            gbl.Gps.gpsStatusMode = Env.GPSStatus;
 
             Kikaikou1.Text = gbl.KikaiMan.kh.ToString("0.000");
             Mirrorkou1.Text = gbl.KikaiMan.mh.ToString("0.000");
@@ -169,6 +170,7 @@ namespace Site7DbEditor
         private void cBoxGPSStatus_SelectedIndexChanged(object? sender, EventArgs e)
         {
             Env.GPSStatus = cBoxGPSStatus.SelectedIndex;
+            gbl.Gps.gpsStatusMode = Env.GPSStatus;
             Env.SaveEnvGPS();
         }
 
