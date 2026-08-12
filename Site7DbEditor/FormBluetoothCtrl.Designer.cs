@@ -18,6 +18,7 @@ namespace Site7DbEditor
         private void InitializeComponent()
         {
             this.panelDockHeader = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.btnDockToPanel = new System.Windows.Forms.Button();
             this.panelBthContent = new System.Windows.Forms.Panel();
             this.panelDockHeader.SuspendLayout();
