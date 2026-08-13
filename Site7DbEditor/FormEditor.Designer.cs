@@ -951,6 +951,7 @@ namespace Site7DbEditor
             this.pnlTestFill.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTestFill.Location = new System.Drawing.Point(3, 3);
             this.pnlTestFill.Name = "pnlTestFill";
+            this.pnlTestFill.Size = new System.Drawing.Size(1466, 320);
 
             // tabIkou
             this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));

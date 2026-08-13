@@ -58,18 +58,10 @@ namespace Site7DbEditor
 
         private void WireDebugLayoutInfo()
         {
-            this.Resize += (s, e) =>
-            {
-                tabIkou?.PerformLayout();
-                UpdateDebugLayoutInfo();
-            };
+            this.Resize += (s, e) => UpdateDebugLayoutInfo();
             if (tabIkou != null)
             {
-                tabIkou.Resize += (s, e) =>
-                {
-                    tabIkou.PerformLayout();
-                    UpdateDebugLayoutInfo();
-                };
+                tabIkou.Resize += (s, e) => UpdateDebugLayoutInfo();
             }
             if (pnlTestFill != null)
             {
