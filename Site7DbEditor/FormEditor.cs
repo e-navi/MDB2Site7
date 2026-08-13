@@ -60,9 +60,9 @@ namespace Site7DbEditor
         private void WireDebugLayoutInfo()
         {
             this.Resize += (s, e) => UpdateDebugLayoutInfo();
-            if (tabTest != null)
+            if (tabIkou != null)
             {
-                tabTest.Resize += (s, e) => UpdateDebugLayoutInfo();
+                tabIkou.Resize += (s, e) => UpdateDebugLayoutInfo();
             }
             if (pnlPrecsRight != null)
             {
@@ -74,9 +74,9 @@ namespace Site7DbEditor
 
         public void UpdateDebugLayoutInfo()
         {
-            if (tabTest != null && pnlPrecsRight != null)
+            if (tabIkou != null && pnlPrecsRight != null)
             {
-                string info = $"tabTest[{tabTest.Width}x{tabTest.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} Pos:({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) Size:{pnlPrecsRight.Width}x{pnlPrecsRight.Height}]";
+                string info = $"tabIkou[{tabIkou.Width}x{tabIkou.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} Pos:({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) Size:{pnlPrecsRight.Width}x{pnlPrecsRight.Height}]";
                 if (lblBottomTitle != null)
                 {
                     lblBottomTitle.Text = info;
@@ -1288,7 +1288,7 @@ namespace Site7DbEditor
             grpCoordValue.Dock = DockStyle.Right;
             grpCoordValue.Width = 175;
 
-            if (tabControlData.SelectedTab == tabTest)
+            if (tabControlData.SelectedTab == tabIkou)
             {
                 pnlPrecsRight.Controls.Add(grpCoordValue);
                 pnlPrecsRight.Controls.SetChildIndex(grpCoordValue, 0);
