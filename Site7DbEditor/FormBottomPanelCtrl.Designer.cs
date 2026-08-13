@@ -75,7 +75,7 @@ namespace Site7DbEditor
             this.ClientSize = new System.Drawing.Size(1480, 362);
             this.Controls.Add(this.panelBottomContent);
             this.Controls.Add(this.panelDockHeader);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.Name = "FormBottomPanelCtrl";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "データ・編集テーブル (分離ウィンドウ)";
