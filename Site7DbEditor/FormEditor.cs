@@ -461,10 +461,6 @@ namespace Site7DbEditor
             {
                 Point targetLoc = panelMapRight.PointToScreen(Point.Empty);
                 Size targetSize = panelMapRight.Size;
-                if (targetLoc.X <= 0 || targetLoc.Y <= 0)
-                {
-                    targetLoc = new Point(this.Location.X + this.Width - 300, this.Location.Y + 100);
-                }
 
                 if (panelRightContent.Controls.Contains(_ucCtrl))
                 {
@@ -533,7 +529,6 @@ namespace Site7DbEditor
                 _ucCtrl.BringToFront();
 
                 panelMapRight.Visible = true;
-                panelMapHeader.SendToBack();
                 panelMapRight.SendToBack();
                 panelMapLeft.SendToBack();
                 picMapCanvas.BringToFront();
@@ -549,10 +544,6 @@ namespace Site7DbEditor
             {
                 Point targetLoc = panelMapLeft.PointToScreen(Point.Empty);
                 Size targetSize = panelMapLeft.Size;
-                if (targetLoc.X <= 0 || targetLoc.Y <= 0)
-                {
-                    targetLoc = new Point(this.Location.X + 20, this.Location.Y + 80);
-                }
 
                 if (_dlgLeft == null || _dlgLeft.IsDisposed)
                 {
@@ -607,7 +598,6 @@ namespace Site7DbEditor
                     panelMapArea.Controls.Add(panelMapLeft);
                 }
 
-                panelMapHeader.SendToBack();
                 panelMapRight.SendToBack();
                 panelMapLeft.SendToBack();
                 picMapCanvas.BringToFront();
@@ -626,10 +616,6 @@ namespace Site7DbEditor
             {
                 Point targetLoc = panelMapBottom.PointToScreen(Point.Empty);
                 Size targetSize = panelMapBottom.Size;
-                if (targetLoc.X <= 0 || targetLoc.Y <= 0)
-                {
-                    targetLoc = new Point(this.Location.X, this.Location.Y + this.Height - 300);
-                }
 
                 if (_dlgBottom == null || _dlgBottom.IsDisposed)
                 {
