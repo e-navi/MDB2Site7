@@ -983,8 +983,7 @@ namespace Site7DbEditor
             this.grpIkouMaster.Text = "遺構";
 
             // dgvIkou
-            this.dgvIkou.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvIkou.Dock = System.Windows.Forms.DockStyle.Left;
             this.dgvIkou.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvIkou.Location = new System.Drawing.Point(6, 22);
             this.dgvIkou.Name = "dgvIkou";
@@ -1169,8 +1168,7 @@ namespace Site7DbEditor
             this.grpIkouL.Text = "遺構L";
 
             // dgvIkouL
-            this.dgvIkouL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvIkouL.Dock = System.Windows.Forms.DockStyle.Left;
             this.dgvIkouL.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvIkouL.Location = new System.Drawing.Point(6, 22);
             this.dgvIkouL.Name = "dgvIkouL";
