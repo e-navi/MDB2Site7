@@ -64,18 +64,19 @@ namespace Site7DbEditor
             {
                 tabTest.Resize += (s, e) => UpdateDebugLayoutInfo();
             }
-            if (pnlTestFill != null)
+            if (pnlPrecsRight != null)
             {
-                pnlTestFill.Resize += (s, e) => UpdateDebugLayoutInfo();
+                pnlPrecsRight.Resize += (s, e) => UpdateDebugLayoutInfo();
+                pnlPrecsRight.LocationChanged += (s, e) => UpdateDebugLayoutInfo();
             }
             UpdateDebugLayoutInfo();
         }
 
         public void UpdateDebugLayoutInfo()
         {
-            if (tabTest != null && pnlTestFill != null)
+            if (tabTest != null && pnlPrecsRight != null)
             {
-                string info = $"tabTest[{tabTest.Width}x{tabTest.Height}] | pnlTestFill[Dock:{pnlTestFill.Dock} Pos:({pnlTestFill.Location.X},{pnlTestFill.Location.Y}) Size:{pnlTestFill.Width}x{pnlTestFill.Height}]";
+                string info = $"tabTest[{tabTest.Width}x{tabTest.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} Pos:({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) Size:{pnlPrecsRight.Width}x{pnlPrecsRight.Height}]";
                 if (lblBottomTitle != null)
                 {
                     lblBottomTitle.Text = info;
@@ -1288,7 +1289,7 @@ namespace Site7DbEditor
             grpCoordValue.Dock = DockStyle.Right;
             grpCoordValue.Width = 175;
 
-            if (idx == 0) // 遺構
+            if (idx == 0 || idx == 3) // 遺構 または テスト
             {
                 pnlPrecsRight.Controls.Add(grpCoordValue);
                 pnlPrecsRight.Controls.SetChildIndex(grpCoordValue, 0);
