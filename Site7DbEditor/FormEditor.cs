@@ -59,9 +59,9 @@ namespace Site7DbEditor
         private void WireDebugLayoutInfo()
         {
             this.Resize += (s, e) => UpdateDebugLayoutInfo();
-            if (tabIkou != null)
+            if (tabTest != null)
             {
-                tabIkou.Resize += (s, e) => UpdateDebugLayoutInfo();
+                tabTest.Resize += (s, e) => UpdateDebugLayoutInfo();
             }
             if (pnlTestFill != null)
             {
@@ -72,9 +72,9 @@ namespace Site7DbEditor
 
         public void UpdateDebugLayoutInfo()
         {
-            if (tabIkou != null && pnlTestFill != null)
+            if (tabTest != null && pnlTestFill != null)
             {
-                string info = $"tabIkou[{tabIkou.Width}x{tabIkou.Height}] | pnlTestFill[Dock:{pnlTestFill.Dock} Pos:({pnlTestFill.Location.X},{pnlTestFill.Location.Y}) Size:{pnlTestFill.Width}x{pnlTestFill.Height}]";
+                string info = $"tabTest[{tabTest.Width}x{tabTest.Height}] | pnlTestFill[Dock:{pnlTestFill.Dock} Pos:({pnlTestFill.Location.X},{pnlTestFill.Location.Y}) Size:{pnlTestFill.Width}x{pnlTestFill.Height}]";
                 if (lblBottomTitle != null)
                 {
                     lblBottomTitle.Text = info;

@@ -202,6 +202,7 @@ namespace Site7DbEditor
             this.pnlPrecsRight = new System.Windows.Forms.Panel();
             this.pnlIbutuRight = new System.Windows.Forms.Panel();
             this.pnlKikaiRight = new System.Windows.Forms.Panel();
+            this.tabTest = new System.Windows.Forms.TabPage();
 
             this.panelHeader.SuspendLayout();
             this.panelMapArea.SuspendLayout();
@@ -937,6 +938,7 @@ namespace Site7DbEditor
             this.tabControlData.Controls.Add(this.tabIkou);
             this.tabControlData.Controls.Add(this.tabIbutu);
             this.tabControlData.Controls.Add(this.tabKikai);
+            this.tabControlData.Controls.Add(this.tabTest);
             this.tabControlData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlData.Font = new System.Drawing.Font("Yu Gothic UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.tabControlData.Location = new System.Drawing.Point(0, 0);
@@ -953,14 +955,22 @@ namespace Site7DbEditor
             this.pnlTestFill.Name = "pnlTestFill";
             this.pnlTestFill.Size = new System.Drawing.Size(1466, 320);
 
+            // tabTest
+            this.tabTest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
+            this.tabTest.Controls.Add(this.pnlTestFill);
+            this.tabTest.Location = new System.Drawing.Point(4, 26);
+            this.tabTest.Name = "tabTest";
+            this.tabTest.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTest.Size = new System.Drawing.Size(1472, 326);
+            this.tabTest.TabIndex = 3;
+            this.tabTest.Text = "テスト";
+
             // tabIkou
             this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabIkou.Controls.Add(this.pnlTestFill);
-            // this.tabIkou.Controls.Add(this.pnlIbutuRight);
-            // this.tabIkou.Controls.Add(this.grpPrecs);
-            // this.tabIkou.Controls.Add(this.grpIkouL);
-            // this.tabIkou.Controls.Add(this.grpIkouMaster);
-            // this.tabIkou.Controls.Add(this.pnlPrecsRight);
+            this.tabIkou.Controls.Add(this.grpPrecs);
+            this.tabIkou.Controls.Add(this.grpIkouL);
+            this.tabIkou.Controls.Add(this.grpIkouMaster);
+            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Location = new System.Drawing.Point(4, 26);
             this.tabIkou.Name = "tabIkou";
             this.tabIkou.Padding = new System.Windows.Forms.Padding(3);
@@ -2283,5 +2293,6 @@ namespace Site7DbEditor
         public System.Windows.Forms.Panel panelBottomContent;
         private System.Windows.Forms.Label lblLeftTitle;
         public System.Windows.Forms.Panel pnlTestFill;
+        private System.Windows.Forms.TabPage tabTest;
     }
 }
