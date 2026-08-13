@@ -528,6 +528,10 @@ namespace Site7DbEditor
                 _ucCtrl.BringToFront();
 
                 panelMapRight.Visible = true;
+                panelMapHeader.SendToBack();
+                panelMapRight.SendToBack();
+                panelMapLeft.SendToBack();
+                picMapCanvas.BringToFront();
                 picMapCanvas.Invalidate();
             }
         }
@@ -592,6 +596,11 @@ namespace Site7DbEditor
                 {
                     panelMapArea.Controls.Add(panelMapLeft);
                 }
+
+                panelMapHeader.SendToBack();
+                panelMapRight.SendToBack();
+                panelMapLeft.SendToBack();
+                picMapCanvas.BringToFront();
             }
 
             _vc.InvalidateBoundsCache();

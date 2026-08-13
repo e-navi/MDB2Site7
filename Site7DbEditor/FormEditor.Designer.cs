@@ -38,6 +38,7 @@ namespace Site7DbEditor
             this.btnResetMapZoom = new System.Windows.Forms.Button();
             this.panelMapLeft = new System.Windows.Forms.Panel();
             this.panelLeftHeader = new System.Windows.Forms.Panel();
+            this.lblLeftTitle = new System.Windows.Forms.Label();
             this.panelLeftContent = new System.Windows.Forms.Panel();
             this.panelMapRight = new System.Windows.Forms.Panel();
             this.panelRightHeader = new System.Windows.Forms.Panel();
@@ -326,7 +327,9 @@ namespace Site7DbEditor
 
             // 
             // panelMapArea (Top Map View - Fill)
-            // Controls.Add order: picMapCanvas (Fill), panelMapLeft (Left), panelMapRight (Right), panelMapHeader (Top)
+            // Controls.Add 順序 (Dock レイアウト):
+            // WinForms の Dock 処理は最背面 (配列の後ろ / SendToBack) から順に領域を割り当てる。
+            // panelMapHeader (Top) → panelMapRight (Right) → panelMapLeft (Left) → picMapCanvas (Fill)
             // 
             this.panelMapArea.Controls.Add(this.picMapCanvas);
             this.panelMapArea.Controls.Add(this.panelMapLeft);
@@ -421,6 +424,7 @@ namespace Site7DbEditor
 
             // panelLeftHeader
             this.panelLeftHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
+            this.panelLeftHeader.Controls.Add(this.lblLeftTitle);
             this.panelLeftHeader.Controls.Add(this.btnDetachLeftPanel);
             this.panelLeftHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLeftHeader.Location = new System.Drawing.Point(0, 0);
@@ -428,14 +432,25 @@ namespace Site7DbEditor
             this.panelLeftHeader.Size = new System.Drawing.Size(130, 30);
             this.panelLeftHeader.TabIndex = 0;
 
+            // lblLeftTitle
+            this.lblLeftTitle.AutoSize = true;
+            this.lblLeftTitle.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.lblLeftTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblLeftTitle.Location = new System.Drawing.Point(4, 7);
+            this.lblLeftTitle.Name = "lblLeftTitle";
+            this.lblLeftTitle.Size = new System.Drawing.Size(56, 15);
+            this.lblLeftTitle.TabIndex = 1;
+            this.lblLeftTitle.Text = "⚙ レイヤ";
+
             // btnDetachLeftPanel
+            this.btnDetachLeftPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDetachLeftPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
             this.btnDetachLeftPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetachLeftPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnDetachLeftPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDetachLeftPanel.Location = new System.Drawing.Point(3, 3);
+            this.btnDetachLeftPanel.Location = new System.Drawing.Point(63, 3);
             this.btnDetachLeftPanel.Name = "btnDetachLeftPanel";
-            this.btnDetachLeftPanel.Size = new System.Drawing.Size(124, 24);
+            this.btnDetachLeftPanel.Size = new System.Drawing.Size(64, 24);
             this.btnDetachLeftPanel.TabIndex = 0;
             this.btnDetachLeftPanel.Text = "↗ 分離";
             this.btnDetachLeftPanel.UseVisualStyleBackColor = false;
@@ -872,9 +887,9 @@ namespace Site7DbEditor
             this.btnDetachBottomPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetachBottomPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnDetachBottomPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDetachBottomPanel.Location = new System.Drawing.Point(1350, 3);
+            this.btnDetachBottomPanel.Location = new System.Drawing.Point(1413, 3);
             this.btnDetachBottomPanel.Name = "btnDetachBottomPanel";
-            this.btnDetachBottomPanel.Size = new System.Drawing.Size(124, 24);
+            this.btnDetachBottomPanel.Size = new System.Drawing.Size(64, 24);
             this.btnDetachBottomPanel.TabIndex = 1;
             this.btnDetachBottomPanel.Text = "↗ 分離";
             this.btnDetachBottomPanel.UseVisualStyleBackColor = false;
@@ -2255,5 +2270,6 @@ namespace Site7DbEditor
         public System.Windows.Forms.Label lblBottomTitle;
         public System.Windows.Forms.Button btnDetachBottomPanel;
         public System.Windows.Forms.Panel panelBottomContent;
+        private System.Windows.Forms.Label lblLeftTitle;
     }
 }
