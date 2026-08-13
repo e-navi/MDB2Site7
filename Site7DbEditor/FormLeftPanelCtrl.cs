@@ -42,7 +42,42 @@ namespace Site7DbEditor
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.ClientSize = new System.Drawing.Size(130, 480);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_NCHITTEST = 0x84;
+            const int HTLEFT = 10;
+            const int HTRIGHT = 11;
+            const int HTTOP = 12;
+            const int HTTOPLEFT = 13;
+            const int HTTOPRIGHT = 14;
+            const int HTBOTTOM = 15;
+            const int HTBOTTOMLEFT = 16;
+            const int HTBOTTOMRIGHT = 17;
+
+            base.WndProc(ref m);
+
+            if (m.Msg == WM_NCHITTEST && (int)m.Result == 1 /* HTCLIENT */)
+            {
+                Point screenPt = new Point(m.LParam.ToInt32());
+                Point clientPt = this.PointToClient(screenPt);
+
+                int border = 8;
+                bool isLeft = clientPt.X <= border;
+                bool isRight = clientPt.X >= this.ClientSize.Width - border;
+                bool isTop = clientPt.Y <= border;
+                bool isBottom = clientPt.Y >= this.ClientSize.Height - border;
+
+                if (isTop && isLeft) m.Result = (IntPtr)HTTOPLEFT;
+                else if (isTop && isRight) m.Result = (IntPtr)HTTOPRIGHT;
+                else if (isBottom && isLeft) m.Result = (IntPtr)HTBOTTOMLEFT;
+                else if (isBottom && isRight) m.Result = (IntPtr)HTBOTTOMRIGHT;
+                else if (isLeft) m.Result = (IntPtr)HTLEFT;
+                else if (isRight) m.Result = (IntPtr)HTRIGHT;
+                else if (isTop) m.Result = (IntPtr)HTTOP;
+                else if (isBottom) m.Result = (IntPtr)HTBOTTOM;
+            }
         }
 
         private void btnDockToPanel_Click(object sender, EventArgs e)
