@@ -1285,23 +1285,22 @@ namespace Site7DbEditor
 
         private void tabControlData_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            int idx = tabControlData.SelectedIndex;
             grpCoordValue.Dock = DockStyle.Right;
             grpCoordValue.Width = 175;
 
-            if (idx == 0 || idx == 3) // 遺構 または テスト
+            if (tabControlData.SelectedTab == tabTest)
             {
                 pnlPrecsRight.Controls.Add(grpCoordValue);
                 pnlPrecsRight.Controls.SetChildIndex(grpCoordValue, 0);
             }
-            else if (idx == 1) // 遺物
+            else if (tabControlData.SelectedTab == tabIbutu)
             {
                 pnlIbutuRight.Controls.Add(grpCoordValue);
                 pnlIbutuRight.Controls.SetChildIndex(grpIbutuRecord, 0);
                 pnlIbutuRight.Controls.SetChildIndex(grpCoordValue, 1);
                 dgvIbutu_SelectionChanged(this, EventArgs.Empty);
             }
-            else if (idx == 2) // 基準点
+            else if (tabControlData.SelectedTab == tabKikai)
             {
                 pnlKikaiRight.Controls.Add(grpCoordValue);
                 pnlKikaiRight.Controls.SetChildIndex(grpKikaiRecord, 0);

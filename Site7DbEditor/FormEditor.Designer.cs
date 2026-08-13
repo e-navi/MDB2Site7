@@ -85,7 +85,6 @@ namespace Site7DbEditor
             // Bottom Splitter Container (Left: Tabbed Data Grids, Right: Edit SidePanel)
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.tabControlData = new System.Windows.Forms.TabControl();
-            this.tabIkou0 = new System.Windows.Forms.TabPage();
             this.grpIkouMaster = new System.Windows.Forms.GroupBox();
             this.dgvIkou = new System.Windows.Forms.DataGridView();
             this.lblPrefixHeader = new System.Windows.Forms.Label();
@@ -213,9 +212,7 @@ namespace Site7DbEditor
             this.splitContainerBottom.Panel2.SuspendLayout();
             this.splitContainerBottom.SuspendLayout();
             this.tabControlData.SuspendLayout();
-            this.tabIkou0.SuspendLayout();
             this.tabControlData.SuspendLayout();
-            this.tabIkou0.SuspendLayout();
             this.grpIkouMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvIkou)).BeginInit();
             this.grpIkouL.SuspendLayout();
@@ -935,7 +932,6 @@ namespace Site7DbEditor
             // tabControlData
             this.tabControlData.Alignment = System.Windows.Forms.TabAlignment.Left;
             this.tabControlData.Multiline = true;
-            this.tabControlData.Controls.Add(this.tabIkou0);
             this.tabControlData.Controls.Add(this.tabIbutu);
             this.tabControlData.Controls.Add(this.tabKikai);
             this.tabControlData.Controls.Add(this.tabTest);
@@ -967,15 +963,6 @@ namespace Site7DbEditor
             this.tabTest.Size = new System.Drawing.Size(1472, 326);
             this.tabTest.TabIndex = 3;
             this.tabTest.Text = "テスト";
-
-            // tabIkou0
-            this.tabIkou0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabIkou0.Location = new System.Drawing.Point(4, 26);
-            this.tabIkou0.Name = "tabIkou0";
-            this.tabIkou0.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIkou0.Size = new System.Drawing.Size(1472, 326);
-            this.tabIkou0.TabIndex = 0;
-            this.tabIkou0.Text = "遺構";
 
             // grpIkouMaster
             this.grpIkouMaster.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2092,7 +2079,6 @@ namespace Site7DbEditor
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottom)).EndInit();
             this.splitContainerBottom.ResumeLayout(false);
             this.tabControlData.ResumeLayout(false);
-            this.tabIkou0.ResumeLayout(false);
             this.grpIkouMaster.ResumeLayout(false);
             this.grpIkouMaster.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvIkou)).EndInit();
@@ -2142,7 +2128,6 @@ namespace Site7DbEditor
 
         private System.Windows.Forms.SplitContainer splitContainerBottom;
         private System.Windows.Forms.TabControl tabControlData;
-        public System.Windows.Forms.TabPage tabIkou0;
         private System.Windows.Forms.GroupBox grpIkouMaster;
         private System.Windows.Forms.DataGridView dgvIkou;
         private System.Windows.Forms.Button btnAddIkou;
