@@ -1575,7 +1575,7 @@ namespace Site7DbEditor
 
             // tabIbutu
             this.tabIbutu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            // this.tabIbutu.Controls.Add(this.pnlIbutuRight);
+            this.tabIbutu.Controls.Add(this.pnlIbutuRight);
             this.tabIbutu.Controls.Add(this.dgvIbutu);
             this.tabIbutu.Location = new System.Drawing.Point(4, 26);
             this.tabIbutu.Name = "tabIbutu";
