@@ -52,6 +52,7 @@ namespace Site7DbEditor
             SetupStyles();
             InitRightEditControls();
             WireEvents();
+            tabControlData_SelectedIndexChanged(this, EventArgs.Empty);
             WireDebugLayoutInfo();
         }
 
@@ -1284,8 +1285,9 @@ namespace Site7DbEditor
         private void tabControlData_SelectedIndexChanged(object? sender, EventArgs e)
         {
             int idx = tabControlData.SelectedIndex;
-            grpCoordValue.Dock = DockStyle.Right;
-            grpCoordValue.Width = 175;
+            grpCoordValue.Dock = DockStyle.Fill;
+            pnlPrecsRight.Dock = DockStyle.Right;
+            pnlPrecsRight.Width = 178;
 
             if (idx == 0) // 遺構
             {
