@@ -52,6 +52,38 @@ namespace Site7DbEditor
             SetupStyles();
             InitRightEditControls();
             WireEvents();
+            WireDebugLayoutInfo();
+        }
+
+        private void WireDebugLayoutInfo()
+        {
+            this.Resize += (s, e) => UpdateDebugLayoutInfo();
+            if (tabIkou != null)
+            {
+                tabIkou.Resize += (s, e) => UpdateDebugLayoutInfo();
+            }
+            if (pnlPrecsRight != null)
+            {
+                pnlPrecsRight.Resize += (s, e) => UpdateDebugLayoutInfo();
+                pnlPrecsRight.LocationChanged += (s, e) => UpdateDebugLayoutInfo();
+            }
+            UpdateDebugLayoutInfo();
+        }
+
+        public void UpdateDebugLayoutInfo()
+        {
+            if (tabIkou != null && pnlPrecsRight != null)
+            {
+                string info = $"tabIkou[Pos:({tabIkou.Location.X},{tabIkou.Location.Y}) Size:{tabIkou.Width}x{tabIkou.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} Pos:({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) Size:{pnlPrecsRight.Width}x{pnlPrecsRight.Height}]";
+                if (lblBottomTitle != null)
+                {
+                    lblBottomTitle.Text = info;
+                }
+                if (_dlgBottom != null && !_dlgBottom.IsDisposed && _dlgBottom.lblTitle != null)
+                {
+                    _dlgBottom.lblTitle.Text = info;
+                }
+            }
         }
 
         private void SetupStyles()
@@ -621,6 +653,7 @@ namespace Site7DbEditor
                 {
                     _dlgBottom = new FormBottomPanelCtrl();
                     _dlgBottom.DockToPanelRequested += (s, e) => SetBottomPanelDisplayMode(false);
+                    _dlgBottom.Resize += (s, e) => UpdateDebugLayoutInfo();
                     _dlgBottom.FormClosing += (s, e) =>
                     {
                         if (_isBottomPanelFloating)
