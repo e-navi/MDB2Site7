@@ -73,9 +73,9 @@ namespace Site7DbEditor
 
         public void UpdateDebugLayoutInfo()
         {
-            if (tabIkou != null && pnlPrecsRight != null)
+            if (tabIkou != null && pnlPrecsRight != null && pnlIbutuRight != null)
             {
-                string info = $"tabIkou[Pos:({tabIkou.Location.X},{tabIkou.Location.Y}) Size:{tabIkou.Width}x{tabIkou.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} Pos:({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) Size:{pnlPrecsRight.Width}x{pnlPrecsRight.Height}]";
+                string info = $"tabIkou[{tabIkou.Width}x{tabIkou.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} ({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) {pnlPrecsRight.Width}x{pnlPrecsRight.Height}] | pnlIbutuRight[Dock:{pnlIbutuRight.Dock} ({pnlIbutuRight.Location.X},{pnlIbutuRight.Location.Y}) {pnlIbutuRight.Width}x{pnlIbutuRight.Height}]";
                 if (lblBottomTitle != null)
                 {
                     lblBottomTitle.Text = info;
