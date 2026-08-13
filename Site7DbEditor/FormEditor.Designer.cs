@@ -974,9 +974,9 @@ namespace Site7DbEditor
             this.grpIkouMaster.Controls.Add(this.lblPrefixHeader);
             this.grpIkouMaster.Controls.Add(this.dgvIkou);
             this.grpIkouMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIkouMaster.Location = new System.Drawing.Point(3, 3);
+            this.grpIkouMaster.Location = new System.Drawing.Point(0, 0);
             this.grpIkouMaster.Name = "grpIkouMaster";
-            this.grpIkouMaster.Size = new System.Drawing.Size(390, 320);
+            this.grpIkouMaster.Width = 390;
             this.grpIkouMaster.TabIndex = 0;
             this.grpIkouMaster.TabStop = false;
             this.grpIkouMaster.Text = "遺構";
@@ -1159,9 +1159,9 @@ namespace Site7DbEditor
             this.grpIkouL.Controls.Add(this.lblLinePrefixHeader);
             this.grpIkouL.Controls.Add(this.dgvIkouL);
             this.grpIkouL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIkouL.Location = new System.Drawing.Point(399, 3);
+            this.grpIkouL.Location = new System.Drawing.Point(0, 0);
             this.grpIkouL.Name = "grpIkouL";
-            this.grpIkouL.Size = new System.Drawing.Size(422, 320);
+            this.grpIkouL.Width = 422;
             this.grpIkouL.TabIndex = 1;
             this.grpIkouL.TabStop = false;
             this.grpIkouL.Text = "遺構L";
@@ -1395,9 +1395,8 @@ namespace Site7DbEditor
             this.grpPrecs.Controls.Add(this.dgvPrecs);
             this.grpPrecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpPrecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpPrecs.Location = new System.Drawing.Point(821, 3);
+            this.grpPrecs.Location = new System.Drawing.Point(0, 0);
             this.grpPrecs.Name = "grpPrecs";
-            this.grpPrecs.Size = new System.Drawing.Size(470, 320);
             this.grpPrecs.TabIndex = 2;
             this.grpPrecs.TabStop = false;
             this.grpPrecs.Text = "構成座標";
@@ -1408,15 +1407,14 @@ namespace Site7DbEditor
             this.dgvPrecs.Location = new System.Drawing.Point(6, 22);
             this.dgvPrecs.Name = "dgvPrecs";
             this.dgvPrecs.RowTemplate.Height = 25;
-            this.dgvPrecs.Size = new System.Drawing.Size(458, 292);
             this.dgvPrecs.TabIndex = 0;
 
             // pnlPrecsRight
-            this.pnlPrecsRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlPrecsRight.Controls.Add(this.grpCoordValue);
-            this.pnlPrecsRight.Location = new System.Drawing.Point(1291, 3);
+            this.pnlPrecsRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlPrecsRight.Location = new System.Drawing.Point(0, 0);
             this.pnlPrecsRight.Name = "pnlPrecsRight";
-            this.pnlPrecsRight.Size = new System.Drawing.Size(178, 320);
+            this.pnlPrecsRight.Width = 178;
             this.pnlPrecsRight.TabIndex = 3;
 
             // grpCoordValue
