@@ -947,10 +947,10 @@ namespace Site7DbEditor
 
             // tabIkou
             this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
+            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Controls.Add(this.grpPrecs);
             this.tabIkou.Controls.Add(this.grpIkouL);
             this.tabIkou.Controls.Add(this.grpIkouMaster);
-            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Location = new System.Drawing.Point(4, 26);
             this.tabIkou.Name = "tabIkou";
             this.tabIkou.Padding = new System.Windows.Forms.Padding(3);
@@ -959,7 +959,8 @@ namespace Site7DbEditor
             this.tabIkou.Text = "遺構";
 
             // grpIkouMaster
-            this.grpIkouMaster.Dock = System.Windows.Forms.DockStyle.Left;
+            this.grpIkouMaster.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.grpIkouMaster.Controls.Add(this.btnDeleteIkouRight);
             this.grpIkouMaster.Controls.Add(this.btnUpdateIkouRight);
             this.grpIkouMaster.Controls.Add(this.btnAddIkou);
@@ -974,9 +975,9 @@ namespace Site7DbEditor
             this.grpIkouMaster.Controls.Add(this.lblPrefixHeader);
             this.grpIkouMaster.Controls.Add(this.dgvIkou);
             this.grpIkouMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIkouMaster.Location = new System.Drawing.Point(0, 0);
+            this.grpIkouMaster.Location = new System.Drawing.Point(3, 3);
             this.grpIkouMaster.Name = "grpIkouMaster";
-            this.grpIkouMaster.Width = 390;
+            this.grpIkouMaster.Size = new System.Drawing.Size(390, 320);
             this.grpIkouMaster.TabIndex = 0;
             this.grpIkouMaster.TabStop = false;
             this.grpIkouMaster.Text = "遺構";
@@ -1138,7 +1139,8 @@ namespace Site7DbEditor
             this.btnAddIkou.UseVisualStyleBackColor = false;
 
             // grpIkouL
-            this.grpIkouL.Dock = System.Windows.Forms.DockStyle.Left;
+            this.grpIkouL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.grpIkouL.Controls.Add(this.btnAddIkouL);
             this.grpIkouL.Controls.Add(this.btnUpdateLineRight);
             this.grpIkouL.Controls.Add(this.btnDeleteLineRight);
@@ -1159,9 +1161,9 @@ namespace Site7DbEditor
             this.grpIkouL.Controls.Add(this.lblLinePrefixHeader);
             this.grpIkouL.Controls.Add(this.dgvIkouL);
             this.grpIkouL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIkouL.Location = new System.Drawing.Point(0, 0);
+            this.grpIkouL.Location = new System.Drawing.Point(396, 3);
             this.grpIkouL.Name = "grpIkouL";
-            this.grpIkouL.Width = 422;
+            this.grpIkouL.Size = new System.Drawing.Size(422, 320);
             this.grpIkouL.TabIndex = 1;
             this.grpIkouL.TabStop = false;
             this.grpIkouL.Text = "遺構L";
@@ -1392,29 +1394,36 @@ namespace Site7DbEditor
             this.btnAddIkouL.UseVisualStyleBackColor = false;
 
             // grpPrecs
+            this.grpPrecs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpPrecs.Controls.Add(this.dgvPrecs);
-            this.grpPrecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpPrecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpPrecs.Location = new System.Drawing.Point(0, 0);
+            this.grpPrecs.Location = new System.Drawing.Point(821, 3);
             this.grpPrecs.Name = "grpPrecs";
+            this.grpPrecs.Size = new System.Drawing.Size(467, 320);
             this.grpPrecs.TabIndex = 2;
             this.grpPrecs.TabStop = false;
             this.grpPrecs.Text = "構成座標";
 
             // dgvPrecs
+            this.dgvPrecs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPrecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPrecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvPrecs.Location = new System.Drawing.Point(6, 22);
             this.dgvPrecs.Name = "dgvPrecs";
             this.dgvPrecs.RowTemplate.Height = 25;
+            this.dgvPrecs.Size = new System.Drawing.Size(455, 292);
             this.dgvPrecs.TabIndex = 0;
 
             // pnlPrecsRight
+            this.pnlPrecsRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlPrecsRight.Controls.Add(this.grpCoordValue);
-            this.pnlPrecsRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlPrecsRight.Location = new System.Drawing.Point(0, 0);
+            this.pnlPrecsRight.Location = new System.Drawing.Point(1291, 3);
             this.pnlPrecsRight.Name = "pnlPrecsRight";
-            this.pnlPrecsRight.Width = 178;
+            this.pnlPrecsRight.Size = new System.Drawing.Size(178, 320);
             this.pnlPrecsRight.TabIndex = 3;
 
             // grpCoordValue
