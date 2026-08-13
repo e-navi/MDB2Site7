@@ -69,6 +69,12 @@ namespace Site7DbEditor
             dgvPrecs.DataBindingComplete += (s, e) => ApplyDgvPrecsColumns();
             dgvIbutu.DataBindingComplete += (s, e) => ApplyDgvIbutuColumns();
             dgvKikai.DataBindingComplete += (s, e) => ApplyDgvKikaiColumns();
+
+            // tabIkou の Dock z-order 確定
+            pnlPrecsRight.SendToBack();
+            grpIkouMaster.SendToBack();
+            grpIkouL.SendToBack();
+            grpPrecs.BringToFront();
         }
 
         private void ApplyDgvIkouColumns()

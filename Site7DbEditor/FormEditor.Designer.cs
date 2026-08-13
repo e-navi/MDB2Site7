@@ -948,9 +948,9 @@ namespace Site7DbEditor
             // tabIkou
             this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
             this.tabIkou.Controls.Add(this.grpPrecs);
-            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Controls.Add(this.grpIkouL);
             this.tabIkou.Controls.Add(this.grpIkouMaster);
+            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Location = new System.Drawing.Point(4, 26);
             this.tabIkou.Name = "tabIkou";
             this.tabIkou.Padding = new System.Windows.Forms.Padding(3);
