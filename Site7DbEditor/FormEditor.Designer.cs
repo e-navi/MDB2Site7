@@ -945,13 +945,22 @@ namespace Site7DbEditor
             this.tabControlData.Size = new System.Drawing.Size(1480, 356);
             this.tabControlData.TabIndex = 0;
 
+            // pnlTestFill
+            this.pnlTestFill = new System.Windows.Forms.Panel();
+            this.pnlTestFill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.pnlTestFill.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTestFill.Location = new System.Drawing.Point(3, 3);
+            this.pnlTestFill.Name = "pnlTestFill";
+            this.pnlTestFill.Size = new System.Drawing.Size(1466, 320);
+
             // tabIkou
             this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabIkou.Controls.Add(this.pnlIbutuRight);
-            this.tabIkou.Controls.Add(this.grpPrecs);
-            this.tabIkou.Controls.Add(this.grpIkouL);
-            this.tabIkou.Controls.Add(this.grpIkouMaster);
-            this.tabIkou.Controls.Add(this.pnlPrecsRight);
+            this.tabIkou.Controls.Add(this.pnlTestFill);
+            // this.tabIkou.Controls.Add(this.pnlIbutuRight);
+            // this.tabIkou.Controls.Add(this.grpPrecs);
+            // this.tabIkou.Controls.Add(this.grpIkouL);
+            // this.tabIkou.Controls.Add(this.grpIkouMaster);
+            // this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Location = new System.Drawing.Point(4, 26);
             this.tabIkou.Name = "tabIkou";
             this.tabIkou.Padding = new System.Windows.Forms.Padding(3);
@@ -2273,5 +2282,6 @@ namespace Site7DbEditor
         public System.Windows.Forms.Button btnDetachBottomPanel;
         public System.Windows.Forms.Panel panelBottomContent;
         private System.Windows.Forms.Label lblLeftTitle;
+        public System.Windows.Forms.Panel pnlTestFill;
     }
 }

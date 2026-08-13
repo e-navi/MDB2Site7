@@ -63,19 +63,18 @@ namespace Site7DbEditor
             {
                 tabIkou.Resize += (s, e) => UpdateDebugLayoutInfo();
             }
-            if (pnlPrecsRight != null)
+            if (pnlTestFill != null)
             {
-                pnlPrecsRight.Resize += (s, e) => UpdateDebugLayoutInfo();
-                pnlPrecsRight.LocationChanged += (s, e) => UpdateDebugLayoutInfo();
+                pnlTestFill.Resize += (s, e) => UpdateDebugLayoutInfo();
             }
             UpdateDebugLayoutInfo();
         }
 
         public void UpdateDebugLayoutInfo()
         {
-            if (tabIkou != null && pnlPrecsRight != null && pnlIbutuRight != null)
+            if (tabIkou != null && pnlTestFill != null)
             {
-                string info = $"tabIkou[{tabIkou.Width}x{tabIkou.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} ({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) {pnlPrecsRight.Width}x{pnlPrecsRight.Height}] | pnlIbutuRight[Dock:{pnlIbutuRight.Dock} ({pnlIbutuRight.Location.X},{pnlIbutuRight.Location.Y}) {pnlIbutuRight.Width}x{pnlIbutuRight.Height}]";
+                string info = $"tabIkou[{tabIkou.Width}x{tabIkou.Height}] | pnlTestFill[Dock:{pnlTestFill.Dock} Pos:({pnlTestFill.Location.X},{pnlTestFill.Location.Y}) Size:{pnlTestFill.Width}x{pnlTestFill.Height}]";
                 if (lblBottomTitle != null)
                 {
                     lblBottomTitle.Text = info;
