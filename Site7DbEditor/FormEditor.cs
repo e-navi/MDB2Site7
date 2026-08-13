@@ -460,6 +460,7 @@ namespace Site7DbEditor
             if (isFloatingForm)
             {
                 Point targetLoc = panelMapRight.PointToScreen(Point.Empty);
+                Size targetSize = panelMapRight.Size;
                 if (targetLoc.X <= 0 || targetLoc.Y <= 0)
                 {
                     targetLoc = new Point(this.Location.X + this.Width - 300, this.Location.Y + 100);
@@ -497,6 +498,10 @@ namespace Site7DbEditor
 
                 _dlgBth.StartPosition = FormStartPosition.Manual;
                 _dlgBth.Location = targetLoc;
+                if (targetSize.Width > 0 && targetSize.Height > 0)
+                {
+                    _dlgBth.Size = targetSize;
+                }
 
                 _ucCtrl.Dock = DockStyle.Fill;
                 if (!_dlgBth.panelBthContent.Controls.Contains(_ucCtrl))
@@ -543,6 +548,7 @@ namespace Site7DbEditor
             if (isFloatingForm)
             {
                 Point targetLoc = panelMapLeft.PointToScreen(Point.Empty);
+                Size targetSize = panelMapLeft.Size;
                 if (targetLoc.X <= 0 || targetLoc.Y <= 0)
                 {
                     targetLoc = new Point(this.Location.X + 20, this.Location.Y + 80);
@@ -576,6 +582,10 @@ namespace Site7DbEditor
 
                 _dlgLeft.StartPosition = FormStartPosition.Manual;
                 _dlgLeft.Location = targetLoc;
+                if (targetSize.Width > 0 && targetSize.Height > 0)
+                {
+                    _dlgLeft.Size = targetSize;
+                }
                 _dlgLeft.Show(this);
             }
             else
@@ -614,12 +624,11 @@ namespace Site7DbEditor
 
             if (isFloatingForm)
             {
-                int targetWidth = this.ClientSize.Width;
-                int targetHeight = 362; // 30px header + 332px content
                 Point targetLoc = panelMapBottom.PointToScreen(Point.Empty);
+                Size targetSize = panelMapBottom.Size;
                 if (targetLoc.X <= 0 || targetLoc.Y <= 0)
                 {
-                    targetLoc = new Point(this.Location.X, this.Location.Y + this.Height - targetHeight);
+                    targetLoc = new Point(this.Location.X, this.Location.Y + this.Height - 300);
                 }
 
                 if (_dlgBottom == null || _dlgBottom.IsDisposed)
@@ -651,9 +660,12 @@ namespace Site7DbEditor
                 }
 
                 _dlgBottom.StartPosition = FormStartPosition.Manual;
-                _dlgBottom.Show(this);
                 _dlgBottom.Location = targetLoc;
-                _dlgBottom.ClientSize = new System.Drawing.Size(targetWidth, targetHeight);
+                if (targetSize.Width > 0 && targetSize.Height > 0)
+                {
+                    _dlgBottom.Size = targetSize;
+                }
+                _dlgBottom.Show(this);
             }
             else
             {

@@ -398,6 +398,7 @@ namespace Site7DbEditor
             this.panelMapHeader.Name = "panelMapHeader";
             this.panelMapHeader.Size = new System.Drawing.Size(1480, 35);
             this.panelMapHeader.TabIndex = 0;
+            this.panelMapHeader.Visible = false;
 
             // lblMapTitle
             this.lblMapTitle.AutoSize = true;
