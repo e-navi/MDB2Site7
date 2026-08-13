@@ -947,8 +947,8 @@ namespace Site7DbEditor
 
             // tabIkou
             this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Controls.Add(this.grpPrecs);
+            this.tabIkou.Controls.Add(this.pnlPrecsRight);
             this.tabIkou.Controls.Add(this.grpIkouL);
             this.tabIkou.Controls.Add(this.grpIkouMaster);
             this.tabIkou.Location = new System.Drawing.Point(4, 26);
@@ -959,8 +959,7 @@ namespace Site7DbEditor
             this.tabIkou.Text = "遺構";
 
             // grpIkouMaster
-            this.grpIkouMaster.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpIkouMaster.Dock = System.Windows.Forms.DockStyle.Left;
             this.grpIkouMaster.Controls.Add(this.btnDeleteIkouRight);
             this.grpIkouMaster.Controls.Add(this.btnUpdateIkouRight);
             this.grpIkouMaster.Controls.Add(this.btnAddIkou);
@@ -1139,8 +1138,7 @@ namespace Site7DbEditor
             this.btnAddIkou.UseVisualStyleBackColor = false;
 
             // grpIkouL
-            this.grpIkouL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpIkouL.Dock = System.Windows.Forms.DockStyle.Left;
             this.grpIkouL.Controls.Add(this.btnAddIkouL);
             this.grpIkouL.Controls.Add(this.btnUpdateLineRight);
             this.grpIkouL.Controls.Add(this.btnDeleteLineRight);
@@ -1394,32 +1392,27 @@ namespace Site7DbEditor
             this.btnAddIkouL.UseVisualStyleBackColor = false;
 
             // grpPrecs
-            this.grpPrecs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpPrecs.Controls.Add(this.dgvPrecs);
+            this.grpPrecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpPrecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpPrecs.Location = new System.Drawing.Point(827, 3);
+            this.grpPrecs.Location = new System.Drawing.Point(821, 3);
             this.grpPrecs.Name = "grpPrecs";
-            this.grpPrecs.Size = new System.Drawing.Size(460, 320);
+            this.grpPrecs.Size = new System.Drawing.Size(470, 320);
             this.grpPrecs.TabIndex = 2;
             this.grpPrecs.TabStop = false;
             this.grpPrecs.Text = "構成座標";
 
             // dgvPrecs
-            this.dgvPrecs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPrecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPrecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvPrecs.Location = new System.Drawing.Point(6, 22);
             this.dgvPrecs.Name = "dgvPrecs";
             this.dgvPrecs.RowTemplate.Height = 25;
-            this.dgvPrecs.Size = new System.Drawing.Size(448, 290);
+            this.dgvPrecs.Size = new System.Drawing.Size(458, 292);
             this.dgvPrecs.TabIndex = 0;
 
             // pnlPrecsRight
-            this.pnlPrecsRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlPrecsRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlPrecsRight.Controls.Add(this.grpCoordValue);
             this.pnlPrecsRight.Location = new System.Drawing.Point(1291, 3);
             this.pnlPrecsRight.Name = "pnlPrecsRight";
