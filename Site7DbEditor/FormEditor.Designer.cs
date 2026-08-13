@@ -1169,7 +1169,7 @@ namespace Site7DbEditor
             this.grpIkouL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
             this.grpIkouL.Location = new System.Drawing.Point(396, 3);
             this.grpIkouL.Name = "grpIkouL";
-            this.grpIkouL.Size = new System.Drawing.Size(422, 320);
+            this.grpIkouL.Size = new System.Drawing.Size(472, 320);
             this.grpIkouL.TabIndex = 1;
             this.grpIkouL.TabStop = false;
             this.grpIkouL.Text = "遺構L";
@@ -1181,7 +1181,7 @@ namespace Site7DbEditor
             this.dgvIkouL.Location = new System.Drawing.Point(6, 22);
             this.dgvIkouL.Name = "dgvIkouL";
             this.dgvIkouL.RowTemplate.Height = 25;
-            this.dgvIkouL.Size = new System.Drawing.Size(235, 290);
+            this.dgvIkouL.Size = new System.Drawing.Size(285, 290);
             this.dgvIkouL.TabIndex = 0;
 
             // lblLinePrefixHeader ("接頭")
@@ -1189,7 +1189,7 @@ namespace Site7DbEditor
             this.lblLinePrefixHeader.AutoSize = true;
             this.lblLinePrefixHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblLinePrefixHeader.ForeColor = System.Drawing.Color.White;
-            this.lblLinePrefixHeader.Location = new System.Drawing.Point(247, 20);
+            this.lblLinePrefixHeader.Location = new System.Drawing.Point(297, 20);
             this.lblLinePrefixHeader.Name = "lblLinePrefixHeader";
             this.lblLinePrefixHeader.Size = new System.Drawing.Size(31, 15);
             this.lblLinePrefixHeader.TabIndex = 1;
@@ -1200,7 +1200,7 @@ namespace Site7DbEditor
             this.lblLineSeqHeader.AutoSize = true;
             this.lblLineSeqHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblLineSeqHeader.ForeColor = System.Drawing.Color.White;
-            this.lblLineSeqHeader.Location = new System.Drawing.Point(316, 20);
+            this.lblLineSeqHeader.Location = new System.Drawing.Point(366, 20);
             this.lblLineSeqHeader.Name = "lblLineSeqHeader";
             this.lblLineSeqHeader.Size = new System.Drawing.Size(31, 15);
             this.lblLineSeqHeader.TabIndex = 2;
@@ -1212,7 +1212,7 @@ namespace Site7DbEditor
             this.cmbLineKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.cmbLineKind.ForeColor = System.Drawing.Color.White;
             this.cmbLineKind.FormattingEnabled = true;
-            this.cmbLineKind.Location = new System.Drawing.Point(247, 38);
+            this.cmbLineKind.Location = new System.Drawing.Point(297, 38);
             this.cmbLineKind.Name = "cmbLineKind";
             this.cmbLineKind.Size = new System.Drawing.Size(65, 25);
             this.cmbLineKind.TabIndex = 3;
@@ -1221,7 +1221,7 @@ namespace Site7DbEditor
             this.txtLineNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.txtLineNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
             this.txtLineNum.ForeColor = System.Drawing.Color.Black;
-            this.txtLineNum.Location = new System.Drawing.Point(316, 38);
+            this.txtLineNum.Location = new System.Drawing.Point(366, 38);
             this.txtLineNum.MaxLength = 3;
             this.txtLineNum.Name = "txtLineNum";
             this.txtLineNum.Size = new System.Drawing.Size(34, 24);
@@ -1233,7 +1233,7 @@ namespace Site7DbEditor
             this.btnLineMaxPlusOne.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLineMaxPlusOne.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnLineMaxPlusOne.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.btnLineMaxPlusOne.Location = new System.Drawing.Point(354, 37);
+            this.btnLineMaxPlusOne.Location = new System.Drawing.Point(404, 37);
             this.btnLineMaxPlusOne.Margin = new System.Windows.Forms.Padding(0);
             this.btnLineMaxPlusOne.Name = "btnLineMaxPlusOne";
             this.btnLineMaxPlusOne.Padding = new System.Windows.Forms.Padding(0);
@@ -1247,7 +1247,7 @@ namespace Site7DbEditor
             this.lblLineNameTitle.AutoSize = true;
             this.lblLineNameTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblLineNameTitle.ForeColor = System.Drawing.Color.White;
-            this.lblLineNameTitle.Location = new System.Drawing.Point(247, 77);
+            this.lblLineNameTitle.Location = new System.Drawing.Point(297, 77);
             this.lblLineNameTitle.Name = "lblLineNameTitle";
             this.lblLineNameTitle.Size = new System.Drawing.Size(35, 17);
             this.lblLineNameTitle.TabIndex = 6;
@@ -1259,7 +1259,7 @@ namespace Site7DbEditor
             this.lblLineNameVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblLineNameVal.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblLineNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblLineNameVal.Location = new System.Drawing.Point(287, 74);
+            this.lblLineNameVal.Location = new System.Drawing.Point(337, 74);
             this.lblLineNameVal.Name = "lblLineNameVal";
             this.lblLineNameVal.Size = new System.Drawing.Size(127, 25);
             this.lblLineNameVal.TabIndex = 7;
@@ -1271,7 +1271,7 @@ namespace Site7DbEditor
             this.rdoLineOpen.Checked = true;
             this.rdoLineOpen.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.rdoLineOpen.ForeColor = System.Drawing.Color.White;
-            this.rdoLineOpen.Location = new System.Drawing.Point(247, 110);
+            this.rdoLineOpen.Location = new System.Drawing.Point(297, 110);
             this.rdoLineOpen.Name = "rdoLineOpen";
             this.rdoLineOpen.Size = new System.Drawing.Size(50, 19);
             this.rdoLineOpen.TabIndex = 8;
@@ -1284,7 +1284,7 @@ namespace Site7DbEditor
             this.rdoLineClosed.AutoSize = true;
             this.rdoLineClosed.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.rdoLineClosed.ForeColor = System.Drawing.Color.White;
-            this.rdoLineClosed.Location = new System.Drawing.Point(301, 110);
+            this.rdoLineClosed.Location = new System.Drawing.Point(351, 110);
             this.rdoLineClosed.Name = "rdoLineClosed";
             this.rdoLineClosed.Size = new System.Drawing.Size(50, 19);
             this.rdoLineClosed.TabIndex = 9;
@@ -1296,7 +1296,7 @@ namespace Site7DbEditor
             this.rdoLinePoint.AutoSize = true;
             this.rdoLinePoint.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.rdoLinePoint.ForeColor = System.Drawing.Color.White;
-            this.rdoLinePoint.Location = new System.Drawing.Point(355, 110);
+            this.rdoLinePoint.Location = new System.Drawing.Point(405, 110);
             this.rdoLinePoint.Name = "rdoLinePoint";
             this.rdoLinePoint.Size = new System.Drawing.Size(65, 19);
             this.rdoLinePoint.TabIndex = 10;
@@ -1308,7 +1308,7 @@ namespace Site7DbEditor
             this.lblLineLayer.AutoSize = true;
             this.lblLineLayer.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblLineLayer.ForeColor = System.Drawing.Color.White;
-            this.lblLineLayer.Location = new System.Drawing.Point(247, 145);
+            this.lblLineLayer.Location = new System.Drawing.Point(297, 145);
             this.lblLineLayer.Name = "lblLineLayer";
             this.lblLineLayer.Size = new System.Drawing.Size(41, 15);
             this.lblLineLayer.TabIndex = 11;
@@ -1320,7 +1320,7 @@ namespace Site7DbEditor
             this.cmbLineLayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLineLayer.ForeColor = System.Drawing.Color.White;
             this.cmbLineLayer.FormattingEnabled = true;
-            this.cmbLineLayer.Location = new System.Drawing.Point(287, 142);
+            this.cmbLineLayer.Location = new System.Drawing.Point(337, 142);
             this.cmbLineLayer.Name = "cmbLineLayer";
             this.cmbLineLayer.Size = new System.Drawing.Size(127, 25);
             this.cmbLineLayer.TabIndex = 12;
@@ -1330,7 +1330,7 @@ namespace Site7DbEditor
             this.lblLineIkouMaster.AutoSize = true;
             this.lblLineIkouMaster.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblLineIkouMaster.ForeColor = System.Drawing.Color.White;
-            this.lblLineIkouMaster.Location = new System.Drawing.Point(247, 177);
+            this.lblLineIkouMaster.Location = new System.Drawing.Point(297, 177);
             this.lblLineIkouMaster.Name = "lblLineIkouMaster";
             this.lblLineIkouMaster.Size = new System.Drawing.Size(31, 15);
             this.lblLineIkouMaster.TabIndex = 13;
@@ -1342,7 +1342,7 @@ namespace Site7DbEditor
             this.cmbLineIkouMaster.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLineIkouMaster.ForeColor = System.Drawing.Color.White;
             this.cmbLineIkouMaster.FormattingEnabled = true;
-            this.cmbLineIkouMaster.Location = new System.Drawing.Point(287, 174);
+            this.cmbLineIkouMaster.Location = new System.Drawing.Point(337, 174);
             this.cmbLineIkouMaster.Name = "cmbLineIkouMaster";
             this.cmbLineIkouMaster.Size = new System.Drawing.Size(127, 25);
             this.cmbLineIkouMaster.TabIndex = 14;
@@ -1353,7 +1353,7 @@ namespace Site7DbEditor
             this.btnLineSetPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLineSetPos.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnLineSetPos.ForeColor = System.Drawing.Color.White;
-            this.btnLineSetPos.Location = new System.Drawing.Point(247, 218);
+            this.btnLineSetPos.Location = new System.Drawing.Point(297, 218);
             this.btnLineSetPos.Name = "btnLineSetPos";
             this.btnLineSetPos.Size = new System.Drawing.Size(167, 28);
             this.btnLineSetPos.TabIndex = 15;
@@ -1366,7 +1366,7 @@ namespace Site7DbEditor
             this.btnDeleteLineRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteLineRight.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDeleteLineRight.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteLineRight.Location = new System.Drawing.Point(247, 284);
+            this.btnDeleteLineRight.Location = new System.Drawing.Point(297, 284);
             this.btnDeleteLineRight.Name = "btnDeleteLineRight";
             this.btnDeleteLineRight.Size = new System.Drawing.Size(50, 28);
             this.btnDeleteLineRight.TabIndex = 13;
@@ -1379,7 +1379,7 @@ namespace Site7DbEditor
             this.btnUpdateLineRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateLineRight.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnUpdateLineRight.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdateLineRight.Location = new System.Drawing.Point(301, 284);
+            this.btnUpdateLineRight.Location = new System.Drawing.Point(351, 284);
             this.btnUpdateLineRight.Name = "btnUpdateLineRight";
             this.btnUpdateLineRight.Size = new System.Drawing.Size(50, 28);
             this.btnUpdateLineRight.TabIndex = 14;
@@ -1392,7 +1392,7 @@ namespace Site7DbEditor
             this.btnAddIkouL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddIkouL.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnAddIkouL.ForeColor = System.Drawing.Color.White;
-            this.btnAddIkouL.Location = new System.Drawing.Point(355, 284);
+            this.btnAddIkouL.Location = new System.Drawing.Point(405, 284);
             this.btnAddIkouL.Name = "btnAddIkouL";
             this.btnAddIkouL.Size = new System.Drawing.Size(59, 28);
             this.btnAddIkouL.TabIndex = 15;
@@ -1405,9 +1405,9 @@ namespace Site7DbEditor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpPrecs.Controls.Add(this.dgvPrecs);
             this.grpPrecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpPrecs.Location = new System.Drawing.Point(821, 3);
+            this.grpPrecs.Location = new System.Drawing.Point(871, 3);
             this.grpPrecs.Name = "grpPrecs";
-            this.grpPrecs.Size = new System.Drawing.Size(467, 320);
+            this.grpPrecs.Size = new System.Drawing.Size(417, 320);
             this.grpPrecs.TabIndex = 2;
             this.grpPrecs.TabStop = false;
             this.grpPrecs.Text = "構成座標";

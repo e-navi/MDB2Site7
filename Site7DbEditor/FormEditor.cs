@@ -142,9 +142,9 @@ namespace Site7DbEditor
             var colName = dgvIkouL.Columns["Name"];
             if (colName != null) { colName.DisplayIndex = 1; colName.HeaderText = "線名"; colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
             var colMode = dgvIkouL.Columns["Mode"];
-            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 45; }
+            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 55; }
             var colLayer = dgvIkouL.Columns["Layer"];
-            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 50; }
+            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 60; }
         }
 
         private void ApplyDgvPrecsColumns()
@@ -243,6 +243,7 @@ namespace Site7DbEditor
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 45, 66);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(0, 180, 216);
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
 
             dgv.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 38);
             dgv.DefaultCellStyle.ForeColor = Color.White;
