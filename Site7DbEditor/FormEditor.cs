@@ -2348,13 +2348,11 @@ namespace Site7DbEditor {
             var itemMove = new ToolStripMenuItem("頂点移動");
             itemMove.Click += (s, e) => {
                 SelectVertex(line, vertexIndex);
-                chkScreenInput.Checked = true;
-                MessageBox.Show($"[頂点移動] 移動先の座標をマップ上でクリックして設定してください。", "頂点移動", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
 
             var itemDelete = new ToolStripMenuItem("頂点削除");
             itemDelete.Click += (s, e) => {
-                DeleteVertex(line, vertexIndex);
+                SelectVertex(line, vertexIndex);
             };
 
             var itemSelect = new ToolStripMenuItem("選択");
@@ -2383,21 +2381,6 @@ namespace Site7DbEditor {
                 txtCoordZ.Text = pt.Z.ToString("F3");
             }
             picMapCanvas.Invalidate();
-        }
-
-        private void DeleteVertex(IkouLModel line, int vertexIndex) {
-            var points = SqliteManager.ParsePrecsText(line.Precs);
-            if (vertexIndex >= 0 && vertexIndex < points.Count) {
-                var confirm = MessageBox.Show($"頂点 (PID: {points[vertexIndex].Pid}) を削除してもよろしいですか？", "頂点削除の確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (confirm == DialogResult.Yes) {
-                    points.RemoveAt(vertexIndex);
-                    line.Precs = SqliteManager.FormatPrecsText(points);
-                    dgvPrecs.DataSource = new BindingList<IkouPointRecord>(points);
-                    dgvPrecs.Refresh();
-                    dgvPrecs_CellValueChanged(this, new DataGridViewCellEventArgs(0, 0));
-                    picMapCanvas.Invalidate();
-                }
-            }
         }
 
         private static void SetCurrentRowSafe(DataGridView dgv, int rowIndex) {
