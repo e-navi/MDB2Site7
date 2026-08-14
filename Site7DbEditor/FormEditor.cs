@@ -1059,6 +1059,8 @@ namespace Site7DbEditor {
         }
 
         private void dgvPrecs_SelectionChanged(object? sender, EventArgs e) {
+            if (_isUpdatingSelection)
+                return;
             try {
                 if (dgvPrecs.SelectedRows.Count > 0 && dgvPrecs.SelectedRows[0].Index >= 0) {
                     _selectedPointIndex = dgvPrecs.SelectedRows[0].Index;
@@ -2377,19 +2379,25 @@ namespace Site7DbEditor {
         }
 
         private void SelectVertex(IkouLModel line, int vertexIndex) {
-            _selectedIkouId = line.Id;
-            _selectedLid = line.Lid;
-            _selectedPointIndex = vertexIndex;
+            _isUpdatingSelection = true;
+            try {
+                _selectedIkouId = line.Id;
+                _selectedLid = line.Lid;
+                _selectedPointIndex = vertexIndex;
 
-            var points = SqliteManager.ParsePrecsText(line.Precs);
-            if (vertexIndex >= 0 && vertexIndex < points.Count) {
-                SetCurrentRowSafe(dgvPrecs, vertexIndex);
-                var pt = points[vertexIndex];
-                txtCoordX.Text = pt.X.ToString("F3");
-                txtCoordY.Text = pt.Y.ToString("F3");
-                txtCoordZ.Text = pt.Z.ToString("F3");
+                var points = SqliteManager.ParsePrecsText(line.Precs);
+                if (vertexIndex >= 0 && vertexIndex < points.Count) {
+                    SetCurrentRowSafe(dgvPrecs, vertexIndex);
+                    _selectedPointIndex = vertexIndex;
+                    var pt = points[vertexIndex];
+                    txtCoordX.Text = pt.X.ToString("F3");
+                    txtCoordY.Text = pt.Y.ToString("F3");
+                    txtCoordZ.Text = pt.Z.ToString("F3");
+                }
+            } finally {
+                _isUpdatingSelection = false;
+                picMapCanvas.Invalidate();
             }
-            picMapCanvas.Invalidate();
         }
 
         private static void SetCurrentRowSafe(DataGridView dgv, int rowIndex) {
