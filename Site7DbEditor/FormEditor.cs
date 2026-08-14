@@ -829,6 +829,8 @@ namespace Site7DbEditor {
         }
 
         private ToolTip? _layerToolTip;
+        private ToolTip _mapHoverToolTip = new ToolTip();
+        private string _lastMapHoverToolTipText = "";
 
         public void UpdateLayerCheckboxColors() {
             if (_chkMapLayers == null)
@@ -2021,6 +2023,8 @@ namespace Site7DbEditor {
                     _vc.LastMousePosMap = e.Location;
                     picMapCanvas.Invalidate();
                 }
+            } else {
+                UpdateMapMouseHoverToolTip(e.Location);
             }
         }
 
@@ -2037,6 +2041,137 @@ namespace Site7DbEditor {
                 int dy = e.Y - _vc.MouseDownPosMap.Y;
                 if (Math.Abs(dx) <= 5 && Math.Abs(dy) <= 5) {
                     PerformMapHitTest(e.Location);
+                }
+            }
+        }
+
+        private void UpdateMapMouseHoverToolTip(Point mousePos) {
+            if (picMapCanvas.Width <= 0 || picMapCanvas.Height <= 0)
+                return;
+
+            PointF ToCanvasPointLocal(double surveyX, double surveyY) {
+                return _vc.ToCanvasPoint(surveyX, surveyY, picMapCanvas.Size);
+            }
+
+            double thresholdPx = 12.0;
+            int activeTab = tabControlData.SelectedIndex; // 0: 遺構, 1: 遺物, 2: 基準点
+            string toolTipText = "";
+
+            if (activeTab == 0 && chkShowIkou.Checked) {
+                var spline = new Xross_Spline();
+                IkouLModel? bestLine = null;
+                int bestVertexIndex = -1;
+                bool isVertexHit = false;
+                double minDist = thresholdPx;
+
+                foreach (var line in _db.IkouLList) {
+                    int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                    if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
+                        continue;
+
+                    var pts = SqliteManager.ParsePrecsText(line.Precs);
+                    if (pts.Count == 0)
+                        continue;
+
+                    // 1. 頂点（Vertex）判定
+                    for (int i = 0; i < pts.Count; i++) {
+                        PointF vp = ToCanvasPointLocal(pts[i].X, pts[i].Y);
+                        double vd = Math.Sqrt((vp.X - mousePos.X) * (vp.X - mousePos.X) + (vp.Y - mousePos.Y) * (vp.Y - mousePos.Y));
+                        if (vd < minDist) {
+                            minDist = vd;
+                            bestLine = line;
+                            bestVertexIndex = i;
+                            isVertexHit = true;
+                        }
+                    }
+
+                    // 2. 線上（Segment）判定（頂点でヒットしていない場合）
+                    if (!isVertexHit) {
+                        PointF[] screenPts;
+                        if (chkShowCurve.Checked && pts.Count >= 3) {
+                            var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
+                            screenPts = curve.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
+                        } else {
+                            screenPts = pts.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
+                        }
+
+                        for (int i = 0; i < screenPts.Length - 1; i++) {
+                            double sd = EditorMapViewController.DistanceToLineSegment(mousePos, screenPts[i], screenPts[i + 1]);
+                            if (sd < minDist) {
+                                minDist = sd;
+                                bestLine = line;
+                                isVertexHit = false;
+                            }
+                        }
+                    }
+                }
+
+                if (bestLine != null) {
+                    var ikouMaster = _db.IkouList.FirstOrDefault(i => i.Id == bestLine.Id);
+                    string ikouName = ikouMaster?.Name ?? $"ID:{bestLine.Id}";
+                    string lineName = string.IsNullOrEmpty(bestLine.Name) ? $"LID:{bestLine.Lid}" : bestLine.Name;
+
+                    if (isVertexHit && bestVertexIndex >= 0) {
+                        var pts = SqliteManager.ParsePrecsText(bestLine.Precs);
+                        if (bestVertexIndex < pts.Count) {
+                            var pt = pts[bestVertexIndex];
+                            string pidText = pt.Pid > 0 ? pt.Pid.ToString() : (bestVertexIndex + 1).ToString();
+                            toolTipText = $"[頂点] 遺構: {ikouName} / 線: {lineName} (PID: {pidText}  X: {pt.X:F3}, Y: {pt.Y:F3}, Z: {pt.Z:F3})";
+                        }
+                    } else {
+                        toolTipText = $"[線上] 遺構: {ikouName} / 線: {lineName}";
+                    }
+                }
+            } else if (activeTab == 1 && chkShowIbutu.Checked) {
+                IbutuModel? bestIbutu = null;
+                double minDist = thresholdPx;
+
+                foreach (var ibutu in _db.IbutuList) {
+                    PointF p = ToCanvasPointLocal(ibutu.X, ibutu.Y);
+                    double d = Math.Sqrt((p.X - mousePos.X) * (p.X - mousePos.X) + (p.Y - mousePos.Y) * (p.Y - mousePos.Y));
+                    if (d < minDist) {
+                        minDist = d;
+                        bestIbutu = ibutu;
+                    }
+                }
+
+                if (bestIbutu != null) {
+                    string syubetu = string.IsNullOrEmpty(bestIbutu.Syubetu) ? "遺物" : bestIbutu.Syubetu;
+                    string noText = bestIbutu.No > 0 ? $"No.{bestIbutu.No}" : "";
+                    string chikuText = string.IsNullOrEmpty(bestIbutu.Chiku) ? "" : $"[{bestIbutu.Chiku}] ";
+                    string souiText = string.IsNullOrEmpty(bestIbutu.Soui) ? "" : $"[{bestIbutu.Soui}] ";
+                    toolTipText = $"[遺物] {chikuText}{souiText}{syubetu} {noText} (X: {bestIbutu.X:F3}, Y: {bestIbutu.Y:F3}, Z: {bestIbutu.Z:F3})";
+                }
+            } else if (activeTab == 2 && chkShowKikai.Checked) {
+                KikaiModel? bestKikai = null;
+                double minDist = thresholdPx;
+
+                foreach (var kikai in _db.KikaiList) {
+                    PointF p = ToCanvasPointLocal(kikai.X, kikai.Y);
+                    double d = Math.Sqrt((p.X - mousePos.X) * (p.X - mousePos.X) + (p.Y - mousePos.Y) * (p.Y - mousePos.Y));
+                    if (d < minDist) {
+                        minDist = d;
+                        bestKikai = kikai;
+                    }
+                }
+
+                if (bestKikai != null) {
+                    string kName = string.IsNullOrEmpty(bestKikai.Name) ? $"K{bestKikai.Id}" : bestKikai.Name;
+                    toolTipText = $"[基準点] {kName} (X: {bestKikai.X:F3}, Y: {bestKikai.Y:F3}, Z: {bestKikai.Z:F3})";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(toolTipText)) {
+                picMapCanvas.Cursor = Cursors.Hand;
+                if (_lastMapHoverToolTipText != toolTipText) {
+                    _lastMapHoverToolTipText = toolTipText;
+                    _mapHoverToolTip.SetToolTip(picMapCanvas, toolTipText);
+                }
+            } else {
+                picMapCanvas.Cursor = Cursors.Default;
+                if (!string.IsNullOrEmpty(_lastMapHoverToolTipText)) {
+                    _lastMapHoverToolTipText = "";
+                    _mapHoverToolTip.SetToolTip(picMapCanvas, null);
                 }
             }
         }
