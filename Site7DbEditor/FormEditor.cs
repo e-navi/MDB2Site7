@@ -2330,8 +2330,7 @@ namespace Site7DbEditor {
                     dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pointsForLine);
 
                     if (isVertexHit && bestVertexIndex >= 0 && bestVertexIndex < pointsForLine.Count) {
-                        _selectedPointIndex = bestVertexIndex;
-                        SetCurrentRowSafe(dgvPrecs, bestVertexIndex);
+                        SelectVertex(bestLine, bestVertexIndex);
 
                         // 選択中の遺構線の頂点(〇)をクリックした際にポップアップメニューを表示
                         ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
