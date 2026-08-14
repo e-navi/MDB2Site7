@@ -15,2092 +15,2273 @@ namespace Site7DbEditor
 
         #region Windows Form Designer generated code
 
-        private void InitializeComponent()
-        {
-            this.panelHeader = new System.Windows.Forms.Panel();
-            this.lblHeaderTitle = new System.Windows.Forms.Label();
-            this.lblSubHeader = new System.Windows.Forms.Label();
-            this.btnOpenDb = new System.Windows.Forms.Button();
-            this.cmbQuickDbSelect = new System.Windows.Forms.ComboBox();
-            this.lblQuickDb = new System.Windows.Forms.Label();
-            this.btnSaveDb = new System.Windows.Forms.Button();
-            this.lblDbStatus = new System.Windows.Forms.Label();
-
-            this.panelMapArea = new System.Windows.Forms.Panel();
-            this.panelMapBottom = new System.Windows.Forms.Panel();
-            this.panelBottomHeader = new System.Windows.Forms.Panel();
-            this.lblBottomTitle = new System.Windows.Forms.Label();
-            this.btnDetachBottomPanel = new System.Windows.Forms.Button();
-            this.panelBottomContent = new System.Windows.Forms.Panel();
-            this.panelMapHeader = new System.Windows.Forms.Panel();
-            this.btnDetachLeftPanel = new System.Windows.Forms.Button();
-            this.lblMapTitle = new System.Windows.Forms.Label();
-            this.btnResetMapZoom = new System.Windows.Forms.Button();
-            this.panelMapLeft = new System.Windows.Forms.Panel();
-            this.panelLeftHeader = new System.Windows.Forms.Panel();
-            this.lblLeftTitle = new System.Windows.Forms.Label();
-            this.panelLeftContent = new System.Windows.Forms.Panel();
-            this.panelMapRight = new System.Windows.Forms.Panel();
-            this.panelRightHeader = new System.Windows.Forms.Panel();
-            this.lblRightTitle = new System.Windows.Forms.Label();
-            this.btnDetachWindow = new System.Windows.Forms.Button();
-            this.panelRightContent = new System.Windows.Forms.Panel();
-            this.btnBgSettings = new System.Windows.Forms.Button();
-            this.btnEnvSettings = new System.Windows.Forms.Button();
-            this.btnUndo = new System.Windows.Forms.Button();
-            this.btnRedo = new System.Windows.Forms.Button();
-            this.lblIkouLayerGrpHeader = new System.Windows.Forms.Label();
-            this.chkLayer01 = new System.Windows.Forms.CheckBox();
-            this.chkLayer02 = new System.Windows.Forms.CheckBox();
-            this.chkLayer03 = new System.Windows.Forms.CheckBox();
-            this.chkLayer04 = new System.Windows.Forms.CheckBox();
-            this.chkLayer05 = new System.Windows.Forms.CheckBox();
-            this.chkLayer06 = new System.Windows.Forms.CheckBox();
-            this.chkLayer07 = new System.Windows.Forms.CheckBox();
-            this.chkLayer08 = new System.Windows.Forms.CheckBox();
-            this.chkLayer09 = new System.Windows.Forms.CheckBox();
-            this.chkLayer10 = new System.Windows.Forms.CheckBox();
-            this.chkLayer11 = new System.Windows.Forms.CheckBox();
-            this.chkLayer12 = new System.Windows.Forms.CheckBox();
-            this.chkLayer13 = new System.Windows.Forms.CheckBox();
-            this.chkLayer14 = new System.Windows.Forms.CheckBox();
-            this.chkLayer15 = new System.Windows.Forms.CheckBox();
-            this.chkLayer16 = new System.Windows.Forms.CheckBox();
-            this.btnLayerAllOn = new System.Windows.Forms.Button();
-            this.btnLayerAllOff = new System.Windows.Forms.Button();
-            this.btnLayerSettings = new System.Windows.Forms.Button();
-            this.btnBatchUpdateModal = new System.Windows.Forms.Button();
-            this.lblEntityNameHeader = new System.Windows.Forms.Label();
-            this.chkShowIbutuName = new System.Windows.Forms.CheckBox();
-            this.chkShowIkouName = new System.Windows.Forms.CheckBox();
-            this.chkShowKikaiName = new System.Windows.Forms.CheckBox();
-            this.chkShowIkou = new System.Windows.Forms.CheckBox();
-            this.chkShowIbutu = new System.Windows.Forms.CheckBox();
-            this.chkShowKikai = new System.Windows.Forms.CheckBox();
-            this.chkShowCurve = new System.Windows.Forms.CheckBox();
-            this.chkShowGrid = new System.Windows.Forms.CheckBox();
-            this.chkColorByIkou = new System.Windows.Forms.CheckBox();
-            this.picMapCanvas = new System.Windows.Forms.PictureBox();
-
-            // Bottom Splitter Container (Left: Tabbed Data Grids, Right: Edit SidePanel)
-            this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
-            this.tabControlData = new System.Windows.Forms.TabControl();
-            this.grpIkouMaster = new System.Windows.Forms.GroupBox();
-            this.dgvIkou = new System.Windows.Forms.DataGridView();
-            this.lblPrefixHeader = new System.Windows.Forms.Label();
-            this.lblSeqHeader = new System.Windows.Forms.Label();
-            this.cmbIkouKind = new System.Windows.Forms.ComboBox();
-            this.txtIkouNum = new System.Windows.Forms.TextBox();
-            this.btnMaxPlusOne = new System.Windows.Forms.Button();
-            this.lblIkouNameTitle = new System.Windows.Forms.Label();
-            this.lblIkouNameVal = new System.Windows.Forms.Label();
-            this.btnSetPos = new System.Windows.Forms.Button();
-            this.btnView3D = new System.Windows.Forms.Button();
-            this.btnDeleteIkouRight = new System.Windows.Forms.Button();
-            this.btnUpdateIkouRight = new System.Windows.Forms.Button();
-            this.btnAddIkou = new System.Windows.Forms.Button();
-            this.grpIkouL = new System.Windows.Forms.GroupBox();
-            this.dgvIkouL = new System.Windows.Forms.DataGridView();
-
-            this.grpPrecs = new System.Windows.Forms.GroupBox();
-            this.dgvPrecs = new System.Windows.Forms.DataGridView();
-
-            this.tabIbutu = new System.Windows.Forms.TabPage();
-            this.dgvIbutu = new System.Windows.Forms.DataGridView();
-            this.grpIbutuRecord = new System.Windows.Forms.GroupBox();
-            this.lblFilterIbutu = new System.Windows.Forms.Label();
-            this.txtFilterIbutu = new System.Windows.Forms.TextBox();
-            this.lblIbutuChiku = new System.Windows.Forms.Label();
-            this.cmbIbutuChiku = new System.Windows.Forms.ComboBox();
-            this.lblIbutuSoui = new System.Windows.Forms.Label();
-            this.cmbIbutuSoui = new System.Windows.Forms.ComboBox();
-            this.lblIbutuSyubetu = new System.Windows.Forms.Label();
-            this.cmbIbutuSyubetu = new System.Windows.Forms.ComboBox();
-            this.lblIbutuLayer = new System.Windows.Forms.Label();
-            this.cmbIbutuLayer = new System.Windows.Forms.ComboBox();
-            this.lblIbutuNo = new System.Windows.Forms.Label();
-            this.txtIbutuNo = new System.Windows.Forms.TextBox();
-            this.chkIbutuAutoInc = new System.Windows.Forms.CheckBox();
-            this.btnIbutuMaxPlusOne = new System.Windows.Forms.Button();
-
-            this.tabKikai = new System.Windows.Forms.TabPage();
-            this.dgvKikai = new System.Windows.Forms.DataGridView();
-            this.grpKikaiRecord = new System.Windows.Forms.GroupBox();
-            this.lblKikaiName = new System.Windows.Forms.Label();
-            this.txtKikaiName = new System.Windows.Forms.TextBox();
-            this.lblKikaiLayer = new System.Windows.Forms.Label();
-            this.cmbKikaiLayer = new System.Windows.Forms.ComboBox();
-            this.grpPointGuidance = new System.Windows.Forms.GroupBox();
-            this.chkPointGuidance = new System.Windows.Forms.CheckBox();
-
-            this.tabLayer = new System.Windows.Forms.TabPage();
-            this.dgvLayer = new System.Windows.Forms.DataGridView();
-            this.btnAddLayer = new System.Windows.Forms.Button();
-            this.btnDeleteLayer = new System.Windows.Forms.Button();
-
-            this.tabBatchUpdate = new System.Windows.Forms.TabPage();
-            this.grpBatchOptions = new System.Windows.Forms.GroupBox();
-            this.lblBatchTable = new System.Windows.Forms.Label();
-            this.cmbBatchTable = new System.Windows.Forms.ComboBox();
-            this.lblBatchFilter = new System.Windows.Forms.Label();
-            this.cmbBatchFilterCol = new System.Windows.Forms.ComboBox();
-            this.cmbBatchFilterOp = new System.Windows.Forms.ComboBox();
-            this.txtBatchFilterVal = new System.Windows.Forms.TextBox();
-            this.lblBatchUpdate = new System.Windows.Forms.Label();
-            this.cmbBatchUpdateCol = new System.Windows.Forms.ComboBox();
-            this.txtBatchUpdateVal = new System.Windows.Forms.TextBox();
-            this.btnBatchExecute = new System.Windows.Forms.Button();
-            this.lblBatchPreviewCount = new System.Windows.Forms.Label();
-            this.dgvBatchPreview = new System.Windows.Forms.DataGridView();
-
-            // Ikou Master Controls
-            this.lblPrefixHeader = new System.Windows.Forms.Label();
-            this.lblSeqHeader = new System.Windows.Forms.Label();
-            this.cmbIkouKind = new System.Windows.Forms.ComboBox();
-            this.txtIkouNum = new System.Windows.Forms.TextBox();
-            this.lblIkouNameTitle = new System.Windows.Forms.Label();
-            this.lblIkouNameVal = new System.Windows.Forms.Label();
-            this.btnMaxPlusOne = new System.Windows.Forms.Button();
-            this.btnSetPos = new System.Windows.Forms.Button();
-            this.btnView3D = new System.Windows.Forms.Button();
-            this.btnUpdateIkouRight = new System.Windows.Forms.Button();
-            this.btnDeleteIkouRight = new System.Windows.Forms.Button();
-            this.btnAddIkou = new System.Windows.Forms.Button();
-
-            this.cmbLineKind = new System.Windows.Forms.ComboBox();
-            this.txtLineNum = new System.Windows.Forms.TextBox();
-            this.btnLineMaxPlusOne = new System.Windows.Forms.Button();
-            this.lblLinePrefixHeader = new System.Windows.Forms.Label();
-            this.lblLineSeqHeader = new System.Windows.Forms.Label();
-            this.lblLineNameTitle = new System.Windows.Forms.Label();
-            this.lblLineNameVal = new System.Windows.Forms.Label();
-            this.rdoLineOpen = new System.Windows.Forms.RadioButton();
-            this.rdoLineClosed = new System.Windows.Forms.RadioButton();
-            this.rdoLinePoint = new System.Windows.Forms.RadioButton();
-            this.lblLineLayer = new System.Windows.Forms.Label();
-            this.cmbLineLayer = new System.Windows.Forms.ComboBox();
-            this.lblLineIkouMaster = new System.Windows.Forms.Label();
-            this.cmbLineIkouMaster = new System.Windows.Forms.ComboBox();
-            this.btnLineSetPos = new System.Windows.Forms.Button();
-            this.btnDeleteLineRight = new System.Windows.Forms.Button();
-            this.btnUpdateLineRight = new System.Windows.Forms.Button();
-            this.btnAddIkouL = new System.Windows.Forms.Button();
-
-            this.grpPointEdit = new System.Windows.Forms.GroupBox();
-            this.lblCoordX = new System.Windows.Forms.Label();
-            this.txtCoordX = new System.Windows.Forms.TextBox();
-            this.lblCoordY = new System.Windows.Forms.Label();
-            this.txtCoordY = new System.Windows.Forms.TextBox();
-            this.lblCoordZ = new System.Windows.Forms.Label();
-            this.txtCoordZ = new System.Windows.Forms.TextBox();
-            this.chkScreenInput = new System.Windows.Forms.CheckBox();
-            this.btnUpdatePointRight = new System.Windows.Forms.Button();
-            this.btnDeletePointRight = new System.Windows.Forms.Button();
-            this.btnAddPointRight = new System.Windows.Forms.Button();
-            this.grpCoordValue = new System.Windows.Forms.GroupBox();
-            this.pnlPrecsRight = new System.Windows.Forms.Panel();
-            this.pnlIbutuRight = new System.Windows.Forms.Panel();
-            this.pnlKikaiRight = new System.Windows.Forms.Panel();
-            this.tabIkou = new System.Windows.Forms.TabPage();
-
-            this.panelHeader.SuspendLayout();
-            this.panelMapArea.SuspendLayout();
-            this.panelMapHeader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picMapCanvas)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottom)).BeginInit();
-            this.splitContainerBottom.Panel1.SuspendLayout();
-            this.splitContainerBottom.Panel2.SuspendLayout();
-            this.splitContainerBottom.SuspendLayout();
-            this.tabControlData.SuspendLayout();
-            this.tabControlData.SuspendLayout();
-            this.grpIkouMaster.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIkou)).BeginInit();
-            this.grpIkouL.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIkouL)).BeginInit();
-            this.grpPrecs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPrecs)).BeginInit();
-            this.tabIbutu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIbutu)).BeginInit();
-            this.tabKikai.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvKikai)).BeginInit();
-            this.tabLayer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLayer)).BeginInit();
-            this.tabBatchUpdate.SuspendLayout();
-            this.grpBatchOptions.SuspendLayout();
-            this.grpPointEdit.SuspendLayout();
-            this.SuspendLayout();
-
+        private void InitializeComponent() {
+            panelHeader = new Panel();
+            lblDbStatus = new Label();
+            btnSaveDb = new Button();
+            lblQuickDb = new Label();
+            cmbQuickDbSelect = new ComboBox();
+            btnOpenDb = new Button();
+            lblSubHeader = new Label();
+            lblHeaderTitle = new Label();
+            panelMapArea = new Panel();
+            picMapCanvas = new PictureBox();
+            panelMapRight = new Panel();
+            panelRightContent = new Panel();
+            panelRightHeader = new Panel();
+            lblRightTitle = new Label();
+            btnDetachWindow = new Button();
+            panelMapHeader = new Panel();
+            lblMapTitle = new Label();
+            btnResetMapZoom = new Button();
+            panelMapLeft = new Panel();
+            panelLeftContent = new Panel();
+            btnBgSettings = new Button();
+            btnEnvSettings = new Button();
+            btnUndo = new Button();
+            btnRedo = new Button();
+            lblIkouLayerGrpHeader = new Label();
+            chkLayer01 = new CheckBox();
+            chkLayer02 = new CheckBox();
+            chkLayer03 = new CheckBox();
+            chkLayer04 = new CheckBox();
+            chkLayer05 = new CheckBox();
+            chkLayer06 = new CheckBox();
+            chkLayer07 = new CheckBox();
+            chkLayer08 = new CheckBox();
+            chkLayer09 = new CheckBox();
+            chkLayer10 = new CheckBox();
+            chkLayer11 = new CheckBox();
+            chkLayer12 = new CheckBox();
+            chkLayer13 = new CheckBox();
+            chkLayer14 = new CheckBox();
+            chkLayer15 = new CheckBox();
+            chkLayer16 = new CheckBox();
+            btnLayerAllOn = new Button();
+            btnLayerAllOff = new Button();
+            btnLayerSettings = new Button();
+            btnBatchUpdateModal = new Button();
+            lblEntityNameHeader = new Label();
+            chkShowIbutu = new CheckBox();
+            chkShowIbutuName = new CheckBox();
+            chkShowIkou = new CheckBox();
+            chkShowIkouName = new CheckBox();
+            chkShowKikai = new CheckBox();
+            chkShowKikaiName = new CheckBox();
+            panelLeftHeader = new Panel();
+            lblLeftTitle = new Label();
+            btnDetachLeftPanel = new Button();
+            panelMapBottom = new Panel();
+            panelBottomContent = new Panel();
+            splitContainerBottom = new SplitContainer();
+            tabControlData = new TabControl();
+            tabIkou = new TabPage();
+            grpPrecs = new GroupBox();
+            dgvPrecs = new DataGridView();
+            grpIkouL = new GroupBox();
+            btnAddIkouL = new Button();
+            btnUpdateLineRight = new Button();
+            btnDeleteLineRight = new Button();
+            btnLineSetPos = new Button();
+            cmbLineIkouMaster = new ComboBox();
+            lblLineIkouMaster = new Label();
+            cmbLineLayer = new ComboBox();
+            lblLineLayer = new Label();
+            rdoLinePoint = new RadioButton();
+            rdoLineClosed = new RadioButton();
+            rdoLineOpen = new RadioButton();
+            lblLineNameTitle = new Label();
+            lblLineNameVal = new Label();
+            btnLineMaxPlusOne = new Button();
+            txtLineNum = new TextBox();
+            cmbLineKind = new ComboBox();
+            lblLineSeqHeader = new Label();
+            lblLinePrefixHeader = new Label();
+            dgvIkouL = new DataGridView();
+            grpIkouMaster = new GroupBox();
+            btnDeleteIkouRight = new Button();
+            btnUpdateIkouRight = new Button();
+            btnAddIkou = new Button();
+            btnSetPos = new Button();
+            btnView3D = new Button();
+            lblIkouNameTitle = new Label();
+            lblIkouNameVal = new Label();
+            btnMaxPlusOne = new Button();
+            txtIkouNum = new TextBox();
+            cmbIkouKind = new ComboBox();
+            lblSeqHeader = new Label();
+            lblPrefixHeader = new Label();
+            dgvIkou = new DataGridView();
+            pnlPrecsRight = new Panel();
+            grpCoordValue = new GroupBox();
+            lblCoordX = new Label();
+            txtCoordX = new TextBox();
+            lblCoordY = new Label();
+            txtCoordY = new TextBox();
+            lblCoordZ = new Label();
+            txtCoordZ = new TextBox();
+            chkScreenInput = new CheckBox();
+            btnDeletePointRight = new Button();
+            btnUpdatePointRight = new Button();
+            btnAddPointRight = new Button();
+            tabIbutu = new TabPage();
+            dgvIbutu = new DataGridView();
+            pnlIbutuRight = new Panel();
+            grpIbutuRecord = new GroupBox();
+            lblFilterIbutu = new Label();
+            txtFilterIbutu = new TextBox();
+            lblIbutuChiku = new Label();
+            cmbIbutuChiku = new ComboBox();
+            lblIbutuSoui = new Label();
+            cmbIbutuSoui = new ComboBox();
+            lblIbutuSyubetu = new Label();
+            cmbIbutuSyubetu = new ComboBox();
+            lblIbutuLayer = new Label();
+            cmbIbutuLayer = new ComboBox();
+            lblIbutuNo = new Label();
+            txtIbutuNo = new TextBox();
+            chkIbutuAutoInc = new CheckBox();
+            btnIbutuMaxPlusOne = new Button();
+            tabKikai = new TabPage();
+            dgvKikai = new DataGridView();
+            pnlKikaiRight = new Panel();
+            grpKikaiRecord = new GroupBox();
+            lblKikaiName = new Label();
+            txtKikaiName = new TextBox();
+            lblKikaiLayer = new Label();
+            cmbKikaiLayer = new ComboBox();
+            grpPointGuidance = new GroupBox();
+            chkPointGuidance = new CheckBox();
+            panelBottomHeader = new Panel();
+            lblBottomTitle = new Label();
+            btnDetachBottomPanel = new Button();
+            chkShowCurve = new CheckBox();
+            chkShowGrid = new CheckBox();
+            chkColorByIkou = new CheckBox();
+            tabLayer = new TabPage();
+            btnDeleteLayer = new Button();
+            btnAddLayer = new Button();
+            dgvLayer = new DataGridView();
+            tabBatchUpdate = new TabPage();
+            dgvBatchPreview = new DataGridView();
+            grpBatchOptions = new GroupBox();
+            lblBatchPreviewCount = new Label();
+            btnBatchExecute = new Button();
+            txtBatchUpdateVal = new TextBox();
+            cmbBatchUpdateCol = new ComboBox();
+            lblBatchUpdate = new Label();
+            txtBatchFilterVal = new TextBox();
+            cmbBatchFilterOp = new ComboBox();
+            cmbBatchFilterCol = new ComboBox();
+            lblBatchFilter = new Label();
+            cmbBatchTable = new ComboBox();
+            lblBatchTable = new Label();
+            grpPointEdit = new GroupBox();
+            pnlTestFill = new Panel();
+            panelMainRight = new Panel();
+            panelStatus = new Panel();
+            panelMain1 = new Panel();
+            panelHeader.SuspendLayout();
+            panelMapArea.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picMapCanvas).BeginInit();
+            panelMapRight.SuspendLayout();
+            panelRightHeader.SuspendLayout();
+            panelMapHeader.SuspendLayout();
+            panelMapLeft.SuspendLayout();
+            panelLeftContent.SuspendLayout();
+            panelLeftHeader.SuspendLayout();
+            panelMapBottom.SuspendLayout();
+            panelBottomContent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerBottom).BeginInit();
+            splitContainerBottom.Panel1.SuspendLayout();
+            splitContainerBottom.SuspendLayout();
+            tabControlData.SuspendLayout();
+            tabIkou.SuspendLayout();
+            grpPrecs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvPrecs).BeginInit();
+            grpIkouL.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIkouL).BeginInit();
+            grpIkouMaster.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIkou).BeginInit();
+            pnlPrecsRight.SuspendLayout();
+            grpCoordValue.SuspendLayout();
+            tabIbutu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIbutu).BeginInit();
+            pnlIbutuRight.SuspendLayout();
+            grpIbutuRecord.SuspendLayout();
+            tabKikai.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvKikai).BeginInit();
+            pnlKikaiRight.SuspendLayout();
+            grpKikaiRecord.SuspendLayout();
+            grpPointGuidance.SuspendLayout();
+            panelBottomHeader.SuspendLayout();
+            tabLayer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvLayer).BeginInit();
+            tabBatchUpdate.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvBatchPreview).BeginInit();
+            grpBatchOptions.SuspendLayout();
+            panelMainRight.SuspendLayout();
+            panelMain1.SuspendLayout();
+            SuspendLayout();
             // 
             // panelHeader
             // 
-            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(28)))), ((int)(((byte)(46)))));
-            this.panelHeader.Controls.Add(this.lblDbStatus);
-            this.panelHeader.Controls.Add(this.btnSaveDb);
-            this.panelHeader.Controls.Add(this.lblQuickDb);
-            this.panelHeader.Controls.Add(this.cmbQuickDbSelect);
-            this.panelHeader.Controls.Add(this.btnOpenDb);
-            this.panelHeader.Controls.Add(this.lblSubHeader);
-            this.panelHeader.Controls.Add(this.lblHeaderTitle);
-            this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(1480, 75);
-            this.panelHeader.TabIndex = 0;
-
-            // lblHeaderTitle
-            this.lblHeaderTitle.AutoSize = true;
-            this.lblHeaderTitle.Font = new System.Drawing.Font("Yu Gothic UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblHeaderTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.lblHeaderTitle.Location = new System.Drawing.Point(15, 12);
-            this.lblHeaderTitle.Name = "lblHeaderTitle";
-            this.lblHeaderTitle.Size = new System.Drawing.Size(260, 25);
-            this.lblHeaderTitle.TabIndex = 0;
-            this.lblHeaderTitle.Text = "SITE7 SQLite Database Editor";
-
-            // lblSubHeader
-            this.lblSubHeader.AutoSize = true;
-            this.lblSubHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblSubHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(170)))), ((int)(((byte)(190)))));
-            this.lblSubHeader.Location = new System.Drawing.Point(16, 42);
-            this.lblSubHeader.Name = "lblSubHeader";
-            this.lblSubHeader.Size = new System.Drawing.Size(320, 15);
-            this.lblSubHeader.TabIndex = 1;
-            this.lblSubHeader.Text = "2D 測量図面 ＆ SQLite DB 連動統合エディタ";
-
-            // btnOpenDb
-            this.btnOpenDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnOpenDb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenDb.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnOpenDb.ForeColor = System.Drawing.Color.White;
-            this.btnOpenDb.Location = new System.Drawing.Point(360, 20);
-            this.btnOpenDb.Name = "btnOpenDb";
-            this.btnOpenDb.Size = new System.Drawing.Size(130, 35);
-            this.btnOpenDb.TabIndex = 2;
-            this.btnOpenDb.Text = "📂 DBフォルダ選択";
-            this.btnOpenDb.UseVisualStyleBackColor = false;
-
-            // lblQuickDb
-            this.lblQuickDb.AutoSize = true;
-            this.lblQuickDb.ForeColor = System.Drawing.Color.White;
-            this.lblQuickDb.Location = new System.Drawing.Point(505, 30);
-            this.lblQuickDb.Name = "lblQuickDb";
-            this.lblQuickDb.Size = new System.Drawing.Size(64, 15);
-            this.lblQuickDb.TabIndex = 3;
-            this.lblQuickDb.Text = "Quick Select:";
-
-            // cmbQuickDbSelect
-            this.cmbQuickDbSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbQuickDbSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbQuickDbSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbQuickDbSelect.ForeColor = System.Drawing.Color.White;
-            this.cmbQuickDbSelect.FormattingEnabled = true;
-            this.cmbQuickDbSelect.Location = new System.Drawing.Point(575, 26);
-            this.cmbQuickDbSelect.Name = "cmbQuickDbSelect";
-            this.cmbQuickDbSelect.Size = new System.Drawing.Size(240, 23);
-            this.cmbQuickDbSelect.TabIndex = 4;
-
-            // btnSaveDb
-            this.btnSaveDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSaveDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(176)))), ((int)(((byte)(0)))));
-            this.btnSaveDb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveDb.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSaveDb.ForeColor = System.Drawing.Color.Black;
-            this.btnSaveDb.Location = new System.Drawing.Point(1310, 20);
-            this.btnSaveDb.Name = "btnSaveDb";
-            this.btnSaveDb.Size = new System.Drawing.Size(155, 35);
-            this.btnSaveDb.TabIndex = 5;
-            this.btnSaveDb.Text = "💾 SQLite DB保存";
-            this.btnSaveDb.UseVisualStyleBackColor = false;
-
+            panelHeader.BackColor = Color.FromArgb(27, 28, 46);
+            panelHeader.Controls.Add(lblDbStatus);
+            panelHeader.Controls.Add(btnSaveDb);
+            panelHeader.Controls.Add(lblQuickDb);
+            panelHeader.Controls.Add(cmbQuickDbSelect);
+            panelHeader.Controls.Add(btnOpenDb);
+            panelHeader.Controls.Add(lblSubHeader);
+            panelHeader.Controls.Add(lblHeaderTitle);
+            panelHeader.Dock = DockStyle.Top;
+            panelHeader.Location = new Point(0, 0);
+            panelHeader.Name = "panelHeader";
+            panelHeader.Size = new Size(1520, 75);
+            panelHeader.TabIndex = 0;
+            // 
             // lblDbStatus
-            this.lblDbStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDbStatus.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblDbStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(183)))), ((int)(((byte)(3)))));
-            this.lblDbStatus.Location = new System.Drawing.Point(1085, 20);
-            this.lblDbStatus.Name = "lblDbStatus";
-            this.lblDbStatus.Size = new System.Drawing.Size(215, 35);
-            this.lblDbStatus.TabIndex = 6;
-            this.lblDbStatus.Text = "DB未読み込み";
-            this.lblDbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
             // 
-            // panelMapArea (Top Map View - Fill)
-            // Controls.Add 順序 (Dock レイアウト):
-            // WinForms の Dock 処理は最背面 (配列の後ろ / SendToBack) から順に領域を割り当てる。
-            // panelMapHeader (Top) → panelMapRight (Right) → panelMapLeft (Left) → picMapCanvas (Fill)
+            lblDbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblDbStatus.Font = new Font("Yu Gothic UI", 8.5F);
+            lblDbStatus.ForeColor = Color.FromArgb(255, 183, 3);
+            lblDbStatus.Location = new Point(1125, 20);
+            lblDbStatus.Name = "lblDbStatus";
+            lblDbStatus.Size = new Size(215, 35);
+            lblDbStatus.TabIndex = 6;
+            lblDbStatus.Text = "DB未読み込み";
+            lblDbStatus.TextAlign = ContentAlignment.MiddleRight;
             // 
-            this.panelMapArea.Controls.Add(this.picMapCanvas);
-            this.panelMapArea.Controls.Add(this.panelMapLeft);
-            this.panelMapArea.Controls.Add(this.panelMapRight);
-            this.panelMapArea.Controls.Add(this.panelMapHeader);
-            this.panelMapArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMapArea.Location = new System.Drawing.Point(0, 56);
-            this.panelMapArea.Name = "panelMapArea";
-            this.panelMapArea.Size = new System.Drawing.Size(1480, 414);
-            this.panelMapArea.TabIndex = 1;
-
+            // btnSaveDb
+            // 
+            btnSaveDb.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSaveDb.BackColor = Color.FromArgb(56, 176, 0);
+            btnSaveDb.FlatStyle = FlatStyle.Flat;
+            btnSaveDb.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold);
+            btnSaveDb.ForeColor = Color.Black;
+            btnSaveDb.Location = new Point(1350, 20);
+            btnSaveDb.Name = "btnSaveDb";
+            btnSaveDb.Size = new Size(155, 35);
+            btnSaveDb.TabIndex = 5;
+            btnSaveDb.Text = "💾 SQLite DB保存";
+            btnSaveDb.UseVisualStyleBackColor = false;
+            // 
+            // lblQuickDb
+            // 
+            lblQuickDb.AutoSize = true;
+            lblQuickDb.ForeColor = Color.White;
+            lblQuickDb.Location = new Point(505, 30);
+            lblQuickDb.Name = "lblQuickDb";
+            lblQuickDb.Size = new Size(58, 15);
+            lblQuickDb.TabIndex = 3;
+            lblQuickDb.Text = "現場選択:";
+            // 
+            // cmbQuickDbSelect
+            // 
+            cmbQuickDbSelect.BackColor = Color.FromArgb(43, 45, 66);
+            cmbQuickDbSelect.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbQuickDbSelect.FlatStyle = FlatStyle.Flat;
+            cmbQuickDbSelect.ForeColor = Color.White;
+            cmbQuickDbSelect.FormattingEnabled = true;
+            cmbQuickDbSelect.Location = new Point(575, 26);
+            cmbQuickDbSelect.Name = "cmbQuickDbSelect";
+            cmbQuickDbSelect.Size = new Size(240, 23);
+            cmbQuickDbSelect.TabIndex = 4;
+            // 
+            // btnOpenDb
+            // 
+            btnOpenDb.BackColor = Color.FromArgb(53, 55, 76);
+            btnOpenDb.FlatStyle = FlatStyle.Flat;
+            btnOpenDb.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            btnOpenDb.ForeColor = Color.White;
+            btnOpenDb.Location = new Point(360, 20);
+            btnOpenDb.Name = "btnOpenDb";
+            btnOpenDb.Size = new Size(130, 35);
+            btnOpenDb.TabIndex = 2;
+            btnOpenDb.Text = "📂 DBフォルダ選択";
+            btnOpenDb.UseVisualStyleBackColor = false;
+            // 
+            // lblSubHeader
+            // 
+            lblSubHeader.AutoSize = true;
+            lblSubHeader.Font = new Font("Yu Gothic UI", 9F);
+            lblSubHeader.ForeColor = Color.FromArgb(160, 170, 190);
+            lblSubHeader.Location = new Point(16, 42);
+            lblSubHeader.Name = "lblSubHeader";
+            lblSubHeader.Size = new Size(173, 15);
+            lblSubHeader.TabIndex = 1;
+            lblSubHeader.Text = "遺構平面 ＆ DB 連動統合エディタ";
+            // 
+            // lblHeaderTitle
+            // 
+            lblHeaderTitle.AutoSize = true;
+            lblHeaderTitle.Font = new Font("Yu Gothic UI", 14F, FontStyle.Bold);
+            lblHeaderTitle.ForeColor = Color.FromArgb(0, 180, 216);
+            lblHeaderTitle.Location = new Point(15, 12);
+            lblHeaderTitle.Name = "lblHeaderTitle";
+            lblHeaderTitle.Size = new Size(157, 25);
+            lblHeaderTitle.TabIndex = 0;
+            lblHeaderTitle.Text = "SITE7 遺構 Editor";
+            // 
+            // panelMapArea
+            // 
+            panelMapArea.Controls.Add(picMapCanvas);
+            panelMapArea.Controls.Add(panelMapRight);
+            panelMapArea.Controls.Add(panelMapHeader);
+            panelMapArea.Dock = DockStyle.Fill;
+            panelMapArea.Location = new Point(0, 0);
+            panelMapArea.Name = "panelMapArea";
+            panelMapArea.Size = new Size(1390, 495);
+            panelMapArea.TabIndex = 1;
+            // 
+            // picMapCanvas
+            // 
+            picMapCanvas.BackColor = Color.FromArgb(16, 16, 20);
+            picMapCanvas.Dock = DockStyle.Fill;
+            picMapCanvas.Location = new Point(0, 35);
+            picMapCanvas.Name = "picMapCanvas";
+            picMapCanvas.Size = new Size(1126, 460);
+            picMapCanvas.TabIndex = 2;
+            picMapCanvas.TabStop = false;
+            // 
+            // panelMapRight
+            // 
+            panelMapRight.BackColor = SystemColors.Control;
+            panelMapRight.Controls.Add(panelRightContent);
+            panelMapRight.Controls.Add(panelRightHeader);
+            panelMapRight.Dock = DockStyle.Right;
+            panelMapRight.Location = new Point(1126, 35);
+            panelMapRight.Name = "panelMapRight";
+            panelMapRight.Size = new Size(264, 460);
+            panelMapRight.TabIndex = 2;
+            // 
+            // panelRightContent
+            // 
+            panelRightContent.AutoScroll = true;
+            panelRightContent.Dock = DockStyle.Fill;
+            panelRightContent.Location = new Point(0, 30);
+            panelRightContent.Name = "panelRightContent";
+            panelRightContent.Size = new Size(264, 430);
+            panelRightContent.TabIndex = 0;
             // 
             // panelRightHeader
             // 
-            this.panelRightHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
-            this.panelRightHeader.Controls.Add(this.lblRightTitle);
-            this.panelRightHeader.Controls.Add(this.btnDetachWindow);
-            this.panelRightHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelRightHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelRightHeader.Name = "panelRightHeader";
-            this.panelRightHeader.Size = new System.Drawing.Size(264, 30);
-            this.panelRightHeader.TabIndex = 0;
-
-            this.lblRightTitle.AutoSize = true;
-            this.lblRightTitle.Font = new System.Drawing.Font("MS UI Gothic", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblRightTitle.ForeColor = System.Drawing.Color.White;
-            this.lblRightTitle.Location = new System.Drawing.Point(6, 8);
-            this.lblRightTitle.Name = "lblRightTitle";
-            this.lblRightTitle.Size = new System.Drawing.Size(120, 15);
-            this.lblRightTitle.Text = "📡 測量機器制御";
-
-            this.btnDetachWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDetachWindow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
-            this.btnDetachWindow.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDetachWindow.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnDetachWindow.ForeColor = System.Drawing.Color.White;
-            this.btnDetachWindow.Location = new System.Drawing.Point(195, 3);
-            this.btnDetachWindow.Name = "btnDetachWindow";
-            this.btnDetachWindow.Size = new System.Drawing.Size(64, 24);
-            this.btnDetachWindow.TabIndex = 1;
-            this.btnDetachWindow.Text = "↗ 分離";
-            this.btnDetachWindow.UseVisualStyleBackColor = false;
-
-            this.panelRightContent.AutoScroll = true;
-            this.panelRightContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelRightContent.Location = new System.Drawing.Point(0, 30);
-            this.panelRightContent.Name = "panelRightContent";
-            this.panelRightContent.Size = new System.Drawing.Size(264, 420);
-
-            this.panelMapRight.BackColor = System.Drawing.SystemColors.Control;
-            this.panelMapRight.Controls.Add(this.panelRightContent);
-            this.panelMapRight.Controls.Add(this.panelRightHeader);
-            this.panelMapRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelMapRight.Location = new System.Drawing.Point(1195, 0);
-            this.panelMapRight.Name = "panelMapRight";
-            this.panelMapRight.Size = new System.Drawing.Size(264, 450);
-            this.panelMapRight.TabIndex = 2;
-            this.panelMapRight.Visible = true;
-
+            panelRightHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelRightHeader.Controls.Add(lblRightTitle);
+            panelRightHeader.Controls.Add(btnDetachWindow);
+            panelRightHeader.Dock = DockStyle.Top;
+            panelRightHeader.Location = new Point(0, 0);
+            panelRightHeader.Name = "panelRightHeader";
+            panelRightHeader.Size = new Size(264, 30);
+            panelRightHeader.TabIndex = 0;
+            // 
+            // lblRightTitle
+            // 
+            lblRightTitle.AutoSize = true;
+            lblRightTitle.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            lblRightTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblRightTitle.Location = new Point(6, 8);
+            lblRightTitle.Name = "lblRightTitle";
+            lblRightTitle.Size = new Size(109, 13);
+            lblRightTitle.TabIndex = 0;
+            lblRightTitle.Text = "📡 測量機器制御";
+            // 
+            // btnDetachWindow
+            // 
+            btnDetachWindow.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachWindow.Dock = DockStyle.Right;
+            btnDetachWindow.FlatStyle = FlatStyle.Flat;
+            btnDetachWindow.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDetachWindow.ForeColor = Color.White;
+            btnDetachWindow.Location = new Point(200, 0);
+            btnDetachWindow.Name = "btnDetachWindow";
+            btnDetachWindow.Size = new Size(64, 30);
+            btnDetachWindow.TabIndex = 1;
+            btnDetachWindow.Text = "↗ 分離";
+            btnDetachWindow.UseVisualStyleBackColor = false;
+            // 
             // panelMapHeader
-            this.panelMapHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
-            this.panelMapHeader.Controls.Add(this.lblMapTitle);
-            this.panelMapHeader.Controls.Add(this.btnResetMapZoom);
-            this.panelMapHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelMapHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelMapHeader.Name = "panelMapHeader";
-            this.panelMapHeader.Size = new System.Drawing.Size(1480, 35);
-            this.panelMapHeader.TabIndex = 0;
-            this.panelMapHeader.Visible = false;
-
+            // 
+            panelMapHeader.BackColor = Color.FromArgb(30, 30, 38);
+            panelMapHeader.Controls.Add(lblMapTitle);
+            panelMapHeader.Controls.Add(btnResetMapZoom);
+            panelMapHeader.Dock = DockStyle.Top;
+            panelMapHeader.Location = new Point(0, 0);
+            panelMapHeader.Name = "panelMapHeader";
+            panelMapHeader.Size = new Size(1390, 35);
+            panelMapHeader.TabIndex = 0;
+            panelMapHeader.Visible = false;
+            // 
             // lblMapTitle
-            this.lblMapTitle.AutoSize = true;
-            this.lblMapTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblMapTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblMapTitle.Location = new System.Drawing.Point(12, 8);
-            this.lblMapTitle.Name = "lblMapTitle";
-            this.lblMapTitle.Size = new System.Drawing.Size(175, 17);
-            this.lblMapTitle.TabIndex = 0;
-            this.lblMapTitle.Text = "🗺 2D 測量平面図 (CAD表示)";
-
+            // 
+            lblMapTitle.AutoSize = true;
+            lblMapTitle.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblMapTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblMapTitle.Location = new Point(12, 8);
+            lblMapTitle.Name = "lblMapTitle";
+            lblMapTitle.Size = new Size(180, 17);
+            lblMapTitle.TabIndex = 0;
+            lblMapTitle.Text = "🗺 2D 測量平面図 (CAD表示)";
+            // 
             // btnResetMapZoom
-            this.btnResetMapZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnResetMapZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnResetMapZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetMapZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnResetMapZoom.ForeColor = System.Drawing.Color.White;
-            this.btnResetMapZoom.Location = new System.Drawing.Point(1350, 5);
-            this.btnResetMapZoom.Name = "btnResetMapZoom";
-            this.btnResetMapZoom.Size = new System.Drawing.Size(115, 26);
-            this.btnResetMapZoom.TabIndex = 1;
-            this.btnResetMapZoom.Text = "🔍 全体表示リセット";
-            this.btnResetMapZoom.UseVisualStyleBackColor = false;
-
-            // panelLeftHeader
-            this.panelLeftHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
-            this.panelLeftHeader.Controls.Add(this.lblLeftTitle);
-            this.panelLeftHeader.Controls.Add(this.btnDetachLeftPanel);
-            this.panelLeftHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelLeftHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelLeftHeader.Name = "panelLeftHeader";
-            this.panelLeftHeader.Size = new System.Drawing.Size(130, 30);
-            this.panelLeftHeader.TabIndex = 0;
-
-            // lblLeftTitle
-            this.lblLeftTitle.AutoSize = true;
-            this.lblLeftTitle.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblLeftTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblLeftTitle.Location = new System.Drawing.Point(4, 7);
-            this.lblLeftTitle.Name = "lblLeftTitle";
-            this.lblLeftTitle.Size = new System.Drawing.Size(56, 15);
-            this.lblLeftTitle.TabIndex = 1;
-            this.lblLeftTitle.Text = "⚙ レイヤ";
-
-            // btnDetachLeftPanel
-            this.btnDetachLeftPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDetachLeftPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
-            this.btnDetachLeftPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDetachLeftPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnDetachLeftPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDetachLeftPanel.Location = new System.Drawing.Point(63, 3);
-            this.btnDetachLeftPanel.Name = "btnDetachLeftPanel";
-            this.btnDetachLeftPanel.Size = new System.Drawing.Size(64, 24);
-            this.btnDetachLeftPanel.TabIndex = 0;
-            this.btnDetachLeftPanel.Text = "↗ 分離";
-            this.btnDetachLeftPanel.UseVisualStyleBackColor = false;
-
-            // panelLeftContent
-            this.panelLeftContent.AutoScroll = true;
-            this.panelLeftContent.Controls.Add(this.btnBgSettings);
-            this.panelLeftContent.Controls.Add(this.btnEnvSettings);
-            this.panelLeftContent.Controls.Add(this.btnUndo);
-            this.panelLeftContent.Controls.Add(this.btnRedo);
-            this.panelLeftContent.Controls.Add(this.lblIkouLayerGrpHeader);
-            this.panelLeftContent.Controls.Add(this.chkLayer01);
-            this.panelLeftContent.Controls.Add(this.chkLayer02);
-            this.panelLeftContent.Controls.Add(this.chkLayer03);
-            this.panelLeftContent.Controls.Add(this.chkLayer04);
-            this.panelLeftContent.Controls.Add(this.chkLayer05);
-            this.panelLeftContent.Controls.Add(this.chkLayer06);
-            this.panelLeftContent.Controls.Add(this.chkLayer07);
-            this.panelLeftContent.Controls.Add(this.chkLayer08);
-            this.panelLeftContent.Controls.Add(this.chkLayer09);
-            this.panelLeftContent.Controls.Add(this.chkLayer10);
-            this.panelLeftContent.Controls.Add(this.chkLayer11);
-            this.panelLeftContent.Controls.Add(this.chkLayer12);
-            this.panelLeftContent.Controls.Add(this.chkLayer13);
-            this.panelLeftContent.Controls.Add(this.chkLayer14);
-            this.panelLeftContent.Controls.Add(this.chkLayer15);
-            this.panelLeftContent.Controls.Add(this.chkLayer16);
-            this.panelLeftContent.Controls.Add(this.btnLayerAllOn);
-            this.panelLeftContent.Controls.Add(this.btnLayerAllOff);
-            this.panelLeftContent.Controls.Add(this.btnLayerSettings);
-            this.panelLeftContent.Controls.Add(this.btnBatchUpdateModal);
-            this.panelLeftContent.Controls.Add(this.lblEntityNameHeader);
-            this.panelLeftContent.Controls.Add(this.chkShowIbutu);
-            this.panelLeftContent.Controls.Add(this.chkShowIbutuName);
-            this.panelLeftContent.Controls.Add(this.chkShowIkou);
-            this.panelLeftContent.Controls.Add(this.chkShowIkouName);
-            this.panelLeftContent.Controls.Add(this.chkShowKikai);
-            this.panelLeftContent.Controls.Add(this.chkShowKikaiName);
-            this.panelLeftContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelLeftContent.Location = new System.Drawing.Point(0, 30);
-            this.panelLeftContent.Name = "panelLeftContent";
-            this.panelLeftContent.Size = new System.Drawing.Size(130, 375);
-            this.panelLeftContent.TabIndex = 1;
-
+            // 
+            btnResetMapZoom.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnResetMapZoom.BackColor = Color.FromArgb(53, 55, 76);
+            btnResetMapZoom.FlatStyle = FlatStyle.Flat;
+            btnResetMapZoom.Font = new Font("Yu Gothic UI", 8.5F);
+            btnResetMapZoom.ForeColor = Color.White;
+            btnResetMapZoom.Location = new Point(1260, 5);
+            btnResetMapZoom.Name = "btnResetMapZoom";
+            btnResetMapZoom.Size = new Size(115, 26);
+            btnResetMapZoom.TabIndex = 1;
+            btnResetMapZoom.Text = "🔍 全体表示リセット";
+            btnResetMapZoom.UseVisualStyleBackColor = false;
+            // 
             // panelMapLeft
-            this.panelMapLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(242)))));
-            this.panelMapLeft.Controls.Add(this.panelLeftContent);
-            this.panelMapLeft.Controls.Add(this.panelLeftHeader);
-            this.panelMapLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelMapLeft.Location = new System.Drawing.Point(0, 0);
-            this.panelMapLeft.Name = "panelMapLeft";
-            this.panelMapLeft.Size = new System.Drawing.Size(130, 405);
-            this.panelMapLeft.TabIndex = 1;
-
+            // 
+            panelMapLeft.BackColor = Color.FromArgb(240, 240, 242);
+            panelMapLeft.Controls.Add(panelLeftContent);
+            panelMapLeft.Controls.Add(panelLeftHeader);
+            panelMapLeft.Dock = DockStyle.Left;
+            panelMapLeft.Location = new Point(0, 0);
+            panelMapLeft.Name = "panelMapLeft";
+            panelMapLeft.Size = new Size(130, 857);
+            panelMapLeft.TabIndex = 1;
+            // 
+            // panelLeftContent
+            // 
+            panelLeftContent.AutoScroll = true;
+            panelLeftContent.Controls.Add(btnBgSettings);
+            panelLeftContent.Controls.Add(btnEnvSettings);
+            panelLeftContent.Controls.Add(btnUndo);
+            panelLeftContent.Controls.Add(btnRedo);
+            panelLeftContent.Controls.Add(lblIkouLayerGrpHeader);
+            panelLeftContent.Controls.Add(chkLayer01);
+            panelLeftContent.Controls.Add(chkLayer02);
+            panelLeftContent.Controls.Add(chkLayer03);
+            panelLeftContent.Controls.Add(chkLayer04);
+            panelLeftContent.Controls.Add(chkLayer05);
+            panelLeftContent.Controls.Add(chkLayer06);
+            panelLeftContent.Controls.Add(chkLayer07);
+            panelLeftContent.Controls.Add(chkLayer08);
+            panelLeftContent.Controls.Add(chkLayer09);
+            panelLeftContent.Controls.Add(chkLayer10);
+            panelLeftContent.Controls.Add(chkLayer11);
+            panelLeftContent.Controls.Add(chkLayer12);
+            panelLeftContent.Controls.Add(chkLayer13);
+            panelLeftContent.Controls.Add(chkLayer14);
+            panelLeftContent.Controls.Add(chkLayer15);
+            panelLeftContent.Controls.Add(chkLayer16);
+            panelLeftContent.Controls.Add(btnLayerAllOn);
+            panelLeftContent.Controls.Add(btnLayerAllOff);
+            panelLeftContent.Controls.Add(btnLayerSettings);
+            panelLeftContent.Controls.Add(btnBatchUpdateModal);
+            panelLeftContent.Controls.Add(lblEntityNameHeader);
+            panelLeftContent.Controls.Add(chkShowIbutu);
+            panelLeftContent.Controls.Add(chkShowIbutuName);
+            panelLeftContent.Controls.Add(chkShowIkou);
+            panelLeftContent.Controls.Add(chkShowIkouName);
+            panelLeftContent.Controls.Add(chkShowKikai);
+            panelLeftContent.Controls.Add(chkShowKikaiName);
+            panelLeftContent.Dock = DockStyle.Fill;
+            panelLeftContent.Location = new Point(0, 30);
+            panelLeftContent.Name = "panelLeftContent";
+            panelLeftContent.Size = new Size(130, 827);
+            panelLeftContent.TabIndex = 1;
+            // 
             // btnBgSettings
-            this.btnBgSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnBgSettings.Location = new System.Drawing.Point(6, 5);
-            this.btnBgSettings.Name = "btnBgSettings";
-            this.btnBgSettings.Size = new System.Drawing.Size(118, 23);
-            this.btnBgSettings.TabIndex = 0;
-            this.btnBgSettings.Text = "背景設定";
-            this.btnBgSettings.UseVisualStyleBackColor = true;
-
+            // 
+            btnBgSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnBgSettings.Location = new Point(6, 5);
+            btnBgSettings.Name = "btnBgSettings";
+            btnBgSettings.Size = new Size(118, 23);
+            btnBgSettings.TabIndex = 0;
+            btnBgSettings.Text = "背景設定";
+            btnBgSettings.UseVisualStyleBackColor = true;
+            // 
             // btnEnvSettings
-            this.btnEnvSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnEnvSettings.Location = new System.Drawing.Point(6, 30);
-            this.btnEnvSettings.Name = "btnEnvSettings";
-            this.btnEnvSettings.Size = new System.Drawing.Size(118, 23);
-            this.btnEnvSettings.TabIndex = 1;
-            this.btnEnvSettings.Text = "環境設定";
-            this.btnEnvSettings.UseVisualStyleBackColor = true;
-
+            // 
+            btnEnvSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnEnvSettings.Location = new Point(6, 30);
+            btnEnvSettings.Name = "btnEnvSettings";
+            btnEnvSettings.Size = new Size(118, 23);
+            btnEnvSettings.TabIndex = 1;
+            btnEnvSettings.Text = "環境設定";
+            btnEnvSettings.UseVisualStyleBackColor = true;
+            // 
             // btnUndo
-            this.btnUndo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnUndo.Location = new System.Drawing.Point(6, 55);
-            this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(57, 23);
-            this.btnUndo.TabIndex = 2;
-            this.btnUndo.Text = "Undo";
-            this.btnUndo.UseVisualStyleBackColor = true;
-
+            // 
+            btnUndo.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnUndo.Location = new Point(6, 55);
+            btnUndo.Name = "btnUndo";
+            btnUndo.Size = new Size(57, 23);
+            btnUndo.TabIndex = 2;
+            btnUndo.Text = "Undo";
+            btnUndo.UseVisualStyleBackColor = true;
+            // 
             // btnRedo
-            this.btnRedo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnRedo.Location = new System.Drawing.Point(67, 55);
-            this.btnRedo.Name = "btnRedo";
-            this.btnRedo.Size = new System.Drawing.Size(57, 23);
-            this.btnRedo.TabIndex = 3;
-            this.btnRedo.Text = "Redo";
-            this.btnRedo.UseVisualStyleBackColor = true;
-
+            // 
+            btnRedo.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnRedo.Location = new Point(67, 55);
+            btnRedo.Name = "btnRedo";
+            btnRedo.Size = new Size(57, 23);
+            btnRedo.TabIndex = 3;
+            btnRedo.Text = "Redo";
+            btnRedo.UseVisualStyleBackColor = true;
+            // 
             // lblIkouLayerGrpHeader
-            this.lblIkouLayerGrpHeader.AutoSize = true;
-            this.lblIkouLayerGrpHeader.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblIkouLayerGrpHeader.ForeColor = System.Drawing.Color.Red;
-            this.lblIkouLayerGrpHeader.Location = new System.Drawing.Point(6, 83);
-            this.lblIkouLayerGrpHeader.Name = "lblIkouLayerGrpHeader";
-            this.lblIkouLayerGrpHeader.Size = new System.Drawing.Size(76, 15);
-            this.lblIkouLayerGrpHeader.TabIndex = 4;
-            this.lblIkouLayerGrpHeader.Text = "遺構レイヤGRP";
-
+            // 
+            lblIkouLayerGrpHeader.AutoSize = true;
+            lblIkouLayerGrpHeader.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblIkouLayerGrpHeader.ForeColor = Color.Red;
+            lblIkouLayerGrpHeader.Location = new Point(6, 83);
+            lblIkouLayerGrpHeader.Name = "lblIkouLayerGrpHeader";
+            lblIkouLayerGrpHeader.Size = new Size(81, 15);
+            lblIkouLayerGrpHeader.TabIndex = 4;
+            lblIkouLayerGrpHeader.Text = "遺構レイヤGRP";
+            // 
             // chkLayer01
-            this.chkLayer01.AutoSize = true;
-            this.chkLayer01.Checked = true;
-            this.chkLayer01.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer01.ForeColor = System.Drawing.Color.Black;
-            this.chkLayer01.Location = new System.Drawing.Point(6, 101);
-            this.chkLayer01.Name = "chkLayer01";
-            this.chkLayer01.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer01.TabIndex = 5;
-            this.chkLayer01.Text = "L01";
-            this.chkLayer01.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer01.AutoSize = true;
+            chkLayer01.Checked = true;
+            chkLayer01.CheckState = CheckState.Checked;
+            chkLayer01.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer01.ForeColor = Color.Black;
+            chkLayer01.Location = new Point(6, 101);
+            chkLayer01.Name = "chkLayer01";
+            chkLayer01.Size = new Size(44, 19);
+            chkLayer01.TabIndex = 5;
+            chkLayer01.Text = "L01";
+            chkLayer01.UseVisualStyleBackColor = true;
+            // 
             // chkLayer02
-            this.chkLayer02.AutoSize = true;
-            this.chkLayer02.Checked = true;
-            this.chkLayer02.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer02.ForeColor = System.Drawing.Color.Red;
-            this.chkLayer02.Location = new System.Drawing.Point(6, 121);
-            this.chkLayer02.Name = "chkLayer02";
-            this.chkLayer02.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer02.TabIndex = 6;
-            this.chkLayer02.Text = "L02";
-            this.chkLayer02.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer02.AutoSize = true;
+            chkLayer02.Checked = true;
+            chkLayer02.CheckState = CheckState.Checked;
+            chkLayer02.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer02.ForeColor = Color.Red;
+            chkLayer02.Location = new Point(6, 121);
+            chkLayer02.Name = "chkLayer02";
+            chkLayer02.Size = new Size(46, 19);
+            chkLayer02.TabIndex = 6;
+            chkLayer02.Text = "L02";
+            chkLayer02.UseVisualStyleBackColor = true;
+            // 
             // chkLayer03
-            this.chkLayer03.AutoSize = true;
-            this.chkLayer03.Checked = true;
-            this.chkLayer03.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer03.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(0)))));
-            this.chkLayer03.Location = new System.Drawing.Point(6, 141);
-            this.chkLayer03.Name = "chkLayer03";
-            this.chkLayer03.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer03.TabIndex = 7;
-            this.chkLayer03.Text = "L03";
-            this.chkLayer03.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer03.AutoSize = true;
+            chkLayer03.Checked = true;
+            chkLayer03.CheckState = CheckState.Checked;
+            chkLayer03.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer03.ForeColor = Color.FromArgb(0, 180, 0);
+            chkLayer03.Location = new Point(6, 141);
+            chkLayer03.Name = "chkLayer03";
+            chkLayer03.Size = new Size(46, 19);
+            chkLayer03.TabIndex = 7;
+            chkLayer03.Text = "L03";
+            chkLayer03.UseVisualStyleBackColor = true;
+            // 
             // chkLayer04
-            this.chkLayer04.AutoSize = true;
-            this.chkLayer04.Checked = true;
-            this.chkLayer04.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer04.ForeColor = System.Drawing.Color.Blue;
-            this.chkLayer04.Location = new System.Drawing.Point(6, 161);
-            this.chkLayer04.Name = "chkLayer04";
-            this.chkLayer04.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer04.TabIndex = 8;
-            this.chkLayer04.Text = "L04";
-            this.chkLayer04.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer04.AutoSize = true;
+            chkLayer04.Checked = true;
+            chkLayer04.CheckState = CheckState.Checked;
+            chkLayer04.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer04.ForeColor = Color.Blue;
+            chkLayer04.Location = new Point(6, 161);
+            chkLayer04.Name = "chkLayer04";
+            chkLayer04.Size = new Size(46, 19);
+            chkLayer04.TabIndex = 8;
+            chkLayer04.Text = "L04";
+            chkLayer04.UseVisualStyleBackColor = true;
+            // 
             // chkLayer05
-            this.chkLayer05.AutoSize = true;
-            this.chkLayer05.Checked = true;
-            this.chkLayer05.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer05.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(180)))), ((int)(((byte)(0)))));
-            this.chkLayer05.Location = new System.Drawing.Point(6, 181);
-            this.chkLayer05.Name = "chkLayer05";
-            this.chkLayer05.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer05.TabIndex = 9;
-            this.chkLayer05.Text = "L05";
-            this.chkLayer05.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer05.AutoSize = true;
+            chkLayer05.Checked = true;
+            chkLayer05.CheckState = CheckState.Checked;
+            chkLayer05.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer05.ForeColor = Color.FromArgb(200, 180, 0);
+            chkLayer05.Location = new Point(6, 181);
+            chkLayer05.Name = "chkLayer05";
+            chkLayer05.Size = new Size(46, 19);
+            chkLayer05.TabIndex = 9;
+            chkLayer05.Text = "L05";
+            chkLayer05.UseVisualStyleBackColor = true;
+            // 
             // chkLayer06
-            this.chkLayer06.AutoSize = true;
-            this.chkLayer06.Checked = true;
-            this.chkLayer06.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer06.ForeColor = System.Drawing.Color.Magenta;
-            this.chkLayer06.Location = new System.Drawing.Point(6, 201);
-            this.chkLayer06.Name = "chkLayer06";
-            this.chkLayer06.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer06.TabIndex = 10;
-            this.chkLayer06.Text = "L06";
-            this.chkLayer06.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer06.AutoSize = true;
+            chkLayer06.Checked = true;
+            chkLayer06.CheckState = CheckState.Checked;
+            chkLayer06.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer06.ForeColor = Color.Magenta;
+            chkLayer06.Location = new Point(6, 201);
+            chkLayer06.Name = "chkLayer06";
+            chkLayer06.Size = new Size(46, 19);
+            chkLayer06.TabIndex = 10;
+            chkLayer06.Text = "L06";
+            chkLayer06.UseVisualStyleBackColor = true;
+            // 
             // chkLayer07
-            this.chkLayer07.AutoSize = true;
-            this.chkLayer07.Checked = true;
-            this.chkLayer07.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer07.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkLayer07.Location = new System.Drawing.Point(6, 221);
-            this.chkLayer07.Name = "chkLayer07";
-            this.chkLayer07.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer07.TabIndex = 11;
-            this.chkLayer07.Text = "L07";
-            this.chkLayer07.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer07.AutoSize = true;
+            chkLayer07.Checked = true;
+            chkLayer07.CheckState = CheckState.Checked;
+            chkLayer07.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer07.ForeColor = Color.DeepSkyBlue;
+            chkLayer07.Location = new Point(6, 221);
+            chkLayer07.Name = "chkLayer07";
+            chkLayer07.Size = new Size(45, 19);
+            chkLayer07.TabIndex = 11;
+            chkLayer07.Text = "L07";
+            chkLayer07.UseVisualStyleBackColor = true;
+            // 
             // chkLayer08
-            this.chkLayer08.AutoSize = true;
-            this.chkLayer08.Checked = true;
-            this.chkLayer08.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer08.ForeColor = System.Drawing.Color.DarkGray;
-            this.chkLayer08.Location = new System.Drawing.Point(6, 241);
-            this.chkLayer08.Name = "chkLayer08";
-            this.chkLayer08.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer08.TabIndex = 12;
-            this.chkLayer08.Text = "L08";
-            this.chkLayer08.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer08.AutoSize = true;
+            chkLayer08.Checked = true;
+            chkLayer08.CheckState = CheckState.Checked;
+            chkLayer08.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer08.ForeColor = Color.DarkGray;
+            chkLayer08.Location = new Point(6, 241);
+            chkLayer08.Name = "chkLayer08";
+            chkLayer08.Size = new Size(46, 19);
+            chkLayer08.TabIndex = 12;
+            chkLayer08.Text = "L08";
+            chkLayer08.UseVisualStyleBackColor = true;
+            // 
             // chkLayer09
-            this.chkLayer09.AutoSize = true;
-            this.chkLayer09.Checked = true;
-            this.chkLayer09.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer09.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))));
-            this.chkLayer09.Location = new System.Drawing.Point(66, 101);
-            this.chkLayer09.Name = "chkLayer09";
-            this.chkLayer09.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer09.TabIndex = 13;
-            this.chkLayer09.Text = "L09";
-            this.chkLayer09.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer09.AutoSize = true;
+            chkLayer09.Checked = true;
+            chkLayer09.CheckState = CheckState.Checked;
+            chkLayer09.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer09.ForeColor = Color.FromArgb(192, 0, 128);
+            chkLayer09.Location = new Point(66, 101);
+            chkLayer09.Name = "chkLayer09";
+            chkLayer09.Size = new Size(46, 19);
+            chkLayer09.TabIndex = 13;
+            chkLayer09.Text = "L09";
+            chkLayer09.UseVisualStyleBackColor = true;
+            // 
             // chkLayer10
-            this.chkLayer10.AutoSize = true;
-            this.chkLayer10.Checked = true;
-            this.chkLayer10.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(128)))), ((int)(((byte)(64)))));
-            this.chkLayer10.Location = new System.Drawing.Point(66, 121);
-            this.chkLayer10.Name = "chkLayer10";
-            this.chkLayer10.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer10.TabIndex = 14;
-            this.chkLayer10.Text = "L10";
-            this.chkLayer10.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer10.AutoSize = true;
+            chkLayer10.Checked = true;
+            chkLayer10.CheckState = CheckState.Checked;
+            chkLayer10.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer10.ForeColor = Color.FromArgb(192, 128, 64);
+            chkLayer10.Location = new Point(66, 121);
+            chkLayer10.Name = "chkLayer10";
+            chkLayer10.Size = new Size(44, 19);
+            chkLayer10.TabIndex = 14;
+            chkLayer10.Text = "L10";
+            chkLayer10.UseVisualStyleBackColor = true;
+            // 
             // chkLayer11
-            this.chkLayer11.AutoSize = true;
-            this.chkLayer11.Checked = true;
-            this.chkLayer11.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.chkLayer11.Location = new System.Drawing.Point(66, 141);
-            this.chkLayer11.Name = "chkLayer11";
-            this.chkLayer11.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer11.TabIndex = 15;
-            this.chkLayer11.Text = "L11";
-            this.chkLayer11.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer11.AutoSize = true;
+            chkLayer11.Checked = true;
+            chkLayer11.CheckState = CheckState.Checked;
+            chkLayer11.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer11.ForeColor = Color.FromArgb(255, 128, 0);
+            chkLayer11.Location = new Point(66, 141);
+            chkLayer11.Name = "chkLayer11";
+            chkLayer11.Size = new Size(42, 19);
+            chkLayer11.TabIndex = 15;
+            chkLayer11.Text = "L11";
+            chkLayer11.UseVisualStyleBackColor = true;
+            // 
             // chkLayer12
-            this.chkLayer12.AutoSize = true;
-            this.chkLayer12.Checked = true;
-            this.chkLayer12.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.chkLayer12.Location = new System.Drawing.Point(66, 161);
-            this.chkLayer12.Name = "chkLayer12";
-            this.chkLayer12.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer12.TabIndex = 16;
-            this.chkLayer12.Text = "L12";
-            this.chkLayer12.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer12.AutoSize = true;
+            chkLayer12.Checked = true;
+            chkLayer12.CheckState = CheckState.Checked;
+            chkLayer12.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer12.ForeColor = Color.FromArgb(128, 192, 128);
+            chkLayer12.Location = new Point(66, 161);
+            chkLayer12.Name = "chkLayer12";
+            chkLayer12.Size = new Size(44, 19);
+            chkLayer12.TabIndex = 16;
+            chkLayer12.Text = "L12";
+            chkLayer12.UseVisualStyleBackColor = true;
+            // 
             // chkLayer13
-            this.chkLayer13.AutoSize = true;
-            this.chkLayer13.Checked = true;
-            this.chkLayer13.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.chkLayer13.Location = new System.Drawing.Point(66, 181);
-            this.chkLayer13.Name = "chkLayer13";
-            this.chkLayer13.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer13.TabIndex = 17;
-            this.chkLayer13.Text = "L13";
-            this.chkLayer13.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer13.AutoSize = true;
+            chkLayer13.Checked = true;
+            chkLayer13.CheckState = CheckState.Checked;
+            chkLayer13.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer13.ForeColor = Color.FromArgb(0, 128, 255);
+            chkLayer13.Location = new Point(66, 181);
+            chkLayer13.Name = "chkLayer13";
+            chkLayer13.Size = new Size(44, 19);
+            chkLayer13.TabIndex = 17;
+            chkLayer13.Text = "L13";
+            chkLayer13.UseVisualStyleBackColor = true;
+            // 
             // chkLayer14
-            this.chkLayer14.AutoSize = true;
-            this.chkLayer14.Checked = true;
-            this.chkLayer14.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(255)))));
-            this.chkLayer14.Location = new System.Drawing.Point(66, 201);
-            this.chkLayer14.Name = "chkLayer14";
-            this.chkLayer14.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer14.TabIndex = 18;
-            this.chkLayer14.Text = "L14";
-            this.chkLayer14.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer14.AutoSize = true;
+            chkLayer14.Checked = true;
+            chkLayer14.CheckState = CheckState.Checked;
+            chkLayer14.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer14.ForeColor = Color.FromArgb(128, 64, 255);
+            chkLayer14.Location = new Point(66, 201);
+            chkLayer14.Name = "chkLayer14";
+            chkLayer14.Size = new Size(44, 19);
+            chkLayer14.TabIndex = 18;
+            chkLayer14.Text = "L14";
+            chkLayer14.UseVisualStyleBackColor = true;
+            // 
             // chkLayer15
-            this.chkLayer15.AutoSize = true;
-            this.chkLayer15.Checked = true;
-            this.chkLayer15.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.chkLayer15.Location = new System.Drawing.Point(66, 221);
-            this.chkLayer15.Name = "chkLayer15";
-            this.chkLayer15.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer15.TabIndex = 19;
-            this.chkLayer15.Text = "L15";
-            this.chkLayer15.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer15.AutoSize = true;
+            chkLayer15.Checked = true;
+            chkLayer15.CheckState = CheckState.Checked;
+            chkLayer15.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer15.ForeColor = Color.FromArgb(180, 180, 180);
+            chkLayer15.Location = new Point(66, 221);
+            chkLayer15.Name = "chkLayer15";
+            chkLayer15.Size = new Size(44, 19);
+            chkLayer15.TabIndex = 19;
+            chkLayer15.Text = "L15";
+            chkLayer15.UseVisualStyleBackColor = true;
+            // 
             // chkLayer16
-            this.chkLayer16.AutoSize = true;
-            this.chkLayer16.Checked = true;
-            this.chkLayer16.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkLayer16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.chkLayer16.Location = new System.Drawing.Point(66, 241);
-            this.chkLayer16.Name = "chkLayer16";
-            this.chkLayer16.Size = new System.Drawing.Size(46, 19);
-            this.chkLayer16.TabIndex = 20;
-            this.chkLayer16.Text = "L16";
-            this.chkLayer16.UseVisualStyleBackColor = true;
-
+            // 
+            chkLayer16.AutoSize = true;
+            chkLayer16.Checked = true;
+            chkLayer16.CheckState = CheckState.Checked;
+            chkLayer16.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkLayer16.ForeColor = Color.FromArgb(100, 100, 100);
+            chkLayer16.Location = new Point(66, 241);
+            chkLayer16.Name = "chkLayer16";
+            chkLayer16.Size = new Size(44, 19);
+            chkLayer16.TabIndex = 20;
+            chkLayer16.Text = "L16";
+            chkLayer16.UseVisualStyleBackColor = true;
+            // 
             // btnLayerAllOn
-            this.btnLayerAllOn.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnLayerAllOn.Location = new System.Drawing.Point(6, 263);
-            this.btnLayerAllOn.Name = "btnLayerAllOn";
-            this.btnLayerAllOn.Size = new System.Drawing.Size(57, 23);
-            this.btnLayerAllOn.TabIndex = 21;
-            this.btnLayerAllOn.Text = "全ON";
-            this.btnLayerAllOn.UseVisualStyleBackColor = true;
-
+            // 
+            btnLayerAllOn.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLayerAllOn.Location = new Point(6, 263);
+            btnLayerAllOn.Name = "btnLayerAllOn";
+            btnLayerAllOn.Size = new Size(57, 23);
+            btnLayerAllOn.TabIndex = 21;
+            btnLayerAllOn.Text = "全ON";
+            btnLayerAllOn.UseVisualStyleBackColor = true;
+            // 
             // btnLayerAllOff
-            this.btnLayerAllOff.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnLayerAllOff.Location = new System.Drawing.Point(67, 263);
-            this.btnLayerAllOff.Name = "btnLayerAllOff";
-            this.btnLayerAllOff.Size = new System.Drawing.Size(57, 23);
-            this.btnLayerAllOff.TabIndex = 22;
-            this.btnLayerAllOff.Text = "全";
-            this.btnLayerAllOff.UseVisualStyleBackColor = true;
-
+            // 
+            btnLayerAllOff.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLayerAllOff.Location = new Point(67, 263);
+            btnLayerAllOff.Name = "btnLayerAllOff";
+            btnLayerAllOff.Size = new Size(57, 23);
+            btnLayerAllOff.TabIndex = 22;
+            btnLayerAllOff.Text = "全";
+            btnLayerAllOff.UseVisualStyleBackColor = true;
+            // 
             // btnLayerSettings
-            this.btnLayerSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnLayerSettings.Location = new System.Drawing.Point(6, 289);
-            this.btnLayerSettings.Name = "btnLayerSettings";
-            this.btnLayerSettings.Size = new System.Drawing.Size(118, 23);
-            this.btnLayerSettings.TabIndex = 23;
-            this.btnLayerSettings.Text = "レイヤ設定";
-            this.btnLayerSettings.UseVisualStyleBackColor = true;
-
+            // 
+            btnLayerSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLayerSettings.Location = new Point(6, 289);
+            btnLayerSettings.Name = "btnLayerSettings";
+            btnLayerSettings.Size = new Size(118, 23);
+            btnLayerSettings.TabIndex = 23;
+            btnLayerSettings.Text = "レイヤ設定";
+            btnLayerSettings.UseVisualStyleBackColor = true;
+            // 
             // btnBatchUpdateModal
-            this.btnBatchUpdateModal.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnBatchUpdateModal.Location = new System.Drawing.Point(6, 314);
-            this.btnBatchUpdateModal.Name = "btnBatchUpdateModal";
-            this.btnBatchUpdateModal.Size = new System.Drawing.Size(118, 23);
-            this.btnBatchUpdateModal.TabIndex = 24;
-            this.btnBatchUpdateModal.Text = "一括更新";
-            this.btnBatchUpdateModal.UseVisualStyleBackColor = true;
-
+            // 
+            btnBatchUpdateModal.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnBatchUpdateModal.Location = new Point(6, 314);
+            btnBatchUpdateModal.Name = "btnBatchUpdateModal";
+            btnBatchUpdateModal.Size = new Size(118, 23);
+            btnBatchUpdateModal.TabIndex = 24;
+            btnBatchUpdateModal.Text = "一括更新";
+            btnBatchUpdateModal.UseVisualStyleBackColor = true;
+            // 
             // lblEntityNameHeader
-            this.lblEntityNameHeader.AutoSize = true;
-            this.lblEntityNameHeader.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblEntityNameHeader.ForeColor = System.Drawing.Color.Red;
-            this.lblEntityNameHeader.Location = new System.Drawing.Point(82, 341);
-            this.lblEntityNameHeader.Name = "lblEntityNameHeader";
-            this.lblEntityNameHeader.Size = new System.Drawing.Size(31, 15);
-            this.lblEntityNameHeader.TabIndex = 25;
-            this.lblEntityNameHeader.Text = "名称";
-
+            // 
+            lblEntityNameHeader.AutoSize = true;
+            lblEntityNameHeader.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblEntityNameHeader.ForeColor = Color.Red;
+            lblEntityNameHeader.Location = new Point(82, 341);
+            lblEntityNameHeader.Name = "lblEntityNameHeader";
+            lblEntityNameHeader.Size = new Size(31, 15);
+            lblEntityNameHeader.TabIndex = 25;
+            lblEntityNameHeader.Text = "名称";
+            // 
             // chkShowIbutu
-            this.chkShowIbutu.AutoSize = true;
-            this.chkShowIbutu.Checked = true;
-            this.chkShowIbutu.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.chkShowIbutu.ForeColor = System.Drawing.Color.Red;
-            this.chkShowIbutu.Location = new System.Drawing.Point(6, 358);
-            this.chkShowIbutu.Name = "chkShowIbutu";
-            this.chkShowIbutu.Size = new System.Drawing.Size(50, 19);
-            this.chkShowIbutu.TabIndex = 26;
-            this.chkShowIbutu.Text = "遺物";
-            this.chkShowIbutu.UseVisualStyleBackColor = true;
-
+            // 
+            chkShowIbutu.AutoSize = true;
+            chkShowIbutu.Checked = true;
+            chkShowIbutu.CheckState = CheckState.Checked;
+            chkShowIbutu.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowIbutu.ForeColor = Color.Red;
+            chkShowIbutu.Location = new Point(6, 358);
+            chkShowIbutu.Name = "chkShowIbutu";
+            chkShowIbutu.Size = new Size(50, 19);
+            chkShowIbutu.TabIndex = 26;
+            chkShowIbutu.Text = "遺物";
+            chkShowIbutu.UseVisualStyleBackColor = true;
+            // 
             // chkShowIbutuName
-            this.chkShowIbutuName.AutoSize = true;
-            this.chkShowIbutuName.Location = new System.Drawing.Point(90, 361);
-            this.chkShowIbutuName.Name = "chkShowIbutuName";
-            this.chkShowIbutuName.Size = new System.Drawing.Size(15, 14);
-            this.chkShowIbutuName.TabIndex = 27;
-            this.chkShowIbutuName.UseVisualStyleBackColor = true;
-
+            // 
+            chkShowIbutuName.AutoSize = true;
+            chkShowIbutuName.Location = new Point(90, 361);
+            chkShowIbutuName.Name = "chkShowIbutuName";
+            chkShowIbutuName.Size = new Size(15, 14);
+            chkShowIbutuName.TabIndex = 27;
+            chkShowIbutuName.UseVisualStyleBackColor = true;
+            // 
             // chkShowIkou
-            this.chkShowIkou.AutoSize = true;
-            this.chkShowIkou.Checked = true;
-            this.chkShowIkou.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.chkShowIkou.ForeColor = System.Drawing.Color.Blue;
-            this.chkShowIkou.Location = new System.Drawing.Point(6, 380);
-            this.chkShowIkou.Name = "chkShowIkou";
-            this.chkShowIkou.Size = new System.Drawing.Size(50, 19);
-            this.chkShowIkou.TabIndex = 28;
-            this.chkShowIkou.Text = "遺構";
-            this.chkShowIkou.UseVisualStyleBackColor = true;
-
+            // 
+            chkShowIkou.AutoSize = true;
+            chkShowIkou.Checked = true;
+            chkShowIkou.CheckState = CheckState.Checked;
+            chkShowIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowIkou.ForeColor = Color.Blue;
+            chkShowIkou.Location = new Point(6, 380);
+            chkShowIkou.Name = "chkShowIkou";
+            chkShowIkou.Size = new Size(50, 19);
+            chkShowIkou.TabIndex = 28;
+            chkShowIkou.Text = "遺構";
+            chkShowIkou.UseVisualStyleBackColor = true;
+            // 
             // chkShowIkouName
-            this.chkShowIkouName.AutoSize = true;
-            this.chkShowIkouName.Location = new System.Drawing.Point(90, 383);
-            this.chkShowIkouName.Name = "chkShowIkouName";
-            this.chkShowIkouName.Size = new System.Drawing.Size(15, 14);
-            this.chkShowIkouName.TabIndex = 29;
-            this.chkShowIkouName.UseVisualStyleBackColor = true;
-
+            // 
+            chkShowIkouName.AutoSize = true;
+            chkShowIkouName.Location = new Point(90, 383);
+            chkShowIkouName.Name = "chkShowIkouName";
+            chkShowIkouName.Size = new Size(15, 14);
+            chkShowIkouName.TabIndex = 29;
+            chkShowIkouName.UseVisualStyleBackColor = true;
+            // 
             // chkShowKikai
-            this.chkShowKikai.AutoSize = true;
-            this.chkShowKikai.Checked = true;
-            this.chkShowKikai.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.chkShowKikai.ForeColor = System.Drawing.Color.Blue;
-            this.chkShowKikai.Location = new System.Drawing.Point(6, 402);
-            this.chkShowKikai.Name = "chkShowKikai";
-            this.chkShowKikai.Size = new System.Drawing.Size(62, 19);
-            this.chkShowKikai.TabIndex = 30;
-            this.chkShowKikai.Text = "基準点";
-            this.chkShowKikai.UseVisualStyleBackColor = true;
-
+            // 
+            chkShowKikai.AutoSize = true;
+            chkShowKikai.Checked = true;
+            chkShowKikai.CheckState = CheckState.Checked;
+            chkShowKikai.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowKikai.ForeColor = Color.Blue;
+            chkShowKikai.Location = new Point(6, 402);
+            chkShowKikai.Name = "chkShowKikai";
+            chkShowKikai.Size = new Size(62, 19);
+            chkShowKikai.TabIndex = 30;
+            chkShowKikai.Text = "基準点";
+            chkShowKikai.UseVisualStyleBackColor = true;
+            // 
             // chkShowKikaiName
-            this.chkShowKikaiName.AutoSize = true;
-            this.chkShowKikaiName.Checked = true;
-            this.chkShowKikaiName.Location = new System.Drawing.Point(90, 405);
-            this.chkShowKikaiName.Name = "chkShowKikaiName";
-            this.chkShowKikaiName.Size = new System.Drawing.Size(15, 14);
-            this.chkShowKikaiName.TabIndex = 31;
-            this.chkShowKikaiName.UseVisualStyleBackColor = true;
-
-            // picMapCanvas
-            this.picMapCanvas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(20)))));
-            this.picMapCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picMapCanvas.Location = new System.Drawing.Point(130, 35);
-            this.picMapCanvas.Name = "picMapCanvas";
-            this.picMapCanvas.Size = new System.Drawing.Size(1350, 405);
-            this.picMapCanvas.TabIndex = 2;
-            this.picMapCanvas.TabStop = false;
-
             // 
-            // panelBottomHeader
+            chkShowKikaiName.AutoSize = true;
+            chkShowKikaiName.Checked = true;
+            chkShowKikaiName.CheckState = CheckState.Checked;
+            chkShowKikaiName.Location = new Point(90, 405);
+            chkShowKikaiName.Name = "chkShowKikaiName";
+            chkShowKikaiName.Size = new Size(15, 14);
+            chkShowKikaiName.TabIndex = 31;
+            chkShowKikaiName.UseVisualStyleBackColor = true;
             // 
-            this.panelBottomHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
-            this.panelBottomHeader.Controls.Add(this.lblBottomTitle);
-            this.panelBottomHeader.Controls.Add(this.btnDetachBottomPanel);
-            this.panelBottomHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBottomHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelBottomHeader.Name = "panelBottomHeader";
-            this.panelBottomHeader.Size = new System.Drawing.Size(1480, 30);
-            this.panelBottomHeader.TabIndex = 0;
-
-            // lblBottomTitle
-            this.lblBottomTitle.AutoSize = true;
-            this.lblBottomTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblBottomTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblBottomTitle.Location = new System.Drawing.Point(10, 7);
-            this.lblBottomTitle.Name = "lblBottomTitle";
-            this.lblBottomTitle.Size = new System.Drawing.Size(140, 15);
-            this.lblBottomTitle.TabIndex = 0;
-            this.lblBottomTitle.Text = "📋 データ・編集テーブル";
-
-            // btnDetachBottomPanel
-            this.btnDetachBottomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDetachBottomPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
-            this.btnDetachBottomPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDetachBottomPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnDetachBottomPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDetachBottomPanel.Location = new System.Drawing.Point(1413, 3);
-            this.btnDetachBottomPanel.Name = "btnDetachBottomPanel";
-            this.btnDetachBottomPanel.Size = new System.Drawing.Size(64, 24);
-            this.btnDetachBottomPanel.TabIndex = 1;
-            this.btnDetachBottomPanel.Text = "↗ 分離";
-            this.btnDetachBottomPanel.UseVisualStyleBackColor = false;
-
+            // panelLeftHeader
             // 
-            // panelBottomContent
+            panelLeftHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelLeftHeader.Controls.Add(lblLeftTitle);
+            panelLeftHeader.Controls.Add(btnDetachLeftPanel);
+            panelLeftHeader.Dock = DockStyle.Top;
+            panelLeftHeader.Location = new Point(0, 0);
+            panelLeftHeader.Name = "panelLeftHeader";
+            panelLeftHeader.Size = new Size(130, 30);
+            panelLeftHeader.TabIndex = 0;
             // 
-            this.panelBottomContent.Controls.Add(this.splitContainerBottom);
-            this.panelBottomContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelBottomContent.Location = new System.Drawing.Point(0, 30);
-            this.panelBottomContent.Name = "panelBottomContent";
-            this.panelBottomContent.Size = new System.Drawing.Size(1480, 332);
-            this.panelBottomContent.TabIndex = 1;
-
+            // lblLeftTitle
+            // 
+            lblLeftTitle.AutoSize = true;
+            lblLeftTitle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblLeftTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblLeftTitle.Location = new Point(4, 7);
+            lblLeftTitle.Name = "lblLeftTitle";
+            lblLeftTitle.Size = new Size(51, 15);
+            lblLeftTitle.TabIndex = 1;
+            lblLeftTitle.Text = "⚙ レイヤ";
+            // 
+            // btnDetachLeftPanel
+            // 
+            btnDetachLeftPanel.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachLeftPanel.Dock = DockStyle.Right;
+            btnDetachLeftPanel.FlatStyle = FlatStyle.Flat;
+            btnDetachLeftPanel.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDetachLeftPanel.ForeColor = Color.White;
+            btnDetachLeftPanel.Location = new Point(66, 0);
+            btnDetachLeftPanel.Name = "btnDetachLeftPanel";
+            btnDetachLeftPanel.Size = new Size(64, 30);
+            btnDetachLeftPanel.TabIndex = 0;
+            btnDetachLeftPanel.Text = "↗ 分離";
+            btnDetachLeftPanel.UseVisualStyleBackColor = false;
             // 
             // panelMapBottom
             // 
-            this.panelMapBottom.Controls.Add(this.panelBottomContent);
-            this.panelMapBottom.Controls.Add(this.panelBottomHeader);
-            this.panelMapBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelMapBottom.Location = new System.Drawing.Point(0, 438);
-            this.panelMapBottom.Name = "panelMapBottom";
-            this.panelMapBottom.Size = new System.Drawing.Size(1480, 362);
-            this.panelMapBottom.TabIndex = 2;
-
+            panelMapBottom.Controls.Add(panelBottomContent);
+            panelMapBottom.Controls.Add(panelBottomHeader);
+            panelMapBottom.Dock = DockStyle.Bottom;
+            panelMapBottom.Location = new Point(0, 495);
+            panelMapBottom.Name = "panelMapBottom";
+            panelMapBottom.Size = new Size(1390, 362);
+            panelMapBottom.TabIndex = 2;
             // 
-            // splitContainerBottom (Left: Data Tab, Right: Property Edit Panel)
+            // panelBottomContent
             // 
-            this.splitContainerBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerBottom.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerBottom.Name = "splitContainerBottom";
-            this.splitContainerBottom.Size = new System.Drawing.Size(1480, 332);
+            panelBottomContent.Controls.Add(splitContainerBottom);
+            panelBottomContent.Dock = DockStyle.Fill;
+            panelBottomContent.Location = new Point(0, 30);
+            panelBottomContent.Name = "panelBottomContent";
+            panelBottomContent.Size = new Size(1390, 332);
+            panelBottomContent.TabIndex = 1;
             // 
-            // splitContainerBottom.Panel1 (Left Data Tabs)
+            // splitContainerBottom
             // 
-            this.splitContainerBottom.Panel1.Controls.Add(this.tabControlData);
-            this.splitContainerBottom.Panel2Collapsed = true;
-            this.splitContainerBottom.SplitterDistance = 1480;
-            this.splitContainerBottom.TabIndex = 0;
-
+            splitContainerBottom.Dock = DockStyle.Fill;
+            splitContainerBottom.Location = new Point(0, 0);
+            splitContainerBottom.Name = "splitContainerBottom";
+            // 
+            // splitContainerBottom.Panel1
+            // 
+            splitContainerBottom.Panel1.Controls.Add(tabControlData);
+            splitContainerBottom.Panel2Collapsed = true;
+            splitContainerBottom.Size = new Size(1390, 332);
+            splitContainerBottom.SplitterDistance = 1365;
+            splitContainerBottom.TabIndex = 0;
+            // 
             // tabControlData
-            this.tabControlData.Alignment = System.Windows.Forms.TabAlignment.Left;
-            this.tabControlData.Multiline = true;
-            this.tabControlData.Controls.Add(this.tabIkou);
-            this.tabControlData.Controls.Add(this.tabIbutu);
-            this.tabControlData.Controls.Add(this.tabKikai);
-            this.tabControlData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlData.Font = new System.Drawing.Font("Yu Gothic UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tabControlData.Location = new System.Drawing.Point(0, 0);
-            this.tabControlData.Name = "tabControlData";
-            this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(1480, 356);
-            this.tabControlData.TabIndex = 0;
-
-            // pnlTestFill
-            this.pnlTestFill = new System.Windows.Forms.Panel();
-            this.pnlTestFill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
-            this.pnlTestFill.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlTestFill.Location = new System.Drawing.Point(3, 3);
-            this.pnlTestFill.Name = "pnlTestFill";
-            this.pnlTestFill.Size = new System.Drawing.Size(1466, 320);
-
+            // 
+            tabControlData.Alignment = TabAlignment.Left;
+            tabControlData.Controls.Add(tabIkou);
+            tabControlData.Controls.Add(tabIbutu);
+            tabControlData.Controls.Add(tabKikai);
+            tabControlData.Dock = DockStyle.Fill;
+            tabControlData.Font = new Font("Yu Gothic UI", 11.25F, FontStyle.Bold);
+            tabControlData.Location = new Point(0, 0);
+            tabControlData.Multiline = true;
+            tabControlData.Name = "tabControlData";
+            tabControlData.SelectedIndex = 0;
+            tabControlData.Size = new Size(1390, 332);
+            tabControlData.TabIndex = 0;
+            // 
             // tabIkou
-            this.tabIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabIkou.Controls.Add(this.grpPrecs);
-            this.tabIkou.Controls.Add(this.grpIkouL);
-            this.tabIkou.Controls.Add(this.grpIkouMaster);
-            this.tabIkou.Controls.Add(this.pnlPrecsRight);
-            this.tabIkou.Location = new System.Drawing.Point(4, 26);
-            this.tabIkou.Name = "tabIkou";
-            this.tabIkou.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIkou.Size = new System.Drawing.Size(1472, 326);
-            this.tabIkou.TabIndex = 0;
-            this.tabIkou.Text = "遺構";
-
-            // grpIkouMaster
-            this.grpIkouMaster.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpIkouMaster.Controls.Add(this.btnDeleteIkouRight);
-            this.grpIkouMaster.Controls.Add(this.btnUpdateIkouRight);
-            this.grpIkouMaster.Controls.Add(this.btnAddIkou);
-            this.grpIkouMaster.Controls.Add(this.btnSetPos);
-            this.grpIkouMaster.Controls.Add(this.btnView3D);
-            this.grpIkouMaster.Controls.Add(this.lblIkouNameTitle);
-            this.grpIkouMaster.Controls.Add(this.lblIkouNameVal);
-            this.grpIkouMaster.Controls.Add(this.btnMaxPlusOne);
-            this.grpIkouMaster.Controls.Add(this.txtIkouNum);
-            this.grpIkouMaster.Controls.Add(this.cmbIkouKind);
-            this.grpIkouMaster.Controls.Add(this.lblSeqHeader);
-            this.grpIkouMaster.Controls.Add(this.lblPrefixHeader);
-            this.grpIkouMaster.Controls.Add(this.dgvIkou);
-            this.grpIkouMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIkouMaster.Location = new System.Drawing.Point(3, 3);
-            this.grpIkouMaster.Name = "grpIkouMaster";
-            this.grpIkouMaster.Size = new System.Drawing.Size(390, 320);
-            this.grpIkouMaster.TabIndex = 0;
-            this.grpIkouMaster.TabStop = false;
-            this.grpIkouMaster.Text = "遺構";
-
-            // dgvIkou
-            this.dgvIkou.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.dgvIkou.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvIkou.Location = new System.Drawing.Point(6, 22);
-            this.dgvIkou.Name = "dgvIkou";
-            this.dgvIkou.RowTemplate.Height = 25;
-            this.dgvIkou.Size = new System.Drawing.Size(196, 290);
-            this.dgvIkou.TabIndex = 0;
-
-            // lblPrefixHeader ("接頭")
-            this.lblPrefixHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblPrefixHeader.AutoSize = true;
-            this.lblPrefixHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblPrefixHeader.ForeColor = System.Drawing.Color.White;
-            this.lblPrefixHeader.Location = new System.Drawing.Point(208, 20);
-            this.lblPrefixHeader.Name = "lblPrefixHeader";
-            this.lblPrefixHeader.Size = new System.Drawing.Size(31, 15);
-            this.lblPrefixHeader.TabIndex = 1;
-            this.lblPrefixHeader.Text = "接頭";
-
-            // lblSeqHeader ("連番")
-            this.lblSeqHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblSeqHeader.AutoSize = true;
-            this.lblSeqHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblSeqHeader.ForeColor = System.Drawing.Color.White;
-            this.lblSeqHeader.Location = new System.Drawing.Point(286, 20);
-            this.lblSeqHeader.Name = "lblSeqHeader";
-            this.lblSeqHeader.Size = new System.Drawing.Size(31, 15);
-            this.lblSeqHeader.TabIndex = 2;
-            this.lblSeqHeader.Text = "連番";
-
-            // cmbIkouKind
-            this.cmbIkouKind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbIkouKind.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbIkouKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.cmbIkouKind.ForeColor = System.Drawing.Color.White;
-            this.cmbIkouKind.FormattingEnabled = true;
-            this.cmbIkouKind.Location = new System.Drawing.Point(208, 38);
-            this.cmbIkouKind.Name = "cmbIkouKind";
-            this.cmbIkouKind.Size = new System.Drawing.Size(74, 25);
-            this.cmbIkouKind.TabIndex = 3;
-
-            // txtIkouNum
-            this.txtIkouNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtIkouNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
-            this.txtIkouNum.ForeColor = System.Drawing.Color.Black;
-            this.txtIkouNum.Location = new System.Drawing.Point(286, 38);
-            this.txtIkouNum.MaxLength = 3;
-            this.txtIkouNum.Name = "txtIkouNum";
-            this.txtIkouNum.Size = new System.Drawing.Size(34, 24);
-            this.txtIkouNum.TabIndex = 4;
-
-            // btnMaxPlusOne
-            this.btnMaxPlusOne.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMaxPlusOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnMaxPlusOne.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMaxPlusOne.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnMaxPlusOne.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.btnMaxPlusOne.Location = new System.Drawing.Point(324, 37);
-            this.btnMaxPlusOne.Margin = new System.Windows.Forms.Padding(0);
-            this.btnMaxPlusOne.Name = "btnMaxPlusOne";
-            this.btnMaxPlusOne.Padding = new System.Windows.Forms.Padding(0);
-            this.btnMaxPlusOne.Size = new System.Drawing.Size(60, 26);
-            this.btnMaxPlusOne.TabIndex = 5;
-            this.btnMaxPlusOne.Text = "最大+1";
-            this.btnMaxPlusOne.UseVisualStyleBackColor = false;
-
-            // lblIkouNameTitle ("遺構名")
-            this.lblIkouNameTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblIkouNameTitle.AutoSize = true;
-            this.lblIkouNameTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblIkouNameTitle.ForeColor = System.Drawing.Color.White;
-            this.lblIkouNameTitle.Location = new System.Drawing.Point(208, 77);
-            this.lblIkouNameTitle.Name = "lblIkouNameTitle";
-            this.lblIkouNameTitle.Size = new System.Drawing.Size(47, 17);
-            this.lblIkouNameTitle.TabIndex = 6;
-            this.lblIkouNameTitle.Text = "遺構名";
-
-            // lblIkouNameVal
-            this.lblIkouNameVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblIkouNameVal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(40)))));
-            this.lblIkouNameVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblIkouNameVal.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblIkouNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblIkouNameVal.Location = new System.Drawing.Point(260, 74);
-            this.lblIkouNameVal.Name = "lblIkouNameVal";
-            this.lblIkouNameVal.Size = new System.Drawing.Size(124, 25);
-            this.lblIkouNameVal.TabIndex = 7;
-            this.lblIkouNameVal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
-            // btnSetPos ("表示位置指定")
-            this.btnSetPos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSetPos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnSetPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetPos.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSetPos.ForeColor = System.Drawing.Color.White;
-            this.btnSetPos.Location = new System.Drawing.Point(208, 118);
-            this.btnSetPos.Name = "btnSetPos";
-            this.btnSetPos.Size = new System.Drawing.Size(176, 28);
-            this.btnSetPos.TabIndex = 8;
-            this.btnSetPos.Text = "表示位置指定";
-            this.btnSetPos.UseVisualStyleBackColor = false;
-
-            // btnView3D ("🧊 3D確認")
-            this.btnView3D.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnView3D.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnView3D.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnView3D.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnView3D.ForeColor = System.Drawing.Color.White;
-            this.btnView3D.Location = new System.Drawing.Point(208, 154);
-            this.btnView3D.Name = "btnView3D";
-            this.btnView3D.Size = new System.Drawing.Size(176, 28);
-            this.btnView3D.TabIndex = 9;
-            this.btnView3D.Text = "🧊 3D確認";
-            this.btnView3D.UseVisualStyleBackColor = false;
-
-            // btnDeleteIkouRight (Bottom Row: 1. 削除)
-            this.btnDeleteIkouRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDeleteIkouRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
-            this.btnDeleteIkouRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteIkouRight.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnDeleteIkouRight.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteIkouRight.Location = new System.Drawing.Point(208, 284);
-            this.btnDeleteIkouRight.Name = "btnDeleteIkouRight";
-            this.btnDeleteIkouRight.Size = new System.Drawing.Size(54, 28);
-            this.btnDeleteIkouRight.TabIndex = 10;
-            this.btnDeleteIkouRight.Text = "削除";
-            this.btnDeleteIkouRight.UseVisualStyleBackColor = false;
-
-            // btnUpdateIkouRight (Bottom Row: 2. 更新)
-            this.btnUpdateIkouRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnUpdateIkouRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(184)))), ((int)(((byte)(1)))));
-            this.btnUpdateIkouRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdateIkouRight.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdateIkouRight.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdateIkouRight.Location = new System.Drawing.Point(268, 284);
-            this.btnUpdateIkouRight.Name = "btnUpdateIkouRight";
-            this.btnUpdateIkouRight.Size = new System.Drawing.Size(54, 28);
-            this.btnUpdateIkouRight.TabIndex = 11;
-            this.btnUpdateIkouRight.Text = "更新";
-            this.btnUpdateIkouRight.UseVisualStyleBackColor = false;
-
-            // btnAddIkou (Bottom Row: 3. 追加)
-            this.btnAddIkou.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnAddIkou.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnAddIkou.ForeColor = System.Drawing.Color.White;
-            this.btnAddIkou.Location = new System.Drawing.Point(328, 284);
-            this.btnAddIkou.Name = "btnAddIkou";
-            this.btnAddIkou.Size = new System.Drawing.Size(56, 28);
-            this.btnAddIkou.TabIndex = 12;
-            this.btnAddIkou.Text = "追加";
-            this.btnAddIkou.UseVisualStyleBackColor = false;
-
-            // grpIkouL
-            this.grpIkouL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpIkouL.Controls.Add(this.btnAddIkouL);
-            this.grpIkouL.Controls.Add(this.btnUpdateLineRight);
-            this.grpIkouL.Controls.Add(this.btnDeleteLineRight);
-            this.grpIkouL.Controls.Add(this.btnLineSetPos);
-            this.grpIkouL.Controls.Add(this.cmbLineIkouMaster);
-            this.grpIkouL.Controls.Add(this.lblLineIkouMaster);
-            this.grpIkouL.Controls.Add(this.cmbLineLayer);
-            this.grpIkouL.Controls.Add(this.lblLineLayer);
-            this.grpIkouL.Controls.Add(this.rdoLinePoint);
-            this.grpIkouL.Controls.Add(this.rdoLineClosed);
-            this.grpIkouL.Controls.Add(this.rdoLineOpen);
-            this.grpIkouL.Controls.Add(this.lblLineNameTitle);
-            this.grpIkouL.Controls.Add(this.lblLineNameVal);
-            this.grpIkouL.Controls.Add(this.btnLineMaxPlusOne);
-            this.grpIkouL.Controls.Add(this.txtLineNum);
-            this.grpIkouL.Controls.Add(this.cmbLineKind);
-            this.grpIkouL.Controls.Add(this.lblLineSeqHeader);
-            this.grpIkouL.Controls.Add(this.lblLinePrefixHeader);
-            this.grpIkouL.Controls.Add(this.dgvIkouL);
-            this.grpIkouL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIkouL.Location = new System.Drawing.Point(396, 3);
-            this.grpIkouL.Name = "grpIkouL";
-            this.grpIkouL.Size = new System.Drawing.Size(472, 320);
-            this.grpIkouL.TabIndex = 1;
-            this.grpIkouL.TabStop = false;
-            this.grpIkouL.Text = "遺構L";
-
-            // dgvIkouL
-            this.dgvIkouL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.dgvIkouL.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvIkouL.Location = new System.Drawing.Point(6, 22);
-            this.dgvIkouL.Name = "dgvIkouL";
-            this.dgvIkouL.RowTemplate.Height = 25;
-            this.dgvIkouL.Size = new System.Drawing.Size(285, 290);
-            this.dgvIkouL.TabIndex = 0;
-
-            // lblLinePrefixHeader ("接頭")
-            this.lblLinePrefixHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLinePrefixHeader.AutoSize = true;
-            this.lblLinePrefixHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblLinePrefixHeader.ForeColor = System.Drawing.Color.White;
-            this.lblLinePrefixHeader.Location = new System.Drawing.Point(297, 20);
-            this.lblLinePrefixHeader.Name = "lblLinePrefixHeader";
-            this.lblLinePrefixHeader.Size = new System.Drawing.Size(31, 15);
-            this.lblLinePrefixHeader.TabIndex = 1;
-            this.lblLinePrefixHeader.Text = "接頭";
-
-            // lblLineSeqHeader ("連番")
-            this.lblLineSeqHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLineSeqHeader.AutoSize = true;
-            this.lblLineSeqHeader.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblLineSeqHeader.ForeColor = System.Drawing.Color.White;
-            this.lblLineSeqHeader.Location = new System.Drawing.Point(366, 20);
-            this.lblLineSeqHeader.Name = "lblLineSeqHeader";
-            this.lblLineSeqHeader.Size = new System.Drawing.Size(31, 15);
-            this.lblLineSeqHeader.TabIndex = 2;
-            this.lblLineSeqHeader.Text = "連番";
-
-            // cmbLineKind
-            this.cmbLineKind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbLineKind.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbLineKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.cmbLineKind.ForeColor = System.Drawing.Color.White;
-            this.cmbLineKind.FormattingEnabled = true;
-            this.cmbLineKind.Location = new System.Drawing.Point(297, 38);
-            this.cmbLineKind.Name = "cmbLineKind";
-            this.cmbLineKind.Size = new System.Drawing.Size(65, 25);
-            this.cmbLineKind.TabIndex = 3;
-
-            // txtLineNum
-            this.txtLineNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtLineNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
-            this.txtLineNum.ForeColor = System.Drawing.Color.Black;
-            this.txtLineNum.Location = new System.Drawing.Point(366, 38);
-            this.txtLineNum.MaxLength = 3;
-            this.txtLineNum.Name = "txtLineNum";
-            this.txtLineNum.Size = new System.Drawing.Size(34, 24);
-            this.txtLineNum.TabIndex = 4;
-
-            // btnLineMaxPlusOne
-            this.btnLineMaxPlusOne.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLineMaxPlusOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnLineMaxPlusOne.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLineMaxPlusOne.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnLineMaxPlusOne.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.btnLineMaxPlusOne.Location = new System.Drawing.Point(404, 37);
-            this.btnLineMaxPlusOne.Margin = new System.Windows.Forms.Padding(0);
-            this.btnLineMaxPlusOne.Name = "btnLineMaxPlusOne";
-            this.btnLineMaxPlusOne.Padding = new System.Windows.Forms.Padding(0);
-            this.btnLineMaxPlusOne.Size = new System.Drawing.Size(60, 26);
-            this.btnLineMaxPlusOne.TabIndex = 5;
-            this.btnLineMaxPlusOne.Text = "最大+1";
-            this.btnLineMaxPlusOne.UseVisualStyleBackColor = false;
-
-            // lblLineNameTitle ("線名")
-            this.lblLineNameTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLineNameTitle.AutoSize = true;
-            this.lblLineNameTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblLineNameTitle.ForeColor = System.Drawing.Color.White;
-            this.lblLineNameTitle.Location = new System.Drawing.Point(297, 77);
-            this.lblLineNameTitle.Name = "lblLineNameTitle";
-            this.lblLineNameTitle.Size = new System.Drawing.Size(35, 17);
-            this.lblLineNameTitle.TabIndex = 6;
-            this.lblLineNameTitle.Text = "線名";
-
-            // lblLineNameVal
-            this.lblLineNameVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLineNameVal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(40)))));
-            this.lblLineNameVal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLineNameVal.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblLineNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblLineNameVal.Location = new System.Drawing.Point(337, 74);
-            this.lblLineNameVal.Name = "lblLineNameVal";
-            this.lblLineNameVal.Size = new System.Drawing.Size(127, 25);
-            this.lblLineNameVal.TabIndex = 7;
-            this.lblLineNameVal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
-            // rdoLineOpen (Row 3: 開放)
-            this.rdoLineOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.rdoLineOpen.AutoSize = true;
-            this.rdoLineOpen.Checked = true;
-            this.rdoLineOpen.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.rdoLineOpen.ForeColor = System.Drawing.Color.White;
-            this.rdoLineOpen.Location = new System.Drawing.Point(297, 110);
-            this.rdoLineOpen.Name = "rdoLineOpen";
-            this.rdoLineOpen.Size = new System.Drawing.Size(50, 19);
-            this.rdoLineOpen.TabIndex = 8;
-            this.rdoLineOpen.TabStop = true;
-            this.rdoLineOpen.Text = "開放";
-            this.rdoLineOpen.UseVisualStyleBackColor = true;
-
-            // rdoLineClosed (Row 3: 閉合)
-            this.rdoLineClosed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.rdoLineClosed.AutoSize = true;
-            this.rdoLineClosed.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.rdoLineClosed.ForeColor = System.Drawing.Color.White;
-            this.rdoLineClosed.Location = new System.Drawing.Point(351, 110);
-            this.rdoLineClosed.Name = "rdoLineClosed";
-            this.rdoLineClosed.Size = new System.Drawing.Size(50, 19);
-            this.rdoLineClosed.TabIndex = 9;
-            this.rdoLineClosed.Text = "閉合";
-            this.rdoLineClosed.UseVisualStyleBackColor = true;
-
-            // rdoLinePoint (Row 3: 標高点)
-            this.rdoLinePoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.rdoLinePoint.AutoSize = true;
-            this.rdoLinePoint.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.rdoLinePoint.ForeColor = System.Drawing.Color.White;
-            this.rdoLinePoint.Location = new System.Drawing.Point(405, 110);
-            this.rdoLinePoint.Name = "rdoLinePoint";
-            this.rdoLinePoint.Size = new System.Drawing.Size(65, 19);
-            this.rdoLinePoint.TabIndex = 10;
-            this.rdoLinePoint.Text = "標高点";
-            this.rdoLinePoint.UseVisualStyleBackColor = true;
-
-            // lblLineLayer (Row 4: レイヤ)
-            this.lblLineLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLineLayer.AutoSize = true;
-            this.lblLineLayer.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblLineLayer.ForeColor = System.Drawing.Color.White;
-            this.lblLineLayer.Location = new System.Drawing.Point(297, 145);
-            this.lblLineLayer.Name = "lblLineLayer";
-            this.lblLineLayer.Size = new System.Drawing.Size(41, 15);
-            this.lblLineLayer.TabIndex = 11;
-            this.lblLineLayer.Text = "レイヤ";
-
-            // cmbLineLayer (Row 4: レイヤ選択のComboBox)
-            this.cmbLineLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbLineLayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbLineLayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLineLayer.ForeColor = System.Drawing.Color.White;
-            this.cmbLineLayer.FormattingEnabled = true;
-            this.cmbLineLayer.Location = new System.Drawing.Point(337, 142);
-            this.cmbLineLayer.Name = "cmbLineLayer";
-            this.cmbLineLayer.Size = new System.Drawing.Size(127, 25);
-            this.cmbLineLayer.TabIndex = 12;
-
-            // lblLineIkouMaster (Row 5: 遺構)
-            this.lblLineIkouMaster.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLineIkouMaster.AutoSize = true;
-            this.lblLineIkouMaster.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblLineIkouMaster.ForeColor = System.Drawing.Color.White;
-            this.lblLineIkouMaster.Location = new System.Drawing.Point(297, 177);
-            this.lblLineIkouMaster.Name = "lblLineIkouMaster";
-            this.lblLineIkouMaster.Size = new System.Drawing.Size(31, 15);
-            this.lblLineIkouMaster.TabIndex = 13;
-            this.lblLineIkouMaster.Text = "遺構";
-
-            // cmbLineIkouMaster (Row 5: 遺構選択 ComboBox DropDownList)
-            this.cmbLineIkouMaster.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbLineIkouMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbLineIkouMaster.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLineIkouMaster.ForeColor = System.Drawing.Color.White;
-            this.cmbLineIkouMaster.FormattingEnabled = true;
-            this.cmbLineIkouMaster.Location = new System.Drawing.Point(337, 174);
-            this.cmbLineIkouMaster.Name = "cmbLineIkouMaster";
-            this.cmbLineIkouMaster.Size = new System.Drawing.Size(127, 25);
-            this.cmbLineIkouMaster.TabIndex = 14;
-
-            // btnLineSetPos (Row 6: 表示位置指定)
-            this.btnLineSetPos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLineSetPos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnLineSetPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLineSetPos.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnLineSetPos.ForeColor = System.Drawing.Color.White;
-            this.btnLineSetPos.Location = new System.Drawing.Point(297, 218);
-            this.btnLineSetPos.Name = "btnLineSetPos";
-            this.btnLineSetPos.Size = new System.Drawing.Size(167, 28);
-            this.btnLineSetPos.TabIndex = 15;
-            this.btnLineSetPos.Text = "表示位置指定";
-            this.btnLineSetPos.UseVisualStyleBackColor = false;
-
-            // btnDeleteLineRight (Bottom Row: 1. 削除)
-            this.btnDeleteLineRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDeleteLineRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
-            this.btnDeleteLineRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteLineRight.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnDeleteLineRight.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteLineRight.Location = new System.Drawing.Point(297, 284);
-            this.btnDeleteLineRight.Name = "btnDeleteLineRight";
-            this.btnDeleteLineRight.Size = new System.Drawing.Size(50, 28);
-            this.btnDeleteLineRight.TabIndex = 13;
-            this.btnDeleteLineRight.Text = "削除";
-            this.btnDeleteLineRight.UseVisualStyleBackColor = false;
-
-            // btnUpdateLineRight (Bottom Row: 2. 更新)
-            this.btnUpdateLineRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnUpdateLineRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(184)))), ((int)(((byte)(1)))));
-            this.btnUpdateLineRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdateLineRight.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdateLineRight.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdateLineRight.Location = new System.Drawing.Point(351, 284);
-            this.btnUpdateLineRight.Name = "btnUpdateLineRight";
-            this.btnUpdateLineRight.Size = new System.Drawing.Size(50, 28);
-            this.btnUpdateLineRight.TabIndex = 14;
-            this.btnUpdateLineRight.Text = "更新";
-            this.btnUpdateLineRight.UseVisualStyleBackColor = false;
-
-            // btnAddIkouL (Bottom Row: 3. 追加)
-            this.btnAddIkouL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddIkouL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnAddIkouL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddIkouL.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnAddIkouL.ForeColor = System.Drawing.Color.White;
-            this.btnAddIkouL.Location = new System.Drawing.Point(405, 284);
-            this.btnAddIkouL.Name = "btnAddIkouL";
-            this.btnAddIkouL.Size = new System.Drawing.Size(59, 28);
-            this.btnAddIkouL.TabIndex = 15;
-            this.btnAddIkouL.Text = "追加";
-            this.btnAddIkouL.UseVisualStyleBackColor = false;
-
+            // 
+            tabIkou.BackColor = Color.FromArgb(20, 20, 25);
+            tabIkou.Controls.Add(grpPrecs);
+            tabIkou.Controls.Add(grpIkouL);
+            tabIkou.Controls.Add(grpIkouMaster);
+            tabIkou.Controls.Add(pnlPrecsRight);
+            tabIkou.Location = new Point(30, 4);
+            tabIkou.Name = "tabIkou";
+            tabIkou.Padding = new Padding(3);
+            tabIkou.Size = new Size(1356, 324);
+            tabIkou.TabIndex = 0;
+            tabIkou.Text = "遺構";
+            // 
             // grpPrecs
-            this.grpPrecs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpPrecs.Controls.Add(this.dgvPrecs);
-            this.grpPrecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpPrecs.Location = new System.Drawing.Point(871, 3);
-            this.grpPrecs.Name = "grpPrecs";
-            this.grpPrecs.Size = new System.Drawing.Size(417, 320);
-            this.grpPrecs.TabIndex = 2;
-            this.grpPrecs.TabStop = false;
-            this.grpPrecs.Text = "構成座標";
-
+            // 
+            grpPrecs.Controls.Add(dgvPrecs);
+            grpPrecs.Dock = DockStyle.Fill;
+            grpPrecs.ForeColor = Color.FromArgb(0, 180, 216);
+            grpPrecs.Location = new Point(865, 3);
+            grpPrecs.Name = "grpPrecs";
+            grpPrecs.Size = new Size(310, 318);
+            grpPrecs.TabIndex = 2;
+            grpPrecs.TabStop = false;
+            grpPrecs.Text = "構成座標";
+            // 
             // dgvPrecs
-            this.dgvPrecs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvPrecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPrecs.Location = new System.Drawing.Point(6, 22);
-            this.dgvPrecs.Name = "dgvPrecs";
-            this.dgvPrecs.RowTemplate.Height = 25;
-            this.dgvPrecs.Size = new System.Drawing.Size(455, 292);
-            this.dgvPrecs.TabIndex = 0;
-
+            // 
+            dgvPrecs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvPrecs.Dock = DockStyle.Fill;
+            dgvPrecs.Location = new Point(3, 23);
+            dgvPrecs.Name = "dgvPrecs";
+            dgvPrecs.Size = new Size(304, 292);
+            dgvPrecs.TabIndex = 0;
+            // 
+            // grpIkouL
+            // 
+            grpIkouL.Controls.Add(btnAddIkouL);
+            grpIkouL.Controls.Add(btnUpdateLineRight);
+            grpIkouL.Controls.Add(btnDeleteLineRight);
+            grpIkouL.Controls.Add(btnLineSetPos);
+            grpIkouL.Controls.Add(cmbLineIkouMaster);
+            grpIkouL.Controls.Add(lblLineIkouMaster);
+            grpIkouL.Controls.Add(cmbLineLayer);
+            grpIkouL.Controls.Add(lblLineLayer);
+            grpIkouL.Controls.Add(rdoLinePoint);
+            grpIkouL.Controls.Add(rdoLineClosed);
+            grpIkouL.Controls.Add(rdoLineOpen);
+            grpIkouL.Controls.Add(lblLineNameTitle);
+            grpIkouL.Controls.Add(lblLineNameVal);
+            grpIkouL.Controls.Add(btnLineMaxPlusOne);
+            grpIkouL.Controls.Add(txtLineNum);
+            grpIkouL.Controls.Add(cmbLineKind);
+            grpIkouL.Controls.Add(lblLineSeqHeader);
+            grpIkouL.Controls.Add(lblLinePrefixHeader);
+            grpIkouL.Controls.Add(dgvIkouL);
+            grpIkouL.Dock = DockStyle.Left;
+            grpIkouL.ForeColor = Color.FromArgb(0, 180, 216);
+            grpIkouL.Location = new Point(393, 3);
+            grpIkouL.Name = "grpIkouL";
+            grpIkouL.Size = new Size(472, 318);
+            grpIkouL.TabIndex = 1;
+            grpIkouL.TabStop = false;
+            grpIkouL.Text = "遺構L";
+            // 
+            // btnAddIkouL
+            // 
+            btnAddIkouL.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnAddIkouL.BackColor = Color.FromArgb(53, 55, 76);
+            btnAddIkouL.FlatStyle = FlatStyle.Flat;
+            btnAddIkouL.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnAddIkouL.ForeColor = Color.White;
+            btnAddIkouL.Location = new Point(405, 282);
+            btnAddIkouL.Name = "btnAddIkouL";
+            btnAddIkouL.Size = new Size(59, 28);
+            btnAddIkouL.TabIndex = 15;
+            btnAddIkouL.Text = "追加";
+            btnAddIkouL.UseVisualStyleBackColor = false;
+            // 
+            // btnUpdateLineRight
+            // 
+            btnUpdateLineRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnUpdateLineRight.BackColor = Color.FromArgb(247, 184, 1);
+            btnUpdateLineRight.FlatStyle = FlatStyle.Flat;
+            btnUpdateLineRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnUpdateLineRight.ForeColor = Color.Black;
+            btnUpdateLineRight.Location = new Point(351, 282);
+            btnUpdateLineRight.Name = "btnUpdateLineRight";
+            btnUpdateLineRight.Size = new Size(50, 28);
+            btnUpdateLineRight.TabIndex = 14;
+            btnUpdateLineRight.Text = "更新";
+            btnUpdateLineRight.UseVisualStyleBackColor = false;
+            // 
+            // btnDeleteLineRight
+            // 
+            btnDeleteLineRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDeleteLineRight.BackColor = Color.FromArgb(190, 45, 60);
+            btnDeleteLineRight.FlatStyle = FlatStyle.Flat;
+            btnDeleteLineRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDeleteLineRight.ForeColor = Color.White;
+            btnDeleteLineRight.Location = new Point(297, 282);
+            btnDeleteLineRight.Name = "btnDeleteLineRight";
+            btnDeleteLineRight.Size = new Size(50, 28);
+            btnDeleteLineRight.TabIndex = 13;
+            btnDeleteLineRight.Text = "削除";
+            btnDeleteLineRight.UseVisualStyleBackColor = false;
+            // 
+            // btnLineSetPos
+            // 
+            btnLineSetPos.BackColor = Color.FromArgb(53, 55, 76);
+            btnLineSetPos.FlatStyle = FlatStyle.Flat;
+            btnLineSetPos.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLineSetPos.ForeColor = Color.White;
+            btnLineSetPos.Location = new Point(297, 218);
+            btnLineSetPos.Name = "btnLineSetPos";
+            btnLineSetPos.Size = new Size(167, 28);
+            btnLineSetPos.TabIndex = 15;
+            btnLineSetPos.Text = "表示位置指定";
+            btnLineSetPos.UseVisualStyleBackColor = false;
+            // 
+            // cmbLineIkouMaster
+            // 
+            cmbLineIkouMaster.BackColor = Color.FromArgb(43, 45, 66);
+            cmbLineIkouMaster.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbLineIkouMaster.ForeColor = Color.White;
+            cmbLineIkouMaster.FormattingEnabled = true;
+            cmbLineIkouMaster.Location = new Point(337, 174);
+            cmbLineIkouMaster.Name = "cmbLineIkouMaster";
+            cmbLineIkouMaster.Size = new Size(127, 28);
+            cmbLineIkouMaster.TabIndex = 14;
+            // 
+            // lblLineIkouMaster
+            // 
+            lblLineIkouMaster.AutoSize = true;
+            lblLineIkouMaster.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblLineIkouMaster.ForeColor = Color.White;
+            lblLineIkouMaster.Location = new Point(297, 177);
+            lblLineIkouMaster.Name = "lblLineIkouMaster";
+            lblLineIkouMaster.Size = new Size(31, 15);
+            lblLineIkouMaster.TabIndex = 13;
+            lblLineIkouMaster.Text = "遺構";
+            // 
+            // cmbLineLayer
+            // 
+            cmbLineLayer.BackColor = Color.FromArgb(43, 45, 66);
+            cmbLineLayer.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbLineLayer.ForeColor = Color.White;
+            cmbLineLayer.FormattingEnabled = true;
+            cmbLineLayer.Location = new Point(337, 142);
+            cmbLineLayer.Name = "cmbLineLayer";
+            cmbLineLayer.Size = new Size(127, 28);
+            cmbLineLayer.TabIndex = 12;
+            // 
+            // lblLineLayer
+            // 
+            lblLineLayer.AutoSize = true;
+            lblLineLayer.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblLineLayer.ForeColor = Color.White;
+            lblLineLayer.Location = new Point(297, 145);
+            lblLineLayer.Name = "lblLineLayer";
+            lblLineLayer.Size = new Size(35, 15);
+            lblLineLayer.TabIndex = 11;
+            lblLineLayer.Text = "レイヤ";
+            // 
+            // rdoLinePoint
+            // 
+            rdoLinePoint.AutoSize = true;
+            rdoLinePoint.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            rdoLinePoint.ForeColor = Color.White;
+            rdoLinePoint.Location = new Point(405, 110);
+            rdoLinePoint.Name = "rdoLinePoint";
+            rdoLinePoint.Size = new Size(61, 19);
+            rdoLinePoint.TabIndex = 10;
+            rdoLinePoint.Text = "標高点";
+            rdoLinePoint.UseVisualStyleBackColor = true;
+            // 
+            // rdoLineClosed
+            // 
+            rdoLineClosed.AutoSize = true;
+            rdoLineClosed.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            rdoLineClosed.ForeColor = Color.White;
+            rdoLineClosed.Location = new Point(351, 110);
+            rdoLineClosed.Name = "rdoLineClosed";
+            rdoLineClosed.Size = new Size(49, 19);
+            rdoLineClosed.TabIndex = 9;
+            rdoLineClosed.Text = "閉合";
+            rdoLineClosed.UseVisualStyleBackColor = true;
+            // 
+            // rdoLineOpen
+            // 
+            rdoLineOpen.AutoSize = true;
+            rdoLineOpen.Checked = true;
+            rdoLineOpen.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            rdoLineOpen.ForeColor = Color.White;
+            rdoLineOpen.Location = new Point(297, 110);
+            rdoLineOpen.Name = "rdoLineOpen";
+            rdoLineOpen.Size = new Size(49, 19);
+            rdoLineOpen.TabIndex = 8;
+            rdoLineOpen.TabStop = true;
+            rdoLineOpen.Text = "開放";
+            rdoLineOpen.UseVisualStyleBackColor = true;
+            // 
+            // lblLineNameTitle
+            // 
+            lblLineNameTitle.AutoSize = true;
+            lblLineNameTitle.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblLineNameTitle.ForeColor = Color.White;
+            lblLineNameTitle.Location = new Point(297, 77);
+            lblLineNameTitle.Name = "lblLineNameTitle";
+            lblLineNameTitle.Size = new Size(34, 17);
+            lblLineNameTitle.TabIndex = 6;
+            lblLineNameTitle.Text = "線名";
+            // 
+            // lblLineNameVal
+            // 
+            lblLineNameVal.BackColor = Color.FromArgb(30, 30, 40);
+            lblLineNameVal.BorderStyle = BorderStyle.FixedSingle;
+            lblLineNameVal.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblLineNameVal.ForeColor = Color.FromArgb(0, 225, 255);
+            lblLineNameVal.Location = new Point(337, 74);
+            lblLineNameVal.Name = "lblLineNameVal";
+            lblLineNameVal.Size = new Size(127, 25);
+            lblLineNameVal.TabIndex = 7;
+            lblLineNameVal.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnLineMaxPlusOne
+            // 
+            btnLineMaxPlusOne.BackColor = Color.FromArgb(53, 55, 76);
+            btnLineMaxPlusOne.FlatStyle = FlatStyle.Flat;
+            btnLineMaxPlusOne.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLineMaxPlusOne.ForeColor = Color.FromArgb(0, 225, 255);
+            btnLineMaxPlusOne.Location = new Point(404, 37);
+            btnLineMaxPlusOne.Margin = new Padding(0);
+            btnLineMaxPlusOne.Name = "btnLineMaxPlusOne";
+            btnLineMaxPlusOne.Size = new Size(60, 26);
+            btnLineMaxPlusOne.TabIndex = 5;
+            btnLineMaxPlusOne.Text = "最大+1";
+            btnLineMaxPlusOne.UseVisualStyleBackColor = false;
+            // 
+            // txtLineNum
+            // 
+            txtLineNum.BackColor = Color.FromArgb(255, 255, 191);
+            txtLineNum.ForeColor = Color.Black;
+            txtLineNum.Location = new Point(366, 38);
+            txtLineNum.MaxLength = 3;
+            txtLineNum.Name = "txtLineNum";
+            txtLineNum.Size = new Size(34, 27);
+            txtLineNum.TabIndex = 4;
+            // 
+            // cmbLineKind
+            // 
+            cmbLineKind.BackColor = Color.FromArgb(43, 45, 66);
+            cmbLineKind.ForeColor = Color.White;
+            cmbLineKind.FormattingEnabled = true;
+            cmbLineKind.Location = new Point(297, 38);
+            cmbLineKind.Name = "cmbLineKind";
+            cmbLineKind.Size = new Size(65, 28);
+            cmbLineKind.TabIndex = 3;
+            // 
+            // lblLineSeqHeader
+            // 
+            lblLineSeqHeader.AutoSize = true;
+            lblLineSeqHeader.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblLineSeqHeader.ForeColor = Color.White;
+            lblLineSeqHeader.Location = new Point(366, 20);
+            lblLineSeqHeader.Name = "lblLineSeqHeader";
+            lblLineSeqHeader.Size = new Size(31, 15);
+            lblLineSeqHeader.TabIndex = 2;
+            lblLineSeqHeader.Text = "連番";
+            // 
+            // lblLinePrefixHeader
+            // 
+            lblLinePrefixHeader.AutoSize = true;
+            lblLinePrefixHeader.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblLinePrefixHeader.ForeColor = Color.White;
+            lblLinePrefixHeader.Location = new Point(297, 20);
+            lblLinePrefixHeader.Name = "lblLinePrefixHeader";
+            lblLinePrefixHeader.Size = new Size(31, 15);
+            lblLinePrefixHeader.TabIndex = 1;
+            lblLinePrefixHeader.Text = "接頭";
+            // 
+            // dgvIkouL
+            // 
+            dgvIkouL.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            dgvIkouL.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvIkouL.Location = new Point(6, 22);
+            dgvIkouL.Name = "dgvIkouL";
+            dgvIkouL.Size = new Size(285, 288);
+            dgvIkouL.TabIndex = 0;
+            // 
+            // grpIkouMaster
+            // 
+            grpIkouMaster.Controls.Add(btnDeleteIkouRight);
+            grpIkouMaster.Controls.Add(btnUpdateIkouRight);
+            grpIkouMaster.Controls.Add(btnAddIkou);
+            grpIkouMaster.Controls.Add(btnSetPos);
+            grpIkouMaster.Controls.Add(btnView3D);
+            grpIkouMaster.Controls.Add(lblIkouNameTitle);
+            grpIkouMaster.Controls.Add(lblIkouNameVal);
+            grpIkouMaster.Controls.Add(btnMaxPlusOne);
+            grpIkouMaster.Controls.Add(txtIkouNum);
+            grpIkouMaster.Controls.Add(cmbIkouKind);
+            grpIkouMaster.Controls.Add(lblSeqHeader);
+            grpIkouMaster.Controls.Add(lblPrefixHeader);
+            grpIkouMaster.Controls.Add(dgvIkou);
+            grpIkouMaster.Dock = DockStyle.Left;
+            grpIkouMaster.ForeColor = Color.FromArgb(0, 180, 216);
+            grpIkouMaster.Location = new Point(3, 3);
+            grpIkouMaster.Name = "grpIkouMaster";
+            grpIkouMaster.Size = new Size(390, 318);
+            grpIkouMaster.TabIndex = 0;
+            grpIkouMaster.TabStop = false;
+            grpIkouMaster.Text = "遺構";
+            // 
+            // btnDeleteIkouRight
+            // 
+            btnDeleteIkouRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDeleteIkouRight.BackColor = Color.FromArgb(190, 45, 60);
+            btnDeleteIkouRight.FlatStyle = FlatStyle.Flat;
+            btnDeleteIkouRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDeleteIkouRight.ForeColor = Color.White;
+            btnDeleteIkouRight.Location = new Point(208, 282);
+            btnDeleteIkouRight.Name = "btnDeleteIkouRight";
+            btnDeleteIkouRight.Size = new Size(54, 28);
+            btnDeleteIkouRight.TabIndex = 10;
+            btnDeleteIkouRight.Text = "削除";
+            btnDeleteIkouRight.UseVisualStyleBackColor = false;
+            // 
+            // btnUpdateIkouRight
+            // 
+            btnUpdateIkouRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnUpdateIkouRight.BackColor = Color.FromArgb(247, 184, 1);
+            btnUpdateIkouRight.FlatStyle = FlatStyle.Flat;
+            btnUpdateIkouRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnUpdateIkouRight.ForeColor = Color.Black;
+            btnUpdateIkouRight.Location = new Point(268, 282);
+            btnUpdateIkouRight.Name = "btnUpdateIkouRight";
+            btnUpdateIkouRight.Size = new Size(54, 28);
+            btnUpdateIkouRight.TabIndex = 11;
+            btnUpdateIkouRight.Text = "更新";
+            btnUpdateIkouRight.UseVisualStyleBackColor = false;
+            // 
+            // btnAddIkou
+            // 
+            btnAddIkou.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnAddIkou.BackColor = Color.FromArgb(53, 55, 76);
+            btnAddIkou.FlatStyle = FlatStyle.Flat;
+            btnAddIkou.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnAddIkou.ForeColor = Color.White;
+            btnAddIkou.Location = new Point(328, 282);
+            btnAddIkou.Name = "btnAddIkou";
+            btnAddIkou.Size = new Size(56, 28);
+            btnAddIkou.TabIndex = 12;
+            btnAddIkou.Text = "追加";
+            btnAddIkou.UseVisualStyleBackColor = false;
+            // 
+            // btnSetPos
+            // 
+            btnSetPos.BackColor = Color.FromArgb(53, 55, 76);
+            btnSetPos.FlatStyle = FlatStyle.Flat;
+            btnSetPos.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnSetPos.ForeColor = Color.White;
+            btnSetPos.Location = new Point(208, 118);
+            btnSetPos.Name = "btnSetPos";
+            btnSetPos.Size = new Size(176, 28);
+            btnSetPos.TabIndex = 8;
+            btnSetPos.Text = "表示位置指定";
+            btnSetPos.UseVisualStyleBackColor = false;
+            // 
+            // btnView3D
+            // 
+            btnView3D.BackColor = Color.FromArgb(53, 55, 76);
+            btnView3D.FlatStyle = FlatStyle.Flat;
+            btnView3D.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnView3D.ForeColor = Color.White;
+            btnView3D.Location = new Point(208, 154);
+            btnView3D.Name = "btnView3D";
+            btnView3D.Size = new Size(176, 28);
+            btnView3D.TabIndex = 9;
+            btnView3D.Text = "\U0001f9ca 3D確認";
+            btnView3D.UseVisualStyleBackColor = false;
+            // 
+            // lblIkouNameTitle
+            // 
+            lblIkouNameTitle.AutoSize = true;
+            lblIkouNameTitle.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblIkouNameTitle.ForeColor = Color.White;
+            lblIkouNameTitle.Location = new Point(208, 77);
+            lblIkouNameTitle.Name = "lblIkouNameTitle";
+            lblIkouNameTitle.Size = new Size(47, 17);
+            lblIkouNameTitle.TabIndex = 6;
+            lblIkouNameTitle.Text = "遺構名";
+            // 
+            // lblIkouNameVal
+            // 
+            lblIkouNameVal.BackColor = Color.FromArgb(30, 30, 40);
+            lblIkouNameVal.BorderStyle = BorderStyle.FixedSingle;
+            lblIkouNameVal.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblIkouNameVal.ForeColor = Color.FromArgb(0, 225, 255);
+            lblIkouNameVal.Location = new Point(260, 74);
+            lblIkouNameVal.Name = "lblIkouNameVal";
+            lblIkouNameVal.Size = new Size(124, 25);
+            lblIkouNameVal.TabIndex = 7;
+            lblIkouNameVal.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnMaxPlusOne
+            // 
+            btnMaxPlusOne.BackColor = Color.FromArgb(53, 55, 76);
+            btnMaxPlusOne.FlatStyle = FlatStyle.Flat;
+            btnMaxPlusOne.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnMaxPlusOne.ForeColor = Color.FromArgb(0, 225, 255);
+            btnMaxPlusOne.Location = new Point(324, 37);
+            btnMaxPlusOne.Margin = new Padding(0);
+            btnMaxPlusOne.Name = "btnMaxPlusOne";
+            btnMaxPlusOne.Size = new Size(60, 26);
+            btnMaxPlusOne.TabIndex = 5;
+            btnMaxPlusOne.Text = "最大+1";
+            btnMaxPlusOne.UseVisualStyleBackColor = false;
+            // 
+            // txtIkouNum
+            // 
+            txtIkouNum.BackColor = Color.FromArgb(255, 255, 191);
+            txtIkouNum.ForeColor = Color.Black;
+            txtIkouNum.Location = new Point(286, 38);
+            txtIkouNum.MaxLength = 3;
+            txtIkouNum.Name = "txtIkouNum";
+            txtIkouNum.Size = new Size(34, 27);
+            txtIkouNum.TabIndex = 4;
+            // 
+            // cmbIkouKind
+            // 
+            cmbIkouKind.BackColor = Color.FromArgb(43, 45, 66);
+            cmbIkouKind.ForeColor = Color.White;
+            cmbIkouKind.FormattingEnabled = true;
+            cmbIkouKind.Location = new Point(208, 38);
+            cmbIkouKind.Name = "cmbIkouKind";
+            cmbIkouKind.Size = new Size(74, 28);
+            cmbIkouKind.TabIndex = 3;
+            // 
+            // lblSeqHeader
+            // 
+            lblSeqHeader.AutoSize = true;
+            lblSeqHeader.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblSeqHeader.ForeColor = Color.White;
+            lblSeqHeader.Location = new Point(286, 20);
+            lblSeqHeader.Name = "lblSeqHeader";
+            lblSeqHeader.Size = new Size(31, 15);
+            lblSeqHeader.TabIndex = 2;
+            lblSeqHeader.Text = "連番";
+            // 
+            // lblPrefixHeader
+            // 
+            lblPrefixHeader.AutoSize = true;
+            lblPrefixHeader.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblPrefixHeader.ForeColor = Color.White;
+            lblPrefixHeader.Location = new Point(208, 20);
+            lblPrefixHeader.Name = "lblPrefixHeader";
+            lblPrefixHeader.Size = new Size(31, 15);
+            lblPrefixHeader.TabIndex = 1;
+            lblPrefixHeader.Text = "接頭";
+            // 
+            // dgvIkou
+            // 
+            dgvIkou.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvIkou.Dock = DockStyle.Left;
+            dgvIkou.Location = new Point(3, 23);
+            dgvIkou.Name = "dgvIkou";
+            dgvIkou.Size = new Size(196, 292);
+            dgvIkou.TabIndex = 0;
+            // 
             // pnlPrecsRight
-            this.pnlPrecsRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlPrecsRight.Controls.Add(this.grpCoordValue);
-            this.pnlPrecsRight.Location = new System.Drawing.Point(1291, 3);
-            this.pnlPrecsRight.Margin = new System.Windows.Forms.Padding(3);
-            this.pnlPrecsRight.Name = "pnlPrecsRight";
-            this.pnlPrecsRight.Size = new System.Drawing.Size(178, 320);
-            this.pnlPrecsRight.TabIndex = 3;
-
+            // 
+            pnlPrecsRight.Controls.Add(grpCoordValue);
+            pnlPrecsRight.Dock = DockStyle.Right;
+            pnlPrecsRight.Location = new Point(1175, 3);
+            pnlPrecsRight.Name = "pnlPrecsRight";
+            pnlPrecsRight.Size = new Size(178, 318);
+            pnlPrecsRight.TabIndex = 3;
+            // 
             // grpCoordValue
-            this.grpCoordValue.Controls.Add(this.lblCoordX);
-            this.grpCoordValue.Controls.Add(this.txtCoordX);
-            this.grpCoordValue.Controls.Add(this.lblCoordY);
-            this.grpCoordValue.Controls.Add(this.txtCoordY);
-            this.grpCoordValue.Controls.Add(this.lblCoordZ);
-            this.grpCoordValue.Controls.Add(this.txtCoordZ);
-            this.grpCoordValue.Controls.Add(this.chkScreenInput);
-            this.grpCoordValue.Controls.Add(this.btnDeletePointRight);
-            this.grpCoordValue.Controls.Add(this.btnUpdatePointRight);
-            this.grpCoordValue.Controls.Add(this.btnAddPointRight);
-            this.grpCoordValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpCoordValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpCoordValue.Location = new System.Drawing.Point(0, 0);
-            this.grpCoordValue.Name = "grpCoordValue";
-            this.grpCoordValue.Size = new System.Drawing.Size(178, 320);
-            this.grpCoordValue.TabIndex = 0;
-            this.grpCoordValue.TabStop = false;
-            this.grpCoordValue.Text = "座標値";
-
+            // 
+            grpCoordValue.Anchor = AnchorStyles.None;
+            grpCoordValue.Controls.Add(lblCoordX);
+            grpCoordValue.Controls.Add(txtCoordX);
+            grpCoordValue.Controls.Add(lblCoordY);
+            grpCoordValue.Controls.Add(txtCoordY);
+            grpCoordValue.Controls.Add(lblCoordZ);
+            grpCoordValue.Controls.Add(txtCoordZ);
+            grpCoordValue.Controls.Add(chkScreenInput);
+            grpCoordValue.Controls.Add(btnDeletePointRight);
+            grpCoordValue.Controls.Add(btnUpdatePointRight);
+            grpCoordValue.Controls.Add(btnAddPointRight);
+            grpCoordValue.ForeColor = Color.FromArgb(0, 180, 216);
+            grpCoordValue.Location = new Point(0, 0);
+            grpCoordValue.Name = "grpCoordValue";
+            grpCoordValue.Size = new Size(178, 318);
+            grpCoordValue.TabIndex = 0;
+            grpCoordValue.TabStop = false;
+            grpCoordValue.Text = "座標値";
+            // 
             // lblCoordX
-            this.lblCoordX.AutoSize = true;
-            this.lblCoordX.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCoordX.ForeColor = System.Drawing.Color.White;
-            this.lblCoordX.Location = new System.Drawing.Point(8, 28);
-            this.lblCoordX.Name = "lblCoordX";
-            this.lblCoordX.Size = new System.Drawing.Size(19, 17);
-            this.lblCoordX.TabIndex = 1;
-            this.lblCoordX.Text = "X:";
-
+            // 
+            lblCoordX.AutoSize = true;
+            lblCoordX.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblCoordX.ForeColor = Color.White;
+            lblCoordX.Location = new Point(8, 28);
+            lblCoordX.Name = "lblCoordX";
+            lblCoordX.Size = new Size(19, 17);
+            lblCoordX.TabIndex = 1;
+            lblCoordX.Text = "X:";
+            // 
             // txtCoordX
-            this.txtCoordX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
-            this.txtCoordX.ForeColor = System.Drawing.Color.Black;
-            this.txtCoordX.Location = new System.Drawing.Point(32, 25);
-            this.txtCoordX.Name = "txtCoordX";
-            this.txtCoordX.Size = new System.Drawing.Size(130, 24);
-            this.txtCoordX.TabIndex = 2;
-            this.txtCoordX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-
+            // 
+            txtCoordX.BackColor = Color.FromArgb(255, 255, 191);
+            txtCoordX.ForeColor = Color.Black;
+            txtCoordX.Location = new Point(32, 25);
+            txtCoordX.Name = "txtCoordX";
+            txtCoordX.Size = new Size(130, 27);
+            txtCoordX.TabIndex = 2;
+            txtCoordX.TextAlign = HorizontalAlignment.Right;
+            // 
             // lblCoordY
-            this.lblCoordY.AutoSize = true;
-            this.lblCoordY.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCoordY.ForeColor = System.Drawing.Color.White;
-            this.lblCoordY.Location = new System.Drawing.Point(8, 68);
-            this.lblCoordY.Name = "lblCoordY";
-            this.lblCoordY.Size = new System.Drawing.Size(18, 17);
-            this.lblCoordY.TabIndex = 3;
-            this.lblCoordY.Text = "Y:";
-
+            // 
+            lblCoordY.AutoSize = true;
+            lblCoordY.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblCoordY.ForeColor = Color.White;
+            lblCoordY.Location = new Point(8, 68);
+            lblCoordY.Name = "lblCoordY";
+            lblCoordY.Size = new Size(18, 17);
+            lblCoordY.TabIndex = 3;
+            lblCoordY.Text = "Y:";
+            // 
             // txtCoordY
-            this.txtCoordY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
-            this.txtCoordY.ForeColor = System.Drawing.Color.Black;
-            this.txtCoordY.Location = new System.Drawing.Point(32, 65);
-            this.txtCoordY.Name = "txtCoordY";
-            this.txtCoordY.Size = new System.Drawing.Size(130, 24);
-            this.txtCoordY.TabIndex = 4;
-            this.txtCoordY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-
+            // 
+            txtCoordY.BackColor = Color.FromArgb(255, 255, 191);
+            txtCoordY.ForeColor = Color.Black;
+            txtCoordY.Location = new Point(32, 65);
+            txtCoordY.Name = "txtCoordY";
+            txtCoordY.Size = new Size(130, 27);
+            txtCoordY.TabIndex = 4;
+            txtCoordY.TextAlign = HorizontalAlignment.Right;
+            // 
             // lblCoordZ
-            this.lblCoordZ.AutoSize = true;
-            this.lblCoordZ.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCoordZ.ForeColor = System.Drawing.Color.White;
-            this.lblCoordZ.Location = new System.Drawing.Point(8, 108);
-            this.lblCoordZ.Name = "lblCoordZ";
-            this.lblCoordZ.Size = new System.Drawing.Size(18, 17);
-            this.lblCoordZ.TabIndex = 5;
-            this.lblCoordZ.Text = "Z:";
-
+            // 
+            lblCoordZ.AutoSize = true;
+            lblCoordZ.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblCoordZ.ForeColor = Color.White;
+            lblCoordZ.Location = new Point(8, 108);
+            lblCoordZ.Name = "lblCoordZ";
+            lblCoordZ.Size = new Size(19, 17);
+            lblCoordZ.TabIndex = 5;
+            lblCoordZ.Text = "Z:";
+            // 
             // txtCoordZ
-            this.txtCoordZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
-            this.txtCoordZ.ForeColor = System.Drawing.Color.Black;
-            this.txtCoordZ.Location = new System.Drawing.Point(32, 105);
-            this.txtCoordZ.Name = "txtCoordZ";
-            this.txtCoordZ.Size = new System.Drawing.Size(130, 24);
-            this.txtCoordZ.TabIndex = 6;
-            this.txtCoordZ.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-
+            // 
+            txtCoordZ.BackColor = Color.FromArgb(255, 255, 191);
+            txtCoordZ.ForeColor = Color.Black;
+            txtCoordZ.Location = new Point(32, 105);
+            txtCoordZ.Name = "txtCoordZ";
+            txtCoordZ.Size = new Size(130, 27);
+            txtCoordZ.TabIndex = 6;
+            txtCoordZ.TextAlign = HorizontalAlignment.Right;
+            // 
             // chkScreenInput
-            this.chkScreenInput.AutoSize = true;
-            this.chkScreenInput.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkScreenInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(35)))), ((int)(((byte)(60)))));
-            this.chkScreenInput.Location = new System.Drawing.Point(8, 148);
-            this.chkScreenInput.Name = "chkScreenInput";
-            this.chkScreenInput.Size = new System.Drawing.Size(102, 21);
-            this.chkScreenInput.TabIndex = 7;
-            this.chkScreenInput.Text = "📌 画面入力";
-            this.chkScreenInput.UseVisualStyleBackColor = true;
-
+            // 
+            chkScreenInput.AutoSize = true;
+            chkScreenInput.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkScreenInput.ForeColor = Color.FromArgb(239, 35, 60);
+            chkScreenInput.Location = new Point(8, 148);
+            chkScreenInput.Name = "chkScreenInput";
+            chkScreenInput.Size = new Size(90, 19);
+            chkScreenInput.TabIndex = 7;
+            chkScreenInput.Text = "📌 画面入力";
+            chkScreenInput.UseVisualStyleBackColor = true;
+            // 
             // btnDeletePointRight
-            this.btnDeletePointRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDeletePointRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
-            this.btnDeletePointRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeletePointRight.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnDeletePointRight.ForeColor = System.Drawing.Color.White;
-            this.btnDeletePointRight.Location = new System.Drawing.Point(8, 284);
-            this.btnDeletePointRight.Name = "btnDeletePointRight";
-            this.btnDeletePointRight.Size = new System.Drawing.Size(48, 28);
-            this.btnDeletePointRight.TabIndex = 8;
-            this.btnDeletePointRight.Text = "削除";
-            this.btnDeletePointRight.UseVisualStyleBackColor = false;
-
+            // 
+            btnDeletePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDeletePointRight.BackColor = Color.FromArgb(190, 45, 60);
+            btnDeletePointRight.FlatStyle = FlatStyle.Flat;
+            btnDeletePointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDeletePointRight.ForeColor = Color.White;
+            btnDeletePointRight.Location = new Point(8, 502);
+            btnDeletePointRight.Name = "btnDeletePointRight";
+            btnDeletePointRight.Size = new Size(48, 28);
+            btnDeletePointRight.TabIndex = 8;
+            btnDeletePointRight.Text = "削除";
+            btnDeletePointRight.UseVisualStyleBackColor = false;
+            // 
             // btnUpdatePointRight
-            this.btnUpdatePointRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnUpdatePointRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(184)))), ((int)(((byte)(1)))));
-            this.btnUpdatePointRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdatePointRight.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdatePointRight.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdatePointRight.Location = new System.Drawing.Point(62, 284);
-            this.btnUpdatePointRight.Name = "btnUpdatePointRight";
-            this.btnUpdatePointRight.Size = new System.Drawing.Size(48, 28);
-            this.btnUpdatePointRight.TabIndex = 9;
-            this.btnUpdatePointRight.Text = "更新";
-            this.btnUpdatePointRight.UseVisualStyleBackColor = false;
-
+            // 
+            btnUpdatePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnUpdatePointRight.BackColor = Color.FromArgb(247, 184, 1);
+            btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
+            btnUpdatePointRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnUpdatePointRight.ForeColor = Color.Black;
+            btnUpdatePointRight.Location = new Point(62, 502);
+            btnUpdatePointRight.Name = "btnUpdatePointRight";
+            btnUpdatePointRight.Size = new Size(48, 28);
+            btnUpdatePointRight.TabIndex = 9;
+            btnUpdatePointRight.Text = "更新";
+            btnUpdatePointRight.UseVisualStyleBackColor = false;
+            // 
             // btnAddPointRight
-            this.btnAddPointRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddPointRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnAddPointRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddPointRight.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnAddPointRight.ForeColor = System.Drawing.Color.White;
-            this.btnAddPointRight.Location = new System.Drawing.Point(116, 284);
-            this.btnAddPointRight.Name = "btnAddPointRight";
-            this.btnAddPointRight.Size = new System.Drawing.Size(48, 28);
-            this.btnAddPointRight.TabIndex = 10;
-            this.btnAddPointRight.Text = "追加";
-            this.btnAddPointRight.UseVisualStyleBackColor = false;
-
+            // 
+            btnAddPointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnAddPointRight.BackColor = Color.FromArgb(53, 55, 76);
+            btnAddPointRight.FlatStyle = FlatStyle.Flat;
+            btnAddPointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnAddPointRight.ForeColor = Color.White;
+            btnAddPointRight.Location = new Point(116, 502);
+            btnAddPointRight.Name = "btnAddPointRight";
+            btnAddPointRight.Size = new Size(48, 28);
+            btnAddPointRight.TabIndex = 10;
+            btnAddPointRight.Text = "追加";
+            btnAddPointRight.UseVisualStyleBackColor = false;
+            // 
             // tabIbutu
-            this.tabIbutu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabIbutu.Controls.Add(this.pnlIbutuRight);
-            this.tabIbutu.Controls.Add(this.dgvIbutu);
-            this.tabIbutu.Location = new System.Drawing.Point(4, 26);
-            this.tabIbutu.Name = "tabIbutu";
-            this.tabIbutu.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIbutu.Size = new System.Drawing.Size(1472, 326);
-            this.tabIbutu.TabIndex = 1;
-            this.tabIbutu.Text = "遺物";
-
-            // pnlIbutuRight
-            this.pnlIbutuRight.Controls.Add(this.grpIbutuRecord);
-            this.pnlIbutuRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlIbutuRight.Location = new System.Drawing.Point(1040, 3);
-            this.pnlIbutuRight.Name = "pnlIbutuRight";
-            this.pnlIbutuRight.Size = new System.Drawing.Size(425, 320);
-            this.pnlIbutuRight.TabIndex = 5;
-
-            // grpIbutuRecord
-            this.grpIbutuRecord.Controls.Add(this.lblFilterIbutu);
-            this.grpIbutuRecord.Controls.Add(this.txtFilterIbutu);
-            this.grpIbutuRecord.Controls.Add(this.lblIbutuChiku);
-            this.grpIbutuRecord.Controls.Add(this.cmbIbutuChiku);
-            this.grpIbutuRecord.Controls.Add(this.lblIbutuSoui);
-            this.grpIbutuRecord.Controls.Add(this.cmbIbutuSoui);
-            this.grpIbutuRecord.Controls.Add(this.lblIbutuSyubetu);
-            this.grpIbutuRecord.Controls.Add(this.cmbIbutuSyubetu);
-            this.grpIbutuRecord.Controls.Add(this.lblIbutuLayer);
-            this.grpIbutuRecord.Controls.Add(this.cmbIbutuLayer);
-            this.grpIbutuRecord.Controls.Add(this.lblIbutuNo);
-            this.grpIbutuRecord.Controls.Add(this.txtIbutuNo);
-            this.grpIbutuRecord.Controls.Add(this.chkIbutuAutoInc);
-            this.grpIbutuRecord.Controls.Add(this.btnIbutuMaxPlusOne);
-            this.grpIbutuRecord.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpIbutuRecord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpIbutuRecord.Location = new System.Drawing.Point(0, 0);
-            this.grpIbutuRecord.Name = "grpIbutuRecord";
-            this.grpIbutuRecord.Size = new System.Drawing.Size(238, 315);
-            this.grpIbutuRecord.TabIndex = 0;
-            this.grpIbutuRecord.TabStop = false;
-            this.grpIbutuRecord.Text = "📦 遺物属性・検索";
-
-            // lblFilterIbutu
-            this.lblFilterIbutu.AutoSize = true;
-            this.lblFilterIbutu.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblFilterIbutu.ForeColor = System.Drawing.Color.White;
-            this.lblFilterIbutu.Location = new System.Drawing.Point(6, 20);
-            this.lblFilterIbutu.Name = "lblFilterIbutu";
-            this.lblFilterIbutu.Size = new System.Drawing.Size(70, 15);
-            this.lblFilterIbutu.TabIndex = 0;
-            this.lblFilterIbutu.Text = "🔍 絞り込み:";
-
-            // txtFilterIbutu
-            this.txtFilterIbutu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.txtFilterIbutu.ForeColor = System.Drawing.Color.White;
-            this.txtFilterIbutu.Location = new System.Drawing.Point(80, 17);
-            this.txtFilterIbutu.Name = "txtFilterIbutu";
-            this.txtFilterIbutu.Size = new System.Drawing.Size(148, 23);
-            this.txtFilterIbutu.TabIndex = 1;
-
-            // lblIbutuChiku
-            this.lblIbutuChiku.AutoSize = true;
-            this.lblIbutuChiku.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblIbutuChiku.ForeColor = System.Drawing.Color.White;
-            this.lblIbutuChiku.Location = new System.Drawing.Point(6, 44);
-            this.lblIbutuChiku.Name = "lblIbutuChiku";
-            this.lblIbutuChiku.Size = new System.Drawing.Size(79, 15);
-            this.lblIbutuChiku.TabIndex = 2;
-            this.lblIbutuChiku.Text = "出土地点/遺構";
-
-            // cmbIbutuChiku
-            this.cmbIbutuChiku.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(190)))));
-            this.cmbIbutuChiku.ForeColor = System.Drawing.Color.Black;
-            this.cmbIbutuChiku.FormattingEnabled = true;
-            this.cmbIbutuChiku.Location = new System.Drawing.Point(6, 61);
-            this.cmbIbutuChiku.Name = "cmbIbutuChiku";
-            this.cmbIbutuChiku.Size = new System.Drawing.Size(222, 23);
-            this.cmbIbutuChiku.TabIndex = 3;
-
-            // lblIbutuSoui
-            this.lblIbutuSoui.AutoSize = true;
-            this.lblIbutuSoui.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblIbutuSoui.ForeColor = System.Drawing.Color.White;
-            this.lblIbutuSoui.Location = new System.Drawing.Point(6, 88);
-            this.lblIbutuSoui.Name = "lblIbutuSoui";
-            this.lblIbutuSoui.Size = new System.Drawing.Size(55, 15);
-            this.lblIbutuSoui.TabIndex = 4;
-            this.lblIbutuSoui.Text = "出土層位";
-
-            // cmbIbutuSoui
-            this.cmbIbutuSoui.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(190)))));
-            this.cmbIbutuSoui.ForeColor = System.Drawing.Color.Black;
-            this.cmbIbutuSoui.FormattingEnabled = true;
-            this.cmbIbutuSoui.Location = new System.Drawing.Point(6, 105);
-            this.cmbIbutuSoui.Name = "cmbIbutuSoui";
-            this.cmbIbutuSoui.Size = new System.Drawing.Size(222, 23);
-            this.cmbIbutuSoui.TabIndex = 5;
-
-            // lblIbutuSyubetu
-            this.lblIbutuSyubetu.AutoSize = true;
-            this.lblIbutuSyubetu.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblIbutuSyubetu.ForeColor = System.Drawing.Color.White;
-            this.lblIbutuSyubetu.Location = new System.Drawing.Point(6, 132);
-            this.lblIbutuSyubetu.Name = "lblIbutuSyubetu";
-            this.lblIbutuSyubetu.Size = new System.Drawing.Size(31, 15);
-            this.lblIbutuSyubetu.TabIndex = 6;
-            this.lblIbutuSyubetu.Text = "種別";
-
-            // cmbIbutuSyubetu
-            this.cmbIbutuSyubetu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(190)))));
-            this.cmbIbutuSyubetu.ForeColor = System.Drawing.Color.Black;
-            this.cmbIbutuSyubetu.FormattingEnabled = true;
-            this.cmbIbutuSyubetu.Location = new System.Drawing.Point(6, 149);
-            this.cmbIbutuSyubetu.Name = "cmbIbutuSyubetu";
-            this.cmbIbutuSyubetu.Size = new System.Drawing.Size(160, 23);
-            this.cmbIbutuSyubetu.TabIndex = 7;
-
-            // lblIbutuLayer
-            this.lblIbutuLayer.AutoSize = true;
-            this.lblIbutuLayer.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblIbutuLayer.ForeColor = System.Drawing.Color.White;
-            this.lblIbutuLayer.Location = new System.Drawing.Point(6, 178);
-            this.lblIbutuLayer.Name = "lblIbutuLayer";
-            this.lblIbutuLayer.Size = new System.Drawing.Size(34, 15);
-            this.lblIbutuLayer.TabIndex = 8;
-            this.lblIbutuLayer.Text = "レイヤ";
-
-            // cmbIbutuLayer
-            this.cmbIbutuLayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbIbutuLayer.ForeColor = System.Drawing.Color.White;
-            this.cmbIbutuLayer.FormattingEnabled = true;
-            this.cmbIbutuLayer.Location = new System.Drawing.Point(50, 175);
-            this.cmbIbutuLayer.Name = "cmbIbutuLayer";
-            this.cmbIbutuLayer.Size = new System.Drawing.Size(178, 23);
-            this.cmbIbutuLayer.TabIndex = 9;
-
-            // lblIbutuNo
-            this.lblIbutuNo.AutoSize = true;
-            this.lblIbutuNo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblIbutuNo.ForeColor = System.Drawing.Color.White;
-            this.lblIbutuNo.Location = new System.Drawing.Point(6, 208);
-            this.lblIbutuNo.Name = "lblIbutuNo";
-            this.lblIbutuNo.Size = new System.Drawing.Size(55, 15);
-            this.lblIbutuNo.TabIndex = 10;
-            this.lblIbutuNo.Text = "遺物番号";
-
-            // txtIbutuNo
-            this.txtIbutuNo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.txtIbutuNo.ForeColor = System.Drawing.Color.White;
-            this.txtIbutuNo.Location = new System.Drawing.Point(68, 205);
-            this.txtIbutuNo.MaxLength = 3;
-            this.txtIbutuNo.Name = "txtIbutuNo";
-            this.txtIbutuNo.Size = new System.Drawing.Size(35, 23);
-            this.txtIbutuNo.TabIndex = 11;
-            this.txtIbutuNo.Text = "1";
-
-            // chkIbutuAutoInc
-            this.chkIbutuAutoInc.AutoSize = true;
-            this.chkIbutuAutoInc.Checked = true;
-            this.chkIbutuAutoInc.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkIbutuAutoInc.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.chkIbutuAutoInc.ForeColor = System.Drawing.Color.White;
-            this.chkIbutuAutoInc.Location = new System.Drawing.Point(129, 207);
-            this.chkIbutuAutoInc.Name = "chkIbutuAutoInc";
-            this.chkIbutuAutoInc.Size = new System.Drawing.Size(95, 19);
-            this.chkIbutuAutoInc.TabIndex = 12;
-            this.chkIbutuAutoInc.Text = "新規で自動+";
-            this.chkIbutuAutoInc.UseVisualStyleBackColor = true;
-
-            // btnIbutuMaxPlusOne
-            this.btnIbutuMaxPlusOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnIbutuMaxPlusOne.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIbutuMaxPlusOne.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnIbutuMaxPlusOne.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.btnIbutuMaxPlusOne.Location = new System.Drawing.Point(68, 233);
-            this.btnIbutuMaxPlusOne.Name = "btnIbutuMaxPlusOne";
-            this.btnIbutuMaxPlusOne.Size = new System.Drawing.Size(78, 26);
-            this.btnIbutuMaxPlusOne.TabIndex = 13;
-            this.btnIbutuMaxPlusOne.Text = "最大+1";
-            this.btnIbutuMaxPlusOne.UseVisualStyleBackColor = false;
-
+            // 
+            tabIbutu.BackColor = Color.FromArgb(20, 20, 25);
+            tabIbutu.Controls.Add(dgvIbutu);
+            tabIbutu.Controls.Add(pnlIbutuRight);
+            tabIbutu.Location = new Point(30, 4);
+            tabIbutu.Name = "tabIbutu";
+            tabIbutu.Padding = new Padding(3);
+            tabIbutu.Size = new Size(1356, 324);
+            tabIbutu.TabIndex = 1;
+            tabIbutu.Text = "遺物";
+            // 
             // dgvIbutu
-            this.dgvIbutu.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvIbutu.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvIbutu.Location = new System.Drawing.Point(12, 12);
-            this.dgvIbutu.Name = "dgvIbutu";
-            this.dgvIbutu.RowTemplate.Height = 25;
-            this.dgvIbutu.Size = new System.Drawing.Size(1015, 300);
-            this.dgvIbutu.TabIndex = 2;
-
+            // 
+            dgvIbutu.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvIbutu.Dock = DockStyle.Fill;
+            dgvIbutu.Location = new Point(3, 3);
+            dgvIbutu.Name = "dgvIbutu";
+            dgvIbutu.Size = new Size(925, 318);
+            dgvIbutu.TabIndex = 2;
+            // 
+            // pnlIbutuRight
+            // 
+            pnlIbutuRight.Controls.Add(grpIbutuRecord);
+            pnlIbutuRight.Dock = DockStyle.Right;
+            pnlIbutuRight.Location = new Point(928, 3);
+            pnlIbutuRight.Name = "pnlIbutuRight";
+            pnlIbutuRight.Size = new Size(425, 318);
+            pnlIbutuRight.TabIndex = 5;
+            // 
+            // grpIbutuRecord
+            // 
+            grpIbutuRecord.Controls.Add(lblFilterIbutu);
+            grpIbutuRecord.Controls.Add(txtFilterIbutu);
+            grpIbutuRecord.Controls.Add(lblIbutuChiku);
+            grpIbutuRecord.Controls.Add(cmbIbutuChiku);
+            grpIbutuRecord.Controls.Add(lblIbutuSoui);
+            grpIbutuRecord.Controls.Add(cmbIbutuSoui);
+            grpIbutuRecord.Controls.Add(lblIbutuSyubetu);
+            grpIbutuRecord.Controls.Add(cmbIbutuSyubetu);
+            grpIbutuRecord.Controls.Add(lblIbutuLayer);
+            grpIbutuRecord.Controls.Add(cmbIbutuLayer);
+            grpIbutuRecord.Controls.Add(lblIbutuNo);
+            grpIbutuRecord.Controls.Add(txtIbutuNo);
+            grpIbutuRecord.Controls.Add(chkIbutuAutoInc);
+            grpIbutuRecord.Controls.Add(btnIbutuMaxPlusOne);
+            grpIbutuRecord.Dock = DockStyle.Fill;
+            grpIbutuRecord.ForeColor = Color.FromArgb(0, 180, 216);
+            grpIbutuRecord.Location = new Point(0, 0);
+            grpIbutuRecord.Name = "grpIbutuRecord";
+            grpIbutuRecord.Size = new Size(425, 318);
+            grpIbutuRecord.TabIndex = 0;
+            grpIbutuRecord.TabStop = false;
+            grpIbutuRecord.Text = "📦 遺物属性・検索";
+            // 
+            // lblFilterIbutu
+            // 
+            lblFilterIbutu.AutoSize = true;
+            lblFilterIbutu.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblFilterIbutu.ForeColor = Color.White;
+            lblFilterIbutu.Location = new Point(6, 20);
+            lblFilterIbutu.Name = "lblFilterIbutu";
+            lblFilterIbutu.Size = new Size(69, 15);
+            lblFilterIbutu.TabIndex = 0;
+            lblFilterIbutu.Text = "🔍 絞り込み:";
+            // 
+            // txtFilterIbutu
+            // 
+            txtFilterIbutu.BackColor = Color.FromArgb(43, 45, 66);
+            txtFilterIbutu.ForeColor = Color.White;
+            txtFilterIbutu.Location = new Point(80, 17);
+            txtFilterIbutu.Name = "txtFilterIbutu";
+            txtFilterIbutu.Size = new Size(148, 27);
+            txtFilterIbutu.TabIndex = 1;
+            // 
+            // lblIbutuChiku
+            // 
+            lblIbutuChiku.AutoSize = true;
+            lblIbutuChiku.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblIbutuChiku.ForeColor = Color.White;
+            lblIbutuChiku.Location = new Point(6, 44);
+            lblIbutuChiku.Name = "lblIbutuChiku";
+            lblIbutuChiku.Size = new Size(84, 15);
+            lblIbutuChiku.TabIndex = 2;
+            lblIbutuChiku.Text = "出土地点/遺構";
+            // 
+            // cmbIbutuChiku
+            // 
+            cmbIbutuChiku.BackColor = Color.FromArgb(255, 255, 190);
+            cmbIbutuChiku.ForeColor = Color.Black;
+            cmbIbutuChiku.FormattingEnabled = true;
+            cmbIbutuChiku.Location = new Point(6, 61);
+            cmbIbutuChiku.Name = "cmbIbutuChiku";
+            cmbIbutuChiku.Size = new Size(222, 28);
+            cmbIbutuChiku.TabIndex = 3;
+            // 
+            // lblIbutuSoui
+            // 
+            lblIbutuSoui.AutoSize = true;
+            lblIbutuSoui.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblIbutuSoui.ForeColor = Color.White;
+            lblIbutuSoui.Location = new Point(6, 88);
+            lblIbutuSoui.Name = "lblIbutuSoui";
+            lblIbutuSoui.Size = new Size(55, 15);
+            lblIbutuSoui.TabIndex = 4;
+            lblIbutuSoui.Text = "出土層位";
+            // 
+            // cmbIbutuSoui
+            // 
+            cmbIbutuSoui.BackColor = Color.FromArgb(255, 255, 190);
+            cmbIbutuSoui.ForeColor = Color.Black;
+            cmbIbutuSoui.FormattingEnabled = true;
+            cmbIbutuSoui.Location = new Point(6, 105);
+            cmbIbutuSoui.Name = "cmbIbutuSoui";
+            cmbIbutuSoui.Size = new Size(222, 28);
+            cmbIbutuSoui.TabIndex = 5;
+            // 
+            // lblIbutuSyubetu
+            // 
+            lblIbutuSyubetu.AutoSize = true;
+            lblIbutuSyubetu.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblIbutuSyubetu.ForeColor = Color.White;
+            lblIbutuSyubetu.Location = new Point(6, 132);
+            lblIbutuSyubetu.Name = "lblIbutuSyubetu";
+            lblIbutuSyubetu.Size = new Size(31, 15);
+            lblIbutuSyubetu.TabIndex = 6;
+            lblIbutuSyubetu.Text = "種別";
+            // 
+            // cmbIbutuSyubetu
+            // 
+            cmbIbutuSyubetu.BackColor = Color.FromArgb(255, 255, 190);
+            cmbIbutuSyubetu.ForeColor = Color.Black;
+            cmbIbutuSyubetu.FormattingEnabled = true;
+            cmbIbutuSyubetu.Location = new Point(6, 149);
+            cmbIbutuSyubetu.Name = "cmbIbutuSyubetu";
+            cmbIbutuSyubetu.Size = new Size(160, 28);
+            cmbIbutuSyubetu.TabIndex = 7;
+            // 
+            // lblIbutuLayer
+            // 
+            lblIbutuLayer.AutoSize = true;
+            lblIbutuLayer.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblIbutuLayer.ForeColor = Color.White;
+            lblIbutuLayer.Location = new Point(6, 178);
+            lblIbutuLayer.Name = "lblIbutuLayer";
+            lblIbutuLayer.Size = new Size(35, 15);
+            lblIbutuLayer.TabIndex = 8;
+            lblIbutuLayer.Text = "レイヤ";
+            // 
+            // cmbIbutuLayer
+            // 
+            cmbIbutuLayer.BackColor = Color.FromArgb(43, 45, 66);
+            cmbIbutuLayer.ForeColor = Color.White;
+            cmbIbutuLayer.FormattingEnabled = true;
+            cmbIbutuLayer.Location = new Point(50, 175);
+            cmbIbutuLayer.Name = "cmbIbutuLayer";
+            cmbIbutuLayer.Size = new Size(178, 28);
+            cmbIbutuLayer.TabIndex = 9;
+            // 
+            // lblIbutuNo
+            // 
+            lblIbutuNo.AutoSize = true;
+            lblIbutuNo.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblIbutuNo.ForeColor = Color.White;
+            lblIbutuNo.Location = new Point(6, 208);
+            lblIbutuNo.Name = "lblIbutuNo";
+            lblIbutuNo.Size = new Size(55, 15);
+            lblIbutuNo.TabIndex = 10;
+            lblIbutuNo.Text = "遺物番号";
+            // 
+            // txtIbutuNo
+            // 
+            txtIbutuNo.BackColor = Color.FromArgb(43, 45, 66);
+            txtIbutuNo.ForeColor = Color.White;
+            txtIbutuNo.Location = new Point(68, 205);
+            txtIbutuNo.MaxLength = 3;
+            txtIbutuNo.Name = "txtIbutuNo";
+            txtIbutuNo.Size = new Size(35, 27);
+            txtIbutuNo.TabIndex = 11;
+            txtIbutuNo.Text = "1";
+            // 
+            // chkIbutuAutoInc
+            // 
+            chkIbutuAutoInc.AutoSize = true;
+            chkIbutuAutoInc.Checked = true;
+            chkIbutuAutoInc.CheckState = CheckState.Checked;
+            chkIbutuAutoInc.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkIbutuAutoInc.ForeColor = Color.White;
+            chkIbutuAutoInc.Location = new Point(129, 207);
+            chkIbutuAutoInc.Name = "chkIbutuAutoInc";
+            chkIbutuAutoInc.Size = new Size(92, 19);
+            chkIbutuAutoInc.TabIndex = 12;
+            chkIbutuAutoInc.Text = "新規で自動+";
+            chkIbutuAutoInc.UseVisualStyleBackColor = true;
+            // 
+            // btnIbutuMaxPlusOne
+            // 
+            btnIbutuMaxPlusOne.BackColor = Color.FromArgb(53, 55, 76);
+            btnIbutuMaxPlusOne.FlatStyle = FlatStyle.Flat;
+            btnIbutuMaxPlusOne.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnIbutuMaxPlusOne.ForeColor = Color.FromArgb(0, 225, 255);
+            btnIbutuMaxPlusOne.Location = new Point(68, 233);
+            btnIbutuMaxPlusOne.Name = "btnIbutuMaxPlusOne";
+            btnIbutuMaxPlusOne.Size = new Size(78, 26);
+            btnIbutuMaxPlusOne.TabIndex = 13;
+            btnIbutuMaxPlusOne.Text = "最大+1";
+            btnIbutuMaxPlusOne.UseVisualStyleBackColor = false;
+            // 
             // tabKikai
-            this.tabKikai.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabKikai.Controls.Add(this.pnlKikaiRight);
-            this.tabKikai.Controls.Add(this.dgvKikai);
-            this.tabKikai.Location = new System.Drawing.Point(4, 26);
-            this.tabKikai.Name = "tabKikai";
-            this.tabKikai.Padding = new System.Windows.Forms.Padding(3);
-            this.tabKikai.Size = new System.Drawing.Size(1472, 326);
-            this.tabKikai.TabIndex = 2;
-            this.tabKikai.Text = "基準点";
-
-            // pnlKikaiRight
-            this.pnlKikaiRight.Controls.Add(this.grpKikaiRecord);
-            this.pnlKikaiRight.Controls.Add(this.grpPointGuidance);
-            this.pnlKikaiRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlKikaiRight.Location = new System.Drawing.Point(860, 3);
-            this.pnlKikaiRight.Name = "pnlKikaiRight";
-            this.pnlKikaiRight.Size = new System.Drawing.Size(600, 320);
-            this.pnlKikaiRight.TabIndex = 3;
-
-            // grpKikaiRecord
-            this.grpKikaiRecord.Controls.Add(this.lblKikaiName);
-            this.grpKikaiRecord.Controls.Add(this.txtKikaiName);
-            this.grpKikaiRecord.Controls.Add(this.lblKikaiLayer);
-            this.grpKikaiRecord.Controls.Add(this.cmbKikaiLayer);
-            this.grpKikaiRecord.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpKikaiRecord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpKikaiRecord.Location = new System.Drawing.Point(0, 0);
-            this.grpKikaiRecord.Name = "grpKikaiRecord";
-            this.grpKikaiRecord.Size = new System.Drawing.Size(205, 315);
-            this.grpKikaiRecord.TabIndex = 0;
-            this.grpKikaiRecord.TabStop = false;
-            this.grpKikaiRecord.Text = "📍 基準点属性";
-
-            // lblKikaiName
-            this.lblKikaiName.AutoSize = true;
-            this.lblKikaiName.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblKikaiName.ForeColor = System.Drawing.Color.White;
-            this.lblKikaiName.Location = new System.Drawing.Point(6, 25);
-            this.lblKikaiName.Name = "lblKikaiName";
-            this.lblKikaiName.Size = new System.Drawing.Size(55, 15);
-            this.lblKikaiName.TabIndex = 0;
-            this.lblKikaiName.Text = "基準点名";
-
-            // txtKikaiName
-            this.txtKikaiName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(190)))));
-            this.txtKikaiName.ForeColor = System.Drawing.Color.Black;
-            this.txtKikaiName.Location = new System.Drawing.Point(68, 22);
-            this.txtKikaiName.Name = "txtKikaiName";
-            this.txtKikaiName.Size = new System.Drawing.Size(128, 23);
-            this.txtKikaiName.TabIndex = 1;
-
-            // lblKikaiLayer
-            this.lblKikaiLayer.AutoSize = true;
-            this.lblKikaiLayer.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblKikaiLayer.ForeColor = System.Drawing.Color.White;
-            this.lblKikaiLayer.Location = new System.Drawing.Point(6, 65);
-            this.lblKikaiLayer.Name = "lblKikaiLayer";
-            this.lblKikaiLayer.Size = new System.Drawing.Size(34, 15);
-            this.lblKikaiLayer.TabIndex = 2;
-            this.lblKikaiLayer.Text = "レイヤ";
-
-            // cmbKikaiLayer
-            this.cmbKikaiLayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbKikaiLayer.ForeColor = System.Drawing.Color.White;
-            this.cmbKikaiLayer.FormattingEnabled = true;
-            this.cmbKikaiLayer.Location = new System.Drawing.Point(50, 62);
-            this.cmbKikaiLayer.Name = "cmbKikaiLayer";
-            this.cmbKikaiLayer.Size = new System.Drawing.Size(146, 23);
-            this.cmbKikaiLayer.TabIndex = 3;
-
-            // grpPointGuidance
-            this.grpPointGuidance.Controls.Add(this.chkPointGuidance);
-            this.grpPointGuidance.Dock = System.Windows.Forms.DockStyle.Right;
-            this.grpPointGuidance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpPointGuidance.Location = new System.Drawing.Point(210, 0);
-            this.grpPointGuidance.Name = "grpPointGuidance";
-            this.grpPointGuidance.Size = new System.Drawing.Size(200, 315);
-            this.grpPointGuidance.TabIndex = 1;
-            this.grpPointGuidance.TabStop = false;
-            this.grpPointGuidance.Text = "🎯 点誘導";
-
-            // chkPointGuidance
-            this.chkPointGuidance.AutoSize = true;
-            this.chkPointGuidance.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.chkPointGuidance.ForeColor = System.Drawing.Color.White;
-            this.chkPointGuidance.Location = new System.Drawing.Point(12, 25);
-            this.chkPointGuidance.Name = "chkPointGuidance";
-            this.chkPointGuidance.Size = new System.Drawing.Size(63, 19);
-            this.chkPointGuidance.TabIndex = 0;
-            this.chkPointGuidance.Text = "点誘導";
-            this.chkPointGuidance.UseVisualStyleBackColor = true;
-
+            // 
+            tabKikai.BackColor = Color.FromArgb(20, 20, 25);
+            tabKikai.Controls.Add(dgvKikai);
+            tabKikai.Controls.Add(pnlKikaiRight);
+            tabKikai.Location = new Point(30, 4);
+            tabKikai.Name = "tabKikai";
+            tabKikai.Padding = new Padding(3);
+            tabKikai.Size = new Size(1356, 324);
+            tabKikai.TabIndex = 2;
+            tabKikai.Text = "基準点";
+            // 
             // dgvKikai
-            this.dgvKikai.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvKikai.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvKikai.Location = new System.Drawing.Point(12, 12);
-            this.dgvKikai.Name = "dgvKikai";
-            this.dgvKikai.RowTemplate.Height = 25;
-            this.dgvKikai.Size = new System.Drawing.Size(835, 300);
-            this.dgvKikai.TabIndex = 0;
-
+            // 
+            dgvKikai.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvKikai.Dock = DockStyle.Fill;
+            dgvKikai.Location = new Point(3, 3);
+            dgvKikai.Name = "dgvKikai";
+            dgvKikai.Size = new Size(750, 318);
+            dgvKikai.TabIndex = 0;
+            // 
+            // pnlKikaiRight
+            // 
+            pnlKikaiRight.Controls.Add(grpKikaiRecord);
+            pnlKikaiRight.Controls.Add(grpPointGuidance);
+            pnlKikaiRight.Dock = DockStyle.Right;
+            pnlKikaiRight.Location = new Point(753, 3);
+            pnlKikaiRight.Name = "pnlKikaiRight";
+            pnlKikaiRight.Size = new Size(600, 318);
+            pnlKikaiRight.TabIndex = 3;
+            // 
+            // grpKikaiRecord
+            // 
+            grpKikaiRecord.Controls.Add(lblKikaiName);
+            grpKikaiRecord.Controls.Add(txtKikaiName);
+            grpKikaiRecord.Controls.Add(lblKikaiLayer);
+            grpKikaiRecord.Controls.Add(cmbKikaiLayer);
+            grpKikaiRecord.Dock = DockStyle.Fill;
+            grpKikaiRecord.ForeColor = Color.FromArgb(0, 180, 216);
+            grpKikaiRecord.Location = new Point(0, 0);
+            grpKikaiRecord.Name = "grpKikaiRecord";
+            grpKikaiRecord.Size = new Size(400, 318);
+            grpKikaiRecord.TabIndex = 0;
+            grpKikaiRecord.TabStop = false;
+            grpKikaiRecord.Text = "📍 基準点属性";
+            // 
+            // lblKikaiName
+            // 
+            lblKikaiName.AutoSize = true;
+            lblKikaiName.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblKikaiName.ForeColor = Color.White;
+            lblKikaiName.Location = new Point(6, 25);
+            lblKikaiName.Name = "lblKikaiName";
+            lblKikaiName.Size = new Size(55, 15);
+            lblKikaiName.TabIndex = 0;
+            lblKikaiName.Text = "基準点名";
+            // 
+            // txtKikaiName
+            // 
+            txtKikaiName.BackColor = Color.FromArgb(255, 255, 190);
+            txtKikaiName.ForeColor = Color.Black;
+            txtKikaiName.Location = new Point(68, 22);
+            txtKikaiName.Name = "txtKikaiName";
+            txtKikaiName.Size = new Size(128, 27);
+            txtKikaiName.TabIndex = 1;
+            // 
+            // lblKikaiLayer
+            // 
+            lblKikaiLayer.AutoSize = true;
+            lblKikaiLayer.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblKikaiLayer.ForeColor = Color.White;
+            lblKikaiLayer.Location = new Point(6, 65);
+            lblKikaiLayer.Name = "lblKikaiLayer";
+            lblKikaiLayer.Size = new Size(35, 15);
+            lblKikaiLayer.TabIndex = 2;
+            lblKikaiLayer.Text = "レイヤ";
+            // 
+            // cmbKikaiLayer
+            // 
+            cmbKikaiLayer.BackColor = Color.FromArgb(43, 45, 66);
+            cmbKikaiLayer.ForeColor = Color.White;
+            cmbKikaiLayer.FormattingEnabled = true;
+            cmbKikaiLayer.Location = new Point(50, 62);
+            cmbKikaiLayer.Name = "cmbKikaiLayer";
+            cmbKikaiLayer.Size = new Size(146, 28);
+            cmbKikaiLayer.TabIndex = 3;
+            // 
+            // grpPointGuidance
+            // 
+            grpPointGuidance.Controls.Add(chkPointGuidance);
+            grpPointGuidance.Dock = DockStyle.Right;
+            grpPointGuidance.ForeColor = Color.FromArgb(0, 180, 216);
+            grpPointGuidance.Location = new Point(400, 0);
+            grpPointGuidance.Name = "grpPointGuidance";
+            grpPointGuidance.Size = new Size(200, 318);
+            grpPointGuidance.TabIndex = 1;
+            grpPointGuidance.TabStop = false;
+            grpPointGuidance.Text = "🎯 点誘導";
+            // 
+            // chkPointGuidance
+            // 
+            chkPointGuidance.AutoSize = true;
+            chkPointGuidance.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkPointGuidance.ForeColor = Color.White;
+            chkPointGuidance.Location = new Point(12, 25);
+            chkPointGuidance.Name = "chkPointGuidance";
+            chkPointGuidance.Size = new Size(62, 19);
+            chkPointGuidance.TabIndex = 0;
+            chkPointGuidance.Text = "点誘導";
+            chkPointGuidance.UseVisualStyleBackColor = true;
+            // 
+            // panelBottomHeader
+            // 
+            panelBottomHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelBottomHeader.Controls.Add(lblBottomTitle);
+            panelBottomHeader.Controls.Add(btnDetachBottomPanel);
+            panelBottomHeader.Dock = DockStyle.Top;
+            panelBottomHeader.Location = new Point(0, 0);
+            panelBottomHeader.Name = "panelBottomHeader";
+            panelBottomHeader.Size = new Size(1390, 30);
+            panelBottomHeader.TabIndex = 0;
+            // 
+            // lblBottomTitle
+            // 
+            lblBottomTitle.AutoSize = true;
+            lblBottomTitle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblBottomTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblBottomTitle.Location = new Point(10, 7);
+            lblBottomTitle.Name = "lblBottomTitle";
+            lblBottomTitle.Size = new Size(115, 15);
+            lblBottomTitle.TabIndex = 0;
+            lblBottomTitle.Text = "📋 データ・編集テーブル";
+            // 
+            // btnDetachBottomPanel
+            // 
+            btnDetachBottomPanel.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachBottomPanel.Dock = DockStyle.Right;
+            btnDetachBottomPanel.FlatStyle = FlatStyle.Flat;
+            btnDetachBottomPanel.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDetachBottomPanel.ForeColor = Color.White;
+            btnDetachBottomPanel.Location = new Point(1326, 0);
+            btnDetachBottomPanel.Name = "btnDetachBottomPanel";
+            btnDetachBottomPanel.Size = new Size(64, 30);
+            btnDetachBottomPanel.TabIndex = 1;
+            btnDetachBottomPanel.Text = "↗ 分離";
+            btnDetachBottomPanel.UseVisualStyleBackColor = false;
+            // 
+            // chkShowCurve
+            // 
+            chkShowCurve.Location = new Point(0, 0);
+            chkShowCurve.Name = "chkShowCurve";
+            chkShowCurve.Size = new Size(104, 24);
+            chkShowCurve.TabIndex = 0;
+            // 
+            // chkShowGrid
+            // 
+            chkShowGrid.Location = new Point(0, 0);
+            chkShowGrid.Name = "chkShowGrid";
+            chkShowGrid.Size = new Size(104, 24);
+            chkShowGrid.TabIndex = 0;
+            // 
+            // chkColorByIkou
+            // 
+            chkColorByIkou.Location = new Point(0, 0);
+            chkColorByIkou.Name = "chkColorByIkou";
+            chkColorByIkou.Size = new Size(104, 24);
+            chkColorByIkou.TabIndex = 0;
+            // 
             // tabLayer
-            this.tabLayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabLayer.Controls.Add(this.btnDeleteLayer);
-            this.tabLayer.Controls.Add(this.btnAddLayer);
-            this.tabLayer.Controls.Add(this.dgvLayer);
-            this.tabLayer.Location = new System.Drawing.Point(4, 26);
-            this.tabLayer.Name = "tabLayer";
-            this.tabLayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLayer.Size = new System.Drawing.Size(1112, 326);
-            this.tabLayer.TabIndex = 3;
-            this.tabLayer.Text = "レイヤ";
-
-            // dgvLayer
-            this.dgvLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvLayer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLayer.Location = new System.Drawing.Point(12, 12);
-            this.dgvLayer.Name = "dgvLayer";
-            this.dgvLayer.RowTemplate.Height = 25;
-            this.dgvLayer.Size = new System.Drawing.Size(1088, 270);
-            this.dgvLayer.TabIndex = 0;
-
-            // btnAddLayer
-            this.btnAddLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddLayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
-            this.btnAddLayer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddLayer.ForeColor = System.Drawing.Color.White;
-            this.btnAddLayer.Location = new System.Drawing.Point(12, 288);
-            this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(110, 30);
-            this.btnAddLayer.TabIndex = 1;
-            this.btnAddLayer.Text = "➕ レイヤ追加";
-            this.btnAddLayer.UseVisualStyleBackColor = false;
-
+            // 
+            tabLayer.BackColor = Color.FromArgb(20, 20, 25);
+            tabLayer.Controls.Add(btnDeleteLayer);
+            tabLayer.Controls.Add(btnAddLayer);
+            tabLayer.Controls.Add(dgvLayer);
+            tabLayer.Location = new Point(4, 26);
+            tabLayer.Name = "tabLayer";
+            tabLayer.Padding = new Padding(3);
+            tabLayer.Size = new Size(1112, 326);
+            tabLayer.TabIndex = 3;
+            tabLayer.Text = "レイヤ";
+            // 
             // btnDeleteLayer
-            this.btnDeleteLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDeleteLayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
-            this.btnDeleteLayer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteLayer.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteLayer.Location = new System.Drawing.Point(130, 288);
-            this.btnDeleteLayer.Name = "btnDeleteLayer";
-            this.btnDeleteLayer.Size = new System.Drawing.Size(110, 30);
-            this.btnDeleteLayer.TabIndex = 2;
-            this.btnDeleteLayer.Text = "🗑 レイヤ削除";
-            this.btnDeleteLayer.UseVisualStyleBackColor = false;
-
+            // 
+            btnDeleteLayer.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDeleteLayer.BackColor = Color.FromArgb(190, 45, 60);
+            btnDeleteLayer.FlatStyle = FlatStyle.Flat;
+            btnDeleteLayer.ForeColor = Color.White;
+            btnDeleteLayer.Location = new Point(130, 288);
+            btnDeleteLayer.Name = "btnDeleteLayer";
+            btnDeleteLayer.Size = new Size(110, 30);
+            btnDeleteLayer.TabIndex = 2;
+            btnDeleteLayer.Text = "🗑 レイヤ削除";
+            btnDeleteLayer.UseVisualStyleBackColor = false;
+            // 
+            // btnAddLayer
+            // 
+            btnAddLayer.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnAddLayer.BackColor = Color.FromArgb(53, 55, 76);
+            btnAddLayer.FlatStyle = FlatStyle.Flat;
+            btnAddLayer.ForeColor = Color.White;
+            btnAddLayer.Location = new Point(12, 288);
+            btnAddLayer.Name = "btnAddLayer";
+            btnAddLayer.Size = new Size(110, 30);
+            btnAddLayer.TabIndex = 1;
+            btnAddLayer.Text = "➕ レイヤ追加";
+            btnAddLayer.UseVisualStyleBackColor = false;
+            // 
+            // dgvLayer
+            // 
+            dgvLayer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvLayer.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvLayer.Location = new Point(12, 12);
+            dgvLayer.Name = "dgvLayer";
+            dgvLayer.Size = new Size(1088, 270);
+            dgvLayer.TabIndex = 0;
+            // 
             // tabBatchUpdate
-            this.tabBatchUpdate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.tabBatchUpdate.Controls.Add(this.dgvBatchPreview);
-            this.tabBatchUpdate.Controls.Add(this.grpBatchOptions);
-            this.tabBatchUpdate.Location = new System.Drawing.Point(4, 26);
-            this.tabBatchUpdate.Name = "tabBatchUpdate";
-            this.tabBatchUpdate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBatchUpdate.Size = new System.Drawing.Size(1112, 326);
-            this.tabBatchUpdate.TabIndex = 4;
-            this.tabBatchUpdate.Text = "一括更新";
-
-            // grpBatchOptions
-            this.grpBatchOptions.Controls.Add(this.lblBatchPreviewCount);
-            this.grpBatchOptions.Controls.Add(this.btnBatchExecute);
-            this.grpBatchOptions.Controls.Add(this.txtBatchUpdateVal);
-            this.grpBatchOptions.Controls.Add(this.cmbBatchUpdateCol);
-            this.grpBatchOptions.Controls.Add(this.lblBatchUpdate);
-            this.grpBatchOptions.Controls.Add(this.txtBatchFilterVal);
-            this.grpBatchOptions.Controls.Add(this.cmbBatchFilterOp);
-            this.grpBatchOptions.Controls.Add(this.cmbBatchFilterCol);
-            this.grpBatchOptions.Controls.Add(this.lblBatchFilter);
-            this.grpBatchOptions.Controls.Add(this.cmbBatchTable);
-            this.grpBatchOptions.Controls.Add(this.lblBatchTable);
-            this.grpBatchOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpBatchOptions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
-            this.grpBatchOptions.Location = new System.Drawing.Point(3, 3);
-            this.grpBatchOptions.Name = "grpBatchOptions";
-            this.grpBatchOptions.Size = new System.Drawing.Size(1106, 85);
-            this.grpBatchOptions.TabIndex = 0;
-            this.grpBatchOptions.TabStop = false;
-            this.grpBatchOptions.Text = "一括置換・更新条件";
-
-            // lblBatchTable
-            this.lblBatchTable.AutoSize = true;
-            this.lblBatchTable.ForeColor = System.Drawing.Color.White;
-            this.lblBatchTable.Location = new System.Drawing.Point(10, 22);
-            this.lblBatchTable.Name = "lblBatchTable";
-            this.lblBatchTable.Size = new System.Drawing.Size(65, 17);
-            this.lblBatchTable.TabIndex = 0;
-            this.lblBatchTable.Text = "対象テーブル:";
-
-            // cmbBatchTable
-            this.cmbBatchTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbBatchTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBatchTable.ForeColor = System.Drawing.Color.White;
-            this.cmbBatchTable.FormattingEnabled = true;
-            this.cmbBatchTable.Location = new System.Drawing.Point(80, 19);
-            this.cmbBatchTable.Name = "cmbBatchTable";
-            this.cmbBatchTable.Size = new System.Drawing.Size(120, 25);
-            this.cmbBatchTable.TabIndex = 1;
-
-            // lblBatchFilter
-            this.lblBatchFilter.AutoSize = true;
-            this.lblBatchFilter.ForeColor = System.Drawing.Color.White;
-            this.lblBatchFilter.Location = new System.Drawing.Point(215, 22);
-            this.lblBatchFilter.Name = "lblBatchFilter";
-            this.lblBatchFilter.Size = new System.Drawing.Size(55, 17);
-            this.lblBatchFilter.TabIndex = 2;
-            this.lblBatchFilter.Text = "絞り込み:";
-
-            // cmbBatchFilterCol
-            this.cmbBatchFilterCol.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbBatchFilterCol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBatchFilterCol.ForeColor = System.Drawing.Color.White;
-            this.cmbBatchFilterCol.FormattingEnabled = true;
-            this.cmbBatchFilterCol.Location = new System.Drawing.Point(275, 19);
-            this.cmbBatchFilterCol.Name = "cmbBatchFilterCol";
-            this.cmbBatchFilterCol.Size = new System.Drawing.Size(110, 25);
-            this.cmbBatchFilterCol.TabIndex = 3;
-
-            // cmbBatchFilterOp
-            this.cmbBatchFilterOp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbBatchFilterOp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBatchFilterOp.ForeColor = System.Drawing.Color.White;
-            this.cmbBatchFilterOp.FormattingEnabled = true;
-            this.cmbBatchFilterOp.Location = new System.Drawing.Point(390, 19);
-            this.cmbBatchFilterOp.Name = "cmbBatchFilterOp";
-            this.cmbBatchFilterOp.Size = new System.Drawing.Size(70, 25);
-            this.cmbBatchFilterOp.TabIndex = 4;
-
-            // txtBatchFilterVal
-            this.txtBatchFilterVal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.txtBatchFilterVal.ForeColor = System.Drawing.Color.White;
-            this.txtBatchFilterVal.Location = new System.Drawing.Point(465, 19);
-            this.txtBatchFilterVal.Name = "txtBatchFilterVal";
-            this.txtBatchFilterVal.Size = new System.Drawing.Size(110, 24);
-            this.txtBatchFilterVal.TabIndex = 5;
-
-            // lblBatchUpdate
-            this.lblBatchUpdate.AutoSize = true;
-            this.lblBatchUpdate.ForeColor = System.Drawing.Color.White;
-            this.lblBatchUpdate.Location = new System.Drawing.Point(590, 22);
-            this.lblBatchUpdate.Name = "lblBatchUpdate";
-            this.lblBatchUpdate.Size = new System.Drawing.Size(65, 17);
-            this.lblBatchUpdate.TabIndex = 6;
-            this.lblBatchUpdate.Text = "変更内容:";
-
-            // cmbBatchUpdateCol
-            this.cmbBatchUpdateCol.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
-            this.cmbBatchUpdateCol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBatchUpdateCol.ForeColor = System.Drawing.Color.White;
-            this.cmbBatchUpdateCol.FormattingEnabled = true;
-            this.cmbBatchUpdateCol.Location = new System.Drawing.Point(660, 19);
-            this.cmbBatchUpdateCol.Name = "cmbBatchUpdateCol";
-            this.cmbBatchUpdateCol.Size = new System.Drawing.Size(110, 25);
-            this.cmbBatchUpdateCol.TabIndex = 7;
-
-            // txtBatchUpdateVal
-            this.txtBatchUpdateVal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(191)))));
-            this.txtBatchUpdateVal.ForeColor = System.Drawing.Color.Black;
-            this.txtBatchUpdateVal.Location = new System.Drawing.Point(775, 19);
-            this.txtBatchUpdateVal.Name = "txtBatchUpdateVal";
-            this.txtBatchUpdateVal.Size = new System.Drawing.Size(110, 24);
-            this.txtBatchUpdateVal.TabIndex = 8;
-
-            // btnBatchExecute
-            this.btnBatchExecute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(184)))), ((int)(((byte)(1)))));
-            this.btnBatchExecute.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBatchExecute.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnBatchExecute.ForeColor = System.Drawing.Color.Black;
-            this.btnBatchExecute.Location = new System.Drawing.Point(895, 17);
-            this.btnBatchExecute.Name = "btnBatchExecute";
-            this.btnBatchExecute.Size = new System.Drawing.Size(100, 28);
-            this.btnBatchExecute.TabIndex = 9;
-            this.btnBatchExecute.Text = "⚡ 一括更新実行";
-            this.btnBatchExecute.UseVisualStyleBackColor = false;
-
-            // lblBatchPreviewCount
-            this.lblBatchPreviewCount.AutoSize = true;
-            this.lblBatchPreviewCount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.lblBatchPreviewCount.Location = new System.Drawing.Point(10, 55);
-            this.lblBatchPreviewCount.Name = "lblBatchPreviewCount";
-            this.lblBatchPreviewCount.Size = new System.Drawing.Size(125, 17);
-            this.lblBatchPreviewCount.TabIndex = 10;
-            this.lblBatchPreviewCount.Text = "対象レコード数: 0 件";
-
+            // 
+            tabBatchUpdate.BackColor = Color.FromArgb(20, 20, 25);
+            tabBatchUpdate.Controls.Add(dgvBatchPreview);
+            tabBatchUpdate.Controls.Add(grpBatchOptions);
+            tabBatchUpdate.Location = new Point(4, 26);
+            tabBatchUpdate.Name = "tabBatchUpdate";
+            tabBatchUpdate.Padding = new Padding(3);
+            tabBatchUpdate.Size = new Size(1112, 326);
+            tabBatchUpdate.TabIndex = 4;
+            tabBatchUpdate.Text = "一括更新";
+            // 
             // dgvBatchPreview
-            this.dgvBatchPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvBatchPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBatchPreview.Location = new System.Drawing.Point(3, 88);
-            this.dgvBatchPreview.Name = "dgvBatchPreview";
-            this.dgvBatchPreview.RowTemplate.Height = 25;
-            this.dgvBatchPreview.Size = new System.Drawing.Size(1106, 235);
-            this.dgvBatchPreview.TabIndex = 1;
-
             // 
-            // panelRightEdit (Property Controls SidePanel)
+            dgvBatchPreview.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBatchPreview.Dock = DockStyle.Fill;
+            dgvBatchPreview.Location = new Point(3, 88);
+            dgvBatchPreview.Name = "dgvBatchPreview";
+            dgvBatchPreview.Size = new Size(1106, 235);
+            dgvBatchPreview.TabIndex = 1;
+            // 
+            // grpBatchOptions
+            // 
+            grpBatchOptions.Controls.Add(lblBatchPreviewCount);
+            grpBatchOptions.Controls.Add(btnBatchExecute);
+            grpBatchOptions.Controls.Add(txtBatchUpdateVal);
+            grpBatchOptions.Controls.Add(cmbBatchUpdateCol);
+            grpBatchOptions.Controls.Add(lblBatchUpdate);
+            grpBatchOptions.Controls.Add(txtBatchFilterVal);
+            grpBatchOptions.Controls.Add(cmbBatchFilterOp);
+            grpBatchOptions.Controls.Add(cmbBatchFilterCol);
+            grpBatchOptions.Controls.Add(lblBatchFilter);
+            grpBatchOptions.Controls.Add(cmbBatchTable);
+            grpBatchOptions.Controls.Add(lblBatchTable);
+            grpBatchOptions.Dock = DockStyle.Top;
+            grpBatchOptions.ForeColor = Color.FromArgb(0, 180, 216);
+            grpBatchOptions.Location = new Point(3, 3);
+            grpBatchOptions.Name = "grpBatchOptions";
+            grpBatchOptions.Size = new Size(1106, 85);
+            grpBatchOptions.TabIndex = 0;
+            grpBatchOptions.TabStop = false;
+            grpBatchOptions.Text = "一括置換・更新条件";
+            // 
+            // lblBatchPreviewCount
+            // 
+            lblBatchPreviewCount.AutoSize = true;
+            lblBatchPreviewCount.ForeColor = Color.FromArgb(0, 225, 255);
+            lblBatchPreviewCount.Location = new Point(10, 55);
+            lblBatchPreviewCount.Name = "lblBatchPreviewCount";
+            lblBatchPreviewCount.Size = new Size(103, 15);
+            lblBatchPreviewCount.TabIndex = 10;
+            lblBatchPreviewCount.Text = "対象レコード数: 0 件";
+            // 
+            // btnBatchExecute
+            // 
+            btnBatchExecute.BackColor = Color.FromArgb(247, 184, 1);
+            btnBatchExecute.FlatStyle = FlatStyle.Flat;
+            btnBatchExecute.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnBatchExecute.ForeColor = Color.Black;
+            btnBatchExecute.Location = new Point(895, 17);
+            btnBatchExecute.Name = "btnBatchExecute";
+            btnBatchExecute.Size = new Size(100, 28);
+            btnBatchExecute.TabIndex = 9;
+            btnBatchExecute.Text = "⚡ 一括更新実行";
+            btnBatchExecute.UseVisualStyleBackColor = false;
+            // 
+            // txtBatchUpdateVal
+            // 
+            txtBatchUpdateVal.BackColor = Color.FromArgb(255, 255, 191);
+            txtBatchUpdateVal.ForeColor = Color.Black;
+            txtBatchUpdateVal.Location = new Point(775, 19);
+            txtBatchUpdateVal.Name = "txtBatchUpdateVal";
+            txtBatchUpdateVal.Size = new Size(110, 23);
+            txtBatchUpdateVal.TabIndex = 8;
+            // 
+            // cmbBatchUpdateCol
+            // 
+            cmbBatchUpdateCol.BackColor = Color.FromArgb(43, 45, 66);
+            cmbBatchUpdateCol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBatchUpdateCol.ForeColor = Color.White;
+            cmbBatchUpdateCol.FormattingEnabled = true;
+            cmbBatchUpdateCol.Location = new Point(660, 19);
+            cmbBatchUpdateCol.Name = "cmbBatchUpdateCol";
+            cmbBatchUpdateCol.Size = new Size(110, 23);
+            cmbBatchUpdateCol.TabIndex = 7;
+            // 
+            // lblBatchUpdate
+            // 
+            lblBatchUpdate.AutoSize = true;
+            lblBatchUpdate.ForeColor = Color.White;
+            lblBatchUpdate.Location = new Point(590, 22);
+            lblBatchUpdate.Name = "lblBatchUpdate";
+            lblBatchUpdate.Size = new Size(58, 15);
+            lblBatchUpdate.TabIndex = 6;
+            lblBatchUpdate.Text = "変更内容:";
+            // 
+            // txtBatchFilterVal
+            // 
+            txtBatchFilterVal.BackColor = Color.FromArgb(43, 45, 66);
+            txtBatchFilterVal.ForeColor = Color.White;
+            txtBatchFilterVal.Location = new Point(465, 19);
+            txtBatchFilterVal.Name = "txtBatchFilterVal";
+            txtBatchFilterVal.Size = new Size(110, 23);
+            txtBatchFilterVal.TabIndex = 5;
+            // 
+            // cmbBatchFilterOp
+            // 
+            cmbBatchFilterOp.BackColor = Color.FromArgb(43, 45, 66);
+            cmbBatchFilterOp.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBatchFilterOp.ForeColor = Color.White;
+            cmbBatchFilterOp.FormattingEnabled = true;
+            cmbBatchFilterOp.Location = new Point(390, 19);
+            cmbBatchFilterOp.Name = "cmbBatchFilterOp";
+            cmbBatchFilterOp.Size = new Size(70, 23);
+            cmbBatchFilterOp.TabIndex = 4;
+            // 
+            // cmbBatchFilterCol
+            // 
+            cmbBatchFilterCol.BackColor = Color.FromArgb(43, 45, 66);
+            cmbBatchFilterCol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBatchFilterCol.ForeColor = Color.White;
+            cmbBatchFilterCol.FormattingEnabled = true;
+            cmbBatchFilterCol.Location = new Point(275, 19);
+            cmbBatchFilterCol.Name = "cmbBatchFilterCol";
+            cmbBatchFilterCol.Size = new Size(110, 23);
+            cmbBatchFilterCol.TabIndex = 3;
+            // 
+            // lblBatchFilter
+            // 
+            lblBatchFilter.AutoSize = true;
+            lblBatchFilter.ForeColor = Color.White;
+            lblBatchFilter.Location = new Point(215, 22);
+            lblBatchFilter.Name = "lblBatchFilter";
+            lblBatchFilter.Size = new Size(53, 15);
+            lblBatchFilter.TabIndex = 2;
+            lblBatchFilter.Text = "絞り込み:";
+            // 
+            // cmbBatchTable
+            // 
+            cmbBatchTable.BackColor = Color.FromArgb(43, 45, 66);
+            cmbBatchTable.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBatchTable.ForeColor = Color.White;
+            cmbBatchTable.FormattingEnabled = true;
+            cmbBatchTable.Location = new Point(80, 19);
+            cmbBatchTable.Name = "cmbBatchTable";
+            cmbBatchTable.Size = new Size(120, 23);
+            cmbBatchTable.TabIndex = 1;
+            // 
+            // lblBatchTable
+            // 
+            lblBatchTable.AutoSize = true;
+            lblBatchTable.ForeColor = Color.White;
+            lblBatchTable.Location = new Point(10, 22);
+            lblBatchTable.Name = "lblBatchTable";
+            lblBatchTable.Size = new Size(69, 15);
+            lblBatchTable.TabIndex = 0;
+            lblBatchTable.Text = "対象テーブル:";
+            // 
+            // grpPointEdit
+            // 
+            grpPointEdit.Location = new Point(0, 0);
+            grpPointEdit.Name = "grpPointEdit";
+            grpPointEdit.Size = new Size(200, 100);
+            grpPointEdit.TabIndex = 0;
+            grpPointEdit.TabStop = false;
+            // 
+            // pnlTestFill
+            // 
+            pnlTestFill.BackColor = Color.FromArgb(40, 50, 70);
+            pnlTestFill.Dock = DockStyle.Fill;
+            pnlTestFill.Location = new Point(3, 3);
+            pnlTestFill.Name = "pnlTestFill";
+            pnlTestFill.Size = new Size(1466, 320);
+            pnlTestFill.TabIndex = 0;
+            // 
+            // panelMainRight
+            // 
+            panelMainRight.Controls.Add(panelMapArea);
+            panelMainRight.Controls.Add(panelMapBottom);
+            panelMainRight.Dock = DockStyle.Fill;
+            panelMainRight.Location = new Point(130, 0);
+            panelMainRight.Name = "panelMainRight";
+            panelMainRight.Size = new Size(1390, 857);
+            panelMainRight.TabIndex = 3;
+            // 
+            // panelStatus
+            // 
+            panelStatus.Dock = DockStyle.Bottom;
+            panelStatus.Location = new Point(0, 932);
+            panelStatus.Name = "panelStatus";
+            panelStatus.Size = new Size(1520, 28);
+            panelStatus.TabIndex = 4;
+            // 
+            // panelMain1
+            // 
+            panelMain1.Controls.Add(panelMainRight);
+            panelMain1.Controls.Add(panelMapLeft);
+            panelMain1.Dock = DockStyle.Fill;
+            panelMain1.Location = new Point(0, 75);
+            panelMain1.Name = "panelMain1";
+            panelMain1.Size = new Size(1520, 857);
+            panelMain1.TabIndex = 5;
             // 
             // FormEditor
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-
-            // FormEditor
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
-            this.ClientSize = new System.Drawing.Size(1520, 960);
-            this.MinimumSize = new System.Drawing.Size(1280, 780);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.WindowState = System.Windows.Forms.FormWindowState.Normal;
-            this.Controls.Add(this.panelMapArea);
-            this.Controls.Add(this.panelMapBottom);
-            this.Controls.Add(this.panelHeader);
-            this.Name = "FormEditor";
-            this.Text = "SITE7 SQLite Database Editor (2D CAD & Data Editor)";
-
-            this.panelHeader.ResumeLayout(false);
-            this.panelHeader.PerformLayout();
-            this.panelMapArea.ResumeLayout(false);
-            this.panelMapHeader.ResumeLayout(false);
-            this.panelMapHeader.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picMapCanvas)).EndInit();
-            this.splitContainerBottom.Panel1.ResumeLayout(false);
-            this.splitContainerBottom.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottom)).EndInit();
-            this.splitContainerBottom.ResumeLayout(false);
-            this.tabControlData.ResumeLayout(false);
-            this.grpIkouMaster.ResumeLayout(false);
-            this.grpIkouMaster.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIkou)).EndInit();
-            this.grpIkouL.ResumeLayout(false);
-            this.grpIkouL.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIkouL)).EndInit();
-            this.grpPrecs.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPrecs)).EndInit();
-            this.tabIbutu.ResumeLayout(false);
-            this.tabIbutu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIbutu)).EndInit();
-            this.tabKikai.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvKikai)).EndInit();
-            this.tabLayer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLayer)).EndInit();
-            this.tabBatchUpdate.ResumeLayout(false);
-            this.grpBatchOptions.ResumeLayout(false);
-            this.grpBatchOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvBatchPreview)).EndInit();
-            this.grpPointEdit.SuspendLayout();
-            this.grpPointEdit.PerformLayout();
-            this.ResumeLayout(false);
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(20, 20, 25);
+            ClientSize = new Size(1520, 960);
+            Controls.Add(panelMain1);
+            Controls.Add(panelStatus);
+            Controls.Add(panelHeader);
+            MinimumSize = new Size(1280, 780);
+            Name = "FormEditor";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "SITE7 SQLite Database Editor (2D CAD & Data Editor)";
+            panelHeader.ResumeLayout(false);
+            panelHeader.PerformLayout();
+            panelMapArea.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picMapCanvas).EndInit();
+            panelMapRight.ResumeLayout(false);
+            panelRightHeader.ResumeLayout(false);
+            panelRightHeader.PerformLayout();
+            panelMapHeader.ResumeLayout(false);
+            panelMapHeader.PerformLayout();
+            panelMapLeft.ResumeLayout(false);
+            panelLeftContent.ResumeLayout(false);
+            panelLeftContent.PerformLayout();
+            panelLeftHeader.ResumeLayout(false);
+            panelLeftHeader.PerformLayout();
+            panelMapBottom.ResumeLayout(false);
+            panelBottomContent.ResumeLayout(false);
+            splitContainerBottom.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerBottom).EndInit();
+            splitContainerBottom.ResumeLayout(false);
+            tabControlData.ResumeLayout(false);
+            tabIkou.ResumeLayout(false);
+            grpPrecs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvPrecs).EndInit();
+            grpIkouL.ResumeLayout(false);
+            grpIkouL.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIkouL).EndInit();
+            grpIkouMaster.ResumeLayout(false);
+            grpIkouMaster.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIkou).EndInit();
+            pnlPrecsRight.ResumeLayout(false);
+            grpCoordValue.ResumeLayout(false);
+            grpCoordValue.PerformLayout();
+            tabIbutu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvIbutu).EndInit();
+            pnlIbutuRight.ResumeLayout(false);
+            grpIbutuRecord.ResumeLayout(false);
+            grpIbutuRecord.PerformLayout();
+            tabKikai.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvKikai).EndInit();
+            pnlKikaiRight.ResumeLayout(false);
+            grpKikaiRecord.ResumeLayout(false);
+            grpKikaiRecord.PerformLayout();
+            grpPointGuidance.ResumeLayout(false);
+            grpPointGuidance.PerformLayout();
+            panelBottomHeader.ResumeLayout(false);
+            panelBottomHeader.PerformLayout();
+            tabLayer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvLayer).EndInit();
+            tabBatchUpdate.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvBatchPreview).EndInit();
+            grpBatchOptions.ResumeLayout(false);
+            grpBatchOptions.PerformLayout();
+            panelMainRight.ResumeLayout(false);
+            panelMain1.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -2278,5 +2459,8 @@ namespace Site7DbEditor
         private System.Windows.Forms.Label lblLeftTitle;
         public System.Windows.Forms.Panel pnlTestFill;
         public System.Windows.Forms.TabPage tabIkou;
+        private Panel panelStatus;
+        private Panel panelMainRight;
+        private Panel panelMain1;
     }
 }
