@@ -483,6 +483,7 @@ namespace Site7DbEditor
             panelLeftContent.Controls.Add(chkShowIkouName);
             panelLeftContent.Controls.Add(chkShowKikai);
             panelLeftContent.Controls.Add(chkShowKikaiName);
+            panelLeftContent.Controls.Add(chkShowCurve);
             panelLeftContent.Dock = DockStyle.Fill;
             panelLeftContent.Location = new Point(0, 30);
             panelLeftContent.Name = "panelLeftContent";
@@ -885,6 +886,20 @@ namespace Site7DbEditor
             chkShowKikaiName.Size = new Size(15, 14);
             chkShowKikaiName.TabIndex = 31;
             chkShowKikaiName.UseVisualStyleBackColor = true;
+            // 
+            // chkShowCurve
+            // 
+            chkShowCurve.AutoSize = true;
+            chkShowCurve.Checked = true;
+            chkShowCurve.CheckState = CheckState.Checked;
+            chkShowCurve.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowCurve.ForeColor = Color.White;
+            chkShowCurve.Location = new Point(6, 446);
+            chkShowCurve.Name = "chkShowCurve";
+            chkShowCurve.Size = new Size(75, 19);
+            chkShowCurve.TabIndex = 32;
+            chkShowCurve.Text = "曲線表示";
+            chkShowCurve.UseVisualStyleBackColor = true;
             // 
             // panelLeftHeader
             // 
@@ -1941,13 +1956,6 @@ namespace Site7DbEditor
             btnDetachBottomPanel.TabIndex = 1;
             btnDetachBottomPanel.Text = "↗ 分離";
             btnDetachBottomPanel.UseVisualStyleBackColor = false;
-            // 
-            // chkShowCurve
-            // 
-            chkShowCurve.Location = new Point(0, 0);
-            chkShowCurve.Name = "chkShowCurve";
-            chkShowCurve.Size = new Size(104, 24);
-            chkShowCurve.TabIndex = 0;
             // 
             // chkShowGrid
             // 
