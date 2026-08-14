@@ -893,7 +893,7 @@ namespace Site7DbEditor
             chkShowCurve.Checked = true;
             chkShowCurve.CheckState = CheckState.Checked;
             chkShowCurve.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowCurve.ForeColor = Color.White;
+            chkShowCurve.ForeColor = Color.Black;
             chkShowCurve.Location = new Point(6, 446);
             chkShowCurve.Name = "chkShowCurve";
             chkShowCurve.Size = new Size(75, 19);
