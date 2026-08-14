@@ -102,7 +102,7 @@ namespace Site7DbEditor.Services
                         screenPts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                     }
 
-                    bool isSelectedFeature = (line.Id == selectedIkouId);
+                    bool isSelectedFeature = (activeTabIndex == 0 && line.Id == selectedIkouId);
 
                     int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
                     Color color = chkColorByIkou
@@ -138,7 +138,7 @@ namespace Site7DbEditor.Services
 
                         using (var ibutuBrush = new SolidBrush(ibutuColor))
                         {
-                            if (ibutu.Id == selectedIbutuId)
+                            if (activeTabIndex == 1 && ibutu.Id == selectedIbutuId)
                             {
                                 g.DrawEllipse(glowPen, pt.X - 7f, pt.Y - 7f, 14f, 14f);
                                 g.FillEllipse(ibutuBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
@@ -164,7 +164,7 @@ namespace Site7DbEditor.Services
                     {
                         PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
                         g.FillEllipse(kikaiBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
-                        g.DrawEllipse(kikai.Id == selectedKikaiId ? selectPen : kikaiPen, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                        g.DrawEllipse((activeTabIndex == 2 && kikai.Id == selectedKikaiId) ? selectPen : kikaiPen, pt.X - 5f, pt.Y - 5f, 10f, 10f);
                     }
                 }
             }
@@ -261,7 +261,7 @@ namespace Site7DbEditor.Services
             }
 
             // 5. 選択中の遺構線のマーク(〇)と点番号(PID)を一番最後に最前面描画
-            if (chkShowIkou)
+            if (chkShowIkou && activeTabIndex == 0)
             {
                 var selectedLine = db.IkouLList.FirstOrDefault(l => l.Id == selectedIkouId && l.Lid == selectedLid);
                 if (selectedLine != null)
