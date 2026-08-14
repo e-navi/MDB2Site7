@@ -2358,8 +2358,7 @@ namespace Site7DbEditor {
 
                 if (isAlreadySelectedLine && isVertexHit && bestVertexIndex >= 0) {
                     // すでに選択中の遺構線の頂点がクリックされた場合:
-                    // 遺構線一覧等の再選択・再バインドは一切行わず、純粋に頂点選択とポップアップ表示のみを実行
-                    SelectVertex(bestLine, bestVertexIndex);
+                    // 勝手に頂点セレクションの変更は行わず、その場所でポップアップ表示を実行
                     ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
                 } else {
                     // 未選択の遺構線、または線自体のクリック時: 遺構線全体の選択処理を行う
@@ -2400,8 +2399,6 @@ namespace Site7DbEditor {
         }
 
         private void ShowVertexContextMenu(Point clickPos, IkouLModel line, int vertexIndex) {
-            SelectVertex(line, vertexIndex);
-
             ContextMenuStrip cmsVertex = new ContextMenuStrip();
 
             var itemMove = new ToolStripMenuItem("頂点移動");
