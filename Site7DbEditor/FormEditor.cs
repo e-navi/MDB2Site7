@@ -2346,6 +2346,8 @@ namespace Site7DbEditor {
         }
 
         private void ShowVertexContextMenu(Point clickPos, IkouLModel line, int vertexIndex) {
+            SelectVertex(line, vertexIndex);
+
             ContextMenuStrip cmsVertex = new ContextMenuStrip();
 
             var itemMove = new ToolStripMenuItem("頂点移動");
@@ -2366,6 +2368,10 @@ namespace Site7DbEditor {
             cmsVertex.Items.Add(itemMove);
             cmsVertex.Items.Add(itemDelete);
             cmsVertex.Items.Add(itemSelect);
+
+            cmsVertex.Closed += (s, e) => {
+                picMapCanvas.Invalidate();
+            };
 
             cmsVertex.Show(picMapCanvas, clickPos);
         }
