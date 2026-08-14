@@ -2317,35 +2317,43 @@ namespace Site7DbEditor {
             }
 
             if (bestLine != null) {
-                _isUpdatingSelection = true;
-                try {
-                    tabControlData.SelectedIndex = 0;
-                    _selectedIkouId = bestLine.Id;
-                    _selectedLid = bestLine.Lid;
+                bool isAlreadySelectedLine = (_selectedIkouId == bestLine.Id && _selectedLid == bestLine.Lid);
 
-                    SelectRowInDgv<IkouModel>(dgvIkou, item => item.Id == bestLine.Id);
+                if (isAlreadySelectedLine && isVertexHit && bestVertexIndex >= 0) {
+                    // すでに選択中の遺構線の頂点がクリックされた場合:
+                    // 遺構線一覧等の再選択・再バインドは一切行わず、純粋に頂点選択とポップアップ表示のみを実行
+                    SelectVertex(bestLine, bestVertexIndex);
+                    ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
+                } else {
+                    // 未選択の遺構線、または線自体のクリック時: 遺構線全体の選択処理を行う
+                    _isUpdatingSelection = true;
+                    try {
+                        tabControlData.SelectedIndex = 0;
+                        _selectedIkouId = bestLine.Id;
+                        _selectedLid = bestLine.Lid;
 
-                    var linesForIkou = _db.IkouLList.Where(l => l.Id == bestLine.Id).ToList();
-                    dgvIkouL.DataSource = new BindingList<IkouLModel>(linesForIkou);
+                        SelectRowInDgv<IkouModel>(dgvIkou, item => item.Id == bestLine.Id);
 
-                    SelectRowInDgv<IkouLModel>(dgvIkouL, item => item.Lid == bestLine.Lid);
+                        var linesForIkou = _db.IkouLList.Where(l => l.Id == bestLine.Id).ToList();
+                        dgvIkouL.DataSource = new BindingList<IkouLModel>(linesForIkou);
 
-                    UpdateIkouLSelection();
+                        SelectRowInDgv<IkouLModel>(dgvIkouL, item => item.Lid == bestLine.Lid);
 
-                    var pointsForLine = SqliteManager.ParsePrecsText(bestLine.Precs);
-                    dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pointsForLine);
+                        UpdateIkouLSelection();
 
-                    if (isVertexHit && bestVertexIndex >= 0 && bestVertexIndex < pointsForLine.Count) {
-                        SelectVertex(bestLine, bestVertexIndex);
+                        var pointsForLine = SqliteManager.ParsePrecsText(bestLine.Precs);
+                        dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pointsForLine);
 
-                        // 選択中の遺構線の頂点(〇)をクリックした際にポップアップメニューを表示
-                        ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
-                    } else {
-                        _selectedPointIndex = -1;
+                        if (isVertexHit && bestVertexIndex >= 0 && bestVertexIndex < pointsForLine.Count) {
+                            SelectVertex(bestLine, bestVertexIndex);
+                            ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
+                        } else {
+                            _selectedPointIndex = -1;
+                        }
+                    } finally {
+                        _isUpdatingSelection = false;
+                        picMapCanvas.Invalidate();
                     }
-                } finally {
-                    _isUpdatingSelection = false;
-                    picMapCanvas.Invalidate();
                 }
                 return true;
             }
