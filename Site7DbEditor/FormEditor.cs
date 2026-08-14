@@ -2327,6 +2327,9 @@ namespace Site7DbEditor {
                     if (isVertexHit && bestVertexIndex >= 0 && bestVertexIndex < pointsForLine.Count) {
                         _selectedPointIndex = bestVertexIndex;
                         SetCurrentRowSafe(dgvPrecs, bestVertexIndex);
+
+                        // 選択中の遺構線の頂点(〇)をクリックした際にポップアップメニューを表示
+                        ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
                     } else {
                         _selectedPointIndex = -1;
                     }
@@ -2337,6 +2340,64 @@ namespace Site7DbEditor {
                 return true;
             }
             return false;
+        }
+
+        private void ShowVertexContextMenu(Point clickPos, IkouLModel line, int vertexIndex) {
+            ContextMenuStrip cmsVertex = new ContextMenuStrip();
+
+            var itemMove = new ToolStripMenuItem("頂点移動");
+            itemMove.Click += (s, e) => {
+                SelectVertex(line, vertexIndex);
+                chkScreenInput.Checked = true;
+                MessageBox.Show($"[頂点移動] 移動先の座標をマップ上でクリックして設定してください。", "頂点移動", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+
+            var itemDelete = new ToolStripMenuItem("頂点削除");
+            itemDelete.Click += (s, e) => {
+                DeleteVertex(line, vertexIndex);
+            };
+
+            var itemSelect = new ToolStripMenuItem("選択");
+            itemSelect.Click += (s, e) => {
+                SelectVertex(line, vertexIndex);
+            };
+
+            cmsVertex.Items.Add(itemMove);
+            cmsVertex.Items.Add(itemDelete);
+            cmsVertex.Items.Add(itemSelect);
+
+            cmsVertex.Show(picMapCanvas, clickPos);
+        }
+
+        private void SelectVertex(IkouLModel line, int vertexIndex) {
+            _selectedIkouId = line.Id;
+            _selectedLid = line.Lid;
+            _selectedPointIndex = vertexIndex;
+
+            var points = SqliteManager.ParsePrecsText(line.Precs);
+            if (vertexIndex >= 0 && vertexIndex < points.Count) {
+                SetCurrentRowSafe(dgvPrecs, vertexIndex);
+                var pt = points[vertexIndex];
+                txtCoordX.Text = pt.X.ToString("F3");
+                txtCoordY.Text = pt.Y.ToString("F3");
+                txtCoordZ.Text = pt.Z.ToString("F3");
+            }
+            picMapCanvas.Invalidate();
+        }
+
+        private void DeleteVertex(IkouLModel line, int vertexIndex) {
+            var points = SqliteManager.ParsePrecsText(line.Precs);
+            if (vertexIndex >= 0 && vertexIndex < points.Count) {
+                var confirm = MessageBox.Show($"頂点 (PID: {points[vertexIndex].Pid}) を削除してもよろしいですか？", "頂点削除の確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm == DialogResult.Yes) {
+                    points.RemoveAt(vertexIndex);
+                    line.Precs = SqliteManager.FormatPrecsText(points);
+                    dgvPrecs.DataSource = new BindingList<IkouPointRecord>(points);
+                    dgvPrecs.Refresh();
+                    dgvPrecs_CellValueChanged(this, new DataGridViewCellEventArgs(0, 0));
+                    picMapCanvas.Invalidate();
+                }
+            }
         }
 
         private static void SetCurrentRowSafe(DataGridView dgv, int rowIndex) {
