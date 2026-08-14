@@ -2264,23 +2264,29 @@ namespace Site7DbEditor {
             double minDist = thresholdPx;
             var spline = new Xross_Spline();
 
-            // 1. すでに選択中の遺構線がある場合、その表示されている頂点(〇)への選択クリック判定を優先
-            var currentSelectedLine = _db.IkouLList.FirstOrDefault(l => l.Id == _selectedIkouId && l.Lid == _selectedLid);
-            if (currentSelectedLine != null) {
-                var currentPts = SqliteManager.ParsePrecsText(currentSelectedLine.Precs);
-                for (int i = 0; i < currentPts.Count; i++) {
-                    PointF vp = toCanvasPoint(currentPts[i].X, currentPts[i].Y);
+            // 1. 全遺構線の頂点(Vertex)へのクリック判定(ToolTipの頂点認識と完全同期)
+            foreach (var line in _db.IkouLList) {
+                int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
+                    continue;
+
+                var pts = SqliteManager.ParsePrecsText(line.Precs);
+                if (pts.Count == 0)
+                    continue;
+
+                for (int i = 0; i < pts.Count; i++) {
+                    PointF vp = toCanvasPoint(pts[i].X, pts[i].Y);
                     double vd = Math.Sqrt((vp.X - clickPos.X) * (vp.X - clickPos.X) + (vp.Y - clickPos.Y) * (vp.Y - clickPos.Y));
                     if (vd < minDist) {
                         minDist = vd;
-                        bestLine = currentSelectedLine;
+                        bestLine = line;
                         bestVertexIndex = i;
                         isVertexHit = true;
                     }
                 }
             }
 
-            // 2. 選択中遺構線の頂点でヒットしなかった場合、全遺構線から線自体の選択クリック判定
+            // 2. どの頂点にもヒットしなかった場合、全遺構線から線自体の選択判定
             if (!isVertexHit) {
                 foreach (var line in _db.IkouLList) {
                     int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
@@ -2304,7 +2310,7 @@ namespace Site7DbEditor {
                         if (sd < minDist) {
                             minDist = sd;
                             bestLine = line;
-                            bestVertexIndex = -1; // 初回線選択時は頂点未選択
+                            bestVertexIndex = -1; // 線自体の選択時は頂点未選択にする
                         }
                     }
                 }
