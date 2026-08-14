@@ -2081,43 +2081,61 @@ namespace Site7DbEditor {
                 bool isVertexHit = false;
                 double minDist = thresholdPx;
 
-                foreach (var line in _db.IkouLList) {
-                    int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
-                    if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
-                        continue;
-
-                    var pts = SqliteManager.ParsePrecsText(line.Precs);
-                    if (pts.Count == 0)
-                        continue;
-
-                    // 1. 頂点（Vertex）判定
-                    for (int i = 0; i < pts.Count; i++) {
-                        PointF vp = ToCanvasPointLocal(pts[i].X, pts[i].Y);
+                // 1. まず「現在選択中の遺構線」の頂点判定を最優先で確認
+                var currentSelectedLine = _db.IkouLList.FirstOrDefault(l => l.Id == _selectedIkouId && l.Lid == _selectedLid);
+                if (currentSelectedLine != null) {
+                    var currentPts = SqliteManager.ParsePrecsText(currentSelectedLine.Precs);
+                    for (int i = 0; i < currentPts.Count; i++) {
+                        PointF vp = ToCanvasPointLocal(currentPts[i].X, currentPts[i].Y);
                         double vd = Math.Sqrt((vp.X - mousePos.X) * (vp.X - mousePos.X) + (vp.Y - mousePos.Y) * (vp.Y - mousePos.Y));
                         if (vd < minDist) {
                             minDist = vd;
-                            bestLine = line;
+                            bestLine = currentSelectedLine;
                             bestVertexIndex = i;
                             isVertexHit = true;
                         }
                     }
+                }
 
-                    // 2. 線上（Segment）判定（頂点でヒットしていない場合）
-                    if (!isVertexHit) {
-                        PointF[] screenPts;
-                        if (chkShowCurve.Checked && pts.Count >= 3) {
-                            var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
-                            screenPts = curve.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
-                        } else {
-                            screenPts = pts.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
+                // 2. 選択中遺構線の頂点でヒットしなかった場合、全遺構線から頂点・線上の判定
+                if (!isVertexHit) {
+                    foreach (var line in _db.IkouLList) {
+                        int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                        if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
+                            continue;
+
+                        var pts = SqliteManager.ParsePrecsText(line.Precs);
+                        if (pts.Count == 0)
+                            continue;
+
+                        for (int i = 0; i < pts.Count; i++) {
+                            PointF vp = ToCanvasPointLocal(pts[i].X, pts[i].Y);
+                            double vd = Math.Sqrt((vp.X - mousePos.X) * (vp.X - mousePos.X) + (vp.Y - mousePos.Y) * (vp.Y - mousePos.Y));
+                            if (vd < minDist) {
+                                minDist = vd;
+                                bestLine = line;
+                                bestVertexIndex = i;
+                                isVertexHit = true;
+                            }
                         }
 
-                        for (int i = 0; i < screenPts.Length - 1; i++) {
-                            double sd = EditorMapViewController.DistanceToLineSegment(mousePos, screenPts[i], screenPts[i + 1]);
-                            if (sd < minDist) {
-                                minDist = sd;
-                                bestLine = line;
-                                isVertexHit = false;
+                        // 2. 線上（Segment）判定（頂点でヒットしていない場合）
+                        if (!isVertexHit) {
+                            PointF[] screenPts;
+                            if (chkShowCurve.Checked && pts.Count >= 3) {
+                                var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
+                                screenPts = curve.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
+                            } else {
+                                screenPts = pts.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
+                            }
+
+                            for (int i = 0; i < screenPts.Length - 1; i++) {
+                                double sd = EditorMapViewController.DistanceToLineSegment(mousePos, screenPts[i], screenPts[i + 1]);
+                                if (sd < minDist) {
+                                    minDist = sd;
+                                    bestLine = line;
+                                    isVertexHit = false;
+                                }
                             }
                         }
                     }
@@ -2276,29 +2294,23 @@ namespace Site7DbEditor {
             double minDist = thresholdPx;
             var spline = new Xross_Spline();
 
-            // 1. 全遺構線の頂点(Vertex)へのクリック判定(ToolTipの頂点認識と完全同期)
-            foreach (var line in _db.IkouLList) {
-                int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
-                if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
-                    continue;
-
-                var pts = SqliteManager.ParsePrecsText(line.Precs);
-                if (pts.Count == 0)
-                    continue;
-
-                for (int i = 0; i < pts.Count; i++) {
-                    PointF vp = toCanvasPoint(pts[i].X, pts[i].Y);
+            // 1. まず「現在選択中の遺構線」の頂点判定を最優先で確認
+            var currentSelectedLine = _db.IkouLList.FirstOrDefault(l => l.Id == _selectedIkouId && l.Lid == _selectedLid);
+            if (currentSelectedLine != null) {
+                var currentPts = SqliteManager.ParsePrecsText(currentSelectedLine.Precs);
+                for (int i = 0; i < currentPts.Count; i++) {
+                    PointF vp = toCanvasPoint(currentPts[i].X, currentPts[i].Y);
                     double vd = Math.Sqrt((vp.X - clickPos.X) * (vp.X - clickPos.X) + (vp.Y - clickPos.Y) * (vp.Y - clickPos.Y));
                     if (vd < minDist) {
                         minDist = vd;
-                        bestLine = line;
+                        bestLine = currentSelectedLine;
                         bestVertexIndex = i;
                         isVertexHit = true;
                     }
                 }
             }
 
-            // 2. どの頂点にもヒットしなかった場合、全遺構線から線自体の選択判定
+            // 2. 選択中遺構線の頂点でヒットしなかった場合、全遺構線から頂点・線上の判定
             if (!isVertexHit) {
                 foreach (var line in _db.IkouLList) {
                     int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
@@ -2309,20 +2321,33 @@ namespace Site7DbEditor {
                     if (pts.Count == 0)
                         continue;
 
-                    PointF[] screenPts;
-                    if (chkShowCurve.Checked && pts.Count >= 3) {
-                        var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
-                        screenPts = curve.Select(p => toCanvasPoint(p.X, p.Y)).ToArray();
-                    } else {
-                        screenPts = pts.Select(p => toCanvasPoint(p.X, p.Y)).ToArray();
+                    for (int i = 0; i < pts.Count; i++) {
+                        PointF vp = toCanvasPoint(pts[i].X, pts[i].Y);
+                        double vd = Math.Sqrt((vp.X - clickPos.X) * (vp.X - clickPos.X) + (vp.Y - clickPos.Y) * (vp.Y - clickPos.Y));
+                        if (vd < minDist) {
+                            minDist = vd;
+                            bestLine = line;
+                            bestVertexIndex = i;
+                            isVertexHit = true;
+                        }
                     }
 
-                    for (int i = 0; i < screenPts.Length - 1; i++) {
-                        double sd = EditorMapViewController.DistanceToLineSegment(clickPos, screenPts[i], screenPts[i + 1]);
-                        if (sd < minDist) {
-                            minDist = sd;
-                            bestLine = line;
-                            bestVertexIndex = -1; // 線自体の選択時は頂点未選択にする
+                    if (!isVertexHit) {
+                        PointF[] screenPts;
+                        if (chkShowCurve.Checked && pts.Count >= 3) {
+                            var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
+                            screenPts = curve.Select(p => toCanvasPoint(p.X, p.Y)).ToArray();
+                        } else {
+                            screenPts = pts.Select(p => toCanvasPoint(p.X, p.Y)).ToArray();
+                        }
+
+                        for (int i = 0; i < screenPts.Length - 1; i++) {
+                            double sd = EditorMapViewController.DistanceToLineSegment(clickPos, screenPts[i], screenPts[i + 1]);
+                            if (sd < minDist) {
+                                minDist = sd;
+                                bestLine = line;
+                                bestVertexIndex = -1;
+                            }
                         }
                     }
                 }
