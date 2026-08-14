@@ -1027,6 +1027,7 @@ namespace Site7DbEditor {
 
                     var points = SqliteManager.ParsePrecsText(selectedLine.Precs);
                     dgvPrecs.DataSource = new BindingList<IkouPointRecord>(points);
+                    try { dgvPrecs.ClearSelection(); } catch { }
                 } else {
                     txtLineNum.Text = "";
                     cmbLineKind.SelectedIndex = -1;
@@ -1035,7 +1036,9 @@ namespace Site7DbEditor {
                     dgvPrecs.DataSource = new BindingList<IkouPointRecord>();
                 }
                 _selectedPointIndex = -1;
-                dgvPrecs_SelectionChanged(this, EventArgs.Empty);
+                txtCoordX.Text = "";
+                txtCoordY.Text = "";
+                txtCoordZ.Text = "";
             } catch { }
         }
 
@@ -1059,8 +1062,8 @@ namespace Site7DbEditor {
             try {
                 if (dgvPrecs.SelectedRows.Count > 0 && dgvPrecs.SelectedRows[0].Index >= 0) {
                     _selectedPointIndex = dgvPrecs.SelectedRows[0].Index;
-                } else if (dgvPrecs.CurrentCell != null && dgvPrecs.CurrentCell.RowIndex >= 0) {
-                    _selectedPointIndex = dgvPrecs.CurrentCell.RowIndex;
+                } else if (dgvPrecs.SelectedCells.Count > 0 && dgvPrecs.SelectedCells[0].RowIndex >= 0) {
+                    _selectedPointIndex = dgvPrecs.SelectedCells[0].RowIndex;
                 } else {
                     _selectedPointIndex = -1;
                 }
