@@ -1027,18 +1027,30 @@ namespace Site7DbEditor {
 
                     var points = SqliteManager.ParsePrecsText(selectedLine.Precs);
                     dgvPrecs.DataSource = new BindingList<IkouPointRecord>(points);
-                    try { dgvPrecs.ClearSelection(); } catch { }
+                    if (points.Count > 0) {
+                        _selectedPointIndex = 0;
+                        SetCurrentRowSafe(dgvPrecs, 0);
+                        var pt = points[0];
+                        txtCoordX.Text = pt.X.ToString("F3");
+                        txtCoordY.Text = pt.Y.ToString("F3");
+                        txtCoordZ.Text = pt.Z.ToString("F3");
+                    } else {
+                        _selectedPointIndex = -1;
+                        txtCoordX.Text = "";
+                        txtCoordY.Text = "";
+                        txtCoordZ.Text = "";
+                    }
                 } else {
                     txtLineNum.Text = "";
                     cmbLineKind.SelectedIndex = -1;
                     lblLineNameVal.Text = "";
                     cmbLineIkouMaster.SelectedIndex = -1;
                     dgvPrecs.DataSource = new BindingList<IkouPointRecord>();
+                    _selectedPointIndex = -1;
+                    txtCoordX.Text = "";
+                    txtCoordY.Text = "";
+                    txtCoordZ.Text = "";
                 }
-                _selectedPointIndex = -1;
-                txtCoordX.Text = "";
-                txtCoordY.Text = "";
-                txtCoordZ.Text = "";
             } catch { }
         }
 
@@ -2347,6 +2359,8 @@ namespace Site7DbEditor {
                         if (isVertexHit && bestVertexIndex >= 0 && bestVertexIndex < pointsForLine.Count) {
                             SelectVertex(bestLine, bestVertexIndex);
                             ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
+                        } else if (pointsForLine.Count > 0) {
+                            SelectVertex(bestLine, 0);
                         } else {
                             _selectedPointIndex = -1;
                         }
