@@ -2227,13 +2227,16 @@ namespace Site7DbEditor {
                 var spline = new Xross_Spline();
                 IkouLModel? bestLine = null;
                 int bestVertexIndex = -1;
+                int bestMidpointIndex = -1;
                 bool isVertexHit = false;
+                bool isMidpointHit = false;
                 double minDist = thresholdPx;
 
-                // 1. まず「現在選択中の遺構線」の頂点判定を最優先で確認
+                // 1. まず「現在選択中の遺構線」の頂点（〇）および中間点（□）判定を最優先で確認
                 var currentSelectedLine = _db.IkouLList.FirstOrDefault(l => l.Id == _selectedIkouId && l.Lid == _selectedLid);
                 if (currentSelectedLine != null) {
                     var currentPts = SqliteManager.ParsePrecsText(currentSelectedLine.Precs);
+                    // 1-1. 頂点（〇）判定
                     for (int i = 0; i < currentPts.Count; i++) {
                         PointF vp = ToCanvasPointLocal(currentPts[i].X, currentPts[i].Y);
                         double vd = Math.Sqrt((vp.X - mousePos.X) * (vp.X - mousePos.X) + (vp.Y - mousePos.Y) * (vp.Y - mousePos.Y));
@@ -2242,12 +2245,38 @@ namespace Site7DbEditor {
                             bestLine = currentSelectedLine;
                             bestVertexIndex = i;
                             isVertexHit = true;
+                            isMidpointHit = false;
+                        }
+                    }
+
+                    // 1-2. 中間点（□）判定（頂点でヒットしていない、かつ曲線描画時）
+                    if (!isVertexHit && currentPts.Count > 1) {
+                        int dbLayerId = currentSelectedLine.Layer >= 49 ? currentSelectedLine.Layer : (currentSelectedLine.Layer + 48);
+                        var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
+                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && currentPts.Count >= 3;
+
+                        if (drawAsCurve) {
+                            for (int i = 0; i < currentPts.Count - 1; i++) {
+                                PointF p1 = ToCanvasPointLocal(currentPts[i].X, currentPts[i].Y);
+                                PointF p2 = ToCanvasPointLocal(currentPts[i + 1].X, currentPts[i + 1].Y);
+                                float midX = (p1.X + p2.X) / 2f;
+                                float midY = (p1.Y + p2.Y) / 2f;
+
+                                double md = Math.Sqrt((midX - mousePos.X) * (midX - mousePos.X) + (midY - mousePos.Y) * (midY - mousePos.Y));
+                                if (md < minDist) {
+                                    minDist = md;
+                                    bestLine = currentSelectedLine;
+                                    bestMidpointIndex = i;
+                                    isMidpointHit = true;
+                                }
+                            }
                         }
                     }
                 }
 
-                // 2. 選択中遺構線の頂点でヒットしなかった場合、全遺構線から頂点・線上の判定
-                if (!isVertexHit) {
+                // 2. 選択中遺構線の頂点・中間点でヒットしなかった場合、全遺構線から頂点・線上の判定
+                if (!isVertexHit && !isMidpointHit) {
                     foreach (var line in _db.IkouLList) {
                         int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
                         if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
@@ -2306,6 +2335,18 @@ namespace Site7DbEditor {
                             var pt = pts[bestVertexIndex];
                             string pidText = pt.Pid > 0 ? pt.Pid.ToString() : (bestVertexIndex + 1).ToString();
                             toolTipText = $"[頂点] 遺構: {ikouName} / 線: {lineName} (PID: {pidText}  X: {pt.X:F3}, Y: {pt.Y:F3}, Z: {pt.Z:F3})";
+                        }
+                    } else if (isMidpointHit && bestMidpointIndex >= 0) {
+                        var pts = SqliteManager.ParsePrecsText(bestLine.Precs);
+                        if (bestMidpointIndex < pts.Count - 1) {
+                            var p1 = pts[bestMidpointIndex];
+                            var p2 = pts[bestMidpointIndex + 1];
+                            double midX = (p1.X + p2.X) / 2.0;
+                            double midY = (p1.Y + p2.Y) / 2.0;
+                            double midZ = (p1.Z + p2.Z) / 2.0;
+                            toolTipText = $"[中間点] 遺構: {ikouName} / 線: {lineName} (区間: {p1.Pid}->{p2.Pid}  X: {midX:F3}, Y: {midY:F3}, Z: {midZ:F3})";
+                        } else {
+                            toolTipText = $"[中間点] 遺構: {ikouName} / 線: {lineName}";
                         }
                     } else {
                         toolTipText = $"[線上] 遺構: {ikouName} / 線: {lineName}";
