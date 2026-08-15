@@ -3364,8 +3364,9 @@ namespace Site7DbEditor {
                 IbutuModel? curIbutu = GetSelectedDataBoundItem<IbutuModel>(dgvIbutu);
                 int.TryParse(txtIbutuNo.Text.Trim(), out int ibutuNo);
                 bool hasValidIbutuNo = (ibutuNo > 0);
+                bool isIbutuNoNotRegistered = isDbLoaded && hasValidIbutuNo && !_db.IbutuList.Any(i => i.No == ibutuNo);
 
-                btnAddPointRight.Enabled = isDbLoaded && hasValidCoord && hasValidIbutuNo;
+                btnAddPointRight.Enabled = isDbLoaded && hasValidCoord && isIbutuNoNotRegistered;
                 btnDeletePointRight.Enabled = (curIbutu != null);
 
                 bool isIbutuDirty = false;
