@@ -398,6 +398,7 @@ namespace Site7DbEditor {
 
             this.KeyPreview = true;
             this.KeyDown += FormEditor_KeyDown;
+            this.FormClosing += FormEditor_FormClosing;
 
             btnLayerSettings.Click += (s, e) => {
                 using (var form = new FormLayerSettings(_db)) {
@@ -3050,6 +3051,28 @@ namespace Site7DbEditor {
         #endregion
 
         #region Undo / Redo Operations
+
+        private void FormEditor_FormClosing(object? sender, FormClosingEventArgs e) {
+            if (_logService.Logs.Count > 0 && !string.IsNullOrEmpty(_db.CurrentDbPath)) {
+                var res = MessageBox.Show(
+                    "データベースに変更（未保存の履歴）があります。\n保存してから終了しますか？\n\n[はい]: データベースに保存して終了\n[いいえ]: 保存せずに終了\n[キャンセル]: 終了を中止",
+                    "終了の確認",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (res == DialogResult.Yes) {
+                    try {
+                        _db.SaveDatabase(_db.CurrentDbPath);
+                        _logService.Clear(_db.CurrentDbPath);
+                    } catch (Exception ex) {
+                        MessageBox.Show($"DB保存時にエラーが発生しました: {ex.Message}", "保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        e.Cancel = true;
+                    }
+                } else if (res == DialogResult.Cancel) {
+                    e.Cancel = true;
+                }
+            }
+        }
 
         private void UpdateUndoRedoButtonsState() {
             if (btnUndo != null)
