@@ -996,6 +996,7 @@ namespace Site7DbEditor {
                         txtIkouNum.Text = no;
                         lblIkouNameVal.Text = selectedIkou.Name;
 
+                        cmbIkouKind.SelectedIndex = -1;
                         bool matched = false;
                         foreach (var item in cmbIkouKind.Items) {
                             if (string.Equals(item.ToString(), prefix, StringComparison.OrdinalIgnoreCase)) {
@@ -1048,6 +1049,7 @@ namespace Site7DbEditor {
                     txtLineNum.Text = no;
                     lblLineNameVal.Text = selectedLine.Name;
 
+                    cmbLineKind.SelectedIndex = -1;
                     bool matched = false;
                     foreach (var item in cmbLineKind.Items) {
                         if (string.Equals(item.ToString(), prefix, StringComparison.OrdinalIgnoreCase)) {
@@ -3291,22 +3293,39 @@ namespace Site7DbEditor {
 
             // 1. 遺構マスター（追加・削除・更新）
             string ikouPrefix = cmbIkouKind.Text.Trim();
-            if (string.IsNullOrEmpty(ikouPrefix)) ikouPrefix = "遺構";
             string ikouNoStr = txtIkouNum.Text.Trim();
-            string ikouFullName = BuildIkouFullNamePreview(ikouPrefix, ikouNoStr);
+            string ikouFullName = $"{ikouPrefix}{ikouNoStr}";
+
+            var (curIkouPrefix, curIkouNo) = curIkou != null ? ParseIkouName(curIkou.Name) : ("", "");
+            bool isIkouDirty = curIkou != null && (
+                !string.Equals(curIkouPrefix, ikouPrefix, StringComparison.OrdinalIgnoreCase) ||
+                !string.Equals(curIkouNo, ikouNoStr, StringComparison.OrdinalIgnoreCase)
+            );
+
             bool isIkouNameNotEmpty = !string.IsNullOrEmpty(ikouFullName);
             bool isIkouNameNotRegistered = isIkouNameNotEmpty && !_db.IkouList.Any(i => i.Name.Equals(ikouFullName, StringComparison.OrdinalIgnoreCase));
             bool isIkouNameNotOtherDup = curIkou != null && isIkouNameNotEmpty && !_db.IkouList.Any(i => i != curIkou && i.Name.Equals(ikouFullName, StringComparison.OrdinalIgnoreCase));
 
             btnAddIkou.Enabled = isDbLoaded && isIkouNameNotRegistered;
             btnDeleteIkouRight.Enabled = (curIkou != null);
-            btnUpdateIkouRight.Enabled = curIkou != null && isIkouNameNotOtherDup && !curIkou.Name.Equals(ikouFullName, StringComparison.OrdinalIgnoreCase);
+            btnUpdateIkouRight.Enabled = curIkou != null && isIkouNameNotOtherDup && isIkouDirty;
 
             // 2. 遺構線マスター（追加・削除・更新）
             string linePrefix = cmbLineKind.Text.Trim();
-            if (string.IsNullOrEmpty(linePrefix)) linePrefix = "線";
             string lineNoStr = txtLineNum.Text.Trim();
-            string lineFullName = BuildLineFullNamePreview(linePrefix, lineNoStr);
+            string lineFullName = $"{linePrefix}{lineNoStr}";
+
+            var (curLinePrefix, curLineNo) = curIkouL != null ? ParseIkouName(curIkouL.Name) : ("", "");
+            int currentModeVal = rdoLineClosed.Checked ? 1 : (rdoLinePoint.Checked ? 2 : 0);
+            int currentLayerVal = GetSelectedLineLayerVal();
+
+            bool isLineDirty = curIkouL != null && (
+                !string.Equals(curLinePrefix, linePrefix, StringComparison.OrdinalIgnoreCase) ||
+                !string.Equals(curLineNo, lineNoStr, StringComparison.OrdinalIgnoreCase) ||
+                curIkouL.Mode != currentModeVal ||
+                curIkouL.Layer != currentLayerVal
+            );
+
             bool isLineNameNotEmpty = !string.IsNullOrEmpty(lineFullName);
             var currentLines = curIkou != null ? _db.IkouLList.Where(l => l.Id == curIkou.Id).ToList() : new List<IkouLModel>();
             bool isLineNameNotRegistered = curIkou != null && isLineNameNotEmpty && !currentLines.Any(l => l.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase));
@@ -3314,14 +3333,6 @@ namespace Site7DbEditor {
 
             btnAddIkouL.Enabled = (curIkou != null) && isLineNameNotRegistered;
             btnDeleteLineRight.Enabled = (curIkouL != null);
-
-            int currentModeVal = rdoLineClosed.Checked ? 1 : (rdoLinePoint.Checked ? 2 : 0);
-            int currentLayerVal = GetSelectedLineLayerVal();
-            bool isLineDirty = curIkouL != null && (
-                !curIkouL.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase) ||
-                curIkouL.Mode != currentModeVal ||
-                curIkouL.Layer != currentLayerVal
-            );
             btnUpdateLineRight.Enabled = curIkouL != null && isLineNameNotOtherDup && isLineDirty;
 
             // 3. 右側パネル（構成点 / 遺物 / 基準点）
