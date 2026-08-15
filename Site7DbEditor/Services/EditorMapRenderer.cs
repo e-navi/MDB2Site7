@@ -274,7 +274,7 @@ namespace Site7DbEditor.Services
                         bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
                         bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
 
-                        // 曲線表示時に、ベースとなる折れ線を薄いグレー(破線)で表示
+                        // 曲線表示時に、ベースとなる折れ線を薄いグレー(破線)で表示し、中間点に□マークを表示
                         if (drawAsCurve && pts.Count > 1)
                         {
                             var polylinePts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
@@ -284,6 +284,22 @@ namespace Site7DbEditor.Services
                             using (var grayPen = new Pen(grayColor, 1.2f) { DashStyle = DashStyle.Dash })
                             {
                                 g.DrawLines(grayPen, polylinePts);
+                            }
+
+                            // 中間点（□）の描画
+                            using (var midPen = new Pen(Color.FromArgb(255, 220, 0), 1.5f))
+                            using (var midBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
+                            {
+                                for (int i = 0; i < polylinePts.Length - 1; i++)
+                                {
+                                    PointF p1 = polylinePts[i];
+                                    PointF p2 = polylinePts[i + 1];
+                                    float midX = (p1.X + p2.X) / 2f;
+                                    float midY = (p1.Y + p2.Y) / 2f;
+
+                                    g.FillRectangle(midBrush, midX - 3.5f, midY - 3.5f, 7f, 7f);
+                                    g.DrawRectangle(midPen, midX - 3.5f, midY - 3.5f, 7f, 7f);
+                                }
                             }
                         }
 
