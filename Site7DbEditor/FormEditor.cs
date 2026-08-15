@@ -37,6 +37,7 @@ namespace Site7DbEditor {
 
         private readonly EditorDbManager _db = new EditorDbManager();
         private readonly EditorMapViewController _vc = new EditorMapViewController();
+        private readonly EditorLogService _logService = new EditorLogService();
 
         private UCCtrl _ucCtrl = new UCCtrl();
         private FormBluetoothCtrl? _dlgBth = null;
@@ -390,6 +391,14 @@ namespace Site7DbEditor {
             btnDetachLeftPanel.Click += (s, e) => SetLeftPanelDisplayMode(!_isLeftPanelFloating);
             btnDetachBottomPanel.Click += (s, e) => SetBottomPanelDisplayMode(!_isBottomPanelFloating);
 
+            btnUndo.Click += (s, e) => ExecuteUndo();
+            btnRedo.Click += (s, e) => ExecuteRedo();
+            _logService.StateChanged += (s, e) => UpdateUndoRedoButtonsState();
+            UpdateUndoRedoButtonsState();
+
+            this.KeyPreview = true;
+            this.KeyDown += FormEditor_KeyDown;
+
             btnLayerSettings.Click += (s, e) => {
                 using (var form = new FormLayerSettings(_db)) {
                     form.ShowDialog(this);
@@ -729,6 +738,7 @@ namespace Site7DbEditor {
                 try { dgvLayer.CancelEdit(); } catch { }
 
                 _db.LoadDatabase(dbPath);
+                _logService.Clear();
                 PopulateIkouLineLayerCombo();
                 BindAllData();
 
@@ -1832,11 +1842,13 @@ namespace Site7DbEditor {
             } else if (tabIdx == 2) // 基準点
               {
                 if (GetSelectedDataBoundItem<KikaiModel>(dgvKikai) is KikaiModel selected) {
+                    var original = (KikaiModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_KIJUNP, selected);
                     selected.Name = txtKikaiName.Text.Trim();
                     selected.Layer = GetSelectedKikaiLayer();
                     selected.X = x;
                     selected.Y = y;
                     selected.Z = z;
+                    _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_KIJUNP, selected, original);
                     dgvKikai.Refresh();
                     picMapCanvas.Invalidate();
                 }
@@ -1916,6 +1928,7 @@ namespace Site7DbEditor {
             } else if (tabIdx == 2) // 基準点
               {
                 if (GetSelectedDataBoundItem<KikaiModel>(dgvKikai) is KikaiModel selected) {
+                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_KIJUNP, selected);
                     _db.KikaiList.Remove(selected);
                     dgvKikai_SelectionChanged(this, EventArgs.Empty);
                     picMapCanvas.Invalidate();
@@ -2000,6 +2013,7 @@ namespace Site7DbEditor {
                     Date = DateTime.Now.ToString("yyyy/MM/dd")
                 };
                 _db.KikaiList.Add(newItem);
+                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_KIJUNP, newItem);
 
                 SelectRowInDgv<KikaiModel>(dgvKikai, item => item.Id == newId);
                 picMapCanvas.Invalidate();
@@ -2027,6 +2041,7 @@ namespace Site7DbEditor {
 
             try {
                 _db.SaveDatabase(_db.CurrentDbPath);
+                _logService.Clear();
                 MessageBox.Show("✔ SQLite DB に正常に上書き保存しました！", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } catch (Exception ex) {
                 MessageBox.Show($"DB保存時にエラーが発生しました: {ex.Message}", "保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3030,6 +3045,67 @@ namespace Site7DbEditor {
             txtCoordZ.Text = z.ToString("F3");
 
             lblDbStatus.Text = $"📡 測量値取り込み: X={x:F3}, Y={y:F3}, Z={z:F3}";
+        }
+
+        #endregion
+
+        #region Undo / Redo Operations
+
+        private void UpdateUndoRedoButtonsState() {
+            if (btnUndo != null)
+                btnUndo.Enabled = _logService.CanUndo;
+            if (btnRedo != null)
+                btnRedo.Enabled = _logService.CanRedo;
+        }
+
+        private void FormEditor_KeyDown(object? sender, KeyEventArgs e) {
+            if (e.Control && e.KeyCode == Keys.Z) {
+                ExecuteUndo();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            } else if (e.Control && e.KeyCode == Keys.Y) {
+                ExecuteRedo();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void ExecuteUndo() {
+            if (!_logService.CanUndo)
+                return;
+
+            if (_logService.Undo(_db, out int recType, out long affectedId)) {
+                if (recType == EditorLogService.REC_TYPE_KIJUNP) {
+                    dgvKikai.Refresh();
+                    if (affectedId > 0 && _db.KikaiList.Any(k => k.Id == affectedId)) {
+                        SelectRowInDgv<KikaiModel>(dgvKikai, k => k.Id == affectedId);
+                    } else if (dgvKikai.Rows.Count > 0) {
+                        SetCurrentRowSafe(dgvKikai, 0);
+                    }
+                    dgvKikai_SelectionChanged(this, EventArgs.Empty);
+                }
+
+                picMapCanvas.Invalidate();
+            }
+        }
+
+        private void ExecuteRedo() {
+            if (!_logService.CanRedo)
+                return;
+
+            if (_logService.Redo(_db, out int recType, out long affectedId)) {
+                if (recType == EditorLogService.REC_TYPE_KIJUNP) {
+                    dgvKikai.Refresh();
+                    if (affectedId > 0 && _db.KikaiList.Any(k => k.Id == affectedId)) {
+                        SelectRowInDgv<KikaiModel>(dgvKikai, k => k.Id == affectedId);
+                    } else if (dgvKikai.Rows.Count > 0) {
+                        SetCurrentRowSafe(dgvKikai, 0);
+                    }
+                    dgvKikai_SelectionChanged(this, EventArgs.Empty);
+                }
+
+                picMapCanvas.Invalidate();
+            }
         }
 
         #endregion
