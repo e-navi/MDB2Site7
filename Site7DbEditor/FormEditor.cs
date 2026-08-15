@@ -25,6 +25,11 @@ namespace Site7DbEditor {
         private long _selectedIbutuId = -1;
         private long _selectedKikaiId = -1;
 
+        private bool _isMovingVertex = false;
+        private IkouLModel? _movingLine = null;
+        private int _movingVertexIndex = -1;
+        private Point _currentRubberBandMousePos = Point.Empty;
+
         private readonly EditorDbManager _db = new EditorDbManager();
         private readonly EditorMapViewController _vc = new EditorMapViewController();
 
@@ -2061,9 +2066,89 @@ namespace Site7DbEditor {
                 showIbutuName: chkShowIbutuName.Checked,
                 showKikaiName: chkShowKikaiName.Checked,
                 isDarkBackground: _isDarkMapBackground);
+
+            // 頂点移動中のラバーバンド描画
+            if (_isMovingVertex && _movingLine != null && _movingVertexIndex >= 0) {
+                var pts = SqliteManager.ParsePrecsText(_movingLine.Precs);
+                if (_movingVertexIndex < pts.Count) {
+                    var origPt = pts[_movingVertexIndex];
+                    PointF startScreenPt = _vc.ToCanvasPoint(origPt.X, origPt.Y, picMapCanvas.Size);
+                    PointF endScreenPt = _currentRubberBandMousePos;
+
+                    using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                    using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
+                    using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
+                        e.Graphics.DrawLine(rubberPen, startScreenPt, endScreenPt);
+                        e.Graphics.FillEllipse(targetBrush, endScreenPt.X - 4f, endScreenPt.Y - 4f, 8f, 8f);
+                        e.Graphics.DrawEllipse(targetPen, endScreenPt.X - 7f, endScreenPt.Y - 7f, 14f, 14f);
+                    }
+                }
+            }
+        }
+
+        private void ApplyVertexMove(Point screenLocation) {
+            if (!_isMovingVertex || _movingLine == null || _movingVertexIndex < 0) {
+                CancelVertexMove();
+                return;
+            }
+
+            var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(screenLocation, picMapCanvas.Size);
+            var pts = SqliteManager.ParsePrecsText(_movingLine.Precs);
+
+            if (_movingVertexIndex < pts.Count) {
+                pts[_movingVertexIndex].X = Math.Round(newSurveyX, 3);
+                pts[_movingVertexIndex].Y = Math.Round(newSurveyY, 3);
+
+                _movingLine.Precs = SqliteManager.FormatPrecsText(pts);
+
+                if (pts.Count > 0) {
+                    _movingLine.X = Math.Round(pts.Average(p => p.X), 3);
+                    _movingLine.Y = Math.Round(pts.Average(p => p.Y), 3);
+                    _movingLine.Z = Math.Round(pts.Average(p => p.Z), 3);
+
+                    if (pts.Count > 1) {
+                        var f = pts.First();
+                        var l = pts.Last();
+                        bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
+                        _movingLine.Mode = match ? 1 : 0;
+                    }
+                }
+
+                dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
+                dgvPrecs.ResetBindings();
+
+                SetCurrentRowSafe(dgvPrecs, _movingVertexIndex);
+                var curPt = pts[_movingVertexIndex];
+                txtCoordX.Text = curPt.X.ToString("F3");
+                txtCoordY.Text = curPt.Y.ToString("F3");
+                txtCoordZ.Text = curPt.Z.ToString("F3");
+
+                dgvIkouL.Refresh();
+            }
+
+            CancelVertexMove();
+        }
+
+        private void CancelVertexMove() {
+            _isMovingVertex = false;
+            _movingLine = null;
+            _movingVertexIndex = -1;
+            _currentRubberBandMousePos = Point.Empty;
+            picMapCanvas.Cursor = Cursors.Default;
+            picMapCanvas.Invalidate();
         }
 
         private void picMapCanvas_MouseDown(object? sender, MouseEventArgs e) {
+            if (_isMovingVertex) {
+                if (e.Button == MouseButtons.Left) {
+                    ApplyVertexMove(e.Location);
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelVertexMove();
+                    return;
+                }
+            }
+
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) {
                 _vc.IsMouseDownMap = true;
                 _vc.IsPanningMap = false;
@@ -2079,6 +2164,12 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_MouseMove(object? sender, MouseEventArgs e) {
+            if (_isMovingVertex) {
+                _currentRubberBandMousePos = e.Location;
+                picMapCanvas.Invalidate();
+                return;
+            }
+
             if (_vc.IsMouseDownMap) {
                 int dx = e.X - _vc.MouseDownPosMap.X;
                 int dy = e.Y - _vc.MouseDownPosMap.Y;
@@ -2107,7 +2198,7 @@ namespace Site7DbEditor {
                 picMapCanvas.Cursor = Cursors.Default;
             }
 
-            if (!wasPanning && e.Button == MouseButtons.Left && !chkScreenInput.Checked) {
+            if (!wasPanning && e.Button == MouseButtons.Left && !chkScreenInput.Checked && !_isMovingVertex) {
                 int dx = e.X - _vc.MouseDownPosMap.X;
                 int dy = e.Y - _vc.MouseDownPosMap.Y;
                 if (Math.Abs(dx) <= 5 && Math.Abs(dy) <= 5) {
@@ -2458,6 +2549,12 @@ namespace Site7DbEditor {
             var itemMove = new ToolStripMenuItem("頂点移動");
             itemMove.Click += (s, e) => {
                 SelectVertex(line, vertexIndex);
+                _isMovingVertex = true;
+                _movingLine = line;
+                _movingVertexIndex = vertexIndex;
+                _currentRubberBandMousePos = clickPos;
+                picMapCanvas.Cursor = Cursors.Cross;
+                picMapCanvas.Invalidate();
             };
 
             var itemDelete = new ToolStripMenuItem("頂点削除");
