@@ -1832,63 +1832,69 @@ namespace Site7DbEditor {
             }
         }
 
+        private void DeletePointAt(int index) {
+            if (dgvPrecs.DataSource is BindingList<IkouPointRecord> pts && index >= 0 && index < pts.Count) {
+                pts.RemoveAt(index);
+
+                // 1. 削除行以降のPIDを一つずつ減らす（1からの連番に再採番）
+                for (int i = 0; i < pts.Count; i++) {
+                    pts[i].Pid = i + 1;
+                }
+
+                // 2. 遺構線のPrecsと代表座標・開閉モードを即時更新
+                if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                    selectedLine.Precs = SqliteManager.FormatPrecsText(pts.ToList());
+
+                    if (pts.Count > 0) {
+                        selectedLine.X = Math.Round(pts.Average(p => p.X), 3);
+                        selectedLine.Y = Math.Round(pts.Average(p => p.Y), 3);
+                        selectedLine.Z = Math.Round(pts.Average(p => p.Z), 3);
+
+                        if (pts.Count > 1) {
+                            var f = pts.First();
+                            var l = pts.Last();
+                            bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
+                            selectedLine.Mode = match ? 1 : 0;
+                        }
+                    } else {
+                        selectedLine.X = 0;
+                        selectedLine.Y = 0;
+                        selectedLine.Z = 0;
+                    }
+                    dgvIkouL.Refresh();
+                }
+
+                // 3. 選択インデックスと座標テキストの調整
+                if (_selectedPointIndex >= pts.Count) {
+                    _selectedPointIndex = pts.Count - 1;
+                } else if (_selectedPointIndex == index) {
+                    _selectedPointIndex = Math.Min(index, pts.Count - 1);
+                }
+
+                dgvPrecs.ResetBindings();
+
+                if (_selectedPointIndex >= 0 && _selectedPointIndex < pts.Count) {
+                    SetCurrentRowSafe(dgvPrecs, _selectedPointIndex);
+                    var pt = pts[_selectedPointIndex];
+                    txtCoordX.Text = pt.X.ToString("F3");
+                    txtCoordY.Text = pt.Y.ToString("F3");
+                    txtCoordZ.Text = pt.Z.ToString("F3");
+                } else {
+                    txtCoordX.Text = "";
+                    txtCoordY.Text = "";
+                    txtCoordZ.Text = "";
+                }
+
+                // 4. マップキャンバス（曲線スプライン再計算を含む）を即時再描画
+                picMapCanvas.Invalidate();
+            }
+        }
+
         private void btnDeletePointRight_Click(object? sender, EventArgs e) {
             int tabIdx = tabControlData.SelectedIndex;
             if (tabIdx == 0) // 遺構 (構成座標)
             {
-                if (_selectedPointIndex >= 0 && dgvPrecs.DataSource is BindingList<IkouPointRecord> pts && _selectedPointIndex < pts.Count) {
-                    pts.RemoveAt(_selectedPointIndex);
-
-                    // 1. 削除行以降のPIDを一つずつ減らす（1からの連番に再採番）
-                    for (int i = 0; i < pts.Count; i++) {
-                        pts[i].Pid = i + 1;
-                    }
-
-                    // 2. 遺構線のPrecsと代表座標・開閉モードを即時更新
-                    if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
-                        selectedLine.Precs = SqliteManager.FormatPrecsText(pts.ToList());
-
-                        if (pts.Count > 0) {
-                            selectedLine.X = Math.Round(pts.Average(p => p.X), 3);
-                            selectedLine.Y = Math.Round(pts.Average(p => p.Y), 3);
-                            selectedLine.Z = Math.Round(pts.Average(p => p.Z), 3);
-
-                            if (pts.Count > 1) {
-                                var f = pts.First();
-                                var l = pts.Last();
-                                bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
-                                selectedLine.Mode = match ? 1 : 0;
-                            }
-                        } else {
-                            selectedLine.X = 0;
-                            selectedLine.Y = 0;
-                            selectedLine.Z = 0;
-                        }
-                        dgvIkouL.Refresh();
-                    }
-
-                    // 3. 選択インデックスと座標テキストの調整
-                    if (_selectedPointIndex >= pts.Count) {
-                        _selectedPointIndex = pts.Count - 1;
-                    }
-
-                    dgvPrecs.ResetBindings();
-
-                    if (_selectedPointIndex >= 0 && _selectedPointIndex < pts.Count) {
-                        SetCurrentRowSafe(dgvPrecs, _selectedPointIndex);
-                        var pt = pts[_selectedPointIndex];
-                        txtCoordX.Text = pt.X.ToString("F3");
-                        txtCoordY.Text = pt.Y.ToString("F3");
-                        txtCoordZ.Text = pt.Z.ToString("F3");
-                    } else {
-                        txtCoordX.Text = "";
-                        txtCoordY.Text = "";
-                        txtCoordZ.Text = "";
-                    }
-
-                    // 4. マップキャンバス（曲線スプライン再計算を含む）を即時再描画
-                    picMapCanvas.Invalidate();
-                }
+                DeletePointAt(_selectedPointIndex);
             } else if (tabIdx == 1) // 遺物
               {
                 if (GetSelectedDataBoundItem<IbutuModel>(dgvIbutu) is IbutuModel selected) {
@@ -2456,7 +2462,7 @@ namespace Site7DbEditor {
 
             var itemDelete = new ToolStripMenuItem("頂点削除");
             itemDelete.Click += (s, e) => {
-                SelectVertex(line, vertexIndex);
+                DeletePointAt(vertexIndex);
             };
 
             var itemSelect = new ToolStripMenuItem("選択");
