@@ -835,6 +835,7 @@ namespace Site7DbEditor {
 
         private ToolTip? _layerToolTip;
         private ToolTip _mapHoverToolTip = new ToolTip();
+        private ToolTip _clickNotifyToolTip = new ToolTip();
         private string _lastMapHoverToolTipText = "";
 
         public void UpdateLayerCheckboxColors() {
@@ -2161,8 +2162,7 @@ namespace Site7DbEditor {
                     txtCoordY.Text = clickY.ToString("F3");
 
                     string notifyText = $"📌 画面入力: X={clickX:F3}, Y={clickY:F3} を取得しました";
-                    _lastMapHoverToolTipText = notifyText;
-                    _mapHoverToolTip.Show(notifyText, picMapCanvas, e.X + 10, e.Y - 25, 2000);
+                    _clickNotifyToolTip.Show(notifyText, picMapCanvas, e.X + 10, e.Y - 25, 2000);
                 }
             }
         }
