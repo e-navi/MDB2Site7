@@ -28,6 +28,11 @@ namespace Site7DbEditor {
         private bool _isMovingVertex = false;
         private IkouLModel? _movingLine = null;
         private int _movingVertexIndex = -1;
+
+        private bool _isInsertingVertex = false;
+        private IkouLModel? _insertingLine = null;
+        private int _insertingSegmentIndex = -1;
+
         private Point _currentRubberBandMousePos = Point.Empty;
 
         private readonly EditorDbManager _db = new EditorDbManager();
@@ -2085,6 +2090,98 @@ namespace Site7DbEditor {
                     }
                 }
             }
+
+            // 頂点追加（挿入）中のラバーバンド描画（前の頂点 -> マウス位置 -> 次の頂点）
+            if (_isInsertingVertex && _insertingLine != null && _insertingSegmentIndex >= 0) {
+                var pts = SqliteManager.ParsePrecsText(_insertingLine.Precs);
+                if (_insertingSegmentIndex < pts.Count - 1) {
+                    var p1 = pts[_insertingSegmentIndex];
+                    var p2 = pts[_insertingSegmentIndex + 1];
+                    PointF screenP1 = _vc.ToCanvasPoint(p1.X, p1.Y, picMapCanvas.Size);
+                    PointF screenP2 = _vc.ToCanvasPoint(p2.X, p2.Y, picMapCanvas.Size);
+                    PointF mousePt = _currentRubberBandMousePos;
+
+                    using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                    using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
+                    using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
+                        e.Graphics.DrawLine(rubberPen, screenP1, mousePt);
+                        e.Graphics.DrawLine(rubberPen, mousePt, screenP2);
+                        e.Graphics.FillEllipse(targetBrush, mousePt.X - 4f, mousePt.Y - 4f, 8f, 8f);
+                        e.Graphics.DrawEllipse(targetPen, mousePt.X - 7f, mousePt.Y - 7f, 14f, 14f);
+                    }
+                }
+            }
+        }
+
+        private void ApplyVertexInsert(Point screenLocation) {
+            if (!_isInsertingVertex || _insertingLine == null || _insertingSegmentIndex < 0) {
+                CancelVertexInsert();
+                return;
+            }
+
+            var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(screenLocation, picMapCanvas.Size);
+            var pts = SqliteManager.ParsePrecsText(_insertingLine.Precs);
+
+            if (_insertingSegmentIndex < pts.Count) {
+                double avgZ = 0.0;
+                if (_insertingSegmentIndex < pts.Count - 1) {
+                    avgZ = Math.Round((pts[_insertingSegmentIndex].Z + pts[_insertingSegmentIndex + 1].Z) / 2.0, 3);
+                } else if (pts.Count > 0) {
+                    avgZ = pts[_insertingSegmentIndex].Z;
+                }
+
+                int insertIdx = _insertingSegmentIndex + 1;
+                var newPt = new IkouPointRecord {
+                    Pid = insertIdx + 1,
+                    X = Math.Round(newSurveyX, 3),
+                    Y = Math.Round(newSurveyY, 3),
+                    Z = avgZ
+                };
+
+                pts.Insert(insertIdx, newPt);
+
+                // 全PIDの再整列
+                for (int i = 0; i < pts.Count; i++) {
+                    pts[i].Pid = i + 1;
+                }
+
+                _insertingLine.Precs = SqliteManager.FormatPrecsText(pts);
+
+                if (pts.Count > 0) {
+                    _insertingLine.X = Math.Round(pts.Average(p => p.X), 3);
+                    _insertingLine.Y = Math.Round(pts.Average(p => p.Y), 3);
+                    _insertingLine.Z = Math.Round(pts.Average(p => p.Z), 3);
+
+                    if (pts.Count > 1) {
+                        var f = pts.First();
+                        var l = pts.Last();
+                        bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
+                        _insertingLine.Mode = match ? 1 : 0;
+                    }
+                }
+
+                _selectedPointIndex = insertIdx;
+                dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
+                dgvPrecs.ResetBindings();
+
+                SetCurrentRowSafe(dgvPrecs, _selectedPointIndex);
+                txtCoordX.Text = newPt.X.ToString("F3");
+                txtCoordY.Text = newPt.Y.ToString("F3");
+                txtCoordZ.Text = newPt.Z.ToString("F3");
+
+                dgvIkouL.Refresh();
+            }
+
+            CancelVertexInsert();
+        }
+
+        private void CancelVertexInsert() {
+            _isInsertingVertex = false;
+            _insertingLine = null;
+            _insertingSegmentIndex = -1;
+            _currentRubberBandMousePos = Point.Empty;
+            picMapCanvas.Cursor = Cursors.Default;
+            picMapCanvas.Invalidate();
         }
 
         private void ApplyVertexMove(Point screenLocation) {
@@ -2150,6 +2247,16 @@ namespace Site7DbEditor {
                 }
             }
 
+            if (_isInsertingVertex) {
+                if (e.Button == MouseButtons.Left) {
+                    ApplyVertexInsert(e.Location);
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelVertexInsert();
+                    return;
+                }
+            }
+
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) {
                 _vc.IsMouseDownMap = true;
                 _vc.IsPanningMap = false;
@@ -2168,7 +2275,7 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_MouseMove(object? sender, MouseEventArgs e) {
-            if (_isMovingVertex) {
+            if (_isMovingVertex || _isInsertingVertex) {
                 _currentRubberBandMousePos = e.Location;
                 picMapCanvas.Invalidate();
                 return;
@@ -2202,7 +2309,7 @@ namespace Site7DbEditor {
                 picMapCanvas.Cursor = Cursors.Default;
             }
 
-            if (!wasPanning && e.Button == MouseButtons.Left && !chkScreenInput.Checked && !_isMovingVertex) {
+            if (!wasPanning && e.Button == MouseButtons.Left && !chkScreenInput.Checked && !_isMovingVertex && !_isInsertingVertex) {
                 int dx = e.X - _vc.MouseDownPosMap.X;
                 int dy = e.Y - _vc.MouseDownPosMap.Y;
                 if (Math.Abs(dx) <= 5 && Math.Abs(dy) <= 5) {
@@ -2489,8 +2596,11 @@ namespace Site7DbEditor {
             double minDist = thresholdPx;
             var spline = new Xross_Spline();
 
-            // 1. まず「現在選択中の遺構線」の頂点判定を最優先で確認
+            // 1. まず「現在選択中の遺構線」の頂点（〇）および中間点（□）判定を最優先で確認
             var currentSelectedLine = _db.IkouLList.FirstOrDefault(l => l.Id == _selectedIkouId && l.Lid == _selectedLid);
+            bool isMidpointHit = false;
+            int bestMidpointIndex = -1;
+
             if (currentSelectedLine != null) {
                 var currentPts = SqliteManager.ParsePrecsText(currentSelectedLine.Precs);
                 for (int i = 0; i < currentPts.Count; i++) {
@@ -2501,12 +2611,38 @@ namespace Site7DbEditor {
                         bestLine = currentSelectedLine;
                         bestVertexIndex = i;
                         isVertexHit = true;
+                        isMidpointHit = false;
+                    }
+                }
+
+                // 中間点（□）判定（頂点でヒットしていない、かつ曲線描画時）
+                if (!isVertexHit && currentPts.Count > 1) {
+                    int dbLayerId = currentSelectedLine.Layer >= 49 ? currentSelectedLine.Layer : (currentSelectedLine.Layer + 48);
+                    var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
+                    bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                    bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && currentPts.Count >= 3;
+
+                    if (drawAsCurve) {
+                        for (int i = 0; i < currentPts.Count - 1; i++) {
+                            PointF p1 = toCanvasPoint(currentPts[i].X, currentPts[i].Y);
+                            PointF p2 = toCanvasPoint(currentPts[i + 1].X, currentPts[i + 1].Y);
+                            float midX = (p1.X + p2.X) / 2f;
+                            float midY = (p1.Y + p2.Y) / 2f;
+
+                            double md = Math.Sqrt((midX - clickPos.X) * (midX - clickPos.X) + (midY - clickPos.Y) * (midY - clickPos.Y));
+                            if (md < minDist) {
+                                minDist = md;
+                                bestLine = currentSelectedLine;
+                                bestMidpointIndex = i;
+                                isMidpointHit = true;
+                            }
+                        }
                     }
                 }
             }
 
-            // 2. 選択中遺構線の頂点でヒットしなかった場合、全遺構線から頂点・線上の判定
-            if (!isVertexHit) {
+            // 2. 選択中遺構線の頂点・中間点でヒットしなかった場合、全遺構線から頂点・線上の判定
+            if (!isVertexHit && !isMidpointHit) {
                 foreach (var line in _db.IkouLList) {
                     int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
                     if (IsMapLayerVisible != null && !IsMapLayerVisible(layerIdx))
@@ -2560,6 +2696,10 @@ namespace Site7DbEditor {
                     // すでに選択中の遺構線の頂点がクリックされた場合:
                     // 勝手に頂点セレクションの変更は行わず、その場所でポップアップ表示を実行
                     ShowVertexContextMenu(clickPos, bestLine, bestVertexIndex);
+                } else if (isAlreadySelectedLine && isMidpointHit && bestMidpointIndex >= 0) {
+                    // すでに選択中の遺構線の中間点がクリックされた場合:
+                    // 中間点ポップアップ（頂点追加）を表示
+                    ShowMidpointContextMenu(clickPos, bestLine, bestMidpointIndex);
                 } else {
                     // 未選択の遺構線、または線自体のクリック時: 遺構線全体の選択処理を行う
                     _isUpdatingSelection = true;
@@ -2596,6 +2736,28 @@ namespace Site7DbEditor {
                 return true;
             }
             return false;
+        }
+
+        private void ShowMidpointContextMenu(Point clickPos, IkouLModel line, int segmentIndex) {
+            ContextMenuStrip cmsMid = new ContextMenuStrip();
+
+            var itemInsert = new ToolStripMenuItem("頂点追加");
+            itemInsert.Click += (s, e) => {
+                _isInsertingVertex = true;
+                _insertingLine = line;
+                _insertingSegmentIndex = segmentIndex;
+                _currentRubberBandMousePos = clickPos;
+                picMapCanvas.Cursor = Cursors.Cross;
+                picMapCanvas.Invalidate();
+            };
+
+            cmsMid.Items.Add(itemInsert);
+
+            cmsMid.Closed += (s, e) => {
+                picMapCanvas.Invalidate();
+            };
+
+            cmsMid.Show(picMapCanvas, clickPos);
         }
 
         private void ShowVertexContextMenu(Point clickPos, IkouLModel line, int vertexIndex) {
