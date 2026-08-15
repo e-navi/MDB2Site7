@@ -68,6 +68,7 @@ namespace Site7DbEditor
             chkShowIkouName = new CheckBox();
             chkShowKikai = new CheckBox();
             chkShowKikaiName = new CheckBox();
+            chkShowCurve = new CheckBox();
             panelLeftHeader = new Panel();
             lblLeftTitle = new Label();
             btnDetachLeftPanel = new Button();
@@ -155,7 +156,6 @@ namespace Site7DbEditor
             panelBottomHeader = new Panel();
             lblBottomTitle = new Label();
             btnDetachBottomPanel = new Button();
-            chkShowCurve = new CheckBox();
             chkShowGrid = new CheckBox();
             chkColorByIkou = new CheckBox();
             tabLayer = new TabPage();
@@ -896,7 +896,7 @@ namespace Site7DbEditor
             chkShowCurve.ForeColor = Color.Black;
             chkShowCurve.Location = new Point(6, 446);
             chkShowCurve.Name = "chkShowCurve";
-            chkShowCurve.Size = new Size(75, 19);
+            chkShowCurve.Size = new Size(74, 19);
             chkShowCurve.TabIndex = 32;
             chkShowCurve.Text = "曲線表示";
             chkShowCurve.UseVisualStyleBackColor = true;
@@ -1567,7 +1567,7 @@ namespace Site7DbEditor
             btnDeletePointRight.FlatStyle = FlatStyle.Flat;
             btnDeletePointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnDeletePointRight.ForeColor = Color.White;
-            btnDeletePointRight.Location = new Point(8, 502);
+            btnDeletePointRight.Location = new Point(17, 282);
             btnDeletePointRight.Name = "btnDeletePointRight";
             btnDeletePointRight.Size = new Size(48, 28);
             btnDeletePointRight.TabIndex = 8;
@@ -1581,7 +1581,7 @@ namespace Site7DbEditor
             btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
             btnUpdatePointRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnUpdatePointRight.ForeColor = Color.Black;
-            btnUpdatePointRight.Location = new Point(62, 502);
+            btnUpdatePointRight.Location = new Point(71, 282);
             btnUpdatePointRight.Name = "btnUpdatePointRight";
             btnUpdatePointRight.Size = new Size(48, 28);
             btnUpdatePointRight.TabIndex = 9;
@@ -1595,7 +1595,7 @@ namespace Site7DbEditor
             btnAddPointRight.FlatStyle = FlatStyle.Flat;
             btnAddPointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnAddPointRight.ForeColor = Color.White;
-            btnAddPointRight.Location = new Point(116, 502);
+            btnAddPointRight.Location = new Point(125, 282);
             btnAddPointRight.Name = "btnAddPointRight";
             btnAddPointRight.Size = new Size(48, 28);
             btnAddPointRight.TabIndex = 10;
