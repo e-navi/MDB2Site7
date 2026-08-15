@@ -312,14 +312,23 @@ namespace Site7DbEditor.Services
                     }
                 }
 
-                if (CurLogIdx > Logs.Count)
-                    CurLogIdx = Logs.Count;
+                // 起動・ロード時は index を 0 にして Redo ができる状態にする
+                CurLogIdx = 0;
 
                 StateChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[LoadLogDB] Error: {ex.Message}");
+            }
+        }
+
+        public void Recover(EditorDbManager db)
+        {
+            CurLogIdx = 0;
+            while (CanRedo)
+            {
+                Redo(db, out _, out _);
             }
         }
 

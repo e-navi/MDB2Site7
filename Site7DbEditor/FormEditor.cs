@@ -743,6 +743,19 @@ namespace Site7DbEditor {
                 PopulateIkouLineLayerCombo();
                 BindAllData();
 
+                if (_logService.Logs.Count > 0) {
+                    var res = MessageBox.Show(
+                        $"前回の未保存データ（{_logService.Logs.Count}件の操作ログ）が存在します。\n前回の編集状態を復元（回復）しますか？\n\n[はい]: 前回の編集状態まで自動回復して進める\n[いいえ]: 復元せず、手動でRedo（進める）可能な状態にする",
+                        "未保存ログの回復確認",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (res == DialogResult.Yes) {
+                        _logService.Recover(_db);
+                        BindAllData();
+                    }
+                }
+
                 lblDbStatus.Text = $"✔ {_db.IkouList.Count}遺構 | {_db.IkouLList.Count}線 | {_db.IbutuList.Count}遺物 | {_db.KikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
 
