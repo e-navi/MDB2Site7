@@ -13,14 +13,16 @@ namespace Site7DbEditor.Services
         public int LogNo { get; set; }
         public int LogType { get; set; } // 1: NEW, 2: DEL, 3: UPD
         public int RecType { get; set; } // 1: 基準点, 2: 遺物, 3: 遺構, 4: 遺構線, 5: 頂点
-        public object Rec { get; set; }
+        public object? OldRec { get; set; } // 変更前（Undo用 / 削除時のスナップショット）
+        public object? NewRec { get; set; } // 変更後（Redo用 / 新規時のスナップショット）
 
-        public LogEntry(int logNo, int logType, int recType, object rec)
+        public LogEntry(int logNo, int logType, int recType, object? oldRec, object? newRec)
         {
             LogNo = logNo;
             LogType = logType;
             RecType = recType;
-            Rec = rec;
+            OldRec = oldRec;
+            NewRec = newRec;
         }
     }
 
@@ -73,10 +75,24 @@ namespace Site7DbEditor.Services
                 Logs.RemoveRange(CurLogIdx, Logs.Count - CurLogIdx);
             }
 
-            // 更新(UPD)時は変更前の状態(rec0)を保存、それ以外はrecを保存
-            object targetRec = (logType == LOG_TYPE_UPD && rec0 != null) ? CloneRecord(recType, rec0) : CloneRecord(recType, rec);
+            object? oldSnapshot = null;
+            object? newSnapshot = null;
 
-            var entry = new LogEntry(CurLogNo, logType, recType, targetRec);
+            if (logType == LOG_TYPE_NEW)
+            {
+                newSnapshot = CloneRecord(recType, rec);
+            }
+            else if (logType == LOG_TYPE_DEL)
+            {
+                oldSnapshot = CloneRecord(recType, rec);
+            }
+            else if (logType == LOG_TYPE_UPD)
+            {
+                oldSnapshot = rec0 != null ? CloneRecord(recType, rec0) : null;
+                newSnapshot = CloneRecord(recType, rec);
+            }
+
+            var entry = new LogEntry(CurLogNo, logType, recType, oldSnapshot, newSnapshot);
             Logs.Add(entry);
             CurLogIdx++;
             IncLogNo();
@@ -110,27 +126,28 @@ namespace Site7DbEditor.Services
 
                 affectedRecType = log.RecType;
 
-                if (log.RecType == REC_TYPE_KIJUNP && log.Rec is KikaiModel rec)
+                if (log.RecType == REC_TYPE_KIJUNP)
                 {
-                    affectedId = rec.Id;
-                    var existing = db.KikaiList.FirstOrDefault(k => k.Id == rec.Id);
-
-                    if (log.LogType == LOG_TYPE_NEW) // 新規追加のUndo -> 削除
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is KikaiModel newK)
                     {
+                        affectedId = newK.Id;
+                        var existing = db.KikaiList.FirstOrDefault(k => k.Id == newK.Id);
                         if (existing != null) db.KikaiList.Remove(existing);
                     }
-                    else if (log.LogType == LOG_TYPE_DEL) // 削除のUndo -> 復元追加
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is KikaiModel oldK)
                     {
-                        if (existing == null) db.KikaiList.Add((KikaiModel)CloneRecord(REC_TYPE_KIJUNP, rec));
+                        affectedId = oldK.Id;
+                        var existing = db.KikaiList.FirstOrDefault(k => k.Id == oldK.Id);
+                        if (existing == null) db.KikaiList.Add((KikaiModel)CloneRecord(REC_TYPE_KIJUNP, oldK));
                     }
-                    else if (log.LogType == LOG_TYPE_UPD) // 更新のUndo -> 変更前状態に戻す
+                    else if (log.LogType == LOG_TYPE_UPD && log.OldRec is KikaiModel updOldK)
                     {
+                        affectedId = updOldK.Id;
+                        var existing = db.KikaiList.FirstOrDefault(k => k.Id == updOldK.Id);
                         if (existing != null)
                         {
-                            // 現在の状態をRedo用にlog.Recにスワップ保存
-                            var currentCopy = (KikaiModel)CloneRecord(REC_TYPE_KIJUNP, existing);
-                            CopyKikaiProperties(rec, existing);
-                            log.Rec = currentCopy;
+                            // 常に更新前の値(OldRec)を適用（スワップしない）
+                            CopyKikaiProperties(updOldK, existing);
                         }
                     }
                 }
@@ -163,26 +180,28 @@ namespace Site7DbEditor.Services
 
                 affectedRecType = log.RecType;
 
-                if (log.RecType == REC_TYPE_KIJUNP && log.Rec is KikaiModel rec)
+                if (log.RecType == REC_TYPE_KIJUNP)
                 {
-                    affectedId = rec.Id;
-                    var existing = db.KikaiList.FirstOrDefault(k => k.Id == rec.Id);
-
-                    if (log.LogType == LOG_TYPE_NEW) // 新規追加のRedo -> 再追加
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is KikaiModel newK)
                     {
-                        if (existing == null) db.KikaiList.Add((KikaiModel)CloneRecord(REC_TYPE_KIJUNP, rec));
+                        affectedId = newK.Id;
+                        var existing = db.KikaiList.FirstOrDefault(k => k.Id == newK.Id);
+                        if (existing == null) db.KikaiList.Add((KikaiModel)CloneRecord(REC_TYPE_KIJUNP, newK));
                     }
-                    else if (log.LogType == LOG_TYPE_DEL) // 削除のRedo -> 削除
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is KikaiModel oldK)
                     {
+                        affectedId = oldK.Id;
+                        var existing = db.KikaiList.FirstOrDefault(k => k.Id == oldK.Id);
                         if (existing != null) db.KikaiList.Remove(existing);
                     }
-                    else if (log.LogType == LOG_TYPE_UPD) // 更新のRedo -> 更新後の状態に戻す
+                    else if (log.LogType == LOG_TYPE_UPD && log.NewRec is KikaiModel updNewK)
                     {
+                        affectedId = updNewK.Id;
+                        var existing = db.KikaiList.FirstOrDefault(k => k.Id == updNewK.Id);
                         if (existing != null)
                         {
-                            var currentCopy = (KikaiModel)CloneRecord(REC_TYPE_KIJUNP, existing);
-                            CopyKikaiProperties(rec, existing);
-                            log.Rec = currentCopy;
+                            // 常に更新後の値(NewRec)を適用（スワップしない）
+                            CopyKikaiProperties(updNewK, existing);
                         }
                     }
                 }
@@ -232,11 +251,12 @@ namespace Site7DbEditor.Services
                             cmd.Parameters.AddWithValue("@logType", CurLogIdx);
                             cmd.ExecuteNonQuery();
 
-                            // 2. 各ログレコードを保存
+                            // 2. 各ログレコードを保存 (更新時は更新後の NewRec を保存)
                             for (int i = 0; i < Logs.Count; i++)
                             {
                                 var log = Logs[i];
-                                string recStr = Rec2Str(log.RecType, log.Rec);
+                                object? targetRec = (log.LogType == LOG_TYPE_UPD) ? (log.NewRec ?? log.OldRec) : (log.NewRec ?? log.OldRec);
+                                string recStr = Rec2Str(log.RecType, targetRec);
 
                                 cmd.CommandText = "INSERT INTO 'LogTbl' (IDX, NO, LOGTYPE, RECTYPE, REC) VALUES (@idx, @no, @logType, @recType, @rec);";
                                 cmd.Parameters.Clear();
@@ -258,7 +278,7 @@ namespace Site7DbEditor.Services
             }
         }
 
-        public void LoadLogDB(string dbPath)
+        public void LoadLogDB(string dbPath, EditorDbManager? db = null)
         {
             if (string.IsNullOrEmpty(dbPath) || !File.Exists(dbPath)) return;
 
@@ -303,7 +323,31 @@ namespace Site7DbEditor.Services
                                     object? recObj = Str2Rec(recType, recStr);
                                     if (recObj != null)
                                     {
-                                        Logs.Add(new LogEntry(no, logType, recType, recObj));
+                                        object? oldRec = null;
+                                        object? newRec = null;
+
+                                        if (logType == LOG_TYPE_NEW)
+                                        {
+                                            newRec = recObj;
+                                        }
+                                        else if (logType == LOG_TYPE_DEL)
+                                        {
+                                            oldRec = recObj;
+                                        }
+                                        else if (logType == LOG_TYPE_UPD)
+                                        {
+                                            newRec = recObj; // LogTbl に入っているのは更新後の値
+                                            if (db != null && recType == REC_TYPE_KIJUNP && recObj is KikaiModel k)
+                                            {
+                                                var existing = db.KikaiList.FirstOrDefault(item => item.Id == k.Id);
+                                                if (existing != null)
+                                                {
+                                                    oldRec = CloneRecord(recType, existing); // 変更前の値
+                                                }
+                                            }
+                                        }
+
+                                        Logs.Add(new LogEntry(no, logType, recType, oldRec, newRec));
                                         if (CurLogNo < no) CurLogNo = no;
                                     }
                                 }
@@ -364,7 +408,7 @@ namespace Site7DbEditor.Services
 
         #region Serialization Helpers
 
-        public static string Rec2Str(int recType, object rec)
+        public static string Rec2Str(int recType, object? rec)
         {
             if (rec == null) return "";
             if (recType == REC_TYPE_KIJUNP && rec is KikaiModel k)
@@ -429,4 +473,3 @@ namespace Site7DbEditor.Services
         #endregion
     }
 }
-

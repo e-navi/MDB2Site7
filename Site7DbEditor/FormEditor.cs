@@ -739,7 +739,7 @@ namespace Site7DbEditor {
                 try { dgvLayer.CancelEdit(); } catch { }
 
                 _db.LoadDatabase(dbPath);
-                _logService.LoadLogDB(dbPath);
+                _logService.LoadLogDB(dbPath, _db);
                 PopulateIkouLineLayerCombo();
                 BindAllData();
 
