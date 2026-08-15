@@ -327,6 +327,36 @@ namespace Site7DbEditor {
             this.btnDeletePointRight.Click += btnDeletePointRight_Click;
             this.btnAddPointRight.Click += btnAddPointRight_Click;
 
+            // UI State Change Triggers
+            this.txtIkouNum.TextChanged += (s, e) => UpdateUIState();
+            this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.cmbIkouKind.TextChanged += (s, e) => UpdateUIState();
+
+            this.txtLineNum.TextChanged += (s, e) => UpdateUIState();
+            this.cmbLineKind.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.cmbLineKind.TextChanged += (s, e) => UpdateUIState();
+            this.cmbLineLayer.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.rdoLineOpen.CheckedChanged += (s, e) => UpdateUIState();
+            this.rdoLineClosed.CheckedChanged += (s, e) => UpdateUIState();
+            this.rdoLinePoint.CheckedChanged += (s, e) => UpdateUIState();
+
+            this.tabControlData.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.txtCoordX.TextChanged += (s, e) => UpdateUIState();
+            this.txtCoordY.TextChanged += (s, e) => UpdateUIState();
+            this.txtCoordZ.TextChanged += (s, e) => UpdateUIState();
+
+            this.cmbIbutuChiku.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.cmbIbutuChiku.TextChanged += (s, e) => UpdateUIState();
+            this.cmbIbutuSoui.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.cmbIbutuSoui.TextChanged += (s, e) => UpdateUIState();
+            this.cmbIbutuSyubetu.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.cmbIbutuSyubetu.TextChanged += (s, e) => UpdateUIState();
+            this.cmbIbutuLayer.SelectedIndexChanged += (s, e) => UpdateUIState();
+            this.txtIbutuNo.TextChanged += (s, e) => UpdateUIState();
+
+            this.txtKikaiName.TextChanged += (s, e) => UpdateUIState();
+            this.cmbKikaiLayer.SelectedIndexChanged += (s, e) => UpdateUIState();
+
             // Double Click Map Centering Events
             this.dgvIkou.CellDoubleClick += dgvIkou_CellDoubleClick;
             this.dgvIkouL.CellDoubleClick += dgvIkouL_CellDoubleClick;
@@ -760,6 +790,7 @@ namespace Site7DbEditor {
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
 
                 _vc.ResetZoom();
+                UpdateUIState();
                 picMapCanvas.Invalidate();
             } catch (Exception ex) {
                 MessageBox.Show($"DB読み込みエラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -999,6 +1030,7 @@ namespace Site7DbEditor {
                         dgvIkouL.DataSource = new BindingList<IkouLModel>();
                         UpdateIkouLSelection(null);
                     }
+                    UpdateUIState();
                 } catch { } finally {
                     _isUpdatingSelection = false;
                     picMapCanvas.Invalidate();
@@ -1098,6 +1130,7 @@ namespace Site7DbEditor {
                 _isUpdatingSelection = true;
                 try {
                     UpdateIkouLSelection();
+                    UpdateUIState();
                 } catch { } finally {
                     _isUpdatingSelection = false;
                     picMapCanvas.Invalidate();
@@ -1752,13 +1785,18 @@ namespace Site7DbEditor {
 
         private void btnUpdateIkouRight_Click(object? sender, EventArgs e) {
             if (GetSelectedDataBoundItem<IkouModel>(dgvIkou) is IkouModel selected) {
+                var original = (IkouModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOU, selected);
                 string prefix = cmbIkouKind.Text.Trim();
+                if (string.IsNullOrEmpty(prefix)) prefix = "遺構";
                 string noStr = txtIkouNum.Text.Trim();
-                string fullName = $"{prefix}{noStr}";
+                string fullName = BuildIkouFullNamePreview(prefix, noStr);
 
                 selected.Name = fullName;
                 lblIkouNameVal.Text = fullName;
+                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOU, selected, original, _db.CurrentDbPath);
                 dgvIkou.Refresh();
+                PopulateIkouMasterCombo();
+                UpdateUIState();
                 picMapCanvas.Invalidate();
             }
         }
@@ -1785,9 +1823,11 @@ namespace Site7DbEditor {
 
         private void btnUpdateLineRight_Click(object? sender, EventArgs e) {
             if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selected) {
+                var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selected);
                 string prefix = cmbLineKind.Text.Trim();
+                if (string.IsNullOrEmpty(prefix)) prefix = "線";
                 string noStr = txtLineNum.Text.Trim();
-                string fullName = $"{prefix}{noStr}";
+                string fullName = BuildLineFullNamePreview(prefix, noStr);
 
                 selected.Name = fullName;
                 lblLineNameVal.Text = fullName;
@@ -1799,17 +1839,11 @@ namespace Site7DbEditor {
                 else if (rdoLinePoint.Checked)
                     selected.Mode = 2;
 
-                int selectedIdx = cmbLineLayer.SelectedIndex;
-                if (selectedIdx >= 0 && selectedIdx < 16) {
-                    selected.Layer = selectedIdx + 1;
-                } else {
-                    string selLayer = cmbLineLayer.SelectedItem?.ToString() ?? "";
-                    if (selLayer.StartsWith("L") && int.TryParse(selLayer.Substring(1, 2), out int parsedLayer)) {
-                        selected.Layer = parsedLayer >= 49 ? (parsedLayer - 48) : parsedLayer;
-                    }
-                }
+                selected.Layer = GetSelectedLineLayerVal();
 
+                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selected, original, _db.CurrentDbPath);
                 dgvIkouL.Refresh();
+                UpdateUIState();
                 picMapCanvas.Invalidate();
             }
         }
@@ -3242,6 +3276,154 @@ namespace Site7DbEditor {
 
                 picMapCanvas.Invalidate();
             }
+        }
+
+        #endregion
+
+        #region UI State and Button Enabled Management
+
+        private void UpdateUIState() {
+            if (this.IsDisposed || !this.IsHandleCreated) return;
+
+            bool isDbLoaded = _db.IkouList != null && !string.IsNullOrEmpty(_db.CurrentDbPath);
+            IkouModel? curIkou = GetSelectedDataBoundItem<IkouModel>(dgvIkou);
+            IkouLModel? curIkouL = GetSelectedDataBoundItem<IkouLModel>(dgvIkouL);
+
+            // 1. 遺構マスター（追加・削除・更新）
+            string ikouPrefix = cmbIkouKind.Text.Trim();
+            if (string.IsNullOrEmpty(ikouPrefix)) ikouPrefix = "遺構";
+            string ikouNoStr = txtIkouNum.Text.Trim();
+            string ikouFullName = BuildIkouFullNamePreview(ikouPrefix, ikouNoStr);
+            bool isIkouNameNotEmpty = !string.IsNullOrEmpty(ikouFullName);
+            bool isIkouNameNotRegistered = isIkouNameNotEmpty && !_db.IkouList.Any(i => i.Name.Equals(ikouFullName, StringComparison.OrdinalIgnoreCase));
+            bool isIkouNameNotOtherDup = curIkou != null && isIkouNameNotEmpty && !_db.IkouList.Any(i => i != curIkou && i.Name.Equals(ikouFullName, StringComparison.OrdinalIgnoreCase));
+
+            btnAddIkou.Enabled = isDbLoaded && isIkouNameNotRegistered;
+            btnDeleteIkouRight.Enabled = (curIkou != null);
+            btnUpdateIkouRight.Enabled = curIkou != null && isIkouNameNotOtherDup && !curIkou.Name.Equals(ikouFullName, StringComparison.OrdinalIgnoreCase);
+
+            // 2. 遺構線マスター（追加・削除・更新）
+            string linePrefix = cmbLineKind.Text.Trim();
+            if (string.IsNullOrEmpty(linePrefix)) linePrefix = "線";
+            string lineNoStr = txtLineNum.Text.Trim();
+            string lineFullName = BuildLineFullNamePreview(linePrefix, lineNoStr);
+            bool isLineNameNotEmpty = !string.IsNullOrEmpty(lineFullName);
+            var currentLines = curIkou != null ? _db.IkouLList.Where(l => l.Id == curIkou.Id).ToList() : new List<IkouLModel>();
+            bool isLineNameNotRegistered = curIkou != null && isLineNameNotEmpty && !currentLines.Any(l => l.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase));
+            bool isLineNameNotOtherDup = curIkouL != null && isLineNameNotEmpty && !currentLines.Any(l => l != curIkouL && l.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase));
+
+            btnAddIkouL.Enabled = (curIkou != null) && isLineNameNotRegistered;
+            btnDeleteLineRight.Enabled = (curIkouL != null);
+
+            int currentModeVal = rdoLineClosed.Checked ? 1 : (rdoLinePoint.Checked ? 2 : 0);
+            int currentLayerVal = GetSelectedLineLayerVal();
+            bool isLineDirty = curIkouL != null && (
+                !curIkouL.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase) ||
+                curIkouL.Mode != currentModeVal ||
+                curIkouL.Layer != currentLayerVal
+            );
+            btnUpdateLineRight.Enabled = curIkouL != null && isLineNameNotOtherDup && isLineDirty;
+
+            // 3. 右側パネル（構成点 / 遺物 / 基準点）
+            int tabIdx = tabControlData.SelectedIndex;
+            double x = 0, y = 0, z = 0;
+            bool hasValidCoord = double.TryParse(txtCoordX.Text.Trim(), out x) &&
+                                 double.TryParse(txtCoordY.Text.Trim(), out y) &&
+                                 double.TryParse(txtCoordZ.Text.Trim(), out z);
+
+            if (tabIdx == 0) // 遺構 (構成座標)
+            {
+                var pts = (dgvPrecs.DataSource is BindingList<IkouPointRecord> bpts) ? bpts : null;
+                bool hasSelectedVertex = (pts != null && _selectedPointIndex >= 0 && _selectedPointIndex < pts.Count);
+
+                btnAddPointRight.Enabled = (curIkouL != null) && hasValidCoord;
+                btnDeletePointRight.Enabled = hasSelectedVertex;
+
+                bool isPointDirty = false;
+                if (hasSelectedVertex && hasValidCoord && pts != null) {
+                    var curPt = pts[_selectedPointIndex];
+                    isPointDirty = Math.Abs(curPt.X - x) > 0.0001 ||
+                                   Math.Abs(curPt.Y - y) > 0.0001 ||
+                                   Math.Abs(curPt.Z - z) > 0.0001;
+                }
+                btnUpdatePointRight.Enabled = hasSelectedVertex && isPointDirty;
+            }
+            else if (tabIdx == 1) // 遺物
+            {
+                IbutuModel? curIbutu = GetSelectedDataBoundItem<IbutuModel>(dgvIbutu);
+                int.TryParse(txtIbutuNo.Text.Trim(), out int ibutuNo);
+                bool hasValidIbutuNo = (ibutuNo > 0);
+
+                btnAddPointRight.Enabled = isDbLoaded && hasValidCoord && hasValidIbutuNo;
+                btnDeletePointRight.Enabled = (curIbutu != null);
+
+                bool isIbutuDirty = false;
+                if (curIbutu != null && hasValidCoord && hasValidIbutuNo) {
+                    string chiku = cmbIbutuChiku.Text.Trim();
+                    string soui = cmbIbutuSoui.Text.Trim();
+                    string syubetu = cmbIbutuSyubetu.Text.Trim();
+                    int layer = GetSelectedIbutuLayer();
+
+                    isIbutuDirty = !string.Equals(curIbutu.Chiku, chiku, StringComparison.OrdinalIgnoreCase) ||
+                                   !string.Equals(curIbutu.Soui, soui, StringComparison.OrdinalIgnoreCase) ||
+                                   !string.Equals(curIbutu.Syubetu, syubetu, StringComparison.OrdinalIgnoreCase) ||
+                                   curIbutu.Layer != layer ||
+                                   curIbutu.No != ibutuNo ||
+                                   Math.Abs(curIbutu.X - x) > 0.0001 ||
+                                   Math.Abs(curIbutu.Y - y) > 0.0001 ||
+                                   Math.Abs(curIbutu.Z - z) > 0.0001;
+                }
+                btnUpdatePointRight.Enabled = curIbutu != null && isIbutuDirty;
+            }
+            else if (tabIdx == 2) // 基準点
+            {
+                KikaiModel? curKikai = GetSelectedDataBoundItem<KikaiModel>(dgvKikai);
+                string kName = txtKikaiName.Text.Trim();
+                bool isKikaiNameNotEmpty = !string.IsNullOrEmpty(kName);
+                bool isKikaiNameNotRegistered = isKikaiNameNotEmpty && !_db.KikaiList.Any(k => k.Name.Equals(kName, StringComparison.OrdinalIgnoreCase));
+                bool isKikaiNameNotOtherDup = curKikai != null && isKikaiNameNotEmpty && !_db.KikaiList.Any(k => k != curKikai && k.Name.Equals(kName, StringComparison.OrdinalIgnoreCase));
+
+                btnAddPointRight.Enabled = isDbLoaded && isKikaiNameNotRegistered && hasValidCoord;
+                btnDeletePointRight.Enabled = (curKikai != null);
+
+                bool isKikaiDirty = false;
+                if (curKikai != null && isKikaiNameNotOtherDup && hasValidCoord) {
+                    int layer = GetSelectedKikaiLayer();
+                    isKikaiDirty = !string.Equals(curKikai.Name, kName, StringComparison.OrdinalIgnoreCase) ||
+                                   curKikai.Layer != layer ||
+                                   Math.Abs(curKikai.X - x) > 0.0001 ||
+                                   Math.Abs(curKikai.Y - y) > 0.0001 ||
+                                   Math.Abs(curKikai.Z - z) > 0.0001;
+                }
+                btnUpdatePointRight.Enabled = curKikai != null && isKikaiDirty;
+            }
+        }
+
+        private string BuildIkouFullNamePreview(string prefix, string noStr) {
+            if (int.TryParse(noStr, out int numVal)) {
+                return numVal < 100 ? $"{prefix}{numVal:D2}" : $"{prefix}{numVal}";
+            }
+            long newId = _db.IkouList.Count > 0 ? _db.IkouList.Max(i => i.Id) + 1 : 1;
+            return $"{prefix}_{newId}";
+        }
+
+        private string BuildLineFullNamePreview(string prefix, string noStr) {
+            if (int.TryParse(noStr, out int numVal)) {
+                return $"{prefix}{numVal}";
+            }
+            return prefix;
+        }
+
+        private int GetSelectedLineLayerVal() {
+            int selectedIdx = cmbLineLayer.SelectedIndex;
+            if (selectedIdx >= 0 && selectedIdx < 16) {
+                return selectedIdx + 1;
+            }
+            string selLayer = cmbLineLayer.SelectedItem?.ToString() ?? cmbLineLayer.Text;
+            if (selLayer.StartsWith("L") && int.TryParse(selLayer.Substring(1, 2), out int parsedLayer)) {
+                return parsedLayer >= 49 ? (parsedLayer - 48) : parsedLayer;
+            }
+            return 1;
         }
 
         #endregion
