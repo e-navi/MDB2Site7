@@ -260,7 +260,7 @@ namespace Site7DbEditor.Services
                 }
             }
 
-            // 5. 選択中の遺構線のマーク(〇)と点番号(PID)を一番最後に最前面描画
+            // 5. 選択中の遺構線のマーク(〇)・折れ線ガイド(薄いグレー)・点番号(PID)を最前面描画
             if (chkShowIkou && activeTabIndex == 0)
             {
                 var selectedLine = db.IkouLList.FirstOrDefault(l => l.Id == selectedIkouId && l.Lid == selectedLid);
@@ -269,6 +269,24 @@ namespace Site7DbEditor.Services
                     var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
                     if (pts.Count > 0)
                     {
+                        int dbLayerId = selectedLine.Layer >= 49 ? selectedLine.Layer : (selectedLine.Layer + 48);
+                        var layer = db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
+                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
+
+                        // 曲線表示時に、ベースとなる折れ線を薄いグレー(破線)で表示
+                        if (drawAsCurve && pts.Count > 1)
+                        {
+                            var polylinePts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
+                            Color grayColor = isDarkBackground
+                                ? Color.FromArgb(160, 160, 170, 185)
+                                : Color.FromArgb(170, 120, 130, 140);
+                            using (var grayPen = new Pen(grayColor, 1.2f) { DashStyle = DashStyle.Dash })
+                            {
+                                g.DrawLines(grayPen, polylinePts);
+                            }
+                        }
+
                         using (var vertexPen = new Pen(Color.FromArgb(255, 220, 0), 1.5f))
                         using (var vertexBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
                         using (var pidFont = new Font("Yu Gothic UI", 8.0F, FontStyle.Bold))
