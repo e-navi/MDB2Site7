@@ -1513,7 +1513,9 @@ namespace Site7DbEditor {
             }
 
             var newItem = new IkouModel { Id = newId, Name = fullName, Date = DateTime.Now.ToString("yyyy/MM/dd") };
+            int addIdx = _db.IkouList.Count;
             _db.IkouList.Add(newItem);
+            _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_IKOU, newItem, null, _db.CurrentDbPath, addIdx);
 
             PopulateIkouMasterCombo();
             SelectRowInDgv<IkouModel>(dgvIkou, item => item.Id == newId);
@@ -1521,12 +1523,23 @@ namespace Site7DbEditor {
 
         private void btnDeleteIkou_Click(object? sender, EventArgs e) {
             if (GetSelectedDataBoundItem<IkouModel>(dgvIkou) is IkouModel selected) {
-                for (int i = _db.IkouLList.Count - 1; i >= 0; i--) {
-                    if (_db.IkouLList[i].Id == selected.Id)
-                        _db.IkouLList.RemoveAt(i);
+                // 1. 紐づくすべての遺構線を先に削除ログ記録して削除 (autoIncLogNo: false で同一LogNoにする)
+                var childLines = _db.IkouLList.Where(l => l.Id == selected.Id).ToList();
+                for (int i = childLines.Count - 1; i >= 0; i--) {
+                    var line = childLines[i];
+                    int lineIdx = _db.IkouLList.IndexOf(line);
+                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_IKOUL, line, null, null, lineIdx, autoIncLogNo: false);
+                    _db.IkouLList.Remove(line);
                 }
+
+                // 2. 遺構本体の削除ログを記録して削除 (autoIncLogNo: true でLogNoをインクリメントし、DBに保存)
+                int ikouIdx = _db.IkouList.IndexOf(selected);
+                _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_IKOU, selected, null, _db.CurrentDbPath, ikouIdx, autoIncLogNo: true);
                 _db.IkouList.Remove(selected);
+
+                PopulateIkouMasterCombo();
                 dgvIkou_SelectionChanged(this, EventArgs.Empty);
+                picMapCanvas.Invalidate();
             }
         }
 
@@ -1585,7 +1598,9 @@ namespace Site7DbEditor {
                     Date = DateTime.Now.ToString("yyyy/MM/dd"),
                     Precs = ""
                 };
+                int addIdx = _db.IkouLList.Count;
                 _db.IkouLList.Add(newLine);
+                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_IKOUL, newLine, null, _db.CurrentDbPath, addIdx);
 
                 dgvIkou_SelectionChanged(this, EventArgs.Empty);
                 SelectRowInDgv<IkouLModel>(dgvIkouL, item => item.Lid == newLid);
@@ -1596,8 +1611,11 @@ namespace Site7DbEditor {
 
         private void btnDeleteIkouL_Click(object? sender, EventArgs e) {
             if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selected) {
+                int lineIdx = _db.IkouLList.IndexOf(selected);
+                _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_IKOUL, selected, null, _db.CurrentDbPath, lineIdx);
                 _db.IkouLList.Remove(selected);
                 dgvIkou_SelectionChanged(this, EventArgs.Empty);
+                picMapCanvas.Invalidate();
             }
         }
 
@@ -1830,12 +1848,19 @@ namespace Site7DbEditor {
             if (tabIdx == 0) // 遺構
             {
                 if (_selectedPointIndex >= 0 && dgvPrecs.DataSource is BindingList<IkouPointRecord> pts && _selectedPointIndex < pts.Count) {
-                    pts[_selectedPointIndex].X = x;
-                    pts[_selectedPointIndex].Y = y;
-                    pts[_selectedPointIndex].Z = z;
+                    if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                        var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
+                        pts[_selectedPointIndex].X = x;
+                        pts[_selectedPointIndex].Y = y;
+                        pts[_selectedPointIndex].Z = z;
 
-                    dgvPrecs.Refresh();
-                    dgvPrecs_CellValueChanged(this, new DataGridViewCellEventArgs(0, _selectedPointIndex));
+                        selectedLine.Precs = SqliteManager.FormatPrecsText(pts.ToList());
+                        _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
+
+                        dgvPrecs.Refresh();
+                        dgvIkouL.Refresh();
+                        picMapCanvas.Invalidate();
+                    }
                 }
             } else if (tabIdx == 1) // 遺物
               {
@@ -1873,6 +1898,9 @@ namespace Site7DbEditor {
 
         private void DeletePointAt(int index) {
             if (dgvPrecs.DataSource is BindingList<IkouPointRecord> pts && index >= 0 && index < pts.Count) {
+                IkouLModel? selectedLine = GetSelectedDataBoundItem<IkouLModel>(dgvIkouL);
+                IkouLModel? original = selectedLine != null ? (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine) : null;
+
                 pts.RemoveAt(index);
 
                 // 1. 削除行以降のPIDを一つずつ減らす（1からの連番に再採番）
@@ -1881,7 +1909,7 @@ namespace Site7DbEditor {
                 }
 
                 // 2. 遺構線のPrecsと代表座標・開閉モードを即時更新
-                if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                if (selectedLine != null) {
                     selectedLine.Precs = SqliteManager.FormatPrecsText(pts.ToList());
 
                     if (pts.Count > 0) {
@@ -1901,6 +1929,10 @@ namespace Site7DbEditor {
                         selectedLine.Z = 0;
                     }
                     dgvIkouL.Refresh();
+
+                    if (original != null) {
+                        _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
+                    }
                 }
 
                 // 3. 選択インデックスと座標テキストの調整
@@ -1964,6 +1996,7 @@ namespace Site7DbEditor {
             if (tabIdx == 0) // 遺構 (構成座標)
             {
                 if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                    var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
                     var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
 
                     int nextPid = pts.Count > 0 ? pts.Max(p => p.Pid) + 1 : 1;
@@ -1975,7 +2008,10 @@ namespace Site7DbEditor {
                     });
 
                     selectedLine.Precs = SqliteManager.FormatPrecsText(pts);
+                    _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
+
                     dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
+                    dgvIkouL.Refresh();
 
                     int newIndex = pts.Count - 1;
                     _selectedPointIndex = newIndex;
@@ -2156,6 +2192,7 @@ namespace Site7DbEditor {
                 return;
             }
 
+            var originalInsert = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, _insertingLine);
             var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(screenLocation, picMapCanvas.Size);
             var pts = SqliteManager.ParsePrecsText(_insertingLine.Precs);
 
@@ -2197,6 +2234,8 @@ namespace Site7DbEditor {
                     }
                 }
 
+                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, _insertingLine, originalInsert, _db.CurrentDbPath);
+
                 _selectedPointIndex = insertIdx;
                 dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
                 dgvPrecs.ResetBindings();
@@ -2227,6 +2266,7 @@ namespace Site7DbEditor {
                 return;
             }
 
+            var originalMove = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, _movingLine);
             var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(screenLocation, picMapCanvas.Size);
             var pts = SqliteManager.ParsePrecsText(_movingLine.Precs);
 
@@ -2248,6 +2288,8 @@ namespace Site7DbEditor {
                         _movingLine.Mode = match ? 1 : 0;
                     }
                 }
+
+                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, _movingLine, originalMove, _db.CurrentDbPath);
 
                 dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
                 dgvPrecs.ResetBindings();
@@ -3135,6 +3177,23 @@ namespace Site7DbEditor {
                         SetCurrentRowSafe(dgvIbutu, 0);
                     }
                     dgvIbutu_SelectionChanged(this, EventArgs.Empty);
+                } else if (recType == EditorLogService.REC_TYPE_IKOU) {
+                    PopulateIkouMasterCombo();
+                    if (dgvIkou.DataSource is BindingList<IkouModel> blIkou)
+                        blIkou.ResetBindings();
+                    if (affectedId > 0 && _db.IkouList.Any(ik => ik.Id == affectedId)) {
+                        SelectRowInDgv<IkouModel>(dgvIkou, ik => ik.Id == affectedId);
+                    } else if (dgvIkou.Rows.Count > 0) {
+                        SetCurrentRowSafe(dgvIkou, 0);
+                    }
+                    dgvIkou_SelectionChanged(this, EventArgs.Empty);
+                } else if (recType == EditorLogService.REC_TYPE_IKOUL) {
+                    var linesForIkou = _db.IkouLList.Where(l => l.Id == _selectedIkouId).ToList();
+                    dgvIkouL.DataSource = new BindingList<IkouLModel>(linesForIkou);
+                    if (affectedId > 0 && linesForIkou.Any(l => l.Lid == affectedId || l.Id == affectedId)) {
+                        SelectRowInDgv<IkouLModel>(dgvIkouL, l => l.Lid == affectedId || l.Id == affectedId);
+                    }
+                    UpdateIkouLSelection();
                 }
 
                 picMapCanvas.Invalidate();
@@ -3162,6 +3221,23 @@ namespace Site7DbEditor {
                         SetCurrentRowSafe(dgvIbutu, 0);
                     }
                     dgvIbutu_SelectionChanged(this, EventArgs.Empty);
+                } else if (recType == EditorLogService.REC_TYPE_IKOU) {
+                    PopulateIkouMasterCombo();
+                    if (dgvIkou.DataSource is BindingList<IkouModel> blIkou)
+                        blIkou.ResetBindings();
+                    if (affectedId > 0 && _db.IkouList.Any(ik => ik.Id == affectedId)) {
+                        SelectRowInDgv<IkouModel>(dgvIkou, ik => ik.Id == affectedId);
+                    } else if (dgvIkou.Rows.Count > 0) {
+                        SetCurrentRowSafe(dgvIkou, 0);
+                    }
+                    dgvIkou_SelectionChanged(this, EventArgs.Empty);
+                } else if (recType == EditorLogService.REC_TYPE_IKOUL) {
+                    var linesForIkou = _db.IkouLList.Where(l => l.Id == _selectedIkouId).ToList();
+                    dgvIkouL.DataSource = new BindingList<IkouLModel>(linesForIkou);
+                    if (affectedId > 0 && linesForIkou.Any(l => l.Lid == affectedId || l.Id == affectedId)) {
+                        SelectRowInDgv<IkouLModel>(dgvIkouL, l => l.Lid == affectedId || l.Id == affectedId);
+                    }
+                    UpdateIkouLSelection();
                 }
 
                 picMapCanvas.Invalidate();

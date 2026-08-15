@@ -69,7 +69,7 @@ namespace Site7DbEditor.Services
             StateChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Push(int logType, int recType, object rec, object? rec0 = null, string? dbPath = null, int rowIndex = -1)
+        public void Push(int logType, int recType, object rec, object? rec0 = null, string? dbPath = null, int rowIndex = -1, bool autoIncLogNo = true)
         {
             // 未来のRedo履歴を切り捨て
             if (CurLogIdx < Logs.Count)
@@ -97,7 +97,11 @@ namespace Site7DbEditor.Services
             var entry = new LogEntry(CurLogNo, logType, recType, oldSnapshot, newSnapshot, rowIndex);
             Logs.Add(entry);
             CurLogIdx++;
-            IncLogNo();
+
+            if (autoIncLogNo)
+            {
+                IncLogNo();
+            }
 
             if (!string.IsNullOrEmpty(dbPath) && File.Exists(dbPath))
             {
@@ -181,6 +185,62 @@ namespace Site7DbEditor.Services
                         if (existing != null)
                         {
                             CopyIbutuProperties(updOldI, existing);
+                        }
+                    }
+                }
+                else if (log.RecType == REC_TYPE_IKOU)
+                {
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is IkouModel newIk)
+                    {
+                        affectedId = newIk.Id;
+                        var existing = db.IkouList.FirstOrDefault(ik => ik.Id == newIk.Id);
+                        if (existing != null) db.IkouList.Remove(existing);
+                    }
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is IkouModel oldIk)
+                    {
+                        affectedId = oldIk.Id;
+                        var existing = db.IkouList.FirstOrDefault(ik => ik.Id == oldIk.Id);
+                        if (existing == null)
+                        {
+                            int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.IkouList.Count) ? log.RowIndex : db.IkouList.Count;
+                            db.IkouList.Insert(insertIdx, (IkouModel)CloneRecord(REC_TYPE_IKOU, oldIk));
+                        }
+                    }
+                    else if (log.LogType == LOG_TYPE_UPD && log.OldRec is IkouModel updOldIk)
+                    {
+                        affectedId = updOldIk.Id;
+                        var existing = db.IkouList.FirstOrDefault(ik => ik.Id == updOldIk.Id);
+                        if (existing != null)
+                        {
+                            CopyIkouProperties(updOldIk, existing);
+                        }
+                    }
+                }
+                else if (log.RecType == REC_TYPE_IKOUL)
+                {
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is IkouLModel newL)
+                    {
+                        affectedId = newL.Id;
+                        var existing = db.IkouLList.FirstOrDefault(l => l.Id == newL.Id && l.Lid == newL.Lid);
+                        if (existing != null) db.IkouLList.Remove(existing);
+                    }
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is IkouLModel oldL)
+                    {
+                        affectedId = oldL.Id;
+                        var existing = db.IkouLList.FirstOrDefault(l => l.Id == oldL.Id && l.Lid == oldL.Lid);
+                        if (existing == null)
+                        {
+                            int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.IkouLList.Count) ? log.RowIndex : db.IkouLList.Count;
+                            db.IkouLList.Insert(insertIdx, (IkouLModel)CloneRecord(REC_TYPE_IKOUL, oldL));
+                        }
+                    }
+                    else if (log.LogType == LOG_TYPE_UPD && log.OldRec is IkouLModel updOldL)
+                    {
+                        affectedId = updOldL.Id;
+                        var existing = db.IkouLList.FirstOrDefault(l => l.Id == updOldL.Id && l.Lid == updOldL.Lid);
+                        if (existing != null)
+                        {
+                            CopyIkouLProperties(updOldL, existing);
                         }
                     }
                 }
@@ -269,6 +329,62 @@ namespace Site7DbEditor.Services
                         }
                     }
                 }
+                else if (log.RecType == REC_TYPE_IKOU)
+                {
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is IkouModel newIk)
+                    {
+                        affectedId = newIk.Id;
+                        var existing = db.IkouList.FirstOrDefault(ik => ik.Id == newIk.Id);
+                        if (existing == null)
+                        {
+                            int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.IkouList.Count) ? log.RowIndex : db.IkouList.Count;
+                            db.IkouList.Insert(insertIdx, (IkouModel)CloneRecord(REC_TYPE_IKOU, newIk));
+                        }
+                    }
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is IkouModel oldIk)
+                    {
+                        affectedId = oldIk.Id;
+                        var existing = db.IkouList.FirstOrDefault(ik => ik.Id == oldIk.Id);
+                        if (existing != null) db.IkouList.Remove(existing);
+                    }
+                    else if (log.LogType == LOG_TYPE_UPD && log.NewRec is IkouModel updNewIk)
+                    {
+                        affectedId = updNewIk.Id;
+                        var existing = db.IkouList.FirstOrDefault(ik => ik.Id == updNewIk.Id);
+                        if (existing != null)
+                        {
+                            CopyIkouProperties(updNewIk, existing);
+                        }
+                    }
+                }
+                else if (log.RecType == REC_TYPE_IKOUL)
+                {
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is IkouLModel newL)
+                    {
+                        affectedId = newL.Id;
+                        var existing = db.IkouLList.FirstOrDefault(l => l.Id == newL.Id && l.Lid == newL.Lid);
+                        if (existing == null)
+                        {
+                            int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.IkouLList.Count) ? log.RowIndex : db.IkouLList.Count;
+                            db.IkouLList.Insert(insertIdx, (IkouLModel)CloneRecord(REC_TYPE_IKOUL, newL));
+                        }
+                    }
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is IkouLModel oldL)
+                    {
+                        affectedId = oldL.Id;
+                        var existing = db.IkouLList.FirstOrDefault(l => l.Id == oldL.Id && l.Lid == oldL.Lid);
+                        if (existing != null) db.IkouLList.Remove(existing);
+                    }
+                    else if (log.LogType == LOG_TYPE_UPD && log.NewRec is IkouLModel updNewL)
+                    {
+                        affectedId = updNewL.Id;
+                        var existing = db.IkouLList.FirstOrDefault(l => l.Id == updNewL.Id && l.Lid == updNewL.Lid);
+                        if (existing != null)
+                        {
+                            CopyIkouLProperties(updNewL, existing);
+                        }
+                    }
+                }
             }
 
             if (!string.IsNullOrEmpty(db.CurrentDbPath) && File.Exists(db.CurrentDbPath))
@@ -315,7 +431,7 @@ namespace Site7DbEditor.Services
                             cmd.Parameters.AddWithValue("@logType", CurLogIdx);
                             cmd.ExecuteNonQuery();
 
-                            // 2. 各ログレコードを保存 (更新時は更新後の NewRec を保存, RowIndex もシリアライズ)
+                            // 2. 各ログレコードを保存
                             for (int i = 0; i < Logs.Count; i++)
                             {
                                 var log = Logs[i];
@@ -414,6 +530,22 @@ namespace Site7DbEditor.Services
                                                 else if (recType == REC_TYPE_IBUTU && recObj is IbutuModel ib)
                                                 {
                                                     var existing = db.IbutuList.FirstOrDefault(item => item.Id == ib.Id);
+                                                    if (existing != null)
+                                                    {
+                                                        oldRec = CloneRecord(recType, existing);
+                                                    }
+                                                }
+                                                else if (recType == REC_TYPE_IKOU && recObj is IkouModel ik)
+                                                {
+                                                    var existing = db.IkouList.FirstOrDefault(item => item.Id == ik.Id);
+                                                    if (existing != null)
+                                                    {
+                                                        oldRec = CloneRecord(recType, existing);
+                                                    }
+                                                }
+                                                else if (recType == REC_TYPE_IKOUL && recObj is IkouLModel l)
+                                                {
+                                                    var existing = db.IkouLList.FirstOrDefault(item => item.Id == l.Id && item.Lid == l.Lid);
                                                     if (existing != null)
                                                     {
                                                         oldRec = CloneRecord(recType, existing);
@@ -523,6 +655,16 @@ namespace Site7DbEditor.Services
                             var model = JsonSerializer.Deserialize<IbutuModel>(dataJson);
                             return (model, rowIndex);
                         }
+                        else if (recType == REC_TYPE_IKOU)
+                        {
+                            var model = JsonSerializer.Deserialize<IkouModel>(dataJson);
+                            return (model, rowIndex);
+                        }
+                        else if (recType == REC_TYPE_IKOUL)
+                        {
+                            var model = JsonSerializer.Deserialize<IkouLModel>(dataJson);
+                            return (model, rowIndex);
+                        }
                     }
                 }
             }
@@ -537,6 +679,14 @@ namespace Site7DbEditor.Services
                     else if (recType == REC_TYPE_IBUTU)
                     {
                         return (JsonSerializer.Deserialize<IbutuModel>(str), -1);
+                    }
+                    else if (recType == REC_TYPE_IKOU)
+                    {
+                        return (JsonSerializer.Deserialize<IkouModel>(str), -1);
+                    }
+                    else if (recType == REC_TYPE_IKOUL)
+                    {
+                        return (JsonSerializer.Deserialize<IkouLModel>(str), -1);
                     }
                 }
                 catch { }
@@ -579,6 +729,27 @@ namespace Site7DbEditor.Services
             dst.BPName = src.BPName;
             dst.KPH = src.KPH;
             dst.MRH = src.MRH;
+        }
+
+        private static void CopyIkouProperties(IkouModel src, IkouModel dst)
+        {
+            dst.Name = src.Name;
+            dst.X = src.X;
+            dst.Y = src.Y;
+            dst.Z = src.Z;
+            dst.Date = src.Date;
+        }
+
+        private static void CopyIkouLProperties(IkouLModel src, IkouLModel dst)
+        {
+            dst.Name = src.Name;
+            dst.Mode = src.Mode;
+            dst.X = src.X;
+            dst.Y = src.Y;
+            dst.Z = src.Z;
+            dst.Layer = src.Layer;
+            dst.Date = src.Date;
+            dst.Precs = src.Precs;
         }
 
         public static object CloneRecord(int recType, object rec)
@@ -624,6 +795,34 @@ namespace Site7DbEditor.Services
                     BPName = ib.BPName,
                     KPH = ib.KPH,
                     MRH = ib.MRH
+                };
+            }
+            else if (recType == REC_TYPE_IKOU && rec is IkouModel ik)
+            {
+                return new IkouModel
+                {
+                    Id = ik.Id,
+                    Name = ik.Name,
+                    X = ik.X,
+                    Y = ik.Y,
+                    Z = ik.Z,
+                    Date = ik.Date
+                };
+            }
+            else if (recType == REC_TYPE_IKOUL && rec is IkouLModel l)
+            {
+                return new IkouLModel
+                {
+                    Id = l.Id,
+                    Lid = l.Lid,
+                    Name = l.Name,
+                    Mode = l.Mode,
+                    X = l.X,
+                    Y = l.Y,
+                    Z = l.Z,
+                    Layer = l.Layer,
+                    Date = l.Date,
+                    Precs = l.Precs
                 };
             }
             return rec;
