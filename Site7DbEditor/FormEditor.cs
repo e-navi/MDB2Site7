@@ -738,7 +738,7 @@ namespace Site7DbEditor {
                 try { dgvLayer.CancelEdit(); } catch { }
 
                 _db.LoadDatabase(dbPath);
-                _logService.Clear();
+                _logService.LoadLogDB(dbPath);
                 PopulateIkouLineLayerCombo();
                 BindAllData();
 
@@ -1848,7 +1848,7 @@ namespace Site7DbEditor {
                     selected.X = x;
                     selected.Y = y;
                     selected.Z = z;
-                    _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_KIJUNP, selected, original);
+                    _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_KIJUNP, selected, original, _db.CurrentDbPath);
                     dgvKikai.Refresh();
                     picMapCanvas.Invalidate();
                 }
@@ -1928,7 +1928,7 @@ namespace Site7DbEditor {
             } else if (tabIdx == 2) // 基準点
               {
                 if (GetSelectedDataBoundItem<KikaiModel>(dgvKikai) is KikaiModel selected) {
-                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_KIJUNP, selected);
+                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_KIJUNP, selected, null, _db.CurrentDbPath);
                     _db.KikaiList.Remove(selected);
                     dgvKikai_SelectionChanged(this, EventArgs.Empty);
                     picMapCanvas.Invalidate();
@@ -2013,7 +2013,7 @@ namespace Site7DbEditor {
                     Date = DateTime.Now.ToString("yyyy/MM/dd")
                 };
                 _db.KikaiList.Add(newItem);
-                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_KIJUNP, newItem);
+                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_KIJUNP, newItem, null, _db.CurrentDbPath);
 
                 SelectRowInDgv<KikaiModel>(dgvKikai, item => item.Id == newId);
                 picMapCanvas.Invalidate();
@@ -2041,7 +2041,7 @@ namespace Site7DbEditor {
 
             try {
                 _db.SaveDatabase(_db.CurrentDbPath);
-                _logService.Clear();
+                _logService.Clear(_db.CurrentDbPath);
                 MessageBox.Show("✔ SQLite DB に正常に上書き保存しました！", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } catch (Exception ex) {
                 MessageBox.Show($"DB保存時にエラーが発生しました: {ex.Message}", "保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);

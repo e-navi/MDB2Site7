@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using Microsoft.Data.Sqlite;
 
 namespace Site7DbEditor.Services
 {
@@ -48,15 +51,21 @@ namespace Site7DbEditor.Services
             CurLogNo++;
         }
 
-        public void Clear()
+        public void Clear(string? dbPath = null)
         {
             CurLogNo = 0;
             CurLogIdx = 0;
             Logs.Clear();
+
+            if (!string.IsNullOrEmpty(dbPath) && File.Exists(dbPath))
+            {
+                ClearInDatabase(dbPath);
+            }
+
             StateChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Push(int logType, int recType, object rec, object? rec0 = null)
+        public void Push(int logType, int recType, object rec, object? rec0 = null, string? dbPath = null)
         {
             // 未来のRedo履歴を切り捨て
             if (CurLogIdx < Logs.Count)
@@ -71,6 +80,11 @@ namespace Site7DbEditor.Services
             Logs.Add(entry);
             CurLogIdx++;
             IncLogNo();
+
+            if (!string.IsNullOrEmpty(dbPath) && File.Exists(dbPath))
+            {
+                SaveLogDB(dbPath);
+            }
 
             StateChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -124,6 +138,11 @@ namespace Site7DbEditor.Services
 
             if (CurLogIdx < 0) CurLogIdx = 0;
 
+            if (!string.IsNullOrEmpty(db.CurrentDbPath) && File.Exists(db.CurrentDbPath))
+            {
+                SaveLogDB(db.CurrentDbPath);
+            }
+
             StateChanged?.Invoke(this, EventArgs.Empty);
             return true;
         }
@@ -169,8 +188,191 @@ namespace Site7DbEditor.Services
                 }
             }
 
+            if (!string.IsNullOrEmpty(db.CurrentDbPath) && File.Exists(db.CurrentDbPath))
+            {
+                SaveLogDB(db.CurrentDbPath);
+            }
+
             StateChanged?.Invoke(this, EventArgs.Empty);
             return true;
+        }
+
+        #region SQLite LogTbl Persistence & Recovery
+
+        public void SaveLogDB(string dbPath)
+        {
+            if (string.IsNullOrEmpty(dbPath) || !File.Exists(dbPath)) return;
+
+            try
+            {
+                using (var conn = new SqliteConnection($"Data Source={dbPath};"))
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.Transaction = trans;
+                            cmd.CommandText = @"
+                                CREATE TABLE IF NOT EXISTS 'LogTbl' (
+                                    IDX INTEGER,
+                                    NO INTEGER,
+                                    LOGTYPE INTEGER,
+                                    RECTYPE INTEGER,
+                                    REC TEXT
+                                );
+                                DELETE FROM 'LogTbl';
+                            ";
+                            cmd.ExecuteNonQuery();
+
+                            // 1. ヘッダーレコード (IDX = -1) に現在の状態を保存
+                            cmd.CommandText = "INSERT INTO 'LogTbl' (IDX, NO, LOGTYPE, RECTYPE, REC) VALUES (-1, @no, @logType, 0, '');";
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@no", CurLogNo);
+                            cmd.Parameters.AddWithValue("@logType", CurLogIdx);
+                            cmd.ExecuteNonQuery();
+
+                            // 2. 各ログレコードを保存
+                            for (int i = 0; i < Logs.Count; i++)
+                            {
+                                var log = Logs[i];
+                                string recStr = Rec2Str(log.RecType, log.Rec);
+
+                                cmd.CommandText = "INSERT INTO 'LogTbl' (IDX, NO, LOGTYPE, RECTYPE, REC) VALUES (@idx, @no, @logType, @recType, @rec);";
+                                cmd.Parameters.Clear();
+                                cmd.Parameters.AddWithValue("@idx", i);
+                                cmd.Parameters.AddWithValue("@no", log.LogNo);
+                                cmd.Parameters.AddWithValue("@logType", log.LogType);
+                                cmd.Parameters.AddWithValue("@recType", log.RecType);
+                                cmd.Parameters.AddWithValue("@rec", recStr);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        trans.Commit();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SaveLogDB] Error: {ex.Message}");
+            }
+        }
+
+        public void LoadLogDB(string dbPath)
+        {
+            if (string.IsNullOrEmpty(dbPath) || !File.Exists(dbPath)) return;
+
+            Logs.Clear();
+            CurLogNo = 0;
+            CurLogIdx = 0;
+
+            try
+            {
+                using (var conn = new SqliteConnection($"Data Source={dbPath};"))
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+                            CREATE TABLE IF NOT EXISTS 'LogTbl' (
+                                IDX INTEGER,
+                                NO INTEGER,
+                                LOGTYPE INTEGER,
+                                RECTYPE INTEGER,
+                                REC TEXT
+                            );
+                            SELECT IDX, NO, LOGTYPE, RECTYPE, REC FROM 'LogTbl' ORDER BY IDX;
+                        ";
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int idx = reader.GetInt32(0);
+                                int no = reader.GetInt32(1);
+                                int logType = reader.GetInt32(2);
+                                int recType = reader.GetInt32(3);
+                                string recStr = reader.IsDBNull(4) ? "" : reader.GetString(4);
+
+                                if (idx == -1) // ヘッダー
+                                {
+                                    CurLogNo = no;
+                                    CurLogIdx = logType;
+                                }
+                                else
+                                {
+                                    object? recObj = Str2Rec(recType, recStr);
+                                    if (recObj != null)
+                                    {
+                                        Logs.Add(new LogEntry(no, logType, recType, recObj));
+                                        if (CurLogNo < no) CurLogNo = no;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (CurLogIdx > Logs.Count)
+                    CurLogIdx = Logs.Count;
+
+                StateChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[LoadLogDB] Error: {ex.Message}");
+            }
+        }
+
+        public void ClearInDatabase(string dbPath)
+        {
+            if (string.IsNullOrEmpty(dbPath) || !File.Exists(dbPath)) return;
+
+            try
+            {
+                using (var conn = new SqliteConnection($"Data Source={dbPath};"))
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+                            CREATE TABLE IF NOT EXISTS 'LogTbl' (
+                                IDX INTEGER,
+                                NO INTEGER,
+                                LOGTYPE INTEGER,
+                                RECTYPE INTEGER,
+                                REC TEXT
+                            );
+                            DELETE FROM 'LogTbl';
+                        ";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch { }
+        }
+
+        #endregion
+
+        #region Serialization Helpers
+
+        public static string Rec2Str(int recType, object rec)
+        {
+            if (rec == null) return "";
+            if (recType == REC_TYPE_KIJUNP && rec is KikaiModel k)
+            {
+                return JsonSerializer.Serialize(k);
+            }
+            return "";
+        }
+
+        public static object? Str2Rec(int recType, string str)
+        {
+            if (string.IsNullOrEmpty(str)) return null;
+            if (recType == REC_TYPE_KIJUNP)
+            {
+                try { return JsonSerializer.Deserialize<KikaiModel>(str); } catch { return null; }
+            }
+            return null;
         }
 
         private static void CopyKikaiProperties(KikaiModel src, KikaiModel dst)
@@ -214,5 +416,8 @@ namespace Site7DbEditor.Services
             }
             return rec;
         }
+
+        #endregion
     }
 }
+
