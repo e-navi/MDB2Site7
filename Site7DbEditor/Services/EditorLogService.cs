@@ -142,7 +142,6 @@ namespace Site7DbEditor.Services
                         var existing = db.KikaiList.FirstOrDefault(k => k.Id == oldK.Id);
                         if (existing == null)
                         {
-                            // 元の行インデックスに Insert 復元
                             int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.KikaiList.Count) ? log.RowIndex : db.KikaiList.Count;
                             db.KikaiList.Insert(insertIdx, (KikaiModel)CloneRecord(REC_TYPE_KIJUNP, oldK));
                         }
@@ -153,8 +152,35 @@ namespace Site7DbEditor.Services
                         var existing = db.KikaiList.FirstOrDefault(k => k.Id == updOldK.Id);
                         if (existing != null)
                         {
-                            // 常に更新前の値(OldRec)を適用（スワップしない）
                             CopyKikaiProperties(updOldK, existing);
+                        }
+                    }
+                }
+                else if (log.RecType == REC_TYPE_IBUTU)
+                {
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is IbutuModel newI)
+                    {
+                        affectedId = newI.Id;
+                        var existing = db.IbutuList.FirstOrDefault(i => i.Id == newI.Id);
+                        if (existing != null) db.IbutuList.Remove(existing);
+                    }
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is IbutuModel oldI)
+                    {
+                        affectedId = oldI.Id;
+                        var existing = db.IbutuList.FirstOrDefault(i => i.Id == oldI.Id);
+                        if (existing == null)
+                        {
+                            int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.IbutuList.Count) ? log.RowIndex : db.IbutuList.Count;
+                            db.IbutuList.Insert(insertIdx, (IbutuModel)CloneRecord(REC_TYPE_IBUTU, oldI));
+                        }
+                    }
+                    else if (log.LogType == LOG_TYPE_UPD && log.OldRec is IbutuModel updOldI)
+                    {
+                        affectedId = updOldI.Id;
+                        var existing = db.IbutuList.FirstOrDefault(i => i.Id == updOldI.Id);
+                        if (existing != null)
+                        {
+                            CopyIbutuProperties(updOldI, existing);
                         }
                     }
                 }
@@ -211,8 +237,35 @@ namespace Site7DbEditor.Services
                         var existing = db.KikaiList.FirstOrDefault(k => k.Id == updNewK.Id);
                         if (existing != null)
                         {
-                            // 常に更新後の値(NewRec)を適用（スワップしない）
                             CopyKikaiProperties(updNewK, existing);
+                        }
+                    }
+                }
+                else if (log.RecType == REC_TYPE_IBUTU)
+                {
+                    if (log.LogType == LOG_TYPE_NEW && log.NewRec is IbutuModel newI)
+                    {
+                        affectedId = newI.Id;
+                        var existing = db.IbutuList.FirstOrDefault(i => i.Id == newI.Id);
+                        if (existing == null)
+                        {
+                            int insertIdx = (log.RowIndex >= 0 && log.RowIndex <= db.IbutuList.Count) ? log.RowIndex : db.IbutuList.Count;
+                            db.IbutuList.Insert(insertIdx, (IbutuModel)CloneRecord(REC_TYPE_IBUTU, newI));
+                        }
+                    }
+                    else if (log.LogType == LOG_TYPE_DEL && log.OldRec is IbutuModel oldI)
+                    {
+                        affectedId = oldI.Id;
+                        var existing = db.IbutuList.FirstOrDefault(i => i.Id == oldI.Id);
+                        if (existing != null) db.IbutuList.Remove(existing);
+                    }
+                    else if (log.LogType == LOG_TYPE_UPD && log.NewRec is IbutuModel updNewI)
+                    {
+                        affectedId = updNewI.Id;
+                        var existing = db.IbutuList.FirstOrDefault(i => i.Id == updNewI.Id);
+                        if (existing != null)
+                        {
+                            CopyIbutuProperties(updNewI, existing);
                         }
                     }
                 }
@@ -348,12 +401,23 @@ namespace Site7DbEditor.Services
                                         else if (logType == LOG_TYPE_UPD)
                                         {
                                             newRec = recObj; // LogTbl に入っているのは更新後の値
-                                            if (db != null && recType == REC_TYPE_KIJUNP && recObj is KikaiModel k)
+                                            if (db != null)
                                             {
-                                                var existing = db.KikaiList.FirstOrDefault(item => item.Id == k.Id);
-                                                if (existing != null)
+                                                if (recType == REC_TYPE_KIJUNP && recObj is KikaiModel k)
                                                 {
-                                                    oldRec = CloneRecord(recType, existing); // 変更前の値
+                                                    var existing = db.KikaiList.FirstOrDefault(item => item.Id == k.Id);
+                                                    if (existing != null)
+                                                    {
+                                                        oldRec = CloneRecord(recType, existing);
+                                                    }
+                                                }
+                                                else if (recType == REC_TYPE_IBUTU && recObj is IbutuModel ib)
+                                                {
+                                                    var existing = db.IbutuList.FirstOrDefault(item => item.Id == ib.Id);
+                                                    if (existing != null)
+                                                    {
+                                                        oldRec = CloneRecord(recType, existing);
+                                                    }
                                                 }
                                             }
                                         }
@@ -419,12 +483,6 @@ namespace Site7DbEditor.Services
 
         #region Serialization Helpers
 
-        public class LogRecordEnvelope
-        {
-            public int RowIndex { get; set; } = -1;
-            public JsonElement Data { get; set; }
-        }
-
         public static string Rec2Str(int recType, object? rec, int rowIndex = -1)
         {
             if (rec == null) return "";
@@ -448,7 +506,6 @@ namespace Site7DbEditor.Services
             if (string.IsNullOrEmpty(str)) return (null, -1);
             try
             {
-                // エンベロープ形式のパース
                 using (var doc = JsonDocument.Parse(str))
                 {
                     var root = doc.RootElement;
@@ -461,17 +518,25 @@ namespace Site7DbEditor.Services
                             var model = JsonSerializer.Deserialize<KikaiModel>(dataJson);
                             return (model, rowIndex);
                         }
+                        else if (recType == REC_TYPE_IBUTU)
+                        {
+                            var model = JsonSerializer.Deserialize<IbutuModel>(dataJson);
+                            return (model, rowIndex);
+                        }
                     }
                 }
             }
             catch
             {
-                // 旧形式（直接モデルシリアライズ）フォールバック
                 try
                 {
                     if (recType == REC_TYPE_KIJUNP)
                     {
                         return (JsonSerializer.Deserialize<KikaiModel>(str), -1);
+                    }
+                    else if (recType == REC_TYPE_IBUTU)
+                    {
+                        return (JsonSerializer.Deserialize<IbutuModel>(str), -1);
                     }
                 }
                 catch { }
@@ -482,6 +547,26 @@ namespace Site7DbEditor.Services
         private static void CopyKikaiProperties(KikaiModel src, KikaiModel dst)
         {
             dst.Name = src.Name;
+            dst.X = src.X;
+            dst.Y = src.Y;
+            dst.Z = src.Z;
+            dst.Layer = src.Layer;
+            dst.Date = src.Date;
+            dst.S = src.S;
+            dst.V = src.V;
+            dst.H = src.H;
+            dst.KPName = src.KPName;
+            dst.BPName = src.BPName;
+            dst.KPH = src.KPH;
+            dst.MRH = src.MRH;
+        }
+
+        private static void CopyIbutuProperties(IbutuModel src, IbutuModel dst)
+        {
+            dst.Chiku = src.Chiku;
+            dst.Soui = src.Soui;
+            dst.Syubetu = src.Syubetu;
+            dst.No = src.No;
             dst.X = src.X;
             dst.Y = src.Y;
             dst.Z = src.Z;
@@ -516,6 +601,29 @@ namespace Site7DbEditor.Services
                     BPName = k.BPName,
                     KPH = k.KPH,
                     MRH = k.MRH
+                };
+            }
+            else if (recType == REC_TYPE_IBUTU && rec is IbutuModel ib)
+            {
+                return new IbutuModel
+                {
+                    Id = ib.Id,
+                    Chiku = ib.Chiku,
+                    Soui = ib.Soui,
+                    Syubetu = ib.Syubetu,
+                    No = ib.No,
+                    X = ib.X,
+                    Y = ib.Y,
+                    Z = ib.Z,
+                    Layer = ib.Layer,
+                    Date = ib.Date,
+                    S = ib.S,
+                    V = ib.V,
+                    H = ib.H,
+                    KPName = ib.KPName,
+                    BPName = ib.BPName,
+                    KPH = ib.KPH,
+                    MRH = ib.MRH
                 };
             }
             return rec;

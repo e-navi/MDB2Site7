@@ -1840,6 +1840,7 @@ namespace Site7DbEditor {
             } else if (tabIdx == 1) // 遺物
               {
                 if (GetSelectedDataBoundItem<IbutuModel>(dgvIbutu) is IbutuModel selected) {
+                    var original = (IbutuModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IBUTU, selected);
                     selected.Chiku = cmbIbutuChiku.Text.Trim();
                     selected.Soui = cmbIbutuSoui.Text.Trim();
                     selected.Syubetu = cmbIbutuSyubetu.Text.Trim();
@@ -1850,6 +1851,7 @@ namespace Site7DbEditor {
                     selected.X = x;
                     selected.Y = y;
                     selected.Z = z;
+                    _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IBUTU, selected, original, _db.CurrentDbPath);
                     dgvIbutu.Refresh();
                     picMapCanvas.Invalidate();
                 }
@@ -1935,6 +1937,8 @@ namespace Site7DbEditor {
             } else if (tabIdx == 1) // 遺物
               {
                 if (GetSelectedDataBoundItem<IbutuModel>(dgvIbutu) is IbutuModel selected) {
+                    int delIdx = _db.IbutuList.IndexOf(selected);
+                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_IBUTU, selected, null, _db.CurrentDbPath, delIdx);
                     _db.IbutuList.Remove(selected);
                     dgvIbutu_SelectionChanged(this, EventArgs.Empty);
                     picMapCanvas.Invalidate();
@@ -2002,7 +2006,9 @@ namespace Site7DbEditor {
                     Z = z,
                     Date = DateTime.Now.ToString("yyyy/MM/dd")
                 };
+                int addIdx = _db.IbutuList.Count;
                 _db.IbutuList.Add(newItem);
+                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_IBUTU, newItem, null, _db.CurrentDbPath, addIdx);
 
                 if (chkIbutuAutoInc.Checked) {
                     txtIbutuNo.Text = (targetNo + 1).ToString();
@@ -3121,6 +3127,14 @@ namespace Site7DbEditor {
                         SetCurrentRowSafe(dgvKikai, 0);
                     }
                     dgvKikai_SelectionChanged(this, EventArgs.Empty);
+                } else if (recType == EditorLogService.REC_TYPE_IBUTU) {
+                    dgvIbutu.Refresh();
+                    if (affectedId > 0 && _db.IbutuList.Any(i => i.Id == affectedId)) {
+                        SelectRowInDgv<IbutuModel>(dgvIbutu, i => i.Id == affectedId);
+                    } else if (dgvIbutu.Rows.Count > 0) {
+                        SetCurrentRowSafe(dgvIbutu, 0);
+                    }
+                    dgvIbutu_SelectionChanged(this, EventArgs.Empty);
                 }
 
                 picMapCanvas.Invalidate();
@@ -3140,6 +3154,14 @@ namespace Site7DbEditor {
                         SetCurrentRowSafe(dgvKikai, 0);
                     }
                     dgvKikai_SelectionChanged(this, EventArgs.Empty);
+                } else if (recType == EditorLogService.REC_TYPE_IBUTU) {
+                    dgvIbutu.Refresh();
+                    if (affectedId > 0 && _db.IbutuList.Any(i => i.Id == affectedId)) {
+                        SelectRowInDgv<IbutuModel>(dgvIbutu, i => i.Id == affectedId);
+                    } else if (dgvIbutu.Rows.Count > 0) {
+                        SetCurrentRowSafe(dgvIbutu, 0);
+                    }
+                    dgvIbutu_SelectionChanged(this, EventArgs.Empty);
                 }
 
                 picMapCanvas.Invalidate();
