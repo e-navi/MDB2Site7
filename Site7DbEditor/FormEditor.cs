@@ -2266,8 +2266,13 @@ namespace Site7DbEditor {
 
                         // 2. 線上（Segment）判定（頂点でヒットしていない場合）
                         if (!isVertexHit) {
+                            int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                            var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
+                            bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                            bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && pts.Count >= 3;
+
                             PointF[] screenPts;
-                            if (chkShowCurve.Checked && pts.Count >= 3) {
+                            if (drawAsCurve) {
                                 var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
                                 screenPts = curve.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
                             } else {
@@ -2478,8 +2483,13 @@ namespace Site7DbEditor {
                     }
 
                     if (!isVertexHit) {
+                        int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                        var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
+                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && pts.Count >= 3;
+
                         PointF[] screenPts;
-                        if (chkShowCurve.Checked && pts.Count >= 3) {
+                        if (drawAsCurve) {
                             var curve = (line.Mode == 1) ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
                             screenPts = curve.Select(p => toCanvasPoint(p.X, p.Y)).ToArray();
                         } else {
