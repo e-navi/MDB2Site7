@@ -1942,7 +1942,8 @@ namespace Site7DbEditor {
             } else if (tabIdx == 2) // 基準点
               {
                 if (GetSelectedDataBoundItem<KikaiModel>(dgvKikai) is KikaiModel selected) {
-                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_KIJUNP, selected, null, _db.CurrentDbPath);
+                    int delIdx = _db.KikaiList.IndexOf(selected);
+                    _logService.Push(EditorLogService.LOG_TYPE_DEL, EditorLogService.REC_TYPE_KIJUNP, selected, null, _db.CurrentDbPath, delIdx);
                     _db.KikaiList.Remove(selected);
                     dgvKikai_SelectionChanged(this, EventArgs.Empty);
                     picMapCanvas.Invalidate();
@@ -2026,8 +2027,9 @@ namespace Site7DbEditor {
                     Z = z,
                     Date = DateTime.Now.ToString("yyyy/MM/dd")
                 };
+                int addIdx = _db.KikaiList.Count;
                 _db.KikaiList.Add(newItem);
-                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_KIJUNP, newItem, null, _db.CurrentDbPath);
+                _logService.Push(EditorLogService.LOG_TYPE_NEW, EditorLogService.REC_TYPE_KIJUNP, newItem, null, _db.CurrentDbPath, addIdx);
 
                 SelectRowInDgv<KikaiModel>(dgvKikai, item => item.Id == newId);
                 picMapCanvas.Invalidate();
