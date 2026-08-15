@@ -2159,6 +2159,10 @@ namespace Site7DbEditor {
                     var (clickX, clickY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
                     txtCoordX.Text = clickX.ToString("F3");
                     txtCoordY.Text = clickY.ToString("F3");
+
+                    string notifyText = $"📌 画面入力: X={clickX:F3}, Y={clickY:F3} を取得しました";
+                    _lastMapHoverToolTipText = notifyText;
+                    _mapHoverToolTip.Show(notifyText, picMapCanvas, e.X + 10, e.Y - 25, 2000);
                 }
             }
         }
