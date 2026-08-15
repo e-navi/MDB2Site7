@@ -430,6 +430,8 @@ namespace Site7DbEditor {
             this.KeyDown += FormEditor_KeyDown;
             this.FormClosing += FormEditor_FormClosing;
 
+            InitButtonThemes();
+
             btnLayerSettings.Click += (s, e) => {
                 using (var form = new FormLayerSettings(_db)) {
                     form.ShowDialog(this);
@@ -3278,6 +3280,65 @@ namespace Site7DbEditor {
 
                 picMapCanvas.Invalidate();
             }
+        }
+
+        #endregion
+
+        #region Button Theme and Visual State Management
+
+        private static readonly Color ColorAddActive = Color.FromArgb(30, 115, 210);      // 爽やかな青
+        private static readonly Color ColorUpdateActive = Color.FromArgb(38, 145, 75);    // 落ち着いた緑
+        private static readonly Color ColorDeleteActive = Color.FromArgb(195, 55, 55);    // 警告の赤
+        private static readonly Color ColorAuxActive = Color.FromArgb(65, 75, 100);       // 補助ボタン（スレート）
+
+        private static readonly Color ColorDisabledBg = Color.FromArgb(232, 235, 240);   // 無効時の淡いグレー
+        private static readonly Color ColorDisabledText = Color.FromArgb(160, 165, 175); // 無効時の薄いテキスト
+        private static readonly Color ColorDisabledBorder = Color.FromArgb(210, 215, 222);
+
+        private void InitButtonThemes() {
+            // 追加ボタン (青)
+            ApplyButtonTheme(btnAddIkou, ColorAddActive);
+            ApplyButtonTheme(btnAddIkouL, ColorAddActive);
+            ApplyButtonTheme(btnAddPointRight, ColorAddActive);
+            ApplyButtonTheme(btnAddLayer, ColorAddActive);
+
+            // 更新ボタン (緑)
+            ApplyButtonTheme(btnUpdateIkouRight, ColorUpdateActive);
+            ApplyButtonTheme(btnUpdateLineRight, ColorUpdateActive);
+            ApplyButtonTheme(btnUpdatePointRight, ColorUpdateActive);
+
+            // 削除ボタン (赤)
+            ApplyButtonTheme(btnDeleteIkouRight, ColorDeleteActive);
+            ApplyButtonTheme(btnDeleteLineRight, ColorDeleteActive);
+            ApplyButtonTheme(btnDeletePointRight, ColorDeleteActive);
+            ApplyButtonTheme(btnDeleteLayer, ColorDeleteActive);
+
+            // 補助ボタン
+            ApplyButtonTheme(btnMaxPlusOne, ColorAuxActive);
+            ApplyButtonTheme(btnLineMaxPlusOne, ColorAuxActive);
+            ApplyButtonTheme(btnIbutuMaxPlusOne, ColorAuxActive);
+        }
+
+        private static void ApplyButtonTheme(Button btn, Color activeColor) {
+            if (btn == null) return;
+
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 1;
+
+            void UpdateVisual() {
+                if (btn.Enabled) {
+                    btn.BackColor = activeColor;
+                    btn.ForeColor = Color.White;
+                    btn.FlatAppearance.BorderColor = activeColor;
+                } else {
+                    btn.BackColor = ColorDisabledBg;
+                    btn.ForeColor = ColorDisabledText;
+                    btn.FlatAppearance.BorderColor = ColorDisabledBorder;
+                }
+            }
+
+            btn.EnabledChanged += (s, e) => UpdateVisual();
+            UpdateVisual();
         }
 
         #endregion
