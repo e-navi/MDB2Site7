@@ -3408,7 +3408,7 @@ namespace Site7DbEditor {
                 var pts = (dgvPrecs.DataSource is BindingList<IkouPointRecord> bpts) ? bpts : null;
                 bool hasSelectedVertex = (pts != null && _selectedPointIndex >= 0 && _selectedPointIndex < pts.Count);
 
-                btnAddPointRight.Enabled = (curIkouL != null) && hasValidCoord;
+                btnAddPointRight.Enabled = (curIkouL != null) && hasValidCoord && !hasSelectedVertex;
                 btnDeletePointRight.Enabled = hasSelectedVertex;
 
                 bool isPointDirty = false;
