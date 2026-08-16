@@ -53,25 +53,28 @@ namespace Site7DbEditor {
             public override string ToString() => DisplayName;
         }
 
+        private string _appVersionString = "v0.9.1";
+        private string _currentGenbaName = "";
+
         public FormEditor() {
             InitializeComponent();
             gbl.FormMain = this;
             SetupStyles();
             InitRightEditControls();
-            DisplayAppVersion();
+            InitAppVersionAndTitle();
             WireEvents();
             tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             tabControlData_SelectedIndexChanged(this, EventArgs.Empty);
             WireDebugLayoutInfo();
         }
 
-        private void DisplayAppVersion() {
+        private void InitAppVersionAndTitle() {
             try {
                 string infoVersion = Assembly.GetExecutingAssembly()
                     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                    .InformationalVersion ?? "1.0.0";
+                    .InformationalVersion ?? "0.9.1";
 
-                string verStr = "v1.0.0";
+                string verStr = "v0.9.1";
                 string gitHash = "";
 
                 if (infoVersion.Contains("+")) {
@@ -82,10 +85,19 @@ namespace Site7DbEditor {
                     verStr = $"v{infoVersion}";
                 }
 
-                string revDisplay = !string.IsNullOrEmpty(gitHash) ? $"{verStr} ({gitHash})" : verStr;
-                lblSubHeader.Text = $"By コンピュータ・システム株式会社  |  {revDisplay}";
+                _appVersionString = !string.IsNullOrEmpty(gitHash) ? $"{verStr} ({gitHash})" : verStr;
             } catch {
-                lblSubHeader.Text = "By コンピュータ・システム株式会社";
+                _appVersionString = "v0.9.1";
+            }
+            lblSubHeader.Text = "By コンピュータ・システム株式会社";
+            UpdateWindowTitle();
+        }
+
+        public void UpdateWindowTitle() {
+            if (!string.IsNullOrEmpty(_currentGenbaName)) {
+                this.Text = $"SITE7 遺跡調査システム  [{_currentGenbaName}]  {_appVersionString}";
+            } else {
+                this.Text = $"SITE7 遺跡調査システム  {_appVersionString}";
             }
         }
 
@@ -822,6 +834,10 @@ namespace Site7DbEditor {
                         BindAllData();
                     }
                 }
+
+                string folderName = Path.GetFileName(Path.GetDirectoryName(dbPath) ?? "");
+                _currentGenbaName = string.IsNullOrEmpty(folderName) ? Path.GetFileName(dbPath) : folderName;
+                UpdateWindowTitle();
 
                 lblDbStatus.Text = $"✔ {_db.IkouList.Count}遺構 | {_db.IkouLList.Count}線 | {_db.IbutuList.Count}遺物 | {_db.KikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
