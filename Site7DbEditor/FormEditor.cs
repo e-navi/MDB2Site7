@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Site7DbEditor.Services;
 
@@ -57,10 +58,35 @@ namespace Site7DbEditor {
             gbl.FormMain = this;
             SetupStyles();
             InitRightEditControls();
+            DisplayAppVersion();
             WireEvents();
             tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             tabControlData_SelectedIndexChanged(this, EventArgs.Empty);
             WireDebugLayoutInfo();
+        }
+
+        private void DisplayAppVersion() {
+            try {
+                string infoVersion = Assembly.GetExecutingAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                    .InformationalVersion ?? "1.0.0";
+
+                string verStr = "v1.0.0";
+                string gitHash = "";
+
+                if (infoVersion.Contains("+")) {
+                    var parts = infoVersion.Split('+');
+                    verStr = $"v{parts[0]}";
+                    gitHash = parts[1].Length >= 7 ? parts[1].Substring(0, 7) : parts[1];
+                } else {
+                    verStr = $"v{infoVersion}";
+                }
+
+                string revDisplay = !string.IsNullOrEmpty(gitHash) ? $"{verStr} ({gitHash})" : verStr;
+                lblSubHeader.Text = $"By コンピュータ・システム株式会社  |  {revDisplay}";
+            } catch {
+                lblSubHeader.Text = "By コンピュータ・システム株式会社";
+            }
         }
 
         private void WireDebugLayoutInfo() {
