@@ -403,6 +403,7 @@ namespace Site7DbEditor {
 
             btnBgSettings.Click += (s, e) => {
                 _isDarkMapBackground = !_isDarkMapBackground;
+                chkWhiteBg.Checked = !_isDarkMapBackground;
                 picMapCanvas.Invalidate();
             };
 
@@ -469,8 +470,12 @@ namespace Site7DbEditor {
             this.chkShowKikai.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowKikaiName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowCurve.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkColorByIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkWhiteBg.CheckedChanged += (s, e) => {
+                _isDarkMapBackground = !chkWhiteBg.Checked;
+                picMapCanvas.Invalidate();
+            };
+            this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.cmbIkouKind.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();

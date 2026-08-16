@@ -158,6 +158,7 @@ namespace Site7DbEditor
             btnDetachBottomPanel = new Button();
             chkShowGrid = new CheckBox();
             chkColorByIkou = new CheckBox();
+            chkWhiteBg = new CheckBox();
             tabLayer = new TabPage();
             btnDeleteLayer = new Button();
             btnAddLayer = new Button();
@@ -306,11 +307,11 @@ namespace Site7DbEditor
             lblSubHeader.AutoSize = true;
             lblSubHeader.Font = new Font("Yu Gothic UI", 9F);
             lblSubHeader.ForeColor = Color.FromArgb(160, 170, 190);
-            lblSubHeader.Location = new Point(16, 42);
+            lblSubHeader.Location = new Point(66, 40);
             lblSubHeader.Name = "lblSubHeader";
-            lblSubHeader.Size = new Size(173, 15);
+            lblSubHeader.Size = new Size(164, 15);
             lblSubHeader.TabIndex = 1;
-            lblSubHeader.Text = "遺構平面 ＆ DB 連動統合エディタ";
+            lblSubHeader.Text = "By コンピュータ・システム株式会社";
             // 
             // lblHeaderTitle
             // 
@@ -319,9 +320,9 @@ namespace Site7DbEditor
             lblHeaderTitle.ForeColor = Color.FromArgb(0, 180, 216);
             lblHeaderTitle.Location = new Point(15, 12);
             lblHeaderTitle.Name = "lblHeaderTitle";
-            lblHeaderTitle.Size = new Size(157, 25);
+            lblHeaderTitle.Size = new Size(200, 25);
             lblHeaderTitle.TabIndex = 0;
-            lblHeaderTitle.Text = "SITE7 遺構 Editor";
+            lblHeaderTitle.Text = "SITE7 遺跡調査システム";
             // 
             // panelMapArea
             // 
@@ -484,6 +485,8 @@ namespace Site7DbEditor
             panelLeftContent.Controls.Add(chkShowKikai);
             panelLeftContent.Controls.Add(chkShowKikaiName);
             panelLeftContent.Controls.Add(chkShowCurve);
+            panelLeftContent.Controls.Add(chkColorByIkou);
+            panelLeftContent.Controls.Add(chkWhiteBg);
             panelLeftContent.Dock = DockStyle.Fill;
             panelLeftContent.Location = new Point(0, 30);
             panelLeftContent.Name = "panelLeftContent";
@@ -1957,19 +1960,37 @@ namespace Site7DbEditor
             btnDetachBottomPanel.Text = "↗ 分離";
             btnDetachBottomPanel.UseVisualStyleBackColor = false;
             // 
+            // 
+            // chkColorByIkou
+            // 
+            chkColorByIkou.AutoSize = true;
+            chkColorByIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkColorByIkou.ForeColor = Color.Black;
+            chkColorByIkou.Location = new Point(6, 470);
+            chkColorByIkou.Name = "chkColorByIkou";
+            chkColorByIkou.Size = new Size(86, 19);
+            chkColorByIkou.TabIndex = 33;
+            chkColorByIkou.Text = "遺構識別色";
+            chkColorByIkou.UseVisualStyleBackColor = true;
+            // 
+            // chkWhiteBg
+            // 
+            chkWhiteBg.AutoSize = true;
+            chkWhiteBg.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkWhiteBg.ForeColor = Color.Black;
+            chkWhiteBg.Location = new Point(6, 494);
+            chkWhiteBg.Name = "chkWhiteBg";
+            chkWhiteBg.Size = new Size(74, 19);
+            chkWhiteBg.TabIndex = 34;
+            chkWhiteBg.Text = "背景色白";
+            chkWhiteBg.UseVisualStyleBackColor = true;
+            // 
             // chkShowGrid
             // 
             chkShowGrid.Location = new Point(0, 0);
             chkShowGrid.Name = "chkShowGrid";
             chkShowGrid.Size = new Size(104, 24);
             chkShowGrid.TabIndex = 0;
-            // 
-            // chkColorByIkou
-            // 
-            chkColorByIkou.Location = new Point(0, 0);
-            chkColorByIkou.Name = "chkColorByIkou";
-            chkColorByIkou.Size = new Size(104, 24);
-            chkColorByIkou.TabIndex = 0;
             // 
             // tabLayer
             // 
@@ -2313,6 +2334,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.CheckBox chkShowCurve;
         private System.Windows.Forms.CheckBox chkShowGrid;
         private System.Windows.Forms.CheckBox chkColorByIkou;
+        private System.Windows.Forms.CheckBox chkWhiteBg;
         private System.Windows.Forms.PictureBox picMapCanvas;
 
         private System.Windows.Forms.SplitContainer splitContainerBottom;
