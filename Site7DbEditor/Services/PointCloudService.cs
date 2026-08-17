@@ -300,14 +300,25 @@ namespace Site7DbEditor.Services
             if (z.HasValue) return z;
 
             // XとYが逆順の点群データ（Easting/Northing）に対するフォールバック
-            return QueryZInternal(surveyY, surveyX, maxSearchRadius);
+            if (!SwapXY)
+            {
+                return QueryZInternal(surveyY, surveyX, maxSearchRadius);
+            }
+            return null;
         }
 
         private double? QueryZInternal(double qX, double qY, double maxSearchRadius)
         {
+            // 範囲外の即時スキップ (0ミリ秒でリターン)
+            if (qX < MinX - maxSearchRadius || qX > MaxX + maxSearchRadius ||
+                qY < MinY - maxSearchRadius || qY > MaxY + maxSearchRadius)
+            {
+                return null;
+            }
+
             long centerGx = (long)Math.Floor(qX / _cellSize);
             long centerGy = (long)Math.Floor(qY / _cellSize);
-            int searchCells = (int)Math.Ceiling(maxSearchRadius / _cellSize);
+            int searchCells = Math.Clamp((int)Math.Ceiling(maxSearchRadius / _cellSize), 1, 3);
 
             double weightedSum = 0;
             double weightSum = 0;
