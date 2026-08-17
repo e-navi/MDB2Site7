@@ -767,6 +767,7 @@ namespace Site7DbEditor {
             }
 
             var searchFolders = new[] { defaultFolder, @"c:\Proj\Antigravity\MDB2Site7\ExportedSite7" };
+            string lastOpenedDb = Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
 
             foreach (var folder in searchFolders) {
                 if (Directory.Exists(folder)) {
@@ -787,7 +788,29 @@ namespace Site7DbEditor {
                 }
             }
 
-            if (cmbQuickDbSelect.Items.Count > 0) {
+            int selectIdx = -1;
+            if (!string.IsNullOrEmpty(lastOpenedDb) && File.Exists(lastOpenedDb)) {
+                for (int i = 0; i < cmbQuickDbSelect.Items.Count; i++) {
+                    if (cmbQuickDbSelect.Items[i] is DbItem item &&
+                        string.Equals(item.FullPath, lastOpenedDb, StringComparison.OrdinalIgnoreCase)) {
+                        selectIdx = i;
+                        break;
+                    }
+                }
+
+                if (selectIdx == -1) {
+                    string parent = Path.GetFileName(Path.GetDirectoryName(lastOpenedDb) ?? "");
+                    string fileName = Path.GetFileName(lastOpenedDb);
+                    string displayName = string.IsNullOrEmpty(parent) ? fileName : $"{parent}\\{fileName}";
+                    var newItem = new DbItem { DisplayName = displayName, FullPath = lastOpenedDb };
+                    cmbQuickDbSelect.Items.Insert(0, newItem);
+                    selectIdx = 0;
+                }
+            }
+
+            if (selectIdx >= 0 && selectIdx < cmbQuickDbSelect.Items.Count) {
+                cmbQuickDbSelect.SelectedIndex = selectIdx;
+            } else if (cmbQuickDbSelect.Items.Count > 0) {
                 cmbQuickDbSelect.SelectedIndex = 0;
             }
         }
@@ -844,6 +867,8 @@ namespace Site7DbEditor {
                 string folderName = Path.GetFileName(Path.GetDirectoryName(dbPath) ?? "");
                 _currentGenbaName = string.IsNullOrEmpty(folderName) ? Path.GetFileName(dbPath) : folderName;
                 UpdateWindowTitle();
+
+                Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
 
                 lblDbStatus.Text = $"✔ {_db.IkouList.Count}遺構 | {_db.IkouLList.Count}線 | {_db.IbutuList.Count}遺物 | {_db.KikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
