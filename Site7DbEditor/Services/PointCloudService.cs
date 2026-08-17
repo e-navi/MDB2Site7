@@ -258,12 +258,21 @@ namespace Site7DbEditor.Services
         /// <summary>
         /// 指定測量座標 (X, Y) における最近傍点・逆距離加重補間によるZ標高値を高速取得
         /// </summary>
-        public double? GetInterpolatedZ(double surveyX, double surveyY, double maxSearchRadius = 3.0)
+        public double? GetInterpolatedZ(double surveyX, double surveyY, double maxSearchRadius = 15.0)
         {
             if (!HasPoints) return null;
 
-            long centerGx = (long)Math.Floor(surveyX / _cellSize);
-            long centerGy = (long)Math.Floor(surveyY / _cellSize);
+            var z = QueryZInternal(surveyX, surveyY, maxSearchRadius);
+            if (z.HasValue) return z;
+
+            // XとYが逆順の点群データ（Easting/Northing）に対するフォールバック
+            return QueryZInternal(surveyY, surveyX, maxSearchRadius);
+        }
+
+        private double? QueryZInternal(double qX, double qY, double maxSearchRadius)
+        {
+            long centerGx = (long)Math.Floor(qX / _cellSize);
+            long centerGy = (long)Math.Floor(qY / _cellSize);
             int searchCells = (int)Math.Ceiling(maxSearchRadius / _cellSize);
 
             double weightedSum = 0;
@@ -283,7 +292,7 @@ namespace Site7DbEditor.Services
                         for (int i = 0; i < list.Count; i++)
                         {
                             var pt = Points[list[i]];
-                            double distSq = (pt.X - surveyX) * (pt.X - surveyX) + (pt.Y - surveyY) * (pt.Y - surveyY);
+                            double distSq = (pt.X - qX) * (pt.X - qX) + (pt.Y - qY) * (pt.Y - qY);
                             if (distSq <= maxRadiusSq)
                             {
                                 if (distSq < closestDistSq)
@@ -311,7 +320,7 @@ namespace Site7DbEditor.Services
                 return weightedSum / weightSum;
             }
 
-            if (closestDistSq < maxRadiusSq)
+            if (closestDistSq <= maxRadiusSq)
             {
                 return closestZ;
             }
