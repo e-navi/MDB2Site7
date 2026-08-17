@@ -533,14 +533,14 @@ namespace Site7DbEditor
                         _pt1Pix = imgPt;
                         _hasPt1 = true;
                         lblPoint1Pix.Text = $"({_pt1Pix.X:F0}, {_pt1Pix.Y:F0}) px";
-                        SetPickMode(2); // 自動で点2モードへ
+                        SetPickMode(0); // 1点のみ指示して終了
                     }
                     else if (_currentPickMode == 2)
                     {
                         _pt2Pix = imgPt;
                         _hasPt2 = true;
                         lblPoint2Pix.Text = $"({_pt2Pix.X:F0}, {_pt2Pix.Y:F0}) px";
-                        SetPickMode(0); // 完了
+                        SetPickMode(0); // 1点のみ指示して終了
                     }
                     picPreview.Invalidate();
                 }
