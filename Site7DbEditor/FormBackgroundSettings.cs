@@ -162,6 +162,17 @@ namespace Site7DbEditor
 
             grpPt2.Controls.AddRange(new Control[] { lblK2, cmbKikai2, lblX2, txtKikai2X, lblY2, txtKikai2Y, btnSetPoint2, lblPoint2Pix });
 
+            // Swap Points (180deg Flip)
+            var btnSwap = new Button {
+                Text = "🔄 2点を入れ替えて180°反転",
+                Dock = DockStyle.Top,
+                Height = 30,
+                BackColor = Color.FromArgb(60, 70, 90),
+                ForeColor = Color.FromArgb(255, 230, 100),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnSwap.Click += (s, e) => SwapPoints();
+
             // Opacity Group
             var grpOpacity = new GroupBox { Text = "④ 不透明度設定", ForeColor = Color.FromArgb(200, 200, 200), Dock = DockStyle.Top, Height = 75, Padding = new Padding(8) };
             trkOpacity.Location = new Point(10, 22);
@@ -183,6 +194,7 @@ namespace Site7DbEditor
 
             // Left panel assembly
             pnlLeft.Controls.Add(grpOpacity);
+            pnlLeft.Controls.Add(btnSwap);
             pnlLeft.Controls.Add(grpPt2);
             pnlLeft.Controls.Add(grpPt1);
             pnlLeft.Controls.Add(grpImage);
@@ -541,6 +553,24 @@ namespace Site7DbEditor
 
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void SwapPoints()
+        {
+            if (!_hasPt1 && !_hasPt2) return;
+
+            var tmpPix = _pt1Pix;
+            _pt1Pix = _pt2Pix;
+            _pt2Pix = tmpPix;
+
+            bool tmpHas = _hasPt1;
+            _hasPt1 = _hasPt2;
+            _hasPt2 = tmpHas;
+
+            lblPoint1Pix.Text = _hasPt1 ? $"({_pt1Pix.X:F0}, {_pt1Pix.Y:F0}) px" : "未指示";
+            lblPoint2Pix.Text = _hasPt2 ? $"({_pt2Pix.X:F0}, {_pt2Pix.Y:F0}) px" : "未指示";
+
+            picPreview.Invalidate();
         }
 
         private void BtnReset_Click(object? sender, EventArgs e)

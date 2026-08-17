@@ -131,22 +131,20 @@ namespace Site7DbEditor.Services
 
             double scale = len_srv / len_pix;
 
-            // 相似変換 (ヘルメルト変換)
-            // a = scale * cos(theta), b = scale * sin(theta)
-            // [dY_srv, dX_srv] と [du_pix, dv_pix] の関係:
-            // dY = a * du - b * dv
-            // dX = b * du + a * dv (画像Y下向き、測量X上向き等の座標系差を考慮)
-            // 一般形:
-            // cos_theta = (du*dY + dv*dX) / (len_pix * len_srv)
-            // sin_theta = (du*dX - dv*dY) / (len_pix * len_srv)
-            double a = (du_pix * dY_srv + dv_pix * dX_srv) / (len_pix * len_pix);
-            double b = (du_pix * dX_srv - dv_pix * dY_srv) / (len_pix * len_pix);
+            // 測量座標系 (Y: 横/東西-右+, X: 縦/南北-上+)
+            // 画像ピクセル系 (u: 右+, v: 下+ -> 上向きは -v)
+            // 複素数表現: (dY + i*dX) = (c + i*d) * (du - i*dv)
+            // c + i*d = (dY + i*dX) * (du + i*dv) / (du^2 + dv^2)
+            double du2_dv2 = len_pix * len_pix;
+            double c = (du_pix * dY_srv - dv_pix * dX_srv) / du2_dv2;
+            double d = (dv_pix * dY_srv + du_pix * dX_srv) / du2_dv2;
 
             double u = px - Config.Pt1_PixelX;
             double v = py - Config.Pt1_PixelY;
 
-            double sY = Config.Pt1_SurveyY + (a * u - b * v);
-            double sX = Config.Pt1_SurveyX + (b * u + a * v);
+            // (dY, dX)^T = [c, -d; d, c] * (u, -v)^T = [c*u + d*v, d*u - c*v]^T
+            double sY = Config.Pt1_SurveyY + (c * u + d * v);
+            double sX = Config.Pt1_SurveyX + (d * u - c * v);
 
             return (sX, sY);
         }
