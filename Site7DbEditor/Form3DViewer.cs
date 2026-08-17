@@ -21,6 +21,7 @@ namespace Site7DbEditor
         private CheckBox chkShowPointCloud = new CheckBox();
         private CheckBox chkSwapXY = new CheckBox();
         private CheckBox chkShowImageMesh = new CheckBox();
+        private ComboBox cmbMeshQuality = new ComboBox();
         private CheckBox chkShowIkouLines = new CheckBox();
         private CheckBox chkShowKikai = new CheckBox();
         private TrackBar trkZScale = new TrackBar();
@@ -54,8 +55,8 @@ namespace Site7DbEditor
             public Color Color;
         }
         private List<MeshVertex[,]> _meshPatches = new List<MeshVertex[,]>();
-        private int _meshCols = 40;
-        private int _meshRows = 40;
+        private int _meshCols = 130;
+        private int _meshRows = 130;
 
         public Form3DViewer(EditorDbManager db)
         {
@@ -67,7 +68,7 @@ namespace Site7DbEditor
         private void InitializeComponent()
         {
             this.Text = "3次元立体確認ビューア (3D Surface & Point Cloud Viewer)";
-            this.Size = new Size(1180, 780);
+            this.Size = new Size(1260, 800);
             this.StartPosition = FormStartPosition.CenterParent;
             this.BackColor = Color.FromArgb(20, 22, 28);
             this.ForeColor = Color.White;
@@ -79,23 +80,44 @@ namespace Site7DbEditor
             pnlToolBar.BackColor = Color.FromArgb(28, 30, 38);
             pnlToolBar.Padding = new Padding(8, 6, 8, 6);
 
-            chkShowImageMesh.Text = "背景画像3D地形";
+            chkShowImageMesh.Text = "画像3D地形";
             chkShowImageMesh.Checked = true;
-            chkShowImageMesh.Location = new Point(12, 10);
+            chkShowImageMesh.Location = new Point(10, 10);
             chkShowImageMesh.AutoSize = true;
             chkShowImageMesh.ForeColor = Color.FromArgb(0, 225, 255);
             chkShowImageMesh.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
+            cmbMeshQuality.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMeshQuality.Items.AddRange(new object[] { "解像度: 低 (50x50)", "解像度: 中 (90x90)", "解像度: 高 (130x130)", "解像度: 超高精細 (180x180)" });
+            cmbMeshQuality.SelectedIndex = 2; // デフォルト: 高 (130x130)
+            cmbMeshQuality.Location = new Point(105, 8);
+            cmbMeshQuality.Size = new Size(160, 25);
+            cmbMeshQuality.BackColor = Color.FromArgb(40, 42, 54);
+            cmbMeshQuality.ForeColor = Color.White;
+            cmbMeshQuality.SelectedIndexChanged += (s, e) => {
+                int[] sizes = new int[] { 50, 90, 130, 180 };
+                int idx = Math.Clamp(cmbMeshQuality.SelectedIndex, 0, sizes.Length - 1);
+                _meshCols = sizes[idx];
+                _meshRows = sizes[idx];
+                Cursor = Cursors.WaitCursor;
+                try {
+                    BuildImageMesh();
+                    pic3DCanvas.Invalidate();
+                } finally {
+                    Cursor = Cursors.Default;
+                }
+            };
+
             chkShowPointCloud.Text = "点群";
             chkShowPointCloud.Checked = true;
-            chkShowPointCloud.Location = new Point(135, 10);
+            chkShowPointCloud.Location = new Point(275, 10);
             chkShowPointCloud.AutoSize = true;
             chkShowPointCloud.ForeColor = Color.FromArgb(100, 255, 120);
             chkShowPointCloud.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkSwapXY.Text = "🔄点群XY入替";
             chkSwapXY.Checked = _pcService.SwapXY;
-            chkSwapXY.Location = new Point(195, 10);
+            chkSwapXY.Location = new Point(330, 10);
             chkSwapXY.AutoSize = true;
             chkSwapXY.ForeColor = Color.FromArgb(255, 230, 100);
             chkSwapXY.CheckedChanged += (s, e) => {
@@ -109,21 +131,21 @@ namespace Site7DbEditor
 
             chkShowIkouLines.Text = "遺構線";
             chkShowIkouLines.Checked = true;
-            chkShowIkouLines.Location = new Point(310, 10);
+            chkShowIkouLines.Location = new Point(445, 10);
             chkShowIkouLines.AutoSize = true;
             chkShowIkouLines.ForeColor = Color.FromArgb(255, 220, 80);
             chkShowIkouLines.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkShowKikai.Text = "基準点";
             chkShowKikai.Checked = true;
-            chkShowKikai.Location = new Point(380, 10);
+            chkShowKikai.Location = new Point(515, 10);
             chkShowKikai.AutoSize = true;
             chkShowKikai.ForeColor = Color.FromArgb(255, 100, 100);
             chkShowKikai.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
-            var lblZ = new Label { Text = "高さ強調:", Location = new Point(450, 12), AutoSize = true, ForeColor = Color.LightGray };
-            trkZScale.Location = new Point(510, 8);
-            trkZScale.Size = new Size(100, 30);
+            var lblZ = new Label { Text = "高さ強調:", Location = new Point(585, 12), AutoSize = true, ForeColor = Color.LightGray };
+            trkZScale.Location = new Point(645, 8);
+            trkZScale.Size = new Size(95, 30);
             trkZScale.Minimum = 10;
             trkZScale.Maximum = 50;
             trkZScale.Value = 15;
@@ -135,25 +157,25 @@ namespace Site7DbEditor
             };
 
             lblZScaleVal.Text = "1.5x";
-            lblZScaleVal.Location = new Point(615, 12);
+            lblZScaleVal.Location = new Point(745, 12);
             lblZScaleVal.AutoSize = true;
             lblZScaleVal.ForeColor = Color.FromArgb(0, 225, 255);
 
             btnResetView.Text = "🔄 視点リセット";
-            btnResetView.Location = new Point(660, 8);
-            btnResetView.Size = new Size(105, 28);
+            btnResetView.Location = new Point(785, 8);
+            btnResetView.Size = new Size(100, 28);
             btnResetView.BackColor = Color.FromArgb(43, 114, 186);
             btnResetView.ForeColor = Color.White;
             btnResetView.FlatStyle = FlatStyle.Flat;
             btnResetView.Click += (s, e) => ResetView();
 
             lblInfo.Text = "【操作】左ドラッグ: 回転 | 右/中ドラッグ: 平行移動 | ホイール: ズーム";
-            lblInfo.Location = new Point(775, 12);
+            lblInfo.Location = new Point(895, 12);
             lblInfo.AutoSize = true;
             lblInfo.ForeColor = Color.FromArgb(170, 180, 200);
 
             pnlToolBar.Controls.AddRange(new Control[] {
-                chkShowImageMesh, chkShowPointCloud, chkSwapXY, chkShowIkouLines, chkShowKikai,
+                chkShowImageMesh, cmbMeshQuality, chkShowPointCloud, chkSwapXY, chkShowIkouLines, chkShowKikai,
                 lblZ, trkZScale, lblZScaleVal, btnResetView, lblInfo
             });
 
@@ -222,12 +244,31 @@ namespace Site7DbEditor
                 defaultZ = _db.KikaiList.Average(k => k.Z);
             }
 
+            // Fast Safe Bitmap Sampling using Marshal.Copy
+            var rect = new Rectangle(0, 0, imgW, imgH);
+            var bmpData = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            byte[] pixelBuffer = new byte[bmpData.Stride * imgH];
+            try
+            {
+                System.Runtime.InteropServices.Marshal.Copy(bmpData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            }
+            finally
+            {
+                bmp.UnlockBits(bmpData);
+            }
+
+            int stride = bmpData.Stride;
+
             for (int r = 0; r < _meshRows; r++)
             {
                 float v = (float)r / (_meshRows - 1) * (imgH - 1);
+                int py = Math.Clamp((int)v, 0, imgH - 1);
+
                 for (int c = 0; c < _meshCols; c++)
                 {
                     float u = (float)c / (_meshCols - 1) * (imgW - 1);
+                    int px = Math.Clamp((int)u, 0, imgW - 1);
+
                     var (sx, sy) = _bgService.PixelToSurvey(u, v);
 
                     double sz = defaultZ;
@@ -237,11 +278,18 @@ namespace Site7DbEditor
                         if (queriedZ.HasValue) sz = queriedZ.Value;
                     }
 
-                    int px = Math.Clamp((int)u, 0, imgW - 1);
-                    int py = Math.Clamp((int)v, 0, imgH - 1);
-                    Color col = bmp.GetPixel(px, py);
+                    int offset = (py * stride) + (px * 4);
+                    byte b = pixelBuffer[offset];
+                    byte g = pixelBuffer[offset + 1];
+                    byte red = pixelBuffer[offset + 2];
+                    byte a = pixelBuffer[offset + 3];
 
-                    grid[r, c] = new MeshVertex { X = sx, Y = sy, Z = sz, Color = col };
+                    grid[r, c] = new MeshVertex {
+                        X = sx,
+                        Y = sy,
+                        Z = sz,
+                        Color = Color.FromArgb(a > 0 ? a : (byte)255, red, g, b)
+                    };
                 }
             }
 
