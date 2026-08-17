@@ -158,6 +158,12 @@ namespace Site7DbEditor
 
         private void Init3DData()
         {
+            // 画像の読み込み保証
+            if (_bgService.LoadedImage == null && !string.IsNullOrEmpty(_bgService.Config.ImagePath) && File.Exists(_bgService.Config.ImagePath))
+            {
+                _bgService.LoadImageFile(_bgService.Config.ImagePath);
+            }
+
             // 1. 点群のサンプリング（描画パフォーマンスのため最大10万点程度に間引き）
             _renderPoints.Clear();
             if (_pcService.HasPoints)
@@ -180,7 +186,13 @@ namespace Site7DbEditor
         private void BuildImageMesh()
         {
             _meshPatches.Clear();
-            if (!_bgService.Config.IsAligned || _bgService.LoadedImage == null) return;
+            if (!_bgService.Config.IsAligned) return;
+
+            if (_bgService.LoadedImage == null && !string.IsNullOrEmpty(_bgService.Config.ImagePath) && File.Exists(_bgService.Config.ImagePath))
+            {
+                _bgService.LoadImageFile(_bgService.Config.ImagePath);
+            }
+            if (_bgService.LoadedImage == null) return;
 
             var bmp = _bgService.LoadedImage;
             int imgW = bmp.Width;
@@ -190,6 +202,10 @@ namespace Site7DbEditor
             var grid = new MeshVertex[_meshRows, _meshCols];
 
             double defaultZ = _pcService.HasPoints ? (_pcService.MinZ + _pcService.MaxZ) / 2.0 : 0.0;
+            if (!_pcService.HasPoints && _db.KikaiList.Count > 0)
+            {
+                defaultZ = _db.KikaiList.Average(k => k.Z);
+            }
 
             for (int r = 0; r < _meshRows; r++)
             {
@@ -202,7 +218,7 @@ namespace Site7DbEditor
                     double sz = defaultZ;
                     if (_pcService.HasPoints)
                     {
-                        var queriedZ = _pcService.GetInterpolatedZ(sx, sy, 20.0);
+                        var queriedZ = _pcService.GetInterpolatedZ(sx, sy, 30.0);
                         if (queriedZ.HasValue) sz = queriedZ.Value;
                     }
 
@@ -219,7 +235,7 @@ namespace Site7DbEditor
 
         private void ResetView()
         {
-            // 範囲の計算
+            // 範囲の計算 (点群、背景画像メッシュ、基準点)
             double minX = double.MaxValue, maxX = double.MinValue;
             double minY = double.MaxValue, maxY = double.MinValue;
             double minZ = double.MaxValue, maxZ = double.MinValue;
@@ -230,7 +246,27 @@ namespace Site7DbEditor
                 minY = _pcService.MinY; maxY = _pcService.MaxY;
                 minZ = _pcService.MinZ; maxZ = _pcService.MaxZ;
             }
-            else if (_db.KikaiList.Count > 0)
+
+            if (_meshPatches.Count > 0)
+            {
+                foreach (var g in _meshPatches)
+                {
+                    int rows = g.GetLength(0);
+                    int cols = g.GetLength(1);
+                    for (int r = 0; r < rows; r++)
+                    {
+                        for (int c = 0; c < cols; c++)
+                        {
+                            var v = g[r, c];
+                            if (v.X < minX) minX = v.X; if (v.X > maxX) maxX = v.X;
+                            if (v.Y < minY) minY = v.Y; if (v.Y > maxY) maxY = v.Y;
+                            if (v.Z < minZ) minZ = v.Z; if (v.Z > maxZ) maxZ = v.Z;
+                        }
+                    }
+                }
+            }
+
+            if (_db.KikaiList.Count > 0)
             {
                 foreach (var k in _db.KikaiList)
                 {
@@ -238,10 +274,6 @@ namespace Site7DbEditor
                     if (k.Y < minY) minY = k.Y; if (k.Y > maxY) maxY = k.Y;
                     if (k.Z < minZ) minZ = k.Z; if (k.Z > maxZ) maxZ = k.Z;
                 }
-            }
-            else
-            {
-                minX = -50; maxX = 50; minY = -50; maxY = 50; minZ = 0; maxZ = 10;
             }
 
             if (minX == double.MaxValue)

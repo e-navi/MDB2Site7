@@ -453,12 +453,6 @@ namespace Site7DbEditor {
                 }
             };
 
-            btn3DViewer.Click += (s, e) => {
-                using (var form = new Form3DViewer(_db)) {
-                    form.ShowDialog(this);
-                }
-            };
-
             btnEnvSettings.Click += (s, e) => {
                 using (var form = new FormDefEnv()) {
                     if (form.ShowDialog(this) == DialogResult.OK) {
