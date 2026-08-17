@@ -116,8 +116,11 @@ namespace Site7DbEditor {
         public void UpdateDebugLayoutInfo() {
             if (tabIkou != null && pnlPrecsRight != null) {
                 string info = $"tabIkou[{tabIkou.Width}x{tabIkou.Height}] | pnlPrecsRight[Dock:{pnlPrecsRight.Dock} Pos:({pnlPrecsRight.Location.X},{pnlPrecsRight.Location.Y}) Size:{pnlPrecsRight.Width}x{pnlPrecsRight.Height}]";
+                if (lblStatusMessage != null) {
+                    lblStatusMessage.Text = info;
+                }
                 if (lblBottomTitle != null) {
-                    lblBottomTitle.Text = info;
+                    lblBottomTitle.Text = "📋 データ・編集テーブル";
                 }
                 if (_dlgBottom != null && !_dlgBottom.IsDisposed && _dlgBottom.lblTitle != null) {
                     _dlgBottom.lblTitle.Text = info;
@@ -533,6 +536,9 @@ namespace Site7DbEditor {
             this.picMapCanvas.MouseUp += picMapCanvas_MouseUp;
             this.picMapCanvas.MouseWheel += picMapCanvas_MouseWheel;
             this.picMapCanvas.MouseDoubleClick += picMapCanvas_MouseDoubleClick;
+            this.picMapCanvas.MouseLeave += (s, e) => {
+                if (lblStatusCoords != null) lblStatusCoords.Text = "";
+            };
         }
 
         private void EnsureUCCtrlValid() {
@@ -2443,6 +2449,11 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_MouseMove(object? sender, MouseEventArgs e) {
+            var (surveyX, surveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
+            if (lblStatusCoords != null) {
+                lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}";
+            }
+
             if (_isMovingVertex || _isInsertingVertex) {
                 _currentRubberBandMousePos = e.Location;
                 picMapCanvas.Invalidate();

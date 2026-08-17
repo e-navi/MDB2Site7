@@ -69,6 +69,8 @@ namespace Site7DbEditor
             chkShowKikai = new CheckBox();
             chkShowKikaiName = new CheckBox();
             chkShowCurve = new CheckBox();
+            chkColorByIkou = new CheckBox();
+            chkWhiteBg = new CheckBox();
             panelLeftHeader = new Panel();
             lblLeftTitle = new Label();
             btnDetachLeftPanel = new Button();
@@ -157,8 +159,6 @@ namespace Site7DbEditor
             lblBottomTitle = new Label();
             btnDetachBottomPanel = new Button();
             chkShowGrid = new CheckBox();
-            chkColorByIkou = new CheckBox();
-            chkWhiteBg = new CheckBox();
             tabLayer = new TabPage();
             btnDeleteLayer = new Button();
             btnAddLayer = new Button();
@@ -181,6 +181,8 @@ namespace Site7DbEditor
             pnlTestFill = new Panel();
             panelMainRight = new Panel();
             panelStatus = new Panel();
+            lblStatusMessage = new Label();
+            lblStatusCoords = new Label();
             panelMain1 = new Panel();
             panelHeader.SuspendLayout();
             panelMapArea.SuspendLayout();
@@ -238,7 +240,7 @@ namespace Site7DbEditor
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(0, 0);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(1520, 75);
+            panelHeader.Size = new Size(1520, 45);
             panelHeader.TabIndex = 0;
             // 
             // lblDbStatus
@@ -246,7 +248,7 @@ namespace Site7DbEditor
             lblDbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblDbStatus.Font = new Font("Yu Gothic UI", 8.5F);
             lblDbStatus.ForeColor = Color.FromArgb(255, 183, 3);
-            lblDbStatus.Location = new Point(1125, 20);
+            lblDbStatus.Location = new Point(1125, 7);
             lblDbStatus.Name = "lblDbStatus";
             lblDbStatus.Size = new Size(215, 35);
             lblDbStatus.TabIndex = 6;
@@ -260,7 +262,7 @@ namespace Site7DbEditor
             btnSaveDb.FlatStyle = FlatStyle.Flat;
             btnSaveDb.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold);
             btnSaveDb.ForeColor = Color.Black;
-            btnSaveDb.Location = new Point(1350, 20);
+            btnSaveDb.Location = new Point(1350, 7);
             btnSaveDb.Name = "btnSaveDb";
             btnSaveDb.Size = new Size(155, 35);
             btnSaveDb.TabIndex = 5;
@@ -271,7 +273,7 @@ namespace Site7DbEditor
             // 
             lblQuickDb.AutoSize = true;
             lblQuickDb.ForeColor = Color.White;
-            lblQuickDb.Location = new Point(505, 30);
+            lblQuickDb.Location = new Point(500, 17);
             lblQuickDb.Name = "lblQuickDb";
             lblQuickDb.Size = new Size(58, 15);
             lblQuickDb.TabIndex = 3;
@@ -284,7 +286,7 @@ namespace Site7DbEditor
             cmbQuickDbSelect.FlatStyle = FlatStyle.Flat;
             cmbQuickDbSelect.ForeColor = Color.White;
             cmbQuickDbSelect.FormattingEnabled = true;
-            cmbQuickDbSelect.Location = new Point(575, 26);
+            cmbQuickDbSelect.Location = new Point(570, 13);
             cmbQuickDbSelect.Name = "cmbQuickDbSelect";
             cmbQuickDbSelect.Size = new Size(240, 23);
             cmbQuickDbSelect.TabIndex = 4;
@@ -295,7 +297,7 @@ namespace Site7DbEditor
             btnOpenDb.FlatStyle = FlatStyle.Flat;
             btnOpenDb.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
             btnOpenDb.ForeColor = Color.White;
-            btnOpenDb.Location = new Point(360, 20);
+            btnOpenDb.Location = new Point(355, 7);
             btnOpenDb.Name = "btnOpenDb";
             btnOpenDb.Size = new Size(130, 35);
             btnOpenDb.TabIndex = 2;
@@ -307,7 +309,7 @@ namespace Site7DbEditor
             lblSubHeader.AutoSize = true;
             lblSubHeader.Font = new Font("Yu Gothic UI", 9F);
             lblSubHeader.ForeColor = Color.FromArgb(160, 170, 190);
-            lblSubHeader.Location = new Point(66, 40);
+            lblSubHeader.Location = new Point(66, 27);
             lblSubHeader.Name = "lblSubHeader";
             lblSubHeader.Size = new Size(164, 15);
             lblSubHeader.TabIndex = 1;
@@ -318,7 +320,7 @@ namespace Site7DbEditor
             lblHeaderTitle.AutoSize = true;
             lblHeaderTitle.Font = new Font("Yu Gothic UI", 14F, FontStyle.Bold);
             lblHeaderTitle.ForeColor = Color.FromArgb(0, 180, 216);
-            lblHeaderTitle.Location = new Point(15, 12);
+            lblHeaderTitle.Location = new Point(13, 8);
             lblHeaderTitle.Name = "lblHeaderTitle";
             lblHeaderTitle.Size = new Size(200, 25);
             lblHeaderTitle.TabIndex = 0;
@@ -332,7 +334,7 @@ namespace Site7DbEditor
             panelMapArea.Dock = DockStyle.Fill;
             panelMapArea.Location = new Point(0, 0);
             panelMapArea.Name = "panelMapArea";
-            panelMapArea.Size = new Size(1390, 495);
+            panelMapArea.Size = new Size(1390, 525);
             panelMapArea.TabIndex = 1;
             // 
             // picMapCanvas
@@ -341,7 +343,7 @@ namespace Site7DbEditor
             picMapCanvas.Dock = DockStyle.Fill;
             picMapCanvas.Location = new Point(0, 35);
             picMapCanvas.Name = "picMapCanvas";
-            picMapCanvas.Size = new Size(1126, 460);
+            picMapCanvas.Size = new Size(1126, 490);
             picMapCanvas.TabIndex = 2;
             picMapCanvas.TabStop = false;
             // 
@@ -353,7 +355,7 @@ namespace Site7DbEditor
             panelMapRight.Dock = DockStyle.Right;
             panelMapRight.Location = new Point(1126, 35);
             panelMapRight.Name = "panelMapRight";
-            panelMapRight.Size = new Size(264, 460);
+            panelMapRight.Size = new Size(264, 490);
             panelMapRight.TabIndex = 2;
             // 
             // panelRightContent
@@ -362,7 +364,7 @@ namespace Site7DbEditor
             panelRightContent.Dock = DockStyle.Fill;
             panelRightContent.Location = new Point(0, 30);
             panelRightContent.Name = "panelRightContent";
-            panelRightContent.Size = new Size(264, 430);
+            panelRightContent.Size = new Size(264, 460);
             panelRightContent.TabIndex = 0;
             // 
             // panelRightHeader
@@ -446,7 +448,7 @@ namespace Site7DbEditor
             panelMapLeft.Dock = DockStyle.Left;
             panelMapLeft.Location = new Point(0, 0);
             panelMapLeft.Name = "panelMapLeft";
-            panelMapLeft.Size = new Size(130, 857);
+            panelMapLeft.Size = new Size(130, 887);
             panelMapLeft.TabIndex = 1;
             // 
             // panelLeftContent
@@ -490,7 +492,7 @@ namespace Site7DbEditor
             panelLeftContent.Dock = DockStyle.Fill;
             panelLeftContent.Location = new Point(0, 30);
             panelLeftContent.Name = "panelLeftContent";
-            panelLeftContent.Size = new Size(130, 827);
+            panelLeftContent.Size = new Size(130, 857);
             panelLeftContent.TabIndex = 1;
             // 
             // btnBgSettings
@@ -904,6 +906,30 @@ namespace Site7DbEditor
             chkShowCurve.Text = "曲線表示";
             chkShowCurve.UseVisualStyleBackColor = true;
             // 
+            // chkColorByIkou
+            // 
+            chkColorByIkou.AutoSize = true;
+            chkColorByIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkColorByIkou.ForeColor = Color.Black;
+            chkColorByIkou.Location = new Point(6, 470);
+            chkColorByIkou.Name = "chkColorByIkou";
+            chkColorByIkou.Size = new Size(86, 19);
+            chkColorByIkou.TabIndex = 33;
+            chkColorByIkou.Text = "遺構識別色";
+            chkColorByIkou.UseVisualStyleBackColor = true;
+            // 
+            // chkWhiteBg
+            // 
+            chkWhiteBg.AutoSize = true;
+            chkWhiteBg.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkWhiteBg.ForeColor = Color.Black;
+            chkWhiteBg.Location = new Point(6, 494);
+            chkWhiteBg.Name = "chkWhiteBg";
+            chkWhiteBg.Size = new Size(74, 19);
+            chkWhiteBg.TabIndex = 34;
+            chkWhiteBg.Text = "背景色白";
+            chkWhiteBg.UseVisualStyleBackColor = true;
+            // 
             // panelLeftHeader
             // 
             panelLeftHeader.BackColor = Color.FromArgb(40, 42, 54);
@@ -945,7 +971,7 @@ namespace Site7DbEditor
             panelMapBottom.Controls.Add(panelBottomContent);
             panelMapBottom.Controls.Add(panelBottomHeader);
             panelMapBottom.Dock = DockStyle.Bottom;
-            panelMapBottom.Location = new Point(0, 495);
+            panelMapBottom.Location = new Point(0, 525);
             panelMapBottom.Name = "panelMapBottom";
             panelMapBottom.Size = new Size(1390, 362);
             panelMapBottom.TabIndex = 2;
@@ -1960,31 +1986,6 @@ namespace Site7DbEditor
             btnDetachBottomPanel.Text = "↗ 分離";
             btnDetachBottomPanel.UseVisualStyleBackColor = false;
             // 
-            // 
-            // chkColorByIkou
-            // 
-            chkColorByIkou.AutoSize = true;
-            chkColorByIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkColorByIkou.ForeColor = Color.Black;
-            chkColorByIkou.Location = new Point(6, 470);
-            chkColorByIkou.Name = "chkColorByIkou";
-            chkColorByIkou.Size = new Size(86, 19);
-            chkColorByIkou.TabIndex = 33;
-            chkColorByIkou.Text = "遺構識別色";
-            chkColorByIkou.UseVisualStyleBackColor = true;
-            // 
-            // chkWhiteBg
-            // 
-            chkWhiteBg.AutoSize = true;
-            chkWhiteBg.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkWhiteBg.ForeColor = Color.Black;
-            chkWhiteBg.Location = new Point(6, 494);
-            chkWhiteBg.Name = "chkWhiteBg";
-            chkWhiteBg.Size = new Size(74, 19);
-            chkWhiteBg.TabIndex = 34;
-            chkWhiteBg.Text = "背景色白";
-            chkWhiteBg.UseVisualStyleBackColor = true;
-            // 
             // chkShowGrid
             // 
             chkShowGrid.Location = new Point(0, 0);
@@ -2222,25 +2223,52 @@ namespace Site7DbEditor
             panelMainRight.Dock = DockStyle.Fill;
             panelMainRight.Location = new Point(130, 0);
             panelMainRight.Name = "panelMainRight";
-            panelMainRight.Size = new Size(1390, 857);
+            panelMainRight.Size = new Size(1390, 887);
             panelMainRight.TabIndex = 3;
             // 
             // panelStatus
             // 
+            panelStatus.BackColor = Color.FromArgb(28, 30, 40);
+            panelStatus.Controls.Add(lblStatusMessage);
+            panelStatus.Controls.Add(lblStatusCoords);
             panelStatus.Dock = DockStyle.Bottom;
             panelStatus.Location = new Point(0, 932);
             panelStatus.Name = "panelStatus";
+            panelStatus.Padding = new Padding(8, 0, 8, 0);
             panelStatus.Size = new Size(1520, 28);
             panelStatus.TabIndex = 4;
+            // 
+            // lblStatusMessage
+            // 
+            lblStatusMessage.Dock = DockStyle.Fill;
+            lblStatusMessage.Font = new Font("Yu Gothic UI", 9F);
+            lblStatusMessage.ForeColor = Color.FromArgb(170, 180, 200);
+            lblStatusMessage.Location = new Point(8, 0);
+            lblStatusMessage.Name = "lblStatusMessage";
+            lblStatusMessage.Size = new Size(1224, 28);
+            lblStatusMessage.TabIndex = 0;
+            lblStatusMessage.Text = "準備完了";
+            lblStatusMessage.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblStatusCoords
+            // 
+            lblStatusCoords.Dock = DockStyle.Right;
+            lblStatusCoords.Font = new Font("Consolas", 9.5F, FontStyle.Bold);
+            lblStatusCoords.ForeColor = Color.FromArgb(0, 225, 255);
+            lblStatusCoords.Location = new Point(1232, 0);
+            lblStatusCoords.Name = "lblStatusCoords";
+            lblStatusCoords.Size = new Size(280, 28);
+            lblStatusCoords.TabIndex = 1;
+            lblStatusCoords.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelMain1
             // 
             panelMain1.Controls.Add(panelMainRight);
             panelMain1.Controls.Add(panelMapLeft);
             panelMain1.Dock = DockStyle.Fill;
-            panelMain1.Location = new Point(0, 75);
+            panelMain1.Location = new Point(0, 45);
             panelMain1.Name = "panelMain1";
-            panelMain1.Size = new Size(1520, 857);
+            panelMain1.Size = new Size(1520, 887);
             panelMain1.TabIndex = 5;
             // 
             // FormEditor
@@ -2490,6 +2518,8 @@ namespace Site7DbEditor
         public System.Windows.Forms.Panel pnlTestFill;
         public System.Windows.Forms.TabPage tabIkou;
         private Panel panelStatus;
+        public System.Windows.Forms.Label lblStatusMessage;
+        public System.Windows.Forms.Label lblStatusCoords;
         private Panel panelMainRight;
         private Panel panelMain1;
     }
