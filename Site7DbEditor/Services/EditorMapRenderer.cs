@@ -28,7 +28,8 @@ namespace Site7DbEditor.Services
             bool showIkouName = false,
             bool showIbutuName = false,
             bool showKikaiName = true,
-            bool isDarkBackground = true)
+            bool isDarkBackground = true,
+            bool chkShowBgImage = true)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(isDarkBackground ? Color.FromArgb(16, 16, 20) : Color.FromArgb(248, 249, 250));
@@ -44,6 +45,9 @@ namespace Site7DbEditor.Services
             {
                 return vc.ToCanvasPoint(surveyX, surveyY, canvasSize);
             }
+
+            // -1. Draw Background Image (背景画像)
+            BackgroundImageService.Instance.DrawBackground(g, canvasSize, vc, chkShowBgImage);
 
             // 0. Draw Mesh/Grid (メッシュ)
             if (chkShowGrid)

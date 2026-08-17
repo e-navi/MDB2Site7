@@ -443,9 +443,14 @@ namespace Site7DbEditor {
             };
 
             btnBgSettings.Click += (s, e) => {
-                _isDarkMapBackground = !_isDarkMapBackground;
-                chkWhiteBg.Checked = !_isDarkMapBackground;
-                picMapCanvas.Invalidate();
+                using (var form = new FormBackgroundSettings(_db)) {
+                    if (form.ShowDialog(this) == DialogResult.OK) {
+                        if (!string.IsNullOrEmpty(_db.CurrentDbPath)) {
+                            BackgroundImageService.Instance.SaveConfig(_db.CurrentDbPath);
+                        }
+                        picMapCanvas.Invalidate();
+                    }
+                }
             };
 
             btnEnvSettings.Click += (s, e) => {
@@ -516,6 +521,7 @@ namespace Site7DbEditor {
                 _isDarkMapBackground = !chkWhiteBg.Checked;
                 picMapCanvas.Invalidate();
             };
+            this.chkShowBgImage.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateCombinedIkouNameLabel();
@@ -869,6 +875,7 @@ namespace Site7DbEditor {
                 UpdateWindowTitle();
 
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
+                BackgroundImageService.Instance.LoadConfig(dbPath);
 
                 lblDbStatus.Text = $"✔ {_db.IkouList.Count}遺構 | {_db.IkouLList.Count}線 | {_db.IbutuList.Count}遺物 | {_db.KikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
@@ -2264,7 +2271,8 @@ namespace Site7DbEditor {
                 showIkouName: chkShowIkouName.Checked,
                 showIbutuName: chkShowIbutuName.Checked,
                 showKikaiName: chkShowKikaiName.Checked,
-                isDarkBackground: _isDarkMapBackground);
+                isDarkBackground: _isDarkMapBackground,
+                chkShowBgImage: chkShowBgImage.Checked);
 
             // 頂点移動中のラバーバンド描画
             if (_isMovingVertex && _movingLine != null && _movingVertexIndex >= 0) {

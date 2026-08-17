@@ -71,6 +71,7 @@ namespace Site7DbEditor
             chkShowCurve = new CheckBox();
             chkColorByIkou = new CheckBox();
             chkWhiteBg = new CheckBox();
+            chkShowBgImage = new CheckBox();
             panelLeftHeader = new Panel();
             lblLeftTitle = new Label();
             btnDetachLeftPanel = new Button();
@@ -489,6 +490,7 @@ namespace Site7DbEditor
             panelLeftContent.Controls.Add(chkShowCurve);
             panelLeftContent.Controls.Add(chkColorByIkou);
             panelLeftContent.Controls.Add(chkWhiteBg);
+            panelLeftContent.Controls.Add(chkShowBgImage);
             panelLeftContent.Dock = DockStyle.Fill;
             panelLeftContent.Location = new Point(0, 30);
             panelLeftContent.Name = "panelLeftContent";
@@ -929,6 +931,20 @@ namespace Site7DbEditor
             chkWhiteBg.TabIndex = 34;
             chkWhiteBg.Text = "背景色白";
             chkWhiteBg.UseVisualStyleBackColor = true;
+            // 
+            // chkShowBgImage
+            // 
+            chkShowBgImage.AutoSize = true;
+            chkShowBgImage.Checked = true;
+            chkShowBgImage.CheckState = CheckState.Checked;
+            chkShowBgImage.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowBgImage.ForeColor = Color.FromArgb(0, 100, 200);
+            chkShowBgImage.Location = new Point(6, 518);
+            chkShowBgImage.Name = "chkShowBgImage";
+            chkShowBgImage.Size = new Size(74, 19);
+            chkShowBgImage.TabIndex = 35;
+            chkShowBgImage.Text = "背景表示";
+            chkShowBgImage.UseVisualStyleBackColor = true;
             // 
             // panelLeftHeader
             // 
@@ -2363,6 +2379,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.CheckBox chkShowGrid;
         private System.Windows.Forms.CheckBox chkColorByIkou;
         private System.Windows.Forms.CheckBox chkWhiteBg;
+        public System.Windows.Forms.CheckBox chkShowBgImage;
         private System.Windows.Forms.PictureBox picMapCanvas;
 
         private System.Windows.Forms.SplitContainer splitContainerBottom;
