@@ -290,6 +290,25 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
+        /// 3Dメッシュ生成用のO(1)超高速標高取得 (補間計算なし・ダイレクトセル参照)
+        /// </summary>
+        public double? GetFastZ(double surveyX, double surveyY)
+        {
+            if (!HasPoints) return null;
+            if (surveyX < MinX || surveyX > MaxX || surveyY < MinY || surveyY > MaxY) return null;
+
+            long centerGx = (long)Math.Floor(surveyX / _cellSize);
+            long centerGy = (long)Math.Floor(surveyY / _cellSize);
+            long key = (centerGx << 32) ^ (centerGy & 0xFFFFFFFFL);
+
+            if (_grid.TryGetValue(key, out var list) && list.Count > 0)
+            {
+                return Points[list[0]].Z;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 指定測量座標 (X, Y) における最近傍点・逆距離加重補間によるZ標高値を高速取得
         /// </summary>
         public double? GetInterpolatedZ(double surveyX, double surveyY, double maxSearchRadius = 15.0)

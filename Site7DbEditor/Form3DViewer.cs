@@ -58,10 +58,14 @@ namespace Site7DbEditor
         private int _meshCols = 130;
         private int _meshRows = 130;
 
+        // State Flags
+        private bool _isInitializing = true;
+
         public Form3DViewer(EditorDbManager db)
         {
             _db = db;
             InitializeComponent();
+            _isInitializing = false;
             Init3DData();
         }
 
@@ -88,14 +92,15 @@ namespace Site7DbEditor
             chkShowImageMesh.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             cmbMeshQuality.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbMeshQuality.Items.AddRange(new object[] { "解像度: 低 (50x50)", "解像度: 中 (90x90)", "解像度: 高 (130x130)", "解像度: 超高精細 (180x180)" });
-            cmbMeshQuality.SelectedIndex = 2; // デフォルト: 高 (130x130)
+            cmbMeshQuality.Items.AddRange(new object[] { "解像度: 低 (50x50)", "解像度: 中 (80x80)", "解像度: 高 (120x120)", "解像度: 超高精細 (160x160)" });
+            cmbMeshQuality.SelectedIndex = 2; // デフォルト: 高 (120x120)
             cmbMeshQuality.Location = new Point(105, 8);
             cmbMeshQuality.Size = new Size(160, 25);
             cmbMeshQuality.BackColor = Color.FromArgb(40, 42, 54);
             cmbMeshQuality.ForeColor = Color.White;
             cmbMeshQuality.SelectedIndexChanged += (s, e) => {
-                int[] sizes = new int[] { 50, 90, 130, 180 };
+                if (_isInitializing) return;
+                int[] sizes = new int[] { 50, 80, 120, 160 };
                 int idx = Math.Clamp(cmbMeshQuality.SelectedIndex, 0, sizes.Length - 1);
                 _meshCols = sizes[idx];
                 _meshRows = sizes[idx];
@@ -274,7 +279,7 @@ namespace Site7DbEditor
                     double sz = defaultZ;
                     if (_pcService.HasPoints)
                     {
-                        var queriedZ = _pcService.GetInterpolatedZ(sx, sy, 30.0);
+                        var queriedZ = _pcService.GetFastZ(sx, sy);
                         if (queriedZ.HasValue) sz = queriedZ.Value;
                     }
 
@@ -524,24 +529,32 @@ namespace Site7DbEditor
 
         private void DrawImageMesh(Graphics g, int w, int h)
         {
+            int step = (_isRotating || _isPanning) ? 2 : 1;
             foreach (var grid in _meshPatches)
             {
                 int rows = grid.GetLength(0);
                 int cols = grid.GetLength(1);
 
-                for (int r = 0; r < rows - 1; r++)
+                for (int r = 0; r < rows - step; r += step)
                 {
-                    for (int c = 0; c < cols - 1; c++)
+                    for (int c = 0; c < cols - step; c += step)
                     {
                         var v00 = grid[r, c];
-                        var v10 = grid[r + 1, c];
-                        var v11 = grid[r + 1, c + 1];
-                        var v01 = grid[r, c + 1];
+                        var v10 = grid[r + step, c];
+                        var v11 = grid[r + step, c + step];
+                        var v01 = grid[r, c + step];
 
                         var p00 = Project3DToScreen(v00.X, v00.Y, v00.Z, w, h);
                         var p10 = Project3DToScreen(v10.X, v10.Y, v10.Z, w, h);
                         var p11 = Project3DToScreen(v11.X, v11.Y, v11.Z, w, h);
                         var p01 = Project3DToScreen(v01.X, v01.Y, v01.Z, w, h);
+
+                        // 画面外簡易クリッピング
+                        float minPx = Math.Min(Math.Min(p00.X, p10.X), Math.Min(p11.X, p01.X));
+                        float maxPx = Math.Max(Math.Max(p00.X, p10.X), Math.Max(p11.X, p01.X));
+                        float minPy = Math.Min(Math.Min(p00.Y, p10.Y), Math.Min(p11.Y, p01.Y));
+                        float maxPy = Math.Max(Math.Max(p00.Y, p10.Y), Math.Max(p11.Y, p01.Y));
+                        if (maxPx < 0 || minPx > w || maxPy < 0 || minPy > h) continue;
 
                         // 平均カラー
                         int avgR = (v00.Color.R + v10.Color.R + v11.Color.R + v01.Color.R) / 4;
