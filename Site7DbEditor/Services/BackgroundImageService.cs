@@ -22,6 +22,7 @@ namespace Site7DbEditor.Services
         public bool IsAligned { get; set; }
         public float Opacity { get; set; } = 0.8f;
         public bool IsVisible { get; set; } = true;
+        public string PointCloudPath { get; set; } = "";
     }
 
     public class BackgroundImageService
@@ -46,6 +47,10 @@ namespace Site7DbEditor.Services
                     {
                         Config = cfg;
                         LoadImageFile(Config.ImagePath);
+                        if (!string.IsNullOrEmpty(Config.PointCloudPath))
+                        {
+                            PointCloudService.Instance.LoadFile(Config.PointCloudPath);
+                        }
                         return true;
                     }
                 }

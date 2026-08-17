@@ -2484,7 +2484,12 @@ namespace Site7DbEditor {
         private void picMapCanvas_MouseMove(object? sender, MouseEventArgs e) {
             var (surveyX, surveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
             if (lblStatusCoords != null) {
-                lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}";
+                var zVal = PointCloudService.Instance.GetInterpolatedZ(surveyX, surveyY);
+                if (zVal.HasValue) {
+                    lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}   Z: {zVal.Value:F3}";
+                } else {
+                    lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}";
+                }
             }
 
             if (_isMovingVertex || _isInsertingVertex) {

@@ -2265,15 +2265,14 @@ namespace Site7DbEditor
             lblStatusMessage.TabIndex = 0;
             lblStatusMessage.Text = "準備完了";
             lblStatusMessage.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // lblStatusCoords
             // 
             lblStatusCoords.Dock = DockStyle.Right;
             lblStatusCoords.Font = new Font("Consolas", 9.5F, FontStyle.Bold);
             lblStatusCoords.ForeColor = Color.FromArgb(0, 225, 255);
-            lblStatusCoords.Location = new Point(1232, 0);
+            lblStatusCoords.Location = new Point(1152, 0);
             lblStatusCoords.Name = "lblStatusCoords";
-            lblStatusCoords.Size = new Size(280, 28);
+            lblStatusCoords.Size = new Size(360, 28);
             lblStatusCoords.TabIndex = 1;
             lblStatusCoords.TextAlign = ContentAlignment.MiddleRight;
             // 

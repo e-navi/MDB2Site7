@@ -33,6 +33,12 @@ namespace Site7DbEditor
         private TrackBar trkOpacity = new TrackBar();
         private Label lblOpacityVal = new Label();
 
+        // Point Cloud Controls
+        private TextBox txtPointCloudPath = new TextBox();
+        private Button btnBrowsePointCloud = new Button();
+        private Button btnClearPointCloud = new Button();
+        private Label lblPointCloudStatus = new Label();
+
         private PictureBox picPreview = new PictureBox();
         private Button btnOk = new Button();
         private Button btnCancel = new Button();
@@ -192,7 +198,47 @@ namespace Site7DbEditor
             grpOpacity.Controls.Add(trkOpacity);
             grpOpacity.Controls.Add(lblOpacityVal);
 
+            // Point Cloud Group
+            var grpPointCloud = new GroupBox { Text = "⑤ 点群データ (XYZ / LAS / CSV)", ForeColor = Color.FromArgb(180, 255, 120), Dock = DockStyle.Top, Height = 95, Padding = new Padding(8) };
+            txtPointCloudPath.Location = new Point(10, 24);
+            txtPointCloudPath.Size = new Size(200, 23);
+            txtPointCloudPath.ReadOnly = true;
+            txtPointCloudPath.BackColor = Color.FromArgb(40, 42, 54);
+            txtPointCloudPath.ForeColor = Color.White;
+
+            btnBrowsePointCloud.Text = "参照...";
+            btnBrowsePointCloud.Location = new Point(216, 23);
+            btnBrowsePointCloud.Size = new Size(60, 25);
+            btnBrowsePointCloud.BackColor = Color.FromArgb(43, 114, 186);
+            btnBrowsePointCloud.ForeColor = Color.White;
+            btnBrowsePointCloud.FlatStyle = FlatStyle.Flat;
+            btnBrowsePointCloud.Click += BtnBrowsePointCloud_Click;
+
+            btnClearPointCloud.Text = "解除";
+            btnClearPointCloud.Location = new Point(280, 23);
+            btnClearPointCloud.Size = new Size(50, 25);
+            btnClearPointCloud.BackColor = Color.FromArgb(120, 50, 50);
+            btnClearPointCloud.ForeColor = Color.White;
+            btnClearPointCloud.FlatStyle = FlatStyle.Flat;
+            btnClearPointCloud.Click += (s, e) => {
+                txtPointCloudPath.Text = "";
+                PointCloudService.Instance.Clear();
+                UpdatePointCloudStatusLabel();
+            };
+
+            lblPointCloudStatus.Text = "点群未読込 (Z表示なし)";
+            lblPointCloudStatus.Location = new Point(10, 56);
+            lblPointCloudStatus.AutoSize = true;
+            lblPointCloudStatus.ForeColor = Color.FromArgb(200, 220, 200);
+
+            grpPointCloud.Controls.Add(txtPointCloudPath);
+            grpPointCloud.Controls.Add(btnBrowsePointCloud);
+            grpPointCloud.Controls.Add(btnClearPointCloud);
+            grpPointCloud.Controls.Add(lblPointCloudStatus);
+
             // Left panel assembly
+            pnlLeft.AutoScroll = true;
+            pnlLeft.Controls.Add(grpPointCloud);
             pnlLeft.Controls.Add(grpOpacity);
             pnlLeft.Controls.Add(btnSwap);
             pnlLeft.Controls.Add(grpPt2);
@@ -311,6 +357,62 @@ namespace Site7DbEditor
 
             trkOpacity.Value = Math.Clamp((int)(cfg.Opacity * 100), 10, 100);
             lblOpacityVal.Text = $"{trkOpacity.Value}%";
+
+            if (!string.IsNullOrEmpty(cfg.PointCloudPath) && File.Exists(cfg.PointCloudPath))
+            {
+                txtPointCloudPath.Text = cfg.PointCloudPath;
+                if (!PointCloudService.Instance.HasPoints)
+                {
+                    PointCloudService.Instance.LoadFile(cfg.PointCloudPath);
+                }
+            }
+            UpdatePointCloudStatusLabel();
+        }
+
+        private void BtnBrowsePointCloud_Click(object? sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "点群データ (*.las;*.xyz;*.csv;*.txt;*.pts)|*.las;*.xyz;*.csv;*.txt;*.pts|すべてのファイル (*.*)|*.*";
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    txtPointCloudPath.Text = ofd.FileName;
+                    Cursor = Cursors.WaitCursor;
+                    try
+                    {
+                        bool success = PointCloudService.Instance.LoadFile(ofd.FileName);
+                        if (success)
+                        {
+                            UpdatePointCloudStatusLabel();
+                            MessageBox.Show($"✔ 点群データを読み込みました。\n点数: {PointCloudService.Instance.Points.Count:N0} 点\nZ範囲: {PointCloudService.Instance.MinZ:F3}m ～ {PointCloudService.Instance.MaxZ:F3}m", "読み込み完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("点群ファイルの読み込みに失敗しました。形式をご確認ください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            UpdatePointCloudStatusLabel();
+                        }
+                    }
+                    finally
+                    {
+                        Cursor = Cursors.Default;
+                    }
+                }
+            }
+        }
+
+        private void UpdatePointCloudStatusLabel()
+        {
+            var pc = PointCloudService.Instance;
+            if (pc.HasPoints)
+            {
+                lblPointCloudStatus.Text = $"✔ {pc.Points.Count:N0}点 (Z: {pc.MinZ:F2}m ～ {pc.MaxZ:F2}m)";
+                lblPointCloudStatus.ForeColor = Color.FromArgb(100, 255, 120);
+            }
+            else
+            {
+                lblPointCloudStatus.Text = "点群未読込 (Z表示なし)";
+                lblPointCloudStatus.ForeColor = Color.FromArgb(200, 220, 200);
+            }
         }
 
         private void BtnBrowseImage_Click(object? sender, EventArgs e)
@@ -550,6 +652,7 @@ namespace Site7DbEditor
             _bgService.SetAlignment(_pt1Pix, s1X, s1Y, _pt2Pix, s2X, s2Y);
             _bgService.Config.Opacity = trkOpacity.Value / 100.0f;
             _bgService.Config.IsVisible = true;
+            _bgService.Config.PointCloudPath = txtPointCloudPath.Text;
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -575,16 +678,20 @@ namespace Site7DbEditor
 
         private void BtnReset_Click(object? sender, EventArgs e)
         {
-            var res = MessageBox.Show("背景画像と位置合わせの設定を解除しますか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var res = MessageBox.Show("背景画像・点群データの設定を解除しますか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (res == DialogResult.Yes)
             {
                 _bgService.Config.IsAligned = false;
                 _bgService.Config.ImagePath = "";
+                _bgService.Config.PointCloudPath = "";
+                PointCloudService.Instance.Clear();
                 _hasPt1 = false;
                 _hasPt2 = false;
                 txtImagePath.Text = "";
+                txtPointCloudPath.Text = "";
                 lblPoint1Pix.Text = "未指示";
                 lblPoint2Pix.Text = "未指示";
+                UpdatePointCloudStatusLabel();
                 _previewImg?.Dispose();
                 _previewImg = null;
                 picPreview.Invalidate();
