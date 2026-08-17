@@ -37,6 +37,7 @@ namespace Site7DbEditor
         private TextBox txtPointCloudPath = new TextBox();
         private Button btnBrowsePointCloud = new Button();
         private Button btnClearPointCloud = new Button();
+        private CheckBox chkSwapPointCloudXY = new CheckBox();
         private Label lblPointCloudStatus = new Label();
 
         private PictureBox picPreview = new PictureBox();
@@ -199,7 +200,7 @@ namespace Site7DbEditor
             grpOpacity.Controls.Add(lblOpacityVal);
 
             // Point Cloud Group
-            var grpPointCloud = new GroupBox { Text = "⑤ 点群データ (XYZ / LAS / CSV)", ForeColor = Color.FromArgb(180, 255, 120), Dock = DockStyle.Top, Height = 95, Padding = new Padding(8) };
+            var grpPointCloud = new GroupBox { Text = "⑤ 点群データ (XYZ / LAS / CSV)", ForeColor = Color.FromArgb(180, 255, 120), Dock = DockStyle.Top, Height = 120, Padding = new Padding(8) };
             txtPointCloudPath.Location = new Point(10, 24);
             txtPointCloudPath.Size = new Size(200, 23);
             txtPointCloudPath.ReadOnly = true;
@@ -226,14 +227,27 @@ namespace Site7DbEditor
                 UpdatePointCloudStatusLabel();
             };
 
+            chkSwapPointCloudXY.Text = "🔄 点群のX・Y座標を入れ替える (E/N反転)";
+            chkSwapPointCloudXY.Location = new Point(10, 54);
+            chkSwapPointCloudXY.AutoSize = true;
+            chkSwapPointCloudXY.ForeColor = Color.FromArgb(255, 230, 100);
+            chkSwapPointCloudXY.CheckedChanged += (s, e) => {
+                if (PointCloudService.Instance.HasPoints)
+                {
+                    PointCloudService.Instance.ToggleSwapXY();
+                    UpdatePointCloudStatusLabel();
+                }
+            };
+
             lblPointCloudStatus.Text = "点群未読込 (Z表示なし)";
-            lblPointCloudStatus.Location = new Point(10, 56);
+            lblPointCloudStatus.Location = new Point(10, 82);
             lblPointCloudStatus.AutoSize = true;
             lblPointCloudStatus.ForeColor = Color.FromArgb(200, 220, 200);
 
             grpPointCloud.Controls.Add(txtPointCloudPath);
             grpPointCloud.Controls.Add(btnBrowsePointCloud);
             grpPointCloud.Controls.Add(btnClearPointCloud);
+            grpPointCloud.Controls.Add(chkSwapPointCloudXY);
             grpPointCloud.Controls.Add(lblPointCloudStatus);
 
             // 3D Preview Button
@@ -378,9 +392,10 @@ namespace Site7DbEditor
             if (!string.IsNullOrEmpty(cfg.PointCloudPath) && File.Exists(cfg.PointCloudPath))
             {
                 txtPointCloudPath.Text = cfg.PointCloudPath;
+                chkSwapPointCloudXY.Checked = cfg.PointCloudSwapXY;
                 if (!PointCloudService.Instance.HasPoints)
                 {
-                    PointCloudService.Instance.LoadFile(cfg.PointCloudPath);
+                    PointCloudService.Instance.LoadFile(cfg.PointCloudPath, cfg.PointCloudSwapXY);
                 }
             }
             UpdatePointCloudStatusLabel();
@@ -397,7 +412,7 @@ namespace Site7DbEditor
                     Cursor = Cursors.WaitCursor;
                     try
                     {
-                        bool success = PointCloudService.Instance.LoadFile(ofd.FileName);
+                        bool success = PointCloudService.Instance.LoadFile(ofd.FileName, chkSwapPointCloudXY.Checked);
                         if (success)
                         {
                             UpdatePointCloudStatusLabel();
@@ -670,6 +685,7 @@ namespace Site7DbEditor
             _bgService.Config.Opacity = trkOpacity.Value / 100.0f;
             _bgService.Config.IsVisible = true;
             _bgService.Config.PointCloudPath = txtPointCloudPath.Text;
+            _bgService.Config.PointCloudSwapXY = chkSwapPointCloudXY.Checked;
 
             this.DialogResult = DialogResult.OK;
             this.Close();

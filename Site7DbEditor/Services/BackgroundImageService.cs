@@ -23,6 +23,7 @@ namespace Site7DbEditor.Services
         public float Opacity { get; set; } = 0.8f;
         public bool IsVisible { get; set; } = true;
         public string PointCloudPath { get; set; } = "";
+        public bool PointCloudSwapXY { get; set; } = false;
     }
 
     public class BackgroundImageService
@@ -49,7 +50,7 @@ namespace Site7DbEditor.Services
                         LoadImageFile(Config.ImagePath);
                         if (!string.IsNullOrEmpty(Config.PointCloudPath))
                         {
-                            PointCloudService.Instance.LoadFile(Config.PointCloudPath);
+                            PointCloudService.Instance.LoadFile(Config.PointCloudPath, Config.PointCloudSwapXY);
                         }
                         return true;
                     }

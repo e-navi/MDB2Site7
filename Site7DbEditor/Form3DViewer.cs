@@ -19,6 +19,7 @@ namespace Site7DbEditor
         private PictureBox pic3DCanvas = new PictureBox();
         private Panel pnlToolBar = new Panel();
         private CheckBox chkShowPointCloud = new CheckBox();
+        private CheckBox chkSwapXY = new CheckBox();
         private CheckBox chkShowImageMesh = new CheckBox();
         private CheckBox chkShowIkouLines = new CheckBox();
         private CheckBox chkShowKikai = new CheckBox();
@@ -85,30 +86,44 @@ namespace Site7DbEditor
             chkShowImageMesh.ForeColor = Color.FromArgb(0, 225, 255);
             chkShowImageMesh.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
-            chkShowPointCloud.Text = "点群 (Point Cloud)";
+            chkShowPointCloud.Text = "点群";
             chkShowPointCloud.Checked = true;
-            chkShowPointCloud.Location = new Point(140, 10);
+            chkShowPointCloud.Location = new Point(135, 10);
             chkShowPointCloud.AutoSize = true;
             chkShowPointCloud.ForeColor = Color.FromArgb(100, 255, 120);
             chkShowPointCloud.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
+            chkSwapXY.Text = "🔄点群XY入替";
+            chkSwapXY.Checked = _pcService.SwapXY;
+            chkSwapXY.Location = new Point(195, 10);
+            chkSwapXY.AutoSize = true;
+            chkSwapXY.ForeColor = Color.FromArgb(255, 230, 100);
+            chkSwapXY.CheckedChanged += (s, e) => {
+                if (_pcService.HasPoints)
+                {
+                    _pcService.ToggleSwapXY();
+                    _bgService.Config.PointCloudSwapXY = _pcService.SwapXY;
+                    Init3DData();
+                }
+            };
+
             chkShowIkouLines.Text = "遺構線";
             chkShowIkouLines.Checked = true;
-            chkShowIkouLines.Location = new Point(275, 10);
+            chkShowIkouLines.Location = new Point(310, 10);
             chkShowIkouLines.AutoSize = true;
             chkShowIkouLines.ForeColor = Color.FromArgb(255, 220, 80);
             chkShowIkouLines.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkShowKikai.Text = "基準点";
             chkShowKikai.Checked = true;
-            chkShowKikai.Location = new Point(350, 10);
+            chkShowKikai.Location = new Point(380, 10);
             chkShowKikai.AutoSize = true;
             chkShowKikai.ForeColor = Color.FromArgb(255, 100, 100);
             chkShowKikai.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
-            var lblZ = new Label { Text = "高さ強調:", Location = new Point(430, 12), AutoSize = true, ForeColor = Color.LightGray };
-            trkZScale.Location = new Point(490, 8);
-            trkZScale.Size = new Size(120, 30);
+            var lblZ = new Label { Text = "高さ強調:", Location = new Point(450, 12), AutoSize = true, ForeColor = Color.LightGray };
+            trkZScale.Location = new Point(510, 8);
+            trkZScale.Size = new Size(100, 30);
             trkZScale.Minimum = 10;
             trkZScale.Maximum = 50;
             trkZScale.Value = 15;
@@ -125,7 +140,7 @@ namespace Site7DbEditor
             lblZScaleVal.ForeColor = Color.FromArgb(0, 225, 255);
 
             btnResetView.Text = "🔄 視点リセット";
-            btnResetView.Location = new Point(665, 8);
+            btnResetView.Location = new Point(660, 8);
             btnResetView.Size = new Size(105, 28);
             btnResetView.BackColor = Color.FromArgb(43, 114, 186);
             btnResetView.ForeColor = Color.White;
@@ -133,12 +148,12 @@ namespace Site7DbEditor
             btnResetView.Click += (s, e) => ResetView();
 
             lblInfo.Text = "【操作】左ドラッグ: 回転 | 右/中ドラッグ: 平行移動 | ホイール: ズーム";
-            lblInfo.Location = new Point(785, 12);
+            lblInfo.Location = new Point(775, 12);
             lblInfo.AutoSize = true;
             lblInfo.ForeColor = Color.FromArgb(170, 180, 200);
 
             pnlToolBar.Controls.AddRange(new Control[] {
-                chkShowImageMesh, chkShowPointCloud, chkShowIkouLines, chkShowKikai,
+                chkShowImageMesh, chkShowPointCloud, chkSwapXY, chkShowIkouLines, chkShowKikai,
                 lblZ, trkZScale, lblZScaleVal, btnResetView, lblInfo
             });
 

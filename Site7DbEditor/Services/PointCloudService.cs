@@ -25,6 +25,7 @@ namespace Site7DbEditor.Services
         public static PointCloudService Instance { get; } = new PointCloudService();
 
         public string CurrentFilePath { get; private set; } = "";
+        public bool SwapXY { get; set; } = false;
         public List<Point3D> Points { get; } = new List<Point3D>();
 
         public double MinX { get; private set; }
@@ -50,20 +51,43 @@ namespace Site7DbEditor.Services
             MinX = MaxX = MinY = MaxY = MinZ = MaxZ = 0;
         }
 
-        public bool LoadFile(string path, int maxPoints = 5000000)
+        public void ToggleSwapXY()
+        {
+            if (string.IsNullOrEmpty(CurrentFilePath) || !File.Exists(CurrentFilePath))
+            {
+                if (Points.Count > 0)
+                {
+                    SwapXY = !SwapXY;
+                    for (int i = 0; i < Points.Count; i++)
+                    {
+                        var pt = Points[i];
+                        Points[i] = new Point3D(pt.Y, pt.X, pt.Z);
+                    }
+                    double tmpMin = MinX; MinX = MinY; MinY = tmpMin;
+                    double tmpMax = MaxX; MaxX = MaxY; MaxY = tmpMax;
+                    BuildSpatialIndex();
+                }
+                return;
+            }
+            SwapXY = !SwapXY;
+            LoadFile(CurrentFilePath, SwapXY);
+        }
+
+        public bool LoadFile(string path, bool swapXY = false, int maxPoints = 5000000)
         {
             if (!File.Exists(path)) return false;
+            SwapXY = swapXY;
 
             string ext = Path.GetExtension(path).ToLowerInvariant();
             bool success = false;
 
             if (ext == ".las")
             {
-                success = LoadLasFile(path, maxPoints);
+                success = LoadLasFile(path, swapXY, maxPoints);
             }
             else
             {
-                success = LoadTextFile(path, maxPoints);
+                success = LoadTextFile(path, swapXY, maxPoints);
             }
 
             if (success && Points.Count > 0)
@@ -75,9 +99,10 @@ namespace Site7DbEditor.Services
             return false;
         }
 
-        private bool LoadTextFile(string path, int maxPoints)
+        private bool LoadTextFile(string path, bool swapXY, int maxPoints)
         {
             Clear();
+            SwapXY = swapXY;
             try
             {
                 using (var sr = new StreamReader(path, Encoding.UTF8))
@@ -99,16 +124,16 @@ namespace Site7DbEditor.Services
 
                         // 3連続の数値を探す (点名, X, Y, Z や X Y Z に対応)
                         int startIdx = -1;
-                        double x = 0, y = 0, z = 0;
+                        double rawX = 0, rawY = 0, rawZ = 0;
                         for (int i = 0; i <= parts.Length - 3; i++)
                         {
                             if (double.TryParse(parts[i], NumberStyles.Float, CultureInfo.InvariantCulture, out double px) &&
                                 double.TryParse(parts[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out double py) &&
                                 double.TryParse(parts[i + 2], NumberStyles.Float, CultureInfo.InvariantCulture, out double pz))
                             {
-                                x = px;
-                                y = py;
-                                z = pz;
+                                rawX = px;
+                                rawY = py;
+                                rawZ = pz;
                                 startIdx = i;
                                 break;
                             }
@@ -116,14 +141,18 @@ namespace Site7DbEditor.Services
 
                         if (startIdx >= 0)
                         {
-                            Points.Add(new Point3D(x, y, z));
+                            double finalX = swapXY ? rawY : rawX;
+                            double finalY = swapXY ? rawX : rawY;
+                            double finalZ = rawZ;
 
-                            if (x < minX) minX = x;
-                            if (x > maxX) maxX = x;
-                            if (y < minY) minY = y;
-                            if (y > maxY) maxY = y;
-                            if (z < minZ) minZ = z;
-                            if (z > maxZ) maxZ = z;
+                            Points.Add(new Point3D(finalX, finalY, finalZ));
+
+                            if (finalX < minX) minX = finalX;
+                            if (finalX > maxX) maxX = finalX;
+                            if (finalY < minY) minY = finalY;
+                            if (finalY > maxY) maxY = finalY;
+                            if (finalZ < minZ) minZ = finalZ;
+                            if (finalZ > maxZ) maxZ = finalZ;
 
                             if (Points.Count >= maxPoints) break;
                         }
@@ -142,9 +171,10 @@ namespace Site7DbEditor.Services
             return false;
         }
 
-        private bool LoadLasFile(string path, int maxPoints)
+        private bool LoadLasFile(string path, bool swapXY, int maxPoints)
         {
             Clear();
+            SwapXY = swapXY;
             try
             {
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -193,18 +223,22 @@ namespace Site7DbEditor.Services
                         int rawY = br.ReadInt32();
                         int rawZ = br.ReadInt32();
 
-                        double x = rawX * xScale + xOffset;
-                        double y = rawY * yScale + yOffset;
-                        double z = rawZ * zScale + zOffset;
+                        double px = rawX * xScale + xOffset;
+                        double py = rawY * yScale + yOffset;
+                        double pz = rawZ * zScale + zOffset;
 
-                        Points.Add(new Point3D(x, y, z));
+                        double finalX = swapXY ? py : px;
+                        double finalY = swapXY ? px : py;
+                        double finalZ = pz;
 
-                        if (x < minX) minX = x;
-                        if (x > maxX) maxX = x;
-                        if (y < minY) minY = y;
-                        if (y > maxY) maxY = y;
-                        if (z < minZ) minZ = z;
-                        if (z > maxZ) maxZ = z;
+                        Points.Add(new Point3D(finalX, finalY, finalZ));
+
+                        if (finalX < minX) minX = finalX;
+                        if (finalX > maxX) maxX = finalX;
+                        if (finalY < minY) minY = finalY;
+                        if (finalY > maxY) maxY = finalY;
+                        if (finalZ < minZ) minZ = finalZ;
+                        if (finalZ > maxZ) maxZ = finalZ;
 
                         // Skip remaining bytes in point record
                         int remainingBytes = pointRecordLen - 12;
