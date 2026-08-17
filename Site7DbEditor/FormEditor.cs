@@ -2475,7 +2475,16 @@ namespace Site7DbEditor {
                     txtCoordX.Text = clickX.ToString("F3");
                     txtCoordY.Text = clickY.ToString("F3");
 
-                    string notifyText = $"📌 画面入力: X={clickX:F3}, Y={clickY:F3} を取得しました";
+                    var zVal = PointCloudService.Instance.GetInterpolatedZ(clickX, clickY);
+                    if (zVal.HasValue) {
+                        txtCoordZ.Text = zVal.Value.ToString("F3");
+                    } else if (string.IsNullOrWhiteSpace(txtCoordZ.Text)) {
+                        txtCoordZ.Text = "0.000";
+                    }
+
+                    string notifyText = zVal.HasValue
+                        ? $"📌 画面入力: X={clickX:F3}, Y={clickY:F3}, Z={zVal.Value:F3} を取得しました"
+                        : $"📌 画面入力: X={clickX:F3}, Y={clickY:F3} を取得しました";
                     _clickNotifyToolTip.Show(notifyText, picMapCanvas, e.X + 10, e.Y - 25, 2000);
                 }
             }
@@ -3499,16 +3508,18 @@ namespace Site7DbEditor {
             // 3. 右側パネル（構成点 / 遺物 / 基準点）
             int tabIdx = tabControlData.SelectedIndex;
             double x = 0, y = 0, z = 0;
-            bool hasValidCoord = double.TryParse(txtCoordX.Text.Trim(), out x) &&
-                                 double.TryParse(txtCoordY.Text.Trim(), out y) &&
-                                 double.TryParse(txtCoordZ.Text.Trim(), out z);
+            bool hasValidX = double.TryParse(txtCoordX.Text.Trim(), out x);
+            bool hasValidY = double.TryParse(txtCoordY.Text.Trim(), out y);
+            bool hasValidZ = double.TryParse(txtCoordZ.Text.Trim(), out z);
+            if (!hasValidZ) z = 0.0;
+            bool hasValidCoord = hasValidX && hasValidY;
 
             if (tabIdx == 0) // 遺構 (構成座標)
             {
                 var pts = (dgvPrecs.DataSource is BindingList<IkouPointRecord> bpts) ? bpts : null;
                 bool hasSelectedVertex = (pts != null && _selectedPointIndex >= 0 && _selectedPointIndex < pts.Count);
 
-                btnAddPointRight.Enabled = (curIkouL != null) && hasValidCoord && !hasSelectedVertex;
+                btnAddPointRight.Enabled = (curIkouL != null) && hasValidCoord;
                 btnDeletePointRight.Enabled = hasSelectedVertex;
 
                 bool isPointDirty = false;
