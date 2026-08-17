@@ -37,6 +37,7 @@ namespace Site7DbEditor
             panelMapLeft = new Panel();
             panelLeftContent = new Panel();
             btnBgSettings = new Button();
+            btn3DViewer = new Button();
             btnEnvSettings = new Button();
             btnUndo = new Button();
             btnRedo = new Button();
@@ -456,6 +457,7 @@ namespace Site7DbEditor
             // 
             panelLeftContent.AutoScroll = true;
             panelLeftContent.Controls.Add(btnBgSettings);
+            panelLeftContent.Controls.Add(btn3DViewer);
             panelLeftContent.Controls.Add(btnEnvSettings);
             panelLeftContent.Controls.Add(btnUndo);
             panelLeftContent.Controls.Add(btnRedo);
@@ -502,10 +504,20 @@ namespace Site7DbEditor
             btnBgSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnBgSettings.Location = new Point(6, 5);
             btnBgSettings.Name = "btnBgSettings";
-            btnBgSettings.Size = new Size(118, 23);
+            btnBgSettings.Size = new Size(57, 23);
             btnBgSettings.TabIndex = 0;
             btnBgSettings.Text = "背景設定";
             btnBgSettings.UseVisualStyleBackColor = true;
+            // 
+            // btn3DViewer
+            // 
+            btn3DViewer.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btn3DViewer.Location = new Point(67, 5);
+            btn3DViewer.Name = "btn3DViewer";
+            btn3DViewer.Size = new Size(57, 23);
+            btn3DViewer.TabIndex = 36;
+            btn3DViewer.Text = "3D確認";
+            btn3DViewer.UseVisualStyleBackColor = true;
             // 
             // btnEnvSettings
             // 
@@ -2489,6 +2501,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.Panel pnlKikaiRight;
 
         private System.Windows.Forms.Button btnBgSettings;
+        public System.Windows.Forms.Button btn3DViewer;
         private System.Windows.Forms.Button btnEnvSettings;
         private System.Windows.Forms.Button btnUndo;
         private System.Windows.Forms.Button btnRedo;

@@ -236,8 +236,25 @@ namespace Site7DbEditor
             grpPointCloud.Controls.Add(btnClearPointCloud);
             grpPointCloud.Controls.Add(lblPointCloudStatus);
 
+            // 3D Preview Button
+            var btnOpen3D = new Button {
+                Text = "🎮 3次元で確認 (3Dプレビュー)",
+                Dock = DockStyle.Top,
+                Height = 34,
+                BackColor = Color.FromArgb(43, 114, 186),
+                ForeColor = Color.White,
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnOpen3D.Click += (s, e) => {
+                using (var f3d = new Form3DViewer(_db)) {
+                    f3d.ShowDialog(this);
+                }
+            };
+
             // Left panel assembly
             pnlLeft.AutoScroll = true;
+            pnlLeft.Controls.Add(btnOpen3D);
             pnlLeft.Controls.Add(grpPointCloud);
             pnlLeft.Controls.Add(grpOpacity);
             pnlLeft.Controls.Add(btnSwap);
