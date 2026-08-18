@@ -522,6 +522,7 @@ namespace Site7DbEditor {
                 picMapCanvas.Invalidate();
             };
             this.chkShowBgImage.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowBgPointCloud.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateCombinedIkouNameLabel();
@@ -2272,7 +2273,8 @@ namespace Site7DbEditor {
                 showIbutuName: chkShowIbutuName.Checked,
                 showKikaiName: chkShowKikaiName.Checked,
                 isDarkBackground: _isDarkMapBackground,
-                chkShowBgImage: chkShowBgImage.Checked);
+                chkShowBgImage: chkShowBgImage.Checked,
+                chkShowBgPointCloud: chkShowBgPointCloud.Checked);
 
             // 頂点移動中のラバーバンド描画
             if (_isMovingVertex && _movingLine != null && _movingVertexIndex >= 0) {
@@ -2475,7 +2477,11 @@ namespace Site7DbEditor {
                     txtCoordX.Text = clickX.ToString("F3");
                     txtCoordY.Text = clickY.ToString("F3");
 
-                    var zVal = PointCloudService.Instance.GetInterpolatedZ(clickX, clickY);
+                    double? zVal = null;
+                    if (chkShowBgPointCloud.Checked) {
+                        zVal = PointCloudService.Instance.GetInterpolatedZ(clickX, clickY);
+                    }
+
                     if (zVal.HasValue) {
                         txtCoordZ.Text = zVal.Value.ToString("F3");
                     } else if (string.IsNullOrWhiteSpace(txtCoordZ.Text)) {
@@ -2493,7 +2499,11 @@ namespace Site7DbEditor {
         private void picMapCanvas_MouseMove(object? sender, MouseEventArgs e) {
             var (surveyX, surveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
             if (lblStatusCoords != null) {
-                var zVal = PointCloudService.Instance.GetInterpolatedZ(surveyX, surveyY);
+                double? zVal = null;
+                if (chkShowBgPointCloud.Checked) {
+                    zVal = PointCloudService.Instance.GetInterpolatedZ(surveyX, surveyY);
+                }
+
                 if (zVal.HasValue) {
                     lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}   Z: {zVal.Value:F3}";
                 } else {

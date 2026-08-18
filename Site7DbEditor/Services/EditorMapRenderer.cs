@@ -29,7 +29,8 @@ namespace Site7DbEditor.Services
             bool showIbutuName = false,
             bool showKikaiName = true,
             bool isDarkBackground = true,
-            bool chkShowBgImage = true)
+            bool chkShowBgImage = true,
+            bool chkShowBgPointCloud = true)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(isDarkBackground ? Color.FromArgb(16, 16, 20) : Color.FromArgb(248, 249, 250));
@@ -48,6 +49,29 @@ namespace Site7DbEditor.Services
 
             // -1. Draw Background Image (背景画像)
             BackgroundImageService.Instance.DrawBackground(g, canvasSize, vc, chkShowBgImage);
+
+            // -0.5. Draw Point Cloud 2D (背景点群)
+            if (chkShowBgPointCloud && PointCloudService.Instance.HasPoints)
+            {
+                var pc = PointCloudService.Instance;
+                int totalPts = pc.Points.Count;
+                int step = Math.Max(1, totalPts / 60000); // 2D表示用に間引き
+                double minZ = pc.MinZ;
+                double rangeZ = Math.Max(0.1, pc.MaxZ - pc.MinZ);
+
+                for (int i = 0; i < totalPts; i += step)
+                {
+                    var pt = pc.Points[i];
+                    PointF p = ToCanvasPoint(pt.X, pt.Y);
+                    if (p.X < -5 || p.X > width + 5 || p.Y < -5 || p.Y > height + 5) continue;
+
+                    Color dotColor = pt.HasColor ? Color.FromArgb(255, pt.R, pt.G, pt.B) : Color.FromArgb(100, 200, 255);
+                    using (var b = new SolidBrush(dotColor))
+                    {
+                        g.FillRectangle(b, p.X - 0.75f, p.Y - 0.75f, 1.5f, 1.5f);
+                    }
+                }
+            }
 
             // 0. Draw Mesh/Grid (メッシュ)
             if (chkShowGrid)

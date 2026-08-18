@@ -72,6 +72,7 @@ namespace Site7DbEditor
             chkColorByIkou = new CheckBox();
             chkWhiteBg = new CheckBox();
             chkShowBgImage = new CheckBox();
+            chkShowBgPointCloud = new CheckBox();
             panelLeftHeader = new Panel();
             lblLeftTitle = new Label();
             btnDetachLeftPanel = new Button();
@@ -491,6 +492,7 @@ namespace Site7DbEditor
             panelLeftContent.Controls.Add(chkColorByIkou);
             panelLeftContent.Controls.Add(chkWhiteBg);
             panelLeftContent.Controls.Add(chkShowBgImage);
+            panelLeftContent.Controls.Add(chkShowBgPointCloud);
             panelLeftContent.Dock = DockStyle.Fill;
             panelLeftContent.Location = new Point(0, 30);
             panelLeftContent.Name = "panelLeftContent";
@@ -941,10 +943,24 @@ namespace Site7DbEditor
             chkShowBgImage.ForeColor = Color.FromArgb(0, 100, 200);
             chkShowBgImage.Location = new Point(6, 518);
             chkShowBgImage.Name = "chkShowBgImage";
-            chkShowBgImage.Size = new Size(74, 19);
+            chkShowBgImage.Size = new Size(98, 19);
             chkShowBgImage.TabIndex = 35;
-            chkShowBgImage.Text = "背景表示";
+            chkShowBgImage.Text = "背景画像表示";
             chkShowBgImage.UseVisualStyleBackColor = true;
+            // 
+            // chkShowBgPointCloud
+            // 
+            chkShowBgPointCloud.AutoSize = true;
+            chkShowBgPointCloud.Checked = true;
+            chkShowBgPointCloud.CheckState = CheckState.Checked;
+            chkShowBgPointCloud.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowBgPointCloud.ForeColor = Color.FromArgb(0, 150, 100);
+            chkShowBgPointCloud.Location = new Point(6, 542);
+            chkShowBgPointCloud.Name = "chkShowBgPointCloud";
+            chkShowBgPointCloud.Size = new Size(98, 19);
+            chkShowBgPointCloud.TabIndex = 36;
+            chkShowBgPointCloud.Text = "背景点群表示";
+            chkShowBgPointCloud.UseVisualStyleBackColor = true;
             // 
             // panelLeftHeader
             // 
@@ -2380,6 +2396,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.CheckBox chkColorByIkou;
         private System.Windows.Forms.CheckBox chkWhiteBg;
         public System.Windows.Forms.CheckBox chkShowBgImage;
+        public System.Windows.Forms.CheckBox chkShowBgPointCloud;
         private System.Windows.Forms.PictureBox picMapCanvas;
 
         private System.Windows.Forms.SplitContainer splitContainerBottom;
