@@ -286,81 +286,34 @@ namespace Site7DbEditor {
         String line;
 
         public GSIGEOME2011() {
-            //Log.d("GPSRTK-GSIGEOME", "now");
-
-            if (true) {
-                var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = "Site7.Resources.gsigeome.bin";
-
-                var names = assembly.GetManifestResourceNames();
-
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
-                using (var reader = new BinaryReader(stream)) {
-                    // 保存した次元情報を読み込む
-                    var rows = reader.ReadInt32();
-                    var cols = reader.ReadInt32();
-                    glamn = reader.ReadDouble();
-                    glomn = reader.ReadDouble();
-                    dat = new float[ys, xs];
-
-                    // データ本体を読み込む
-                    for (int i = 0; i < cols; i++) {
-                        for (int j = 0; j < rows; j++) {
-                            dat[i, j] = reader.ReadSingle();
-                        }
-                    }
-                }
-            } else {
-                dat = new float[ys, xs];
-                for (int i = 0; i < ys; i++) {
-                    for (int j = 0; j < xs; j++) {
-                        dat[i, j] = geoLim;
-                    }
-                }
-
-
-                var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = "Site7.Resources.gsigeome.txt";
-
-                var names = assembly.GetManifestResourceNames();
-
-                using (var stream = assembly.GetManifestResourceStream(resourceName)) {
-                    using (var sr = new StreamReader(stream)) {
-                        while ((line = sr.ReadLine()) != null) {
-                            string[] cols = line.Split('\t');
-                            if (cols[0].Equals("gh")) {
-                                int iy = int.Parse(cols[1]);
-                                int ix = int.Parse(cols[2]);
-                                double z = double.Parse(cols[3]);
-                                if ((0 < ix) && (ix < (xs - 1)) && (0 < iy) && (iy < (ys - 1))) {
-                                    dat[iy + 1, ix + 1] = (float)z;
-                                }
-                            } else {
-
-                                if (cols[0].Equals("glamn"))
-                                    glamn = double.Parse(cols[1]);
-                                if (cols[0].Equals("glomn"))
-                                    glomn = double.Parse(cols[1]);
-                                if (cols[0].Equals("dgla"))
-                                    dgla = double.Parse(cols[1]);
-                                if (cols[0].Equals("dglo"))
-                                    dglo = double.Parse(cols[1]);
-                                if (cols[0].Equals("nla"))
-                                    nla = int.Parse(cols[1]);
-                                if (cols[0].Equals("nlo"))
-                                    nlo = int.Parse(cols[1]);
-                                if (cols[0].Equals("ikind"))
-                                    ikind = int.Parse(cols[1]);
-                                if (cols[0].Equals("vern"))
-                                    verNo = cols[1];
-                            }
-                        }
-
-                    }
+            dat = new float[ys, xs];
+            for (int i = 0; i < ys; i++) {
+                for (int j = 0; j < xs; j++) {
+                    dat[i, j] = geoLim;
                 }
             }
+            try {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = "Site7DbEditor.Resources.gsigeome.bin";
 
+                using (var stream = assembly.GetManifestResourceStream(resourceName)) {
+                    if (stream != null) {
+                        using (var reader = new BinaryReader(stream)) {
+                            var rows = reader.ReadInt32();
+                            var cols = reader.ReadInt32();
+                            glamn = reader.ReadDouble();
+                            glomn = reader.ReadDouble();
+                            for (int i = 0; i < cols && i < ys; i++) {
+                                for (int j = 0; j < rows && j < xs; j++) {
+                                    dat[i, j] = reader.ReadSingle();
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch { }
         }
+
         public void saveBin(string path) {
             string fname = Path.Combine(path, "gsigeome.bin");
             int rows = xs;
@@ -532,56 +485,56 @@ namespace Site7DbEditor {
             }
         }
         private double[,] loadBin(string name) {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(name))
-            //using (var stream = new FileStream(fname, FileMode.Open))
-            using (var reader = new BinaryReader(stream)) {
-                // 保存した次元情報を読み込む
-                var rows = reader.ReadInt32();
-                var cols = reader.ReadInt32();
-                double[,] array = new double[rows, cols];
-
-                // データ本体を読み込む
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        array[i, j] = reader.ReadDouble();
+            double[,] array = new double[NROWS, NCOLS];
+            try {
+                var assembly = Assembly.GetExecutingAssembly();
+                using (var stream = assembly.GetManifestResourceStream(name)) {
+                    if (stream != null) {
+                        using (var reader = new BinaryReader(stream)) {
+                            var rows = reader.ReadInt32();
+                            var cols = reader.ReadInt32();
+                            array = new double[rows, cols];
+                            for (int i = 0; i < rows; i++) {
+                                for (int j = 0; j < cols; j++) {
+                                    array[i, j] = reader.ReadDouble();
+                                }
+                            }
+                        }
                     }
                 }
-                return array;
-            }
+            } catch { }
+            return array;
         }
 
         private double[,] loadISGGrid(string name) {
             double[,] grid = new double[NROWS, NCOLS];
-
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(name)) {
-                using (var sr = new StreamReader(stream)) {
-                    string line, line2;
-
-                    while ((line = sr.ReadLine()) != null) {
-                        if (line.Contains("end_of_head"))
-                            break;
-                    }
-
-                    for (int i = 0; i < NROWS; i++) {
-                        line = sr.ReadLine();
-
-                        if (line == null) break;
-                        line2 = line.Trim();
-                        string[] tokens = Regex.Split(line2, @"\s+");
-                        //line.Split(' ');
-                        double d;
-                        for (int j = 0; j < Math.Min(tokens.Length, NCOLS); j++) {
-                            d = NODATA;
-                            Double.TryParse(tokens[j], out d);
-                            grid[i, j] = d;
+            try {
+                var assembly = Assembly.GetExecutingAssembly();
+                using (var stream = assembly.GetManifestResourceStream(name)) {
+                    if (stream != null) {
+                        using (var sr = new StreamReader(stream)) {
+                            string line, line2;
+                            while ((line = sr.ReadLine()) != null) {
+                                if (line.Contains("end_of_head"))
+                                    break;
+                            }
+                            for (int i = 0; i < NROWS; i++) {
+                                line = sr.ReadLine();
+                                if (line == null) break;
+                                line2 = line.Trim();
+                                string[] tokens = Regex.Split(line2, @"\s+");
+                                double d;
+                                for (int j = 0; j < Math.Min(tokens.Length, NCOLS); j++) {
+                                    d = NODATA;
+                                    Double.TryParse(tokens[j], out d);
+                                    grid[i, j] = d;
+                                }
+                            }
                         }
                     }
                 }
-            }
+            } catch { }
             return grid;
-
         }
 
         // 緯度経度からジオイド高を取得
