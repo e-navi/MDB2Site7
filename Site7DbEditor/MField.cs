@@ -166,6 +166,14 @@ namespace Site7DbEditor {
 
                 SetRec(curLng, curAngV / 360.0, curAngH / 360.0);
                 isError = false;
+            } else if (cols.Length >= 4) {
+                // *ST1等（測角のみ）
+                double curAngV = St7Lib.CheckDouble(cols[3], 0.0);
+                double curAngH = St7Lib.CheckDouble(cols[2], 0.0);
+                curStatus = cols[0].Length >= 6 ? St7Lib.CheckInt(cols[0].Substring(5, 1), 0) : 0;
+
+                SetRec(-1.0, curAngV / 360.0, curAngH / 360.0);
+                isError = false;
             } else {
                 isError = true;
                 errorMessage = "受信フォーマットエラー: " + rec;
