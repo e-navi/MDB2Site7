@@ -11,12 +11,20 @@ namespace Site7DbEditor.Services
         public double X;
         public double Y;
         public double Z;
+        public byte R;
+        public byte G;
+        public byte B;
+        public bool HasColor;
 
-        public Point3D(double x, double y, double z)
+        public Point3D(double x, double y, double z, byte r = 0, byte g = 0, byte b = 0, bool hasColor = false)
         {
             X = x;
             Y = y;
             Z = z;
+            R = r;
+            G = g;
+            B = b;
+            HasColor = hasColor;
         }
     }
 
@@ -37,8 +45,8 @@ namespace Site7DbEditor.Services
 
         public bool HasPoints => Points.Count > 0;
 
-        // 空間グリッドインデックス (セルサイズ 1.0m)
-        private double _cellSize = 1.0;
+        // 空間グリッドインデックス (セルサイズ 0.1m)
+        private double _cellSize = 0.1;
         private readonly Dictionary<long, List<int>> _grid = new Dictionary<long, List<int>>();
 
         private PointCloudService() { }
@@ -61,7 +69,7 @@ namespace Site7DbEditor.Services
                     for (int i = 0; i < Points.Count; i++)
                     {
                         var pt = Points[i];
-                        Points[i] = new Point3D(pt.Y, pt.X, pt.Z);
+                        Points[i] = new Point3D(pt.Y, pt.X, pt.Z, pt.R, pt.G, pt.B, pt.HasColor);
                     }
                     double tmpMin = MinX; MinX = MinY; MinY = tmpMin;
                     double tmpMax = MaxX; MaxX = MaxY; MaxY = tmpMax;
@@ -126,44 +134,56 @@ namespace Site7DbEditor.Services
                 using (var sr = new StreamReader(path, Encoding.UTF8))
                 {
                     string? line;
-                    char[] sep = new char[] { ' ', '\t', ',', ';' };
-
                     double minX = double.MaxValue, maxX = double.MinValue;
                     double minY = double.MaxValue, maxY = double.MinValue;
                     double minZ = double.MaxValue, maxZ = double.MinValue;
+
+                    char[] seps = new char[] { ' ', '\t', ',', ';' };
 
                     while ((line = sr.ReadLine()) != null)
                     {
                         if (string.IsNullOrWhiteSpace(line)) continue;
                         if (line.StartsWith("#") || line.StartsWith("//")) continue;
 
-                        var parts = line.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = line.Split(seps, StringSplitOptions.RemoveEmptyEntries);
                         if (parts.Length < 3) continue;
 
-                        // 3連続の数値を探す (点名, X, Y, Z や X Y Z に対応)
-                        int startIdx = -1;
-                        double rawX = 0, rawY = 0, rawZ = 0;
-                        for (int i = 0; i <= parts.Length - 3; i++)
+                        if (double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double px) &&
+                            double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double py) &&
+                            double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out double pz))
                         {
-                            if (double.TryParse(parts[i], NumberStyles.Float, CultureInfo.InvariantCulture, out double px) &&
-                                double.TryParse(parts[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out double py) &&
-                                double.TryParse(parts[i + 2], NumberStyles.Float, CultureInfo.InvariantCulture, out double pz))
+                            byte r = 0, g = 0, b = 0;
+                            bool hasColor = false;
+
+                            // RGBのパース (X Y Z R G B または X Y Z I R G B)
+                            if (parts.Length >= 6)
                             {
-                                rawX = px;
-                                rawY = py;
-                                rawZ = pz;
-                                startIdx = i;
-                                break;
+                                int rIdx = 3, gIdx = 4, bIdx = 5;
+                                if (parts.Length >= 7 && !double.TryParse(parts[3], out double testVal) || (parts.Length >= 7 && double.TryParse(parts[6], out _)))
+                                {
+                                    // 4列目がIntensity等の場合
+                                    if (double.TryParse(parts[3], out _) && double.TryParse(parts[4], out _) && double.TryParse(parts[5], out _) && double.TryParse(parts[6], out _))
+                                    {
+                                        rIdx = 4; gIdx = 5; bIdx = 6;
+                                    }
+                                }
+
+                                if (double.TryParse(parts[rIdx], NumberStyles.Float, CultureInfo.InvariantCulture, out double cr) &&
+                                    double.TryParse(parts[gIdx], NumberStyles.Float, CultureInfo.InvariantCulture, out double cg) &&
+                                    double.TryParse(parts[bIdx], NumberStyles.Float, CultureInfo.InvariantCulture, out double cb))
+                                {
+                                    r = (byte)Math.Clamp(cr > 255 ? (cr / 256.0) : cr, 0, 255);
+                                    g = (byte)Math.Clamp(cg > 255 ? (cg / 256.0) : cg, 0, 255);
+                                    b = (byte)Math.Clamp(cb > 255 ? (cb / 256.0) : cb, 0, 255);
+                                    hasColor = true;
+                                }
                             }
-                        }
 
-                        if (startIdx >= 0)
-                        {
-                            double finalX = swapXY ? rawY : rawX;
-                            double finalY = swapXY ? rawX : rawY;
-                            double finalZ = rawZ;
+                            double finalX = swapXY ? py : px;
+                            double finalY = swapXY ? px : py;
+                            double finalZ = pz;
 
-                            Points.Add(new Point3D(finalX, finalY, finalZ));
+                            Points.Add(new Point3D(finalX, finalY, finalZ, r, g, b, hasColor));
 
                             if (finalX < minX) minX = finalX;
                             if (finalX > maxX) maxX = finalX;
@@ -232,6 +252,25 @@ namespace Site7DbEditor.Services
                         totalPoints = br.ReadUInt64();
                     }
 
+                    // RGB オフセットの決定 (X, Y, Z 12 bytes からの相対スキップ)
+                    bool hasLasColor = false;
+                    int bytesBeforeColor = 0;
+                    if (pointFormat == 2)
+                    {
+                        hasLasColor = true;
+                        bytesBeforeColor = 8; // 20 - 12
+                    }
+                    else if (pointFormat == 3)
+                    {
+                        hasLasColor = true;
+                        bytesBeforeColor = 16; // 28 - 12
+                    }
+                    else if (pointFormat == 7 || pointFormat == 8)
+                    {
+                        hasLasColor = true;
+                        bytesBeforeColor = 18; // 30 - 12
+                    }
+
                     fs.Seek(offsetToPoints, SeekOrigin.Begin);
                     long pointsToRead = (long)Math.Min((ulong)maxPoints, totalPoints);
 
@@ -249,7 +288,27 @@ namespace Site7DbEditor.Services
                         double finalY = swapXY ? px : py;
                         double finalZ = pz;
 
-                        Points.Add(new Point3D(finalX, finalY, finalZ));
+                        byte r = 0, g = 0, b = 0;
+                        if (hasLasColor)
+                        {
+                            if (bytesBeforeColor > 0) fs.Seek(bytesBeforeColor, SeekOrigin.Current);
+                            ushort rawR = br.ReadUInt16();
+                            ushort rawG = br.ReadUInt16();
+                            ushort rawB = br.ReadUInt16();
+                            r = (byte)(rawR > 255 ? (rawR >> 8) : rawR);
+                            g = (byte)(rawG > 255 ? (rawG >> 8) : rawG);
+                            b = (byte)(rawB > 255 ? (rawB >> 8) : rawB);
+
+                            int remainingBytes = pointRecordLen - 12 - bytesBeforeColor - 6;
+                            if (remainingBytes > 0) fs.Seek(remainingBytes, SeekOrigin.Current);
+                        }
+                        else
+                        {
+                            int remainingBytes = pointRecordLen - 12;
+                            if (remainingBytes > 0) fs.Seek(remainingBytes, SeekOrigin.Current);
+                        }
+
+                        Points.Add(new Point3D(finalX, finalY, finalZ, r, g, b, hasLasColor));
 
                         if (finalX < minX) minX = finalX;
                         if (finalX > maxX) maxX = finalX;
@@ -257,13 +316,6 @@ namespace Site7DbEditor.Services
                         if (finalY > maxY) maxY = finalY;
                         if (finalZ < minZ) minZ = finalZ;
                         if (finalZ > maxZ) maxZ = finalZ;
-
-                        // Skip remaining bytes in point record
-                        int remainingBytes = pointRecordLen - 12;
-                        if (remainingBytes > 0)
-                        {
-                            fs.Seek(remainingBytes, SeekOrigin.Current);
-                        }
                     }
 
                     if (Points.Count > 0)

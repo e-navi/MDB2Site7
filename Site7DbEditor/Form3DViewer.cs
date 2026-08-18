@@ -222,12 +222,12 @@ namespace Site7DbEditor
                 _bgService.LoadImageFile(_bgService.Config.ImagePath);
             }
 
-            // 1. 点群のサンプリング（描画パフォーマンスのため最大10万点程度に間引き）
+            // 1. 点群のサンプリング（高精細25万点サンプリング）
             _renderPoints.Clear();
             if (_pcService.HasPoints)
             {
                 int total = _pcService.Points.Count;
-                int step = Math.Max(1, total / 80000);
+                int step = Math.Max(1, total / 250000);
                 for (int i = 0; i < total; i += step)
                 {
                     _renderPoints.Add(_pcService.Points[i]);
@@ -660,15 +660,24 @@ namespace Site7DbEditor
             foreach (var pt in _renderPoints)
             {
                 var scrPt = Project3DToScreen(pt.X, pt.Y, pt.Z, w, h);
-                if (scrPt.X < -10 || scrPt.X > w + 10 || scrPt.Y < -10 || scrPt.Y > h + 10) continue;
+                if (scrPt.X < -5 || scrPt.X > w + 5 || scrPt.Y < -5 || scrPt.Y > h + 5) continue;
 
-                // 標高ヒートマップカラー
-                double normZ = Math.Clamp((pt.Z - minZ) / rangeZ, 0.0, 1.0);
-                Color dotColor = GetElevationColor(normZ);
+                Color dotColor;
+                if (pt.HasColor)
+                {
+                    // 実写RGBカラー
+                    dotColor = Color.FromArgb(255, pt.R, pt.G, pt.B);
+                }
+                else
+                {
+                    // 標高ヒートマップカラー
+                    double normZ = Math.Clamp((pt.Z - minZ) / rangeZ, 0.0, 1.0);
+                    dotColor = GetElevationColor(normZ);
+                }
 
                 using (var brush = new SolidBrush(dotColor))
                 {
-                    g.FillRectangle(brush, scrPt.X - 1f, scrPt.Y - 1f, 2.5f, 2.5f);
+                    g.FillRectangle(brush, scrPt.X - 0.75f, scrPt.Y - 0.75f, 1.5f, 1.5f);
                 }
             }
         }
