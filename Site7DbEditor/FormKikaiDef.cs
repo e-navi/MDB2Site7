@@ -78,6 +78,7 @@ namespace Site7DbEditor {
             }
             CBSelKikaiP.SelectedIndex = kidx;
             CBSelBackP.SelectedIndex = bidx;
+            UpdatePlanLen();
         }
 
         private void button2_Click(object sender, EventArgs e) {
@@ -106,8 +107,15 @@ namespace Site7DbEditor {
 
 
         }
+        private void UpdatePlanLen() {
+            KikaiMan km = gbl.KikaiMan;
+            if (km.kp != null && km.bp != null) {
+                double len1 = km.kp.CalcLen(km.bp);
+                L_Len1.Text = len1.ToString("0.000");
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e) {
-            
             TStation ts = gbl.TStation;
             KikaiMan km = gbl.KikaiMan;
 
@@ -116,27 +124,33 @@ namespace Site7DbEditor {
             }
             timer1.Enabled = false;
 
-
             double len1 = km.kp.CalcLen(km.bp);
-            double len2 = km.kp.CalcLen(ts.curPos);
+            // 測距値が得られている場合の実測距離計算
+            double len2 = gbl.MField.lng > 0 ? gbl.MField.lng * Math.Sin(gbl.MField.angV * Math.PI / 180.0) : km.kp.CalcLen(ts.curPos);
 
             L_Len1.Text = len1.ToString("0.000");
             L_Len2.Text = len2.ToString("0.000");
-            L_Len3.Text = (len1-len2).ToString("0.000");
+            L_Len3.Text = (len1 - len2).ToString("0.000");
 
             button1.Enabled = true;
         }
 
         private void CBSelKikaiP_SelectedIndexChanged(object sender, EventArgs e) {
-            KikaiMan km = gbl.KikaiMan;
-            KijunPRecEx krec = gbl.st7Data.KijunP.KPList[CBSelKikaiP.SelectedIndex];
-            km.kp = new TINP3(krec.Name, krec.X, krec.Y, krec.Z);
+            if (CBSelKikaiP.SelectedIndex >= 0 && CBSelKikaiP.SelectedIndex < gbl.st7Data.KijunP.KPList.Count) {
+                KikaiMan km = gbl.KikaiMan;
+                KijunPRecEx krec = gbl.st7Data.KijunP.KPList[CBSelKikaiP.SelectedIndex];
+                km.kp = new TINP3(krec.Name, krec.X, krec.Y, krec.Z);
+                UpdatePlanLen();
+            }
         }
 
         private void CBSelBackP_SelectedIndexChanged(object sender, EventArgs e) {
-            KikaiMan km = gbl.KikaiMan;
-            KijunPRecEx brec = gbl.st7Data.KijunP.KPList[CBSelBackP.SelectedIndex];
-            km.bp = new TINP3(brec.Name, brec.X, brec.Y, brec.Z);
+            if (CBSelBackP.SelectedIndex >= 0 && CBSelBackP.SelectedIndex < gbl.st7Data.KijunP.KPList.Count) {
+                KikaiMan km = gbl.KikaiMan;
+                KijunPRecEx brec = gbl.st7Data.KijunP.KPList[CBSelBackP.SelectedIndex];
+                km.bp = new TINP3(brec.Name, brec.X, brec.Y, brec.Z);
+                UpdatePlanLen();
+            }
         }
         private void ChangeTSMode(bool isShow) {
             if (isShow) {

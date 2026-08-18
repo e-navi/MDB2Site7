@@ -304,21 +304,146 @@ namespace Site7DbEditor
 
         private void timer1_Tick(object? sender, EventArgs e)
         {
-            if (gbl.TStation.isChangePos)
+            if (tabControl4.SelectedTab == tabTS)
             {
-                gbl.TStation.isChangePos = false;
-                SetTextBoxPos(gbl.TStation.curPos.X, gbl.TStation.curPos.Y, gbl.TStation.curPos.Z);
-            }
-            if (gbl.Gps.isChangePos)
-            {
-                gbl.Gps.isChangePos = false;
-                SetTextBoxPos(gbl.Gps.curPos.X, gbl.Gps.curPos.Y, gbl.Gps.curPos.Z);
-            }
+                if (!gbl.TStation.isConnect)
+                {
+                    timer1.Enabled = false;
+                    labelStatus.Text = "未接続";
+                    btnConnect.Enabled = true;
+                    btnConnect.Text = "接続";
+                    SelKikaiTenBackTenBtn1.Enabled = false;
+                    return;
+                }
 
-            if (gbl.Gps != null && gbl.Gps.isOpen)
+                if (gbl.MField.isError)
+                {
+                    labelStatus.Text = "測定エラー";
+                    btnUpdPos.Enabled = false;
+                    SetTextBoxPos(0, 0, 0);
+                    gbl.FormMain?.SetMsg("エラーコード:" + gbl.MField.errorMessage);
+                    return;
+                }
+
+                if (gbl.MField.isTracking())
+                {
+                    if (!gbl.MField.isLngOK())
+                    {
+                        if (Env.curTSMode == Env.TS_MODE_TUIBI && chbContMeasure.Checked)
+                        {
+                            labelStatus.Text = "追尾中(未測定)";
+                            btnUpdPos.Enabled = false;
+                            SetTextBoxPos(0, 0, 0);
+                        }
+                        else
+                        {
+                            labelStatus.Text = "追尾中(測定可)";
+                            btnAutoTsuibi.Text = "測定";
+                        }
+                        gbl.FormMain?.ShowZumen0();
+                        return;
+                    }
+
+                    labelStatus.Text = "追尾中";
+                    btnAutoTsuibi.Text = "追尾中断";
+                    XYZ p = gbl.KikaiMan.cnvP(gbl.MField.lng, gbl.MField.angH, gbl.MField.angV);
+                    gbl.FormMain?.SetMsg("lng:" + gbl.MField.lng.ToString("0.000") + " angH:" + gbl.MField.angH.ToString("0.000000") + " angV:" + gbl.MField.angV.ToString("0.000000"));
+                    btnUpdPos.Enabled = true;
+
+                    if (gbl.TStation.isChangePos)
+                    {
+                        gbl.TStation.isChangePos = false;
+                        if (gbl.MField.isLngOK())
+                        {
+                            gbl.TStation.curPos.set(p);
+                            if (gbl.TStation.isKikaiDefSet)
+                            {
+                                gbl.TStation.isKikaiDefSet = false;
+                            }
+                            double x = gbl.TStation.curPos.X;
+                            double y = gbl.TStation.curPos.Y;
+                            double z = gbl.TStation.curPos.Z + St7Lib.CheckDouble(Kikaikou1.Text, 0.0) - St7Lib.CheckDouble(Mirrorkou1.Text, 0.0);
+                            SetTextBoxPos(x, y, z);
+                            if (gbl.FormMain != null && gbl.FormMain.isModeKijun() && gbl.FormMain.IsYudoMode())
+                            {
+                                gbl.FormMain.SetTSYudo();
+                            }
+                        }
+                        gbl.FormMain?.ShowZumen0();
+                    }
+                }
+                else
+                {
+                    if (gbl.MField.isSearching() || gbl.MField.lng == 0.0 || gbl.MField.lng == -1.0)
+                    {
+                        btnUpdPos.Enabled = false;
+                        SetTextBoxPos(0, 0, 0);
+                    }
+                    else
+                    {
+                        if (gbl.TStation.isChangePos)
+                        {
+                            gbl.TStation.isChangePos = false;
+                            btnUpdPos.Enabled = true;
+                            XYZ p = gbl.KikaiMan.cnvP(gbl.MField.lng, gbl.MField.angH, gbl.MField.angV);
+                            gbl.FormMain?.SetMsg("lng:" + gbl.MField.lng.ToString("0.000") + " angH:" + gbl.MField.angH.ToString("0.000000") + " angV:" + gbl.MField.angV.ToString("0.000000"));
+                            gbl.TStation.curPos.set(p);
+                            if (gbl.TStation.isKikaiDefSet)
+                            {
+                                gbl.TStation.isKikaiDefSet = false;
+                            }
+                            double z = gbl.TStation.curPos.Z + St7Lib.CheckDouble(Kikaikou1.Text, 0.0) - St7Lib.CheckDouble(Mirrorkou1.Text, 0.0);
+                            SetTextBoxPos(gbl.TStation.curPos.X, gbl.TStation.curPos.Y, z);
+                        }
+                    }
+
+                    if (gbl.MField.isSearching())
+                    {
+                        labelStatus.Text = "サーチ中";
+                    }
+                    else
+                    {
+                        if (Env.curTSMode == Env.TS_MODE_TUIBI)
+                        {
+                            btnAutoTsuibi.Text = "自動追尾";
+                            if (gbl.MField.curStatus == 3) labelStatus.Text = "追尾停止(接続中)";
+                            else if (gbl.MField.curStatus == 2) labelStatus.Text = "自動視準(接続中)";
+                            else labelStatus.Text = "追尾なし";
+                        }
+                        else
+                        {
+                            btnAutoTsuibi.Text = Env.getTSModeStr(Env.curTSMode);
+                            labelStatus.Text = "追尾なし";
+                        }
+                        btnAutoTsuibi.Refresh();
+                    }
+                }
+            }
+            else
             {
-                labelGPS1.Text = $"取得状況：{gbl.Gps.GetGpsStatusText()}";
-                labelGPS2.Text = $"HDOP:{gbl.Gps.gpsDOP:F1} 衛星数：{gbl.Gps.gpsSatelite}";
+                if (gbl.Gps != null && gbl.Gps.isChange)
+                {
+                    labelStatus2.Text = "GPS取得";
+                    XYZ p = gbl.Gps.gpsP;
+                    if (!gbl.Gps.curPos.equal(p))
+                    {
+                        gbl.Gps.curPos.set(p);
+                        double z = gbl.Gps.curPos.Z;
+                        SetTextBoxPos(gbl.Gps.curPos.X, gbl.Gps.curPos.Y, z);
+                        gbl.Gps.isChangePos = true;
+                        gbl.FormMain?.SetMsg(gbl.Gps.gpsBL?.ToStr() ?? "");
+                        gbl.FormMain?.ShowZumen0();
+                    }
+                    btnUpdPos.Enabled = Env.isGoodGPS(gbl.Gps.gpsStatus);
+                    labelGPS1.Text = $"取得状況：{gbl.Gps.GetGpsStatusText()}";
+                    labelGPS2.Text = $"HDOP:{gbl.Gps.gpsDOP:F1} 衛星数：{gbl.Gps.gpsSatelite}";
+                }
+                else
+                {
+                    labelStatus2.Text = "GPS未取得";
+                    btnUpdPos.Enabled = false;
+                    SetTextBoxPos(0, 0, 0);
+                }
             }
         }
 
