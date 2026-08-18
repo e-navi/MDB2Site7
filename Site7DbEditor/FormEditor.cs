@@ -384,6 +384,7 @@ namespace Site7DbEditor {
             this.rdoLineOpen.CheckedChanged += (s, e) => UpdateUIState();
             this.rdoLineClosed.CheckedChanged += (s, e) => UpdateUIState();
             this.rdoLinePoint.CheckedChanged += (s, e) => UpdateUIState();
+            this.cmbLineIkouMaster.SelectedIndexChanged += (s, e) => UpdateUIState();
 
             this.tabControlData.SelectedIndexChanged += (s, e) => UpdateUIState();
             this.txtCoordX.TextChanged += (s, e) => UpdateUIState();
@@ -1921,25 +1922,55 @@ namespace Site7DbEditor {
 
         private void btnUpdateLineRight_Click(object? sender, EventArgs e) {
             if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selected) {
-                var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selected);
+                long targetIkouId = selected.Id;
+                if (cmbLineIkouMaster.SelectedItem is IkouComboItem targetItem) {
+                    targetIkouId = targetItem.Id;
+                }
+
                 string prefix = cmbLineKind.Text.Trim();
                 if (string.IsNullOrEmpty(prefix)) prefix = "線";
                 string noStr = txtLineNum.Text.Trim();
                 string fullName = BuildLineFullNamePreview(prefix, noStr);
 
+                int modeVal = rdoLineOpen.Checked ? 0 : (rdoLineClosed.Checked ? 1 : 2);
+                int layerVal = GetSelectedLineLayerVal();
+
+                if (targetIkouId != selected.Id) {
+                    // 【移動処理】
+                    var targetLines = _db.IkouLList.Where(l => l.Id == targetIkouId).ToList();
+                    if (targetLines.Any(l => l.Name.Equals(fullName, StringComparison.OrdinalIgnoreCase))) {
+                        MessageBox.Show("移動先の遺構に既に同じ名前の遺構線が存在します。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // 移動先の新しいLid = 最大Lid + 1 (存在しない場合は1)
+                    long newLid = targetLines.Count > 0 ? targetLines.Max(l => l.Lid) + 1 : 1;
+
+                    var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selected);
+
+                    selected.Id = targetIkouId;
+                    selected.Lid = newLid;
+                    selected.Name = fullName;
+                    selected.Mode = modeVal;
+                    selected.Layer = layerVal;
+
+                    _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selected, original, _db.CurrentDbPath);
+
+                    // 移動元の遺構L一覧をリフレッシュ
+                    dgvIkou_SelectionChanged(this, EventArgs.Empty);
+                    picMapCanvas.Invalidate();
+                    UpdateUIState();
+                    return;
+                }
+
+                // 【通常の更新処理】
+                var originalUpdate = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selected);
                 selected.Name = fullName;
                 lblLineNameVal.Text = fullName;
+                selected.Mode = modeVal;
+                selected.Layer = layerVal;
 
-                if (rdoLineOpen.Checked)
-                    selected.Mode = 0;
-                else if (rdoLineClosed.Checked)
-                    selected.Mode = 1;
-                else if (rdoLinePoint.Checked)
-                    selected.Mode = 2;
-
-                selected.Layer = GetSelectedLineLayerVal();
-
-                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selected, original, _db.CurrentDbPath);
+                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selected, originalUpdate, _db.CurrentDbPath);
                 dgvIkouL.Refresh();
                 UpdateUIState();
                 picMapCanvas.Invalidate();
@@ -3558,7 +3589,7 @@ namespace Site7DbEditor {
             btnDeleteIkouRight.Enabled = (curIkou != null);
             btnUpdateIkouRight.Enabled = curIkou != null && isIkouNameNotOtherDup && isIkouDirty;
 
-            // 2. 遺構線マスター（追加・削除・更新）
+            // 2. 遺構線マスター（追加・削除・更新/移動）
             string linePrefix = cmbLineKind.Text.Trim();
             string lineNoStr = txtLineNum.Text.Trim();
             string lineFullName = $"{linePrefix}{lineNoStr}";
@@ -3567,11 +3598,19 @@ namespace Site7DbEditor {
             int currentModeVal = rdoLineClosed.Checked ? 1 : (rdoLinePoint.Checked ? 2 : 0);
             int currentLayerVal = GetSelectedLineLayerVal();
 
+            long selectedTargetIkouId = curIkou != null ? curIkou.Id : 0;
+            if (cmbLineIkouMaster.SelectedItem is IkouComboItem targetIkouItem) {
+                selectedTargetIkouId = targetIkouItem.Id;
+            }
+
+            bool isMovingToOtherIkou = curIkouL != null && curIkouL.Id != selectedTargetIkouId;
+
             bool isLineDirty = curIkouL != null && (
                 !string.Equals(curLinePrefix, linePrefix, StringComparison.OrdinalIgnoreCase) ||
                 !string.Equals(curLineNo, lineNoStr, StringComparison.OrdinalIgnoreCase) ||
                 curIkouL.Mode != currentModeVal ||
-                curIkouL.Layer != currentLayerVal
+                curIkouL.Layer != currentLayerVal ||
+                isMovingToOtherIkou
             );
 
             bool isLineNameNotEmpty = !string.IsNullOrEmpty(lineFullName);
@@ -3579,9 +3618,18 @@ namespace Site7DbEditor {
             bool isLineNameNotRegistered = curIkou != null && isLineNameNotEmpty && !currentLines.Any(l => l.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase));
             bool isLineNameNotOtherDup = curIkouL != null && isLineNameNotEmpty && !currentLines.Any(l => l != curIkouL && l.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase));
 
-            btnAddIkouL.Enabled = (curIkou != null) && isLineNameNotRegistered;
+            btnAddIkouL.Enabled = (curIkou != null) && isLineNameNotRegistered && !isMovingToOtherIkou;
             btnDeleteLineRight.Enabled = (curIkouL != null);
-            btnUpdateLineRight.Enabled = curIkouL != null && isLineNameNotOtherDup && isLineDirty;
+
+            if (isMovingToOtherIkou) {
+                btnUpdateLineRight.Text = "移動";
+                var targetLines = _db.IkouLList.Where(l => l.Id == selectedTargetIkouId).ToList();
+                bool isDupInTarget = targetLines.Any(l => l.Name.Equals(lineFullName, StringComparison.OrdinalIgnoreCase));
+                btnUpdateLineRight.Enabled = isLineNameNotEmpty && !isDupInTarget;
+            } else {
+                btnUpdateLineRight.Text = "更新";
+                btnUpdateLineRight.Enabled = curIkouL != null && isLineNameNotOtherDup && isLineDirty;
+            }
 
             // 3. 右側パネル（構成点 / 遺物 / 基準点）
             int tabIdx = tabControlData.SelectedIndex;
