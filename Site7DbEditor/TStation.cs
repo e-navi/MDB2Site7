@@ -244,6 +244,7 @@ namespace Site7DbEditor {
             }
         }
         public void AS_BtnClick_3() {
+            gbl.MField.isError = false;
             if (Env.curTSMode == Env.TS_MODE_TUIBI) {
                 if (gbl.MField.isTracking()) {  //  追尾中
                     if (chbContMeasure.Checked) {
@@ -703,7 +704,7 @@ namespace Site7DbEditor {
 
                             isChangePos = true;
                             str = "";
-                            int curStatus = St7Lib.CheckInt(str0[0].Substring(5, 1), 0);
+                            int curStatus = (str0[0].Length >= 6) ? St7Lib.CheckInt(str0[0].Substring(5, 1), 0) : 0;
                             gbl.MField.curStatus = curStatus;
 
                             if (curStatus != curTuibiStatus) {

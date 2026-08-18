@@ -152,11 +152,17 @@ namespace Site7DbEditor {
         }
         public bool SetRecAS(String rec) {
             if (string.IsNullOrWhiteSpace(rec)) {
-                isError = true;
-                errorMessage = "受信エラー";
                 return isError;
             }
             rec = rec.Trim();
+            if (rec.StartsWith("OK") || rec.StartsWith("*")) {
+                isError = false;
+            }
+            if (rec.StartsWith("E2") || rec.StartsWith("ERR") || rec.StartsWith("receive NAK")) {
+                isError = true;
+                errorMessage = rec;
+                return isError;
+            }
             String[] cols = rec.Split(',');
             if (cols.Length >= 5) {
                 double curLng = St7Lib.CheckDouble(cols[4], 0.0);
@@ -174,9 +180,11 @@ namespace Site7DbEditor {
 
                 SetRec(-1.0, curAngV / 360.0, curAngH / 360.0);
                 isError = false;
-            } else {
-                isError = true;
-                errorMessage = "受信フォーマットエラー: " + rec;
+            } else if (cols.Length >= 3) {
+                double curAngV = St7Lib.CheckDouble(cols[2], 0.0);
+                double curAngH = St7Lib.CheckDouble(cols[1], 0.0);
+                SetRec(-1.0, curAngV / 360.0, curAngH / 360.0);
+                isError = false;
             }
             return isError;
         }
