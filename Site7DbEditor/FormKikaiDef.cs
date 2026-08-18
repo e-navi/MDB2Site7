@@ -99,6 +99,7 @@ namespace Site7DbEditor {
                 return;
             }
             gbl.MField.isError = false;
+            gbl.MField.lastValidLng = 0.0;
             ts.isKikaiDefSet = true;
             waitCount = 0;
             timer1.Enabled = true;
@@ -123,7 +124,7 @@ namespace Site7DbEditor {
             KikaiMan km = gbl.KikaiMan;
             waitCount++;
 
-            double measuredSlope = gbl.MField.lng > 0 ? gbl.MField.lng : (ts.curLng > 0 ? ts.curLng : 0.0);
+            double measuredSlope = gbl.MField.lng > 0 ? gbl.MField.lng : (gbl.MField.lastValidLng > 0 ? gbl.MField.lastValidLng : (ts.curLng > 0 ? ts.curLng : 0.0));
             if (ts.isKikaiDefSet && measuredSlope <= 0 && waitCount < 100) {
                 return;
             }

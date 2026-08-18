@@ -9,6 +9,7 @@ namespace Site7DbEditor {
     public class MField {
         public bool isChange;
         public double lng = 0.0;
+        public double lastValidLng = 0.0;
         public double angV = 0.0;
         public double angV0 = -1.0;
         public double angH = 0.0;
@@ -125,7 +126,7 @@ namespace Site7DbEditor {
         public bool SetRec(double curLng, double curAngV, double curAngH) {
             //Log.d("MField_SetRec!","now");
             if (0 < curLng) {
-                //    curLng = calcHoseiLng(curLng);
+                lastValidLng = curLng;
             }
             if (lng != curLng || angV != curAngV || angH != curAngH) {
                 if (angH0 == -1.0) {
