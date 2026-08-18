@@ -105,6 +105,10 @@ namespace Site7DbEditor
         public static int GPSCount = Def.GetIniInt("TS", "GPSCount", 10);
         public static int i93IMU = Def.GetIniInt("TS", "i93IMU", i93IMU_Yes);
 
+        public static int TSMode = getTSMode(); //getTSMode()で初期化する。TSの設定によって変わるため、Defから直接読み込まない。
+        public static int curTSMode0 = TSMode;  //実行中ユーザによって変更した値(自動追尾/自動視準/視準のみ/測定)
+        public static int curTSMode = TSMode;   //実行中状態によりて変わる値(自動追尾->測定、視準のみ→測定など)
+
         public static int PaperSize = Def.GetIniInt("PAPER", "SIZE", PAPER_SIZE_A3);
         public static int PaperScale = Def.GetIniInt("PAPER", "SCALE", PAPER_Scale_200);
         public static int PaperAng = Def.GetIniInt("PAPER", "ANG", 0);

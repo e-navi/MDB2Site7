@@ -183,7 +183,7 @@ namespace Site7DbEditor
             {
                 if (btn.Text == "接続")
                 {
-                    gbl.TStation.SetCom(Env.ComPortTS);
+                    gbl.TStation.SetCom(GetTSModel() == 0, Env.ComPortTS);
                     gbl.TStation.Connect();
                     if (gbl.TStation.isConnect)
                     {

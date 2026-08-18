@@ -649,8 +649,8 @@ namespace Site7DbEditor {
                     _dlgLeft.FormClosed += (s, e) => { _dlgLeft = null; };
                 }
 
-                if (panelMapArea.Controls.Contains(panelMapLeft)) {
-                    panelMapArea.Controls.Remove(panelMapLeft);
+                if (panelMain1.Controls.Contains(panelMapLeft)) {
+                    panelMain1.Controls.Remove(panelMapLeft);
                 }
 
                 panelLeftHeader.Visible = false;
@@ -676,13 +676,11 @@ namespace Site7DbEditor {
 
                 panelLeftHeader.Visible = true;
                 panelMapLeft.Dock = DockStyle.Left;
-                if (!panelMapArea.Controls.Contains(panelMapLeft)) {
-                    panelMapArea.Controls.Add(panelMapLeft);
+                if (!panelMain1.Controls.Contains(panelMapLeft)) {
+                    panelMain1.Controls.Add(panelMapLeft);
                 }
 
-                panelMapRight.SendToBack();
                 panelMapLeft.SendToBack();
-                picMapCanvas.BringToFront();
             }
 
             _vc.InvalidateBoundsCache();
