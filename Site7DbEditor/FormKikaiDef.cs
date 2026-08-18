@@ -125,22 +125,28 @@ namespace Site7DbEditor {
             waitCount++;
 
             double measuredSlope = gbl.MField.lng > 0 ? gbl.MField.lng : (gbl.MField.lastValidLng > 0 ? gbl.MField.lastValidLng : (ts.curLng > 0 ? ts.curLng : 0.0));
-            if (ts.isKikaiDefSet && measuredSlope <= 0 && waitCount < 100) {
-                return;
+
+            if (measuredSlope > 0) {
+                timer1.Enabled = false;
+                ts.isKikaiDefSet = false;
+
+                double len1 = km.kp.CalcLen(km.bp);
+                // 測距値（斜距離）と高度角から実測水平距離を計算
+                double vAngle = gbl.MField.angV > 0 ? gbl.MField.angV * 360.0 : (ts.curAngV > 0 ? ts.curAngV : 90.0);
+                double len2 = Math.Abs(measuredSlope * Math.Sin(St7Lib.ToRadian(vAngle)));
+
+                L_Len1.Text = len1.ToString("0.000");
+                L_Len2.Text = len2.ToString("0.000");
+                L_Len3.Text = (len1 - len2).ToString("0.000");
+
+                button1.Enabled = true;
+            } else if (waitCount > 150) {
+                timer1.Enabled = false;
+                ts.isKikaiDefSet = false;
+                L_Len2.Text = "未測距";
+                L_Len3.Text = "---";
+                button1.Enabled = true;
             }
-            timer1.Enabled = false;
-            ts.isKikaiDefSet = false;
-
-            double len1 = km.kp.CalcLen(km.bp);
-            // 測距値（斜距離）と高度角から実測水平距離を計算
-            double vAngle = gbl.MField.angV > 0 ? gbl.MField.angV * 360.0 : (ts.curAngV > 0 ? ts.curAngV : 90.0);
-            double len2 = Math.Abs(measuredSlope * Math.Sin(St7Lib.ToRadian(vAngle)));
-
-            L_Len1.Text = len1.ToString("0.000");
-            L_Len2.Text = len2.ToString("0.000");
-            L_Len3.Text = (len1 - len2).ToString("0.000");
-
-            button1.Enabled = true;
         }
 
         private void CBSelKikaiP_SelectedIndexChanged(object sender, EventArgs e) {
