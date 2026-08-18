@@ -246,19 +246,16 @@ namespace Site7DbEditor {
         public void AS_BtnClick_3() {
             gbl.MField.isError = false;
             if (Env.curTSMode == Env.TS_MODE_TUIBI) {
-                if (gbl.MField.isTracking()) {  //  追尾中
-                    if (chbContMeasure.Checked) {
-                        SetSearchMode(false);
-                        StopRotate();
-                        StopSokutei();
-                        return;
-                    } else {
-                        //追尾のみの時
-                        SetFILD(true);
-                        return;
-                    }
+                if (gbl.MField.isTracking()) {  //  追尾中の場合は確実に中断
+                    SetSearchMode(false);
+                    StopRotate();
+                    StopSokutei();
+                    gbl.MField.curStatus = 0;
+                    gbl.MField.ClearLng();
+                    return;
                 }
 
+                // 停止状態から自動追尾を開始
                 SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, true);
                 SetAutoTrack(true);
                 SetSearchMode(true);
