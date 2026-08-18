@@ -155,6 +155,38 @@ namespace Site7DbEditor.Services
             return (sX, sY);
         }
 
+        public (float px, float py) SurveyToPixel(double sX, double sY)
+        {
+            if (!Config.IsAligned) return (0, 0);
+
+            double du_pix = Config.Pt2_PixelX - Config.Pt1_PixelX;
+            double dv_pix = Config.Pt2_PixelY - Config.Pt1_PixelY;
+            double len_pix = Math.Sqrt(du_pix * du_pix + dv_pix * dv_pix);
+            if (len_pix < 1e-6) return (Config.Pt1_PixelX, Config.Pt1_PixelY);
+
+            double dX_srv = Config.Pt2_SurveyX - Config.Pt1_SurveyX;
+            double dY_srv = Config.Pt2_SurveyY - Config.Pt1_SurveyY;
+            double len_srv = Math.Sqrt(dX_srv * dX_srv + dY_srv * dY_srv);
+            if (len_srv < 1e-6) return (Config.Pt1_PixelX, Config.Pt1_PixelY);
+
+            double du2_dv2 = len_pix * len_pix;
+            double c = (du_pix * dY_srv - dv_pix * dX_srv) / du2_dv2;
+            double d = (dv_pix * dY_srv + du_pix * dX_srv) / du2_dv2;
+            double det = c * c + d * d;
+            if (det < 1e-12) return (Config.Pt1_PixelX, Config.Pt1_PixelY);
+
+            double dsY = sY - Config.Pt1_SurveyY;
+            double dsX = sX - Config.Pt1_SurveyX;
+
+            double u = (c * dsY + d * dsX) / det;
+            double v = (d * dsY - c * dsX) / det;
+
+            float px = (float)(Config.Pt1_PixelX + u);
+            float py = (float)(Config.Pt1_PixelY + v);
+
+            return (px, py);
+        }
+
         public void DrawBackground(Graphics g, Size canvasSize, EditorMapViewController vc, bool isVisible)
         {
             if (!isVisible || !Config.IsAligned || LoadedImage == null) return;
