@@ -150,43 +150,42 @@ namespace Site7DbEditor {
             return isError;
         }
         public bool SetRecAS(String rec) {
-            if (rec == null) {
+            if (string.IsNullOrWhiteSpace(rec)) {
                 isError = true;
                 errorMessage = "受信エラー";
                 return isError;
             }
+            rec = rec.Trim();
             String[] cols = rec.Split(',');
-            double curLng = St7Lib.CheckDouble(cols[4], 0.0);
-            double curAngV = St7Lib.CheckDouble(cols[3], 0.0);
-            double curAngH = St7Lib.CheckDouble(cols[2], 0.0);
-            curStatus = St7Lib.CheckInt(cols[0].Substring(5, 1), 0);
+            if (cols.Length >= 5) {
+                double curLng = St7Lib.CheckDouble(cols[4], 0.0);
+                double curAngV = St7Lib.CheckDouble(cols[3], 0.0);
+                double curAngH = St7Lib.CheckDouble(cols[2], 0.0);
+                curStatus = cols[0].Length >= 6 ? St7Lib.CheckInt(cols[0].Substring(5, 1), 0) : 0;
 
-            //修正！2026.03.12 by A.Iimuro 視準測定の時に curStatus に3が返る！
-            //if (curStatus == 5 || curStatus == 2) {
-            //if (curStatus == 5 || curStatus == 2 || curStatus == 3) {
-            if (curStatus == 5 || curStatus == 2 || curStatus == 3 || curStatus == 0) {
-                    SetRec(curLng, curAngV / 360.0, curAngH / 360.0);
+                SetRec(curLng, curAngV / 360.0, curAngH / 360.0);
                 isError = false;
             } else {
                 isError = true;
-                errorMessage = "測定できません";   
+                errorMessage = "受信フォーマットエラー: " + rec;
             }
             return isError;
         }
         public bool SetRecAS2(String rec) {
-            if (rec == null) {
+            if (string.IsNullOrWhiteSpace(rec)) {
                 isError = true;
                 errorMessage = "受信エラー";
                 return isError;
             }
-            if (rec.StartsWith("E200")) {
+            rec = rec.Trim();
+            if (rec.StartsWith("E") || rec.StartsWith("e")) {
                 isError = true;
-                errorMessage = "E200:測定できません";
+                errorMessage = rec + ":測定できません";
                 return isError;
             }
-            String[] cols = rec.Split(' ');
+            String[] cols = rec.Split(new[] { ' ', '\t', ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (cols.Length == 4) {
+            if (cols.Length >= 3) {
                 double curLng = St7Lib.CheckDouble2(cols[0], 0.0, -4);
                 double curAngV = St7Lib.CheckDouble2(cols[1], 0.0, -5);
                 double curAngH = St7Lib.CheckDouble2(cols[2], 0.0, -5);
@@ -197,10 +196,9 @@ namespace Site7DbEditor {
                     Env.curTSMode = Env.curTSMode0;
                 }
                 isError = false;
-
             } else {
                 isError = true;
-                errorMessage = "測定できません";
+                errorMessage = "測定できません: " + rec;
             }
             return isError;
         }

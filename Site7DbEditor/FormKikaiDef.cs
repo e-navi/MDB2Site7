@@ -85,6 +85,8 @@ namespace Site7DbEditor {
             Hide();
         }
 
+        int waitCount = 0;
+
         private void buttonMesure01_Click(object sender, EventArgs e) {
             //後視点を視準！
             TStation ts = gbl.TStation;
@@ -96,16 +98,13 @@ namespace Site7DbEditor {
                 MessageBox.Show("器械点・後視点で異なる点を指定してください");
                 return;
             }
+            gbl.MField.isError = false;
             ts.isKikaiDefSet = true;
+            waitCount = 0;
             timer1.Enabled = true;
             button1.Enabled = false;
 
             ts.AS_BtnClick_3();
-
-            //ts.SetFILD(true);
-            //Thread.Sleep(500);
-
-
         }
         private void UpdatePlanLen() {
             KikaiMan km = gbl.KikaiMan;
@@ -118,11 +117,13 @@ namespace Site7DbEditor {
         private void timer1_Tick(object sender, EventArgs e) {
             TStation ts = gbl.TStation;
             KikaiMan km = gbl.KikaiMan;
+            waitCount++;
 
-            if (ts.isKikaiDefSet) {
+            if (ts.isKikaiDefSet && gbl.MField.lng <= 0 && waitCount < 100) {
                 return;
             }
             timer1.Enabled = false;
+            ts.isKikaiDefSet = false;
 
             double len1 = km.kp.CalcLen(km.bp);
             // 測距値が得られている場合の実測距離計算
