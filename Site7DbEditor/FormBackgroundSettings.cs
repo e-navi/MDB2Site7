@@ -261,6 +261,56 @@ namespace Site7DbEditor
                 FlatStyle = FlatStyle.Flat
             };
             btnOpen3D.Click += (s, e) => {
+                var pc = PointCloudService.Instance;
+                if (pc.HasPoints)
+                {
+                    // 現場の代表座標（基準点、または背景画像アライメント）を取得
+                    double siteX = 0, siteY = 0;
+                    bool hasSite = false;
+
+                    if (_db.KikaiList.Count > 0)
+                    {
+                        siteX = _db.KikaiList.Average(k => k.X);
+                        siteY = _db.KikaiList.Average(k => k.Y);
+                        hasSite = true;
+                    }
+                    else if (_bgService.Config.IsAligned)
+                    {
+                        siteX = (_bgService.Config.Pt1_SurveyX + _bgService.Config.Pt2_SurveyX) / 2.0;
+                        siteY = (_bgService.Config.Pt1_SurveyY + _bgService.Config.Pt2_SurveyY) / 2.0;
+                        hasSite = true;
+                    }
+
+                    if (hasSite)
+                    {
+                        // 1. 自動XY反転チェック
+                        if (pc.AutoDetectAndSwapXY(siteX, siteY))
+                        {
+                            chkSwapPointCloudXY.Checked = pc.SwapXY;
+                            UpdatePointCloudStatusLabel();
+                        }
+
+                        // 2. 現場座標との距離チェック (1km = 1000m)
+                        double pcMidX = (pc.MinX + pc.MaxX) / 2.0;
+                        double pcMidY = (pc.MinY + pc.MaxY) / 2.0;
+                        double dist = Math.Sqrt((pcMidX - siteX) * (pcMidX - siteX) + (pcMidY - siteY) * (pcMidY - siteY));
+
+                        if (dist > 1000.0)
+                        {
+                            MessageBox.Show(
+                                $"⚠ 点群データの座標が現場の基準点と大きく離れています。\n\n" +
+                                $"・現場基準点中心: X={siteX:F1}, Y={siteY:F1}\n" +
+                                $"・点群データ中心: X={pcMidX:F1}, Y={pcMidY:F1}\n" +
+                                $"・離れ距離: 約 {dist / 1000.0:F1} km ({dist:N0} m)\n\n" +
+                                $"点群の測量座標系やXY反転設定をご確認ください。\n3Dビューアの起動を中止します。",
+                                "点群座標の不一致 (3D起動中止)",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                }
+
                 using (var f3d = new Form3DViewer(_db)) {
                     f3d.ShowDialog(this);
                 }
