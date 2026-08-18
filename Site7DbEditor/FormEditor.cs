@@ -524,6 +524,10 @@ namespace Site7DbEditor {
             this.chkShowBgImage.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowBgPointCloud.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkScreenInput.CheckedChanged += (s, e) => {
+                picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
+                picMapCanvas.Invalidate();
+            };
             this.tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.cmbIkouKind.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();
@@ -2314,6 +2318,26 @@ namespace Site7DbEditor {
                     }
                 }
             }
+
+            // 画面入力モード中の遺構頂点追加ラバーバンド描画（2点目以降）
+            if (chkScreenInput.Checked && tabControlData.SelectedIndex == 0 && !_isMovingVertex && !_isInsertingVertex) {
+                if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                    var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+                    if (pts.Count > 0) {
+                        var lastPt = pts[pts.Count - 1];
+                        PointF startScreenPt = _vc.ToCanvasPoint(lastPt.X, lastPt.Y, picMapCanvas.Size);
+                        PointF endScreenPt = _currentRubberBandMousePos;
+
+                        using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                        using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
+                        using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
+                            e.Graphics.DrawLine(rubberPen, startScreenPt, endScreenPt);
+                            e.Graphics.FillEllipse(targetBrush, endScreenPt.X - 4f, endScreenPt.Y - 4f, 8f, 8f);
+                            e.Graphics.DrawEllipse(targetPen, endScreenPt.X - 7f, endScreenPt.Y - 7f, 14f, 14f);
+                        }
+                    }
+                }
+            }
         }
 
         private void ApplyVertexInsert(Point screenLocation) {
@@ -2466,6 +2490,12 @@ namespace Site7DbEditor {
                 }
             }
 
+            if (chkScreenInput.Checked && e.Button == MouseButtons.Right) {
+                chkScreenInput.Checked = false;
+                _clickNotifyToolTip.Show("⏹ 画面入力を終了しました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
+                return;
+            }
+
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) {
                 _vc.IsMouseDownMap = true;
                 _vc.IsPanningMap = false;
@@ -2482,16 +2512,49 @@ namespace Site7DbEditor {
                         zVal = PointCloudService.Instance.GetInterpolatedZ(clickX, clickY);
                     }
 
-                    if (zVal.HasValue) {
-                        txtCoordZ.Text = zVal.Value.ToString("F3");
-                    } else if (string.IsNullOrWhiteSpace(txtCoordZ.Text)) {
-                        txtCoordZ.Text = "0.000";
+                    double z = zVal ?? (double.TryParse(txtCoordZ.Text.Trim(), out double parsedZ) ? parsedZ : 0.0);
+                    txtCoordZ.Text = z.ToString("F3");
+
+                    // 遺構データタブの場合: クリックで頂点を直接追加
+                    if (tabControlData.SelectedIndex == 0) {
+                        if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                            var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
+                            var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+
+                            int nextPid = pts.Count > 0 ? pts.Max(p => p.Pid) + 1 : 1;
+                            pts.Add(new IkouPointRecord {
+                                Pid = nextPid,
+                                X = clickX,
+                                Y = clickY,
+                                Z = z
+                            });
+
+                            selectedLine.Precs = SqliteManager.FormatPrecsText(pts);
+                            _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
+
+                            dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
+                            dgvIkouL.Refresh();
+
+                            int newIndex = pts.Count - 1;
+                            _selectedPointIndex = newIndex;
+                            if (newIndex >= 0 && newIndex < dgvPrecs.Rows.Count) {
+                                SetCurrentRowSafe(dgvPrecs, newIndex);
+                            }
+
+                            string notifyText = zVal.HasValue
+                                ? $"✔ 頂点{nextPid}を追加: X={clickX:F3}, Y={clickY:F3}, Z={z:F3}"
+                                : $"✔ 頂点{nextPid}を追加: X={clickX:F3}, Y={clickY:F3}";
+                            _clickNotifyToolTip.Show(notifyText, picMapCanvas, e.X + 10, e.Y - 25, 1500);
+
+                            picMapCanvas.Invalidate();
+                            return;
+                        }
                     }
 
-                    string notifyText = zVal.HasValue
-                        ? $"📌 画面入力: X={clickX:F3}, Y={clickY:F3}, Z={zVal.Value:F3} を取得しました"
+                    string defaultNotify = zVal.HasValue
+                        ? $"📌 画面入力: X={clickX:F3}, Y={clickY:F3}, Z={z:F3} を取得しました"
                         : $"📌 画面入力: X={clickX:F3}, Y={clickY:F3} を取得しました";
-                    _clickNotifyToolTip.Show(notifyText, picMapCanvas, e.X + 10, e.Y - 25, 2000);
+                    _clickNotifyToolTip.Show(defaultNotify, picMapCanvas, e.X + 10, e.Y - 25, 2000);
                 }
             }
         }
@@ -2509,6 +2572,11 @@ namespace Site7DbEditor {
                 } else {
                     lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}";
                 }
+            }
+
+            if (chkScreenInput.Checked && tabControlData.SelectedIndex == 0) {
+                _currentRubberBandMousePos = e.Location;
+                picMapCanvas.Invalidate();
             }
 
             if (_isMovingVertex || _isInsertingVertex) {
