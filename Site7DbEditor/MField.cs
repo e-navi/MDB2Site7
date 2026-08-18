@@ -189,13 +189,11 @@ namespace Site7DbEditor {
             return isError;
         }
         public bool SetRecAS2(String rec) {
-            if (string.IsNullOrWhiteSpace(rec)) {
-                isError = true;
-                errorMessage = "受信エラー";
-                return isError;
+            if (string.IsNullOrWhiteSpace(rec) || rec == "OK" || rec.StartsWith("OK") || rec.StartsWith("*")) {
+                return false;
             }
             rec = rec.Trim();
-            if (rec.StartsWith("E") || rec.StartsWith("e")) {
+            if (rec.StartsWith("E200") || rec.StartsWith("ERR") || rec.StartsWith("receive NAK")) {
                 isError = true;
                 errorMessage = rec + ":測定できません";
                 return isError;
@@ -213,9 +211,6 @@ namespace Site7DbEditor {
                     Env.curTSMode = Env.curTSMode0;
                 }
                 isError = false;
-            } else {
-                isError = true;
-                errorMessage = "測定できません: " + rec;
             }
             return isError;
         }

@@ -670,26 +670,15 @@ namespace Site7DbEditor {
 
                         if (sendStr.StartsWith("\u0014")) {
 
-                            if (receiveStr == "") {
+                            if (string.IsNullOrWhiteSpace(receiveStr) || receiveStr == "OK" || receiveStr.StartsWith("OK")) {
                                 continue;
                             }
                             str = receiveStr;
                             receivedBuff = "";
-                            
 
                             if (!gbl.MField.SetRecAS2(str)) {
                                 isChangePos = true;
-
                             }
-                            /*
-                            if (Env.TS == Env.TS_PS || Env.TS == Env.TS_DS) {  //2026.5.15 自動追尾対応TSは、STOPしないとまずい！
-                                sendStr = "\u0012";     // \u0014 の時は \u0012でないとSTOPしない
-                                curCmd = 1;
-                            } else {
-                                sendStr = "";
-                            }
-                            */
-                            // \u0014の時は、いつも \u0012で STOPしたほうがよい！と思う 2026.6.12
                             sendStr = "\u0012";     // \u0014 の時は \u0012でないとSTOPしない
                             curCmd = 1;
                         }
