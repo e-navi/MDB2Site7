@@ -284,9 +284,8 @@ namespace Site7DbEditor.Services
             _grid.Clear();
             if (Points.Count == 0) return;
 
-            // 点群の広がりから適切なセルサイズを自動計算 (0.5m 〜 2.0m)
-            double range = Math.Max(MaxX - MinX, MaxY - MinY);
-            _cellSize = Math.Clamp(range / 100.0, 0.5, 5.0);
+            // 0.1mメッシュの微細な地形変化を捉えるためセルサイズを0.1m(10cm)に設定
+            _cellSize = 0.1;
 
             for (int i = 0; i < Points.Count; i++)
             {
@@ -308,21 +307,48 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// 3Dメッシュ生成用のO(1)超高速標高取得 (補間計算なし・ダイレクトセル参照)
+        /// 3Dメッシュ生成用の超高速・精密最近傍標高取得 (0.1m単位で滑らかに取得)
         /// </summary>
         public double? GetFastZ(double surveyX, double surveyY)
         {
             if (!HasPoints) return null;
-            if (surveyX < MinX || surveyX > MaxX || surveyY < MinY || surveyY > MaxY) return null;
+            if (surveyX < MinX - 0.5 || surveyX > MaxX + 0.5 || surveyY < MinY - 0.5 || surveyY > MaxY + 0.5) return null;
 
             long centerGx = (long)Math.Floor(surveyX / _cellSize);
             long centerGy = (long)Math.Floor(surveyY / _cellSize);
-            long key = (centerGx << 32) ^ (centerGy & 0xFFFFFFFFL);
 
-            if (_grid.TryGetValue(key, out var list) && list.Count > 0)
+            double closestDistSq = double.MaxValue;
+            double closestZ = 0;
+            bool found = false;
+
+            // 中心セルおよび近傍3x3セルから最短距離の実測点を探す
+            for (long dx = -1; dx <= 1; dx++)
             {
-                return Points[list[0]].Z;
+                for (long dy = -1; dy <= 1; dy++)
+                {
+                    long key = ((centerGx + dx) << 32) ^ ((centerGy + dy) & 0xFFFFFFFFL);
+                    if (_grid.TryGetValue(key, out var list))
+                    {
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var pt = Points[list[i]];
+                            double dSq = (pt.X - surveyX) * (pt.X - surveyX) + (pt.Y - surveyY) * (pt.Y - surveyY);
+                            if (dSq < closestDistSq)
+                            {
+                                closestDistSq = dSq;
+                                closestZ = pt.Z;
+                                found = true;
+                            }
+                        }
+                    }
+                }
             }
+
+            if (found && closestDistSq <= 0.25) // 0.5m以内の点群が存在する場合
+            {
+                return closestZ;
+            }
+
             return null;
         }
 
