@@ -46,7 +46,7 @@ namespace Site7DbEditor {
                 km.ang0 = 0.0;
             }
             //ts.SetITRGT();
-            gbl.FormMain.ShowZumen0();
+            gbl.FormMain?.ShowZumen0();
             Hide();
         }
         

@@ -41,6 +41,7 @@ namespace Site7DbEditor
             gbl.TStation.searchAreaBtn = btnSearch;
             gbl.TStation.chbContMeasure = chbContMeasure;
 
+            gbl.UCCtrl = this;
             setSerialPort();
             SetBtns();
         }
@@ -220,7 +221,17 @@ namespace Site7DbEditor
 
         private void btnDefKikaiBack_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("器械点設定ダイアログ", "器械点設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (gbl.st7Data.KijunP.KPList.Count < 2)
+            {
+                MessageBox.Show("基準点を２点以上登録してください！", "器械点設定", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (gbl.FormKikaiDef == null || gbl.FormKikaiDef.IsDisposed)
+            {
+                gbl.FormKikaiDef = new FormKikaiDef();
+            }
+            gbl.FormKikaiDef.Show();
+            gbl.FormKikaiDef.BringToFront();
         }
 
         private void SelKikaiTenBackTenBtn1_Click(object? sender, EventArgs e)
