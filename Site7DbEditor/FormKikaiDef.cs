@@ -104,7 +104,11 @@ namespace Site7DbEditor {
             timer1.Enabled = true;
             button1.Enabled = false;
 
-            ts.AS_BtnClick_3();
+            if (gbl.MField.isTracking()) {
+                ts.SetFILD(true);
+            } else {
+                ts.AS_BtnClick_3();
+            }
         }
         private void UpdatePlanLen() {
             KikaiMan km = gbl.KikaiMan;
@@ -119,20 +123,17 @@ namespace Site7DbEditor {
             KikaiMan km = gbl.KikaiMan;
             waitCount++;
 
-            if (ts.isKikaiDefSet && gbl.MField.lng <= 0 && waitCount < 100) {
+            double measuredSlope = gbl.MField.lng > 0 ? gbl.MField.lng : (ts.curLng > 0 ? ts.curLng : 0.0);
+            if (ts.isKikaiDefSet && measuredSlope <= 0 && waitCount < 100) {
                 return;
             }
             timer1.Enabled = false;
             ts.isKikaiDefSet = false;
 
             double len1 = km.kp.CalcLen(km.bp);
-            // 測距値（斜距離 lng）と高度角（angV: 0~1.0）から実測水平距離を計算
-            double len2 = 0.0;
-            if (gbl.MField.lng > 0) {
-                len2 = Math.Abs(gbl.MField.lng * Math.Sin(St7Lib.ToRadian(gbl.MField.angV * 360.0)));
-            } else if (ts.curPos != null) {
-                len2 = km.kp.CalcLen(ts.curPos);
-            }
+            // 測距値（斜距離）と高度角から実測水平距離を計算
+            double vAngle = gbl.MField.angV > 0 ? gbl.MField.angV * 360.0 : (ts.curAngV > 0 ? ts.curAngV : 90.0);
+            double len2 = Math.Abs(measuredSlope * Math.Sin(St7Lib.ToRadian(vAngle)));
 
             L_Len1.Text = len1.ToString("0.000");
             L_Len2.Text = len2.ToString("0.000");
