@@ -126,8 +126,13 @@ namespace Site7DbEditor {
             ts.isKikaiDefSet = false;
 
             double len1 = km.kp.CalcLen(km.bp);
-            // 測距値が得られている場合の実測距離計算
-            double len2 = gbl.MField.lng > 0 ? gbl.MField.lng * Math.Sin(gbl.MField.angV * Math.PI / 180.0) : km.kp.CalcLen(ts.curPos);
+            // 測距値（斜距離 lng）と高度角（angV: 0~1.0）から実測水平距離を計算
+            double len2 = 0.0;
+            if (gbl.MField.lng > 0) {
+                len2 = Math.Abs(gbl.MField.lng * Math.Sin(St7Lib.ToRadian(gbl.MField.angV * 360.0)));
+            } else if (ts.curPos != null) {
+                len2 = km.kp.CalcLen(ts.curPos);
+            }
 
             L_Len1.Text = len1.ToString("0.000");
             L_Len2.Text = len2.ToString("0.000");
