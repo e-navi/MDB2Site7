@@ -321,7 +321,8 @@ namespace Site7DbEditor
                     bool hasZ = false;
                     if (_pcService.HasPoints)
                     {
-                        var queriedZ = _pcService.GetFastZ(sx, sy);
+                        double maxDist = Math.Max(0.08, spacing * 0.85);
+                        var queriedZ = _pcService.GetFastZ(sx, sy, maxDist);
                         if (queriedZ.HasValue)
                         {
                             sz = queriedZ.Value;
@@ -609,8 +610,8 @@ namespace Site7DbEditor
                             var v11 = grid[r + step, c + step];
                             var v01 = grid[r, c + step];
 
-                            // 点群範囲のみ表示の場合、4頂点のいずれも標高を持たないセルは除外
-                            if (onlyPointCloud && !v00.HasElevation && !v10.HasElevation && !v11.HasElevation && !v01.HasElevation)
+                            // 点群範囲のみ表示の場合、4頂点すべてが有効な標高を持つセルのみ描画（点群のない余白への張り出しを完全に排除）
+                            if (onlyPointCloud && (!v00.HasElevation || !v10.HasElevation || !v11.HasElevation || !v01.HasElevation))
                             {
                                 continue;
                             }

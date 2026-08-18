@@ -307,24 +307,26 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// 3Dメッシュ生成用の超高速・精密最近傍標高取得 (0.1m単位で滑らかに取得)
+        /// 3Dメッシュ生成用の超高速・精密最近傍標高取得 (指定許容距離内の点群のみ採用)
         /// </summary>
-        public double? GetFastZ(double surveyX, double surveyY)
+        public double? GetFastZ(double surveyX, double surveyY, double maxDist = 0.5)
         {
             if (!HasPoints) return null;
-            if (surveyX < MinX - 0.5 || surveyX > MaxX + 0.5 || surveyY < MinY - 0.5 || surveyY > MaxY + 0.5) return null;
+            if (surveyX < MinX - maxDist || surveyX > MaxX + maxDist || surveyY < MinY - maxDist || surveyY > MaxY + maxDist) return null;
 
             long centerGx = (long)Math.Floor(surveyX / _cellSize);
             long centerGy = (long)Math.Floor(surveyY / _cellSize);
+
+            double maxDistSq = maxDist * maxDist;
+            int cellRadius = Math.Clamp((int)Math.Ceiling(maxDist / _cellSize), 1, 3);
 
             double closestDistSq = double.MaxValue;
             double closestZ = 0;
             bool found = false;
 
-            // 中心セルおよび近傍3x3セルから最短距離の実測点を探す
-            for (long dx = -1; dx <= 1; dx++)
+            for (long dx = -cellRadius; dx <= cellRadius; dx++)
             {
-                for (long dy = -1; dy <= 1; dy++)
+                for (long dy = -cellRadius; dy <= cellRadius; dy++)
                 {
                     long key = ((centerGx + dx) << 32) ^ ((centerGy + dy) & 0xFFFFFFFFL);
                     if (_grid.TryGetValue(key, out var list))
@@ -344,7 +346,7 @@ namespace Site7DbEditor.Services
                 }
             }
 
-            if (found && closestDistSq <= 0.25) // 0.5m以内の点群が存在する場合
+            if (found && closestDistSq <= maxDistSq)
             {
                 return closestZ;
             }
