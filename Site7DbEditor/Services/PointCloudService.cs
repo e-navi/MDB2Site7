@@ -73,6 +73,24 @@ namespace Site7DbEditor.Services
             LoadFile(CurrentFilePath, SwapXY);
         }
 
+        public bool AutoDetectAndSwapXY(double siteX, double siteY)
+        {
+            if (Points.Count == 0) return false;
+            double midX = (MinX + MaxX) / 2.0;
+            double midY = (MinY + MaxY) / 2.0;
+
+            double distNormal = (midX - siteX) * (midX - siteX) + (midY - siteY) * (midY - siteY);
+            double distSwapped = (midY - siteX) * (midY - siteX) + (midX - siteY) * (midX - siteY);
+
+            // 反転した方が現場基準点に明らかに近ければ自動反転
+            if (distSwapped < distNormal * 0.5)
+            {
+                ToggleSwapXY();
+                return true;
+            }
+            return false;
+        }
+
         public bool LoadFile(string path, bool swapXY = false, int maxPoints = 5000000)
         {
             if (!File.Exists(path)) return false;

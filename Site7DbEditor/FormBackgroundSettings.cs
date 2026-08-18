@@ -415,8 +415,19 @@ namespace Site7DbEditor
                         bool success = PointCloudService.Instance.LoadFile(ofd.FileName, chkSwapPointCloudXY.Checked);
                         if (success)
                         {
+                            // 現場基準点が存在する場合は自動XY判定
+                            if (_db.KikaiList.Count > 0)
+                            {
+                                double avgSiteX = _db.KikaiList.Average(k => k.X);
+                                double avgSiteY = _db.KikaiList.Average(k => k.Y);
+                                if (PointCloudService.Instance.AutoDetectAndSwapXY(avgSiteX, avgSiteY))
+                                {
+                                    chkSwapPointCloudXY.Checked = PointCloudService.Instance.SwapXY;
+                                }
+                            }
+
                             UpdatePointCloudStatusLabel();
-                            MessageBox.Show($"✔ 点群データを読み込みました。\n点数: {PointCloudService.Instance.Points.Count:N0} 点\nZ範囲: {PointCloudService.Instance.MinZ:F3}m ～ {PointCloudService.Instance.MaxZ:F3}m", "読み込み完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"✔ 点群データを読み込みました。\n点数: {PointCloudService.Instance.Points.Count:N0} 点\nZ範囲: {PointCloudService.Instance.MinZ:F3}m ～ {PointCloudService.Instance.MaxZ:F3}m" + (PointCloudService.Instance.SwapXY ? "\n(※現場座標系に合わせてXYを自動反転しました)" : ""), "読み込み完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {

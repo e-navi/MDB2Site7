@@ -282,8 +282,8 @@ namespace Site7DbEditor
             }
 
             double spacing = Math.Max(0.05, _gridSpacing);
-            int cols = Math.Clamp((int)Math.Ceiling((maxY - minY) / spacing) + 1, 5, 300);
-            int rows = Math.Clamp((int)Math.Ceiling((maxX - minX) / spacing) + 1, 5, 300);
+            int cols = Math.Clamp((int)Math.Ceiling((maxY - minY) / spacing) + 1, 5, 2000);
+            int rows = Math.Clamp((int)Math.Ceiling((maxX - minX) / spacing) + 1, 5, 2000);
 
             var grid = new MeshVertex[rows, cols];
             double defaultZ = _pcService.HasPoints ? (_pcService.MinZ + _pcService.MaxZ) / 2.0 : 0.0;
@@ -423,26 +423,27 @@ namespace Site7DbEditor
         {
             // 測量座標系: X=北(縦/上), Y=東(横/右), Z=標高(上)
             // ターゲット中心からの相対座標
-            double dx = x - _targetX;
-            double dy = y - _targetY;
-            double dz = (z - _targetZ) * _zExaggeration;
+            double dx = x - _targetX; // 北
+            double dy = y - _targetY; // 東
+            double dz = (z - _targetZ) * _zExaggeration; // 標高
 
-            // Yaw (水平回転: Z軸まわり)
+            // Yaw (水平回転: Z軸まわり、0度で真北を視線正面とする)
             double radYaw = _camYaw * Math.PI / 180.0;
             double cosYaw = Math.Cos(radYaw);
             double sinYaw = Math.Sin(radYaw);
 
-            double rx = dx * cosYaw - dy * sinYaw;
-            double ry = dx * sinYaw + dy * cosYaw;
+            // 水平視線における画面横方向(東成分 u) と 画面奥行き方向(北成分 v)
+            double u = -dx * sinYaw + dy * cosYaw;
+            double v =  dx * cosYaw + dy * sinYaw;
 
-            // Pitch (仰角回転: 横軸まわり)
+            // Pitch (仰角回転: 見下ろし角、正で上から見下ろす)
             double radPitch = _camPitch * Math.PI / 180.0;
             double cosPitch = Math.Cos(radPitch);
             double sinPitch = Math.Sin(radPitch);
 
-            double eyeX = rx;
-            double eyeY = ry * sinPitch + dz * cosPitch;
-            double eyeZ = ry * cosPitch - dz * sinPitch; // 奥行き
+            double eyeX = u;
+            double eyeY = -v * sinPitch + dz * cosPitch; // 上下: 見下ろすと前方が下がり、標高(+dz)が上
+            double eyeZ =  v * cosPitch + dz * sinPitch; // 奥行き: 前方の地面が奥へ
 
             // 透視投影 (Perspective Projection)
             double fovDist = Math.Max(20.0, _camDistance);
