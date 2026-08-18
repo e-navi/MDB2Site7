@@ -11,12 +11,46 @@ namespace Site7DbEditor
         {
             Name = name;
         }
+        public TINP3(string name, double x, double y, double z = 0.0) : base(x, y, z)
+        {
+            Name = name;
+        }
 
         public void set(TINP3 p)
         {
             base.set(p);
             Name = p.Name;
         }
+
+        public double CalcLen(TINP3 p)
+        {
+            double dx = p.X - X;
+            double dy = p.Y - Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        public double CalcLen(XYZ p)
+        {
+            double dx = p.X - X;
+            double dy = p.Y - Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+    }
+
+    public class KijunPRec : TINP3
+    {
+        public int Layer { get; set; } = 1;
+        public KijunPRec() : base() { }
+        public KijunPRec(string name, double x, double y, double z = 0.0, int layer = 1) : base(x, y, z, name)
+        {
+            Layer = layer;
+        }
+    }
+
+    public class KijunPRecEx : KijunPRec
+    {
+        public KijunPRecEx() : base() { }
+        public KijunPRecEx(string name, double x, double y, double z = 0.0, int layer = 1) : base(name, x, y, z, layer) { }
     }
 
     public static class St7Lib

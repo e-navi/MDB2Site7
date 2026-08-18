@@ -1,780 +1,742 @@
-namespace Site7DbEditor
-{
-    partial class UCCtrl
-    {
+namespace Site7DbEditor {
+    partial class UCCtrl {
+        /// <summary> 
+        /// 必要なデザイナー変数です。
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
+        /// <summary> 
+        /// 使用中のリソースをすべてクリーンアップします。
+        /// </summary>
+        /// <param name="disposing">マネージド リソースを破棄する場合は true を指定し、その他の場合は false を指定します。</param>
+        protected override void Dispose(bool disposing) {
+            if (disposing && (components != null)) {
                 components.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        #region Component Designer generated code
+        #region コンポーネント デザイナーで生成されたコード
 
+        /// <summary> 
+        /// デザイナー サポートに必要なメソッドです。このメソッドの内容を 
+        /// コード エディターで変更しないでください。
+        /// </summary>
         private void InitializeComponent() {
-            components = new System.ComponentModel.Container();
-            panelCtrl = new Panel();
-            tabControl4 = new TabControl();
-            tabTS = new TabPage();
-            cBoxTS = new ComboBox();
-            comboBox1 = new ComboBox();
-            btnConnect = new Button();
-            btnDefKikaiBack = new Button();
-            Label12 = new Label();
-            Kikaikou1 = new TextBox();
-            Label14 = new Label();
-            SelKikaiTenBackTenBtn1 = new Button();
-            Label13 = new Label();
-            Mirrorkou1 = new TextBox();
-            Label16 = new Label();
-            btnLight = new Button();
-            btnSearch = new Button();
-            btnUp = new Button();
-            btnAutoTsuibi = new Button();
-            btnSijun = new Button();
-            btnLeft2 = new Button();
-            btnLeft = new Button();
-            btnStop = new Button();
-            btnRight = new Button();
-            btnRight2 = new Button();
-            trackBar1 = new TrackBar();
-            btnDown = new Button();
-            labelStatus = new Label();
-            tabGPS = new TabPage();
-            cBoxGPS = new ComboBox();
-            label27 = new Label();
-            cBoxKei = new ComboBox();
-            comboBox2 = new ComboBox();
-            btnConnect2 = new Button();
-            label20 = new Label();
-            cBoxGPSStatus = new ComboBox();
-            label24 = new Label();
-            textBoxKikaikou2 = new TextBox();
-            label25 = new Label();
-            labelStatus2 = new Label();
-            labelGPS1 = new Label();
-            labelGPS2 = new Label();
-            panelBottomCoords = new Panel();
-            btnUpdPos = new Button();
-            textBoxX = new TextBox();
-            label18 = new Label();
-            textBoxY = new TextBox();
-            label11 = new Label();
-            textBoxZ = new TextBox();
-            label10 = new Label();
-            chbContMeasure = new CheckBox();
-            chkAutoSet = new CheckBox();
-            timer1 = new System.Windows.Forms.Timer(components);
-            panelCtrl.SuspendLayout();
-            tabControl4.SuspendLayout();
-            tabTS.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
-            tabGPS.SuspendLayout();
-            panelBottomCoords.SuspendLayout();
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            this.panelCtrl = new System.Windows.Forms.Panel();
+            this.tabControl4 = new System.Windows.Forms.TabControl();
+            this.tabTS = new System.Windows.Forms.TabPage();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.Mirrorkou1 = new System.Windows.Forms.TextBox();
+            this.Kikaikou1 = new System.Windows.Forms.TextBox();
+            this.Label16 = new System.Windows.Forms.Label();
+            this.Label12 = new System.Windows.Forms.Label();
+            this.Label13 = new System.Windows.Forms.Label();
+            this.Label14 = new System.Windows.Forms.Label();
+            this.cBoxTS = new System.Windows.Forms.ComboBox();
+            this.btnLight = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.btnSijun = new System.Windows.Forms.Button();
+            this.btnAutoTsuibi = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnLeft2 = new System.Windows.Forms.Button();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.btnRight2 = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.btnDefKikaiBack = new System.Windows.Forms.Button();
+            this.SelKikaiTenBackTenBtn1 = new System.Windows.Forms.Button();
+            this.tabGPS = new System.Windows.Forms.TabPage();
+            this.cBoxKei = new System.Windows.Forms.ComboBox();
+            this.labelStatus2 = new System.Windows.Forms.Label();
+            this.cBoxGPSStatus = new System.Windows.Forms.ComboBox();
+            this.cBoxGPS = new System.Windows.Forms.ComboBox();
+            this.textBoxKikaikou2 = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.labelGPS2 = new System.Windows.Forms.Label();
+            this.labelGPS1 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.btnConnect2 = new System.Windows.Forms.Button();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.btnUpdPos = new System.Windows.Forms.Button();
+            this.textBoxX = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBoxZ = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.chbContMeasure = new System.Windows.Forms.CheckBox();
+            this.chkAutoSet = new System.Windows.Forms.CheckBox();
+            this.textBoxY = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.panelCtrl.SuspendLayout();
+            this.tabControl4.SuspendLayout();
+            this.tabTS.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.tabGPS.SuspendLayout();
+            this.SuspendLayout();
             // 
             // panelCtrl
             // 
-            panelCtrl.BorderStyle = BorderStyle.FixedSingle;
-            panelCtrl.Controls.Add(tabControl4);
-            panelCtrl.Controls.Add(panelBottomCoords);
-            panelCtrl.Dock = DockStyle.Fill;
-            panelCtrl.Location = new Point(0, 0);
-            panelCtrl.Margin = new Padding(4, 4, 4, 4);
-            panelCtrl.Name = "panelCtrl";
-            panelCtrl.Size = new Size(292, 508);
-            panelCtrl.TabIndex = 172;
+            this.panelCtrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelCtrl.Controls.Add(this.tabControl4);
+            this.panelCtrl.Controls.Add(this.btnUpdPos);
+            this.panelCtrl.Controls.Add(this.textBoxX);
+            this.panelCtrl.Controls.Add(this.label10);
+            this.panelCtrl.Controls.Add(this.textBoxZ);
+            this.panelCtrl.Controls.Add(this.label11);
+            this.panelCtrl.Controls.Add(this.chbContMeasure);
+            this.panelCtrl.Controls.Add(this.chkAutoSet);
+            this.panelCtrl.Controls.Add(this.textBoxY);
+            this.panelCtrl.Controls.Add(this.label18);
+            this.panelCtrl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelCtrl.Location = new System.Drawing.Point(0, 0);
+            this.panelCtrl.Name = "panelCtrl";
+            this.panelCtrl.Size = new System.Drawing.Size(271, 406);
+            this.panelCtrl.TabIndex = 172;
             // 
             // tabControl4
             // 
-            tabControl4.Controls.Add(tabTS);
-            tabControl4.Controls.Add(tabGPS);
-            tabControl4.Dock = DockStyle.Bottom;
-            tabControl4.Font = new Font("MS UI Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            tabControl4.Location = new Point(0, 64);
-            tabControl4.Margin = new Padding(4, 4, 4, 4);
-            tabControl4.Multiline = true;
-            tabControl4.Name = "tabControl4";
-            tabControl4.SelectedIndex = 0;
-            tabControl4.Size = new Size(290, 322);
-            tabControl4.TabIndex = 170;
-            tabControl4.Tag = "3";
-            tabControl4.SelectedIndexChanged += tabControl4_SelectedIndexChanged;
+            this.tabControl4.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+            this.tabControl4.Controls.Add(this.tabTS);
+            this.tabControl4.Controls.Add(this.tabGPS);
+            this.tabControl4.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.tabControl4.Location = new System.Drawing.Point(3, 96);
+            this.tabControl4.Multiline = true;
+            this.tabControl4.Name = "tabControl4";
+            this.tabControl4.SelectedIndex = 0;
+            this.tabControl4.Size = new System.Drawing.Size(265, 301);
+            this.tabControl4.TabIndex = 170;
+            this.tabControl4.Tag = "3";
+            this.tabControl4.SelectedIndexChanged += new System.EventHandler(this.tabControl4_SelectedIndexChanged);
             // 
             // tabTS
             // 
-            tabTS.Controls.Add(cBoxTS);
-            tabTS.Controls.Add(comboBox1);
-            tabTS.Controls.Add(btnConnect);
-            tabTS.Controls.Add(btnDefKikaiBack);
-            tabTS.Controls.Add(Label12);
-            tabTS.Controls.Add(Kikaikou1);
-            tabTS.Controls.Add(Label14);
-            tabTS.Controls.Add(SelKikaiTenBackTenBtn1);
-            tabTS.Controls.Add(Label13);
-            tabTS.Controls.Add(Mirrorkou1);
-            tabTS.Controls.Add(Label16);
-            tabTS.Controls.Add(btnLight);
-            tabTS.Controls.Add(btnSearch);
-            tabTS.Controls.Add(btnUp);
-            tabTS.Controls.Add(btnAutoTsuibi);
-            tabTS.Controls.Add(btnSijun);
-            tabTS.Controls.Add(btnLeft2);
-            tabTS.Controls.Add(btnLeft);
-            tabTS.Controls.Add(btnStop);
-            tabTS.Controls.Add(btnRight);
-            tabTS.Controls.Add(btnRight2);
-            tabTS.Controls.Add(trackBar1);
-            tabTS.Controls.Add(btnDown);
-            tabTS.Controls.Add(labelStatus);
-            tabTS.Location = new Point(4, 26);
-            tabTS.Margin = new Padding(4, 4, 4, 4);
-            tabTS.Name = "tabTS";
-            tabTS.Padding = new Padding(4, 4, 4, 4);
-            tabTS.Size = new Size(282, 292);
-            tabTS.TabIndex = 2;
-            tabTS.Text = "TS";
-            tabTS.UseVisualStyleBackColor = true;
-            // 
-            // cBoxTS
-            // 
-            cBoxTS.DropDownStyle = ComboBoxStyle.DropDownList;
-            cBoxTS.FormattingEnabled = true;
-            cBoxTS.Items.AddRange(new object[] { "LN100/150", "PS-A GT100 MS(自動追尾)", "DS-AC PS-AC GT-500(自動視準)", "OS ES GM(手動視準)" });
-            cBoxTS.Location = new Point(2, 5);
-            cBoxTS.Margin = new Padding(4, 4, 4, 4);
-            cBoxTS.Name = "cBoxTS";
-            cBoxTS.Size = new Size(244, 24);
-            cBoxTS.TabIndex = 182;
-            cBoxTS.SelectionChangeCommitted += cBoxTS_SelectedIndexChanged;
-            // 
-            // comboBox1
-            // 
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(2, 42);
-            comboBox1.Margin = new Padding(4, 4, 4, 4);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(181, 24);
-            comboBox1.TabIndex = 0;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            // 
-            // btnConnect
-            // 
-            btnConnect.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnConnect.Location = new Point(186, 39);
-            btnConnect.Margin = new Padding(4, 4, 4, 4);
-            btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(61, 32);
-            btnConnect.TabIndex = 1;
-            btnConnect.Tag = "1";
-            btnConnect.Text = "接続";
-            btnConnect.UseVisualStyleBackColor = true;
-            btnConnect.Click += btnConnect_Click;
-            // 
-            // btnDefKikaiBack
-            // 
-            btnDefKikaiBack.BackColor = SystemColors.Control;
-            btnDefKikaiBack.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnDefKikaiBack.Location = new Point(2, 80);
-            btnDefKikaiBack.Margin = new Padding(4, 4, 4, 4);
-            btnDefKikaiBack.Name = "btnDefKikaiBack";
-            btnDefKikaiBack.Size = new Size(97, 35);
-            btnDefKikaiBack.TabIndex = 168;
-            btnDefKikaiBack.Text = "器械点設定";
-            btnDefKikaiBack.UseVisualStyleBackColor = true;
-            btnDefKikaiBack.Click += btnDefKikaiBack_Click;
-            // 
-            // Label12
-            // 
-            Label12.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            Label12.Location = new Point(102, 88);
-            Label12.Margin = new Padding(4, 0, 4, 0);
-            Label12.Name = "Label12";
-            Label12.Size = new Size(54, 20);
-            Label12.TabIndex = 188;
-            Label12.Text = "器械高";
-            // 
-            // Kikaikou1
-            // 
-            Kikaikou1.BackColor = Color.FromArgb(255, 255, 128);
-            Kikaikou1.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            Kikaikou1.Location = new Point(156, 80);
-            Kikaikou1.Margin = new Padding(4, 4, 4, 4);
-            Kikaikou1.Name = "Kikaikou1";
-            Kikaikou1.Size = new Size(69, 29);
-            Kikaikou1.TabIndex = 183;
-            Kikaikou1.Tag = "1";
-            Kikaikou1.Text = "1.500";
-            Kikaikou1.TextAlign = HorizontalAlignment.Right;
-            Kikaikou1.TextChanged += Kikaikou1_TextChanged;
-            // 
-            // Label14
-            // 
-            Label14.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            Label14.Location = new Point(229, 88);
-            Label14.Margin = new Padding(4, 0, 4, 0);
-            Label14.Name = "Label14";
-            Label14.Size = new Size(23, 20);
-            Label14.TabIndex = 186;
-            Label14.Text = "ｍ";
-            // 
-            // SelKikaiTenBackTenBtn1
-            // 
-            SelKikaiTenBackTenBtn1.BackColor = SystemColors.Control;
-            SelKikaiTenBackTenBtn1.Enabled = false;
-            SelKikaiTenBackTenBtn1.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            SelKikaiTenBackTenBtn1.Location = new Point(2, 119);
-            SelKikaiTenBackTenBtn1.Margin = new Padding(4, 4, 4, 4);
-            SelKikaiTenBackTenBtn1.Name = "SelKikaiTenBackTenBtn1";
-            SelKikaiTenBackTenBtn1.Size = new Size(97, 35);
-            SelKikaiTenBackTenBtn1.TabIndex = 168;
-            SelKikaiTenBackTenBtn1.Text = "器械点測定";
-            SelKikaiTenBackTenBtn1.UseVisualStyleBackColor = true;
-            SelKikaiTenBackTenBtn1.Click += SelKikaiTenBackTenBtn1_Click;
-            // 
-            // Label13
-            // 
-            Label13.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            Label13.Location = new Point(102, 126);
-            Label13.Margin = new Padding(4, 0, 4, 0);
-            Label13.Name = "Label13";
-            Label13.Size = new Size(56, 19);
-            Label13.TabIndex = 187;
-            Label13.Text = "ミラー高";
-            // 
-            // Mirrorkou1
-            // 
-            Mirrorkou1.BackColor = Color.FromArgb(255, 255, 128);
-            Mirrorkou1.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            Mirrorkou1.Location = new Point(156, 119);
-            Mirrorkou1.Margin = new Padding(4, 4, 4, 4);
-            Mirrorkou1.Name = "Mirrorkou1";
-            Mirrorkou1.Size = new Size(69, 29);
-            Mirrorkou1.TabIndex = 184;
-            Mirrorkou1.Tag = "2";
-            Mirrorkou1.Text = "1.200";
-            Mirrorkou1.TextAlign = HorizontalAlignment.Right;
-            Mirrorkou1.TextChanged += Kikaikou1_TextChanged;
-            // 
-            // Label16
-            // 
-            Label16.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            Label16.Location = new Point(229, 126);
-            Label16.Margin = new Padding(4, 0, 4, 0);
-            Label16.Name = "Label16";
-            Label16.Size = new Size(23, 20);
-            Label16.TabIndex = 185;
-            Label16.Text = "ｍ";
-            // 
-            // btnLight
-            // 
-            btnLight.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnLight.Location = new Point(1, 158);
-            btnLight.Margin = new Padding(4, 4, 4, 4);
-            btnLight.Name = "btnLight";
-            btnLight.Size = new Size(48, 40);
-            btnLight.TabIndex = 170;
-            btnLight.Tag = "0";
-            btnLight.Text = "消灯";
-            btnLight.UseVisualStyleBackColor = true;
-            btnLight.Click += btnAutoTsuibi_Click;
-            // 
-            // btnSearch
-            // 
-            btnSearch.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnSearch.Location = new Point(50, 158);
-            btnSearch.Margin = new Padding(4, 4, 4, 4);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(48, 40);
-            btnSearch.TabIndex = 171;
-            btnSearch.Tag = "2";
-            btnSearch.Text = "G";
-            btnSearch.UseVisualStyleBackColor = true;
-            btnSearch.Click += btnAutoTsuibi_Click;
-            // 
-            // btnUp
-            // 
-            btnUp.Enabled = false;
-            btnUp.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnUp.Location = new Point(99, 158);
-            btnUp.Margin = new Padding(4, 4, 4, 4);
-            btnUp.Name = "btnUp";
-            btnUp.Size = new Size(48, 40);
-            btnUp.TabIndex = 172;
-            btnUp.Tag = "9";
-            btnUp.Text = "△";
-            btnUp.UseVisualStyleBackColor = true;
-            btnUp.Click += btnAutoTsuibi_Click;
-            btnUp.MouseDown += btnUp_MouseDown;
-            btnUp.MouseUp += btnUp_MouseUp;
-            // 
-            // btnAutoTsuibi
-            // 
-            btnAutoTsuibi.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnAutoTsuibi.Location = new Point(148, 158);
-            btnAutoTsuibi.Margin = new Padding(4, 4, 4, 4);
-            btnAutoTsuibi.Name = "btnAutoTsuibi";
-            btnAutoTsuibi.Size = new Size(84, 40);
-            btnAutoTsuibi.TabIndex = 181;
-            btnAutoTsuibi.Tag = "3";
-            btnAutoTsuibi.Text = "自動追尾";
-            btnAutoTsuibi.UseVisualStyleBackColor = true;
-            btnAutoTsuibi.Click += btnAutoTsuibi_Click;
-            // 
-            // btnSijun
-            // 
-            btnSijun.Font = new Font("MS UI Gothic", 11F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            btnSijun.Location = new Point(233, 158);
-            btnSijun.Margin = new Padding(4, 4, 4, 4);
-            btnSijun.Name = "btnSijun";
-            btnSijun.Size = new Size(21, 40);
-            btnSijun.TabIndex = 181;
-            btnSijun.Tag = "12";
-            btnSijun.Text = "▶";
-            btnSijun.UseVisualStyleBackColor = true;
-            btnSijun.Click += btnAutoTsuibi_Click;
-            // 
-            // btnLeft2
-            // 
-            btnLeft2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnLeft2.Location = new Point(1, 200);
-            btnLeft2.Margin = new Padding(4, 4, 4, 4);
-            btnLeft2.Name = "btnLeft2";
-            btnLeft2.Size = new Size(48, 40);
-            btnLeft2.TabIndex = 173;
-            btnLeft2.Tag = "5";
-            btnLeft2.Text = "<<";
-            btnLeft2.UseVisualStyleBackColor = true;
-            btnLeft2.Click += btnAutoTsuibi_Click;
-            btnLeft2.MouseDown += btnUp_MouseDown;
-            btnLeft2.MouseUp += btnUp_MouseUp;
-            // 
-            // btnLeft
-            // 
-            btnLeft.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnLeft.Location = new Point(50, 200);
-            btnLeft.Margin = new Padding(4, 4, 4, 4);
-            btnLeft.Name = "btnLeft";
-            btnLeft.Size = new Size(48, 40);
-            btnLeft.TabIndex = 175;
-            btnLeft.Tag = "6";
-            btnLeft.Text = "<";
-            btnLeft.UseVisualStyleBackColor = true;
-            btnLeft.Click += btnAutoTsuibi_Click;
-            btnLeft.MouseDown += btnUp_MouseDown;
-            btnLeft.MouseUp += btnUp_MouseUp;
-            // 
-            // btnStop
-            // 
-            btnStop.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnStop.Location = new Point(102, 200);
-            btnStop.Margin = new Padding(4, 4, 4, 4);
-            btnStop.Name = "btnStop";
-            btnStop.Size = new Size(40, 40);
-            btnStop.TabIndex = 177;
-            btnStop.Tag = "11";
-            btnStop.Text = "■";
-            btnStop.UseVisualStyleBackColor = true;
-            btnStop.Click += btnAutoTsuibi_Click;
-            // 
-            // btnRight
-            // 
-            btnRight.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnRight.Location = new Point(145, 200);
-            btnRight.Margin = new Padding(4, 4, 4, 4);
-            btnRight.Name = "btnRight";
-            btnRight.Size = new Size(48, 40);
-            btnRight.TabIndex = 176;
-            btnRight.Tag = "7";
-            btnRight.Text = ">";
-            btnRight.UseVisualStyleBackColor = true;
-            btnRight.Click += btnAutoTsuibi_Click;
-            btnRight.MouseDown += btnUp_MouseDown;
-            btnRight.MouseUp += btnUp_MouseUp;
-            // 
-            // btnRight2
-            // 
-            btnRight2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnRight2.Location = new Point(195, 200);
-            btnRight2.Margin = new Padding(4, 4, 4, 4);
-            btnRight2.Name = "btnRight2";
-            btnRight2.Size = new Size(48, 40);
-            btnRight2.TabIndex = 174;
-            btnRight2.Tag = "8";
-            btnRight2.Text = ">>";
-            btnRight2.UseVisualStyleBackColor = true;
-            btnRight2.Click += btnAutoTsuibi_Click;
-            btnRight2.MouseDown += btnUp_MouseDown;
-            btnRight2.MouseUp += btnUp_MouseUp;
-            // 
-            // trackBar1
-            // 
-            trackBar1.AutoSize = false;
-            trackBar1.LargeChange = 1;
-            trackBar1.Location = new Point(-1, 242);
-            trackBar1.Margin = new Padding(4, 4, 4, 4);
-            trackBar1.Maximum = 5;
-            trackBar1.Minimum = 2;
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(93, 40);
-            trackBar1.TabIndex = 178;
-            trackBar1.Value = 3;
-            trackBar1.Scroll += trackBar1_Scroll;
-            // 
-            // btnDown
-            // 
-            btnDown.Enabled = false;
-            btnDown.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnDown.Location = new Point(99, 242);
-            btnDown.Margin = new Padding(4, 4, 4, 4);
-            btnDown.Name = "btnDown";
-            btnDown.Size = new Size(48, 40);
-            btnDown.TabIndex = 179;
-            btnDown.Tag = "10";
-            btnDown.Text = "▽";
-            btnDown.UseVisualStyleBackColor = true;
-            btnDown.Click += btnAutoTsuibi_Click;
-            btnDown.MouseDown += btnUp_MouseDown;
-            btnDown.MouseUp += btnUp_MouseUp;
+            this.tabTS.Controls.Add(this.labelStatus);
+            this.tabTS.Controls.Add(this.Mirrorkou1);
+            this.tabTS.Controls.Add(this.Kikaikou1);
+            this.tabTS.Controls.Add(this.Label16);
+            this.tabTS.Controls.Add(this.Label12);
+            this.tabTS.Controls.Add(this.Label13);
+            this.tabTS.Controls.Add(this.Label14);
+            this.tabTS.Controls.Add(this.cBoxTS);
+            this.tabTS.Controls.Add(this.btnLight);
+            this.tabTS.Controls.Add(this.btnSearch);
+            this.tabTS.Controls.Add(this.btnSijun);
+            this.tabTS.Controls.Add(this.btnAutoTsuibi);
+            this.tabTS.Controls.Add(this.btnUp);
+            this.tabTS.Controls.Add(this.btnDown);
+            this.tabTS.Controls.Add(this.btnLeft2);
+            this.tabTS.Controls.Add(this.trackBar1);
+            this.tabTS.Controls.Add(this.btnRight2);
+            this.tabTS.Controls.Add(this.btnStop);
+            this.tabTS.Controls.Add(this.btnLeft);
+            this.tabTS.Controls.Add(this.btnRight);
+            this.tabTS.Controls.Add(this.btnConnect);
+            this.tabTS.Controls.Add(this.comboBox1);
+            this.tabTS.Controls.Add(this.btnDefKikaiBack);
+            this.tabTS.Controls.Add(this.SelKikaiTenBackTenBtn1);
+            this.tabTS.Location = new System.Drawing.Point(4, 4);
+            this.tabTS.Name = "tabTS";
+            this.tabTS.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTS.Size = new System.Drawing.Size(257, 271);
+            this.tabTS.TabIndex = 2;
+            this.tabTS.Text = "TS";
+            this.tabTS.UseVisualStyleBackColor = true;
             // 
             // labelStatus
             // 
-            labelStatus.AutoSize = true;
-            labelStatus.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            labelStatus.ForeColor = Color.Red;
-            labelStatus.Location = new Point(152, 252);
-            labelStatus.Margin = new Padding(4, 0, 4, 0);
-            labelStatus.Name = "labelStatus";
-            labelStatus.Size = new Size(67, 14);
-            labelStatus.TabIndex = 189;
-            labelStatus.Text = "TSの状況";
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelStatus.ForeColor = System.Drawing.Color.Red;
+            this.labelStatus.Location = new System.Drawing.Point(154, 108);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(67, 14);
+            this.labelStatus.TabIndex = 189;
+            this.labelStatus.Text = "TSの状況";
+            // 
+            // Mirrorkou1
+            // 
+            this.Mirrorkou1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.Mirrorkou1.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Mirrorkou1.Location = new System.Drawing.Point(167, 171);
+            this.Mirrorkou1.Name = "Mirrorkou1";
+            this.Mirrorkou1.Size = new System.Drawing.Size(64, 29);
+            this.Mirrorkou1.TabIndex = 184;
+            this.Mirrorkou1.Tag = "2";
+            this.Mirrorkou1.Text = "1.200";
+            this.Mirrorkou1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Mirrorkou1.TextChanged += new System.EventHandler(this.Kikaikou1_TextChanged);
+            // 
+            // Kikaikou1
+            // 
+            this.Kikaikou1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.Kikaikou1.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Kikaikou1.Location = new System.Drawing.Point(167, 140);
+            this.Kikaikou1.Name = "Kikaikou1";
+            this.Kikaikou1.Size = new System.Drawing.Size(64, 29);
+            this.Kikaikou1.TabIndex = 183;
+            this.Kikaikou1.Tag = "1";
+            this.Kikaikou1.Text = "1.500";
+            this.Kikaikou1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Kikaikou1.TextChanged += new System.EventHandler(this.Kikaikou1_TextChanged);
+            // 
+            // Label16
+            // 
+            this.Label16.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Label16.Location = new System.Drawing.Point(230, 182);
+            this.Label16.Name = "Label16";
+            this.Label16.Size = new System.Drawing.Size(24, 16);
+            this.Label16.TabIndex = 185;
+            this.Label16.Text = "ｍ";
+            // 
+            // Label12
+            // 
+            this.Label12.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Label12.Location = new System.Drawing.Point(112, 150);
+            this.Label12.Name = "Label12";
+            this.Label12.Size = new System.Drawing.Size(57, 16);
+            this.Label12.TabIndex = 188;
+            this.Label12.Text = "器械高";
+            // 
+            // Label13
+            // 
+            this.Label13.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Label13.Location = new System.Drawing.Point(112, 181);
+            this.Label13.Name = "Label13";
+            this.Label13.Size = new System.Drawing.Size(61, 15);
+            this.Label13.TabIndex = 187;
+            this.Label13.Text = "ミラー高";
+            // 
+            // Label14
+            // 
+            this.Label14.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Label14.Location = new System.Drawing.Point(230, 148);
+            this.Label14.Name = "Label14";
+            this.Label14.Size = new System.Drawing.Size(24, 16);
+            this.Label14.TabIndex = 186;
+            this.Label14.Text = "ｍ";
+            // 
+            // cBoxTS
+            // 
+            this.cBoxTS.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cBoxTS.FormattingEnabled = true;
+            this.cBoxTS.Items.AddRange(new object[] {
+            "LN100/150",
+            "PS-A GT100 MS(自動追尾)",
+            "DS-AC PS-AC GT-500(自動視準)",
+            "OS ES GM(手動視準)"});
+            this.cBoxTS.Location = new System.Drawing.Point(3, 241);
+            this.cBoxTS.Name = "cBoxTS";
+            this.cBoxTS.Size = new System.Drawing.Size(251, 24);
+            this.cBoxTS.TabIndex = 182;
+            this.cBoxTS.SelectionChangeCommitted += new System.EventHandler(this.cBoxTS_SelectedIndexChanged);
+            // 
+            // btnLight
+            // 
+            this.btnLight.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnLight.Location = new System.Drawing.Point(1, 3);
+            this.btnLight.Name = "btnLight";
+            this.btnLight.Size = new System.Drawing.Size(48, 40);
+            this.btnLight.TabIndex = 170;
+            this.btnLight.Tag = "0";
+            this.btnLight.Text = "消灯";
+            this.btnLight.UseVisualStyleBackColor = true;
+            this.btnLight.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            // this.btnSearch.Image = global::Site7DbEditor.Properties.Resources.yajirushi1;
+            this.btnSearch.Location = new System.Drawing.Point(48, 3);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(48, 40);
+            this.btnSearch.TabIndex = 171;
+            this.btnSearch.Tag = "2";
+            this.btnSearch.Text = "G";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            // 
+            // btnSijun
+            // 
+            this.btnSijun.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnSijun.Location = new System.Drawing.Point(230, 3);
+            this.btnSijun.Name = "btnSijun";
+            this.btnSijun.Size = new System.Drawing.Size(25, 40);
+            this.btnSijun.TabIndex = 181;
+            this.btnSijun.Tag = "12";
+            this.btnSijun.Text = "▶";
+            this.btnSijun.UseVisualStyleBackColor = true;
+            this.btnSijun.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            // 
+            // btnAutoTsuibi
+            // 
+            this.btnAutoTsuibi.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnAutoTsuibi.Location = new System.Drawing.Point(153, 3);
+            this.btnAutoTsuibi.Name = "btnAutoTsuibi";
+            this.btnAutoTsuibi.Size = new System.Drawing.Size(78, 40);
+            this.btnAutoTsuibi.TabIndex = 181;
+            this.btnAutoTsuibi.Tag = "3";
+            this.btnAutoTsuibi.Text = "自動追尾";
+            this.btnAutoTsuibi.UseVisualStyleBackColor = true;
+            this.btnAutoTsuibi.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            // 
+            // btnUp
+            // 
+            this.btnUp.Enabled = false;
+            this.btnUp.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnUp.Location = new System.Drawing.Point(101, 3);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(48, 40);
+            this.btnUp.TabIndex = 172;
+            this.btnUp.Tag = "9";
+            this.btnUp.Text = "△";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // btnDown
+            // 
+            this.btnDown.Enabled = false;
+            this.btnDown.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnDown.Location = new System.Drawing.Point(100, 94);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(48, 40);
+            this.btnDown.TabIndex = 179;
+            this.btnDown.Tag = "10";
+            this.btnDown.Text = "▽";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // btnLeft2
+            // 
+            this.btnLeft2.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnLeft2.Location = new System.Drawing.Point(0, 48);
+            this.btnLeft2.Name = "btnLeft2";
+            this.btnLeft2.Size = new System.Drawing.Size(48, 40);
+            this.btnLeft2.TabIndex = 173;
+            this.btnLeft2.Tag = "5";
+            this.btnLeft2.Text = "<<";
+            this.btnLeft2.UseVisualStyleBackColor = true;
+            this.btnLeft2.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            this.btnLeft2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnLeft2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.AutoSize = false;
+            this.trackBar1.LargeChange = 1;
+            this.trackBar1.Location = new System.Drawing.Point(-1, 94);
+            this.trackBar1.Maximum = 5;
+            this.trackBar1.Minimum = 2;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(94, 40);
+            this.trackBar1.TabIndex = 178;
+            this.trackBar1.Value = 3;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // btnRight2
+            // 
+            this.btnRight2.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnRight2.Location = new System.Drawing.Point(199, 48);
+            this.btnRight2.Name = "btnRight2";
+            this.btnRight2.Size = new System.Drawing.Size(48, 40);
+            this.btnRight2.TabIndex = 174;
+            this.btnRight2.Tag = "8";
+            this.btnRight2.Text = ">>";
+            this.btnRight2.UseVisualStyleBackColor = true;
+            this.btnRight2.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            this.btnRight2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnRight2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // btnStop
+            // 
+            this.btnStop.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnStop.Location = new System.Drawing.Point(106, 48);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(36, 40);
+            this.btnStop.TabIndex = 177;
+            this.btnStop.Tag = "11";
+            this.btnStop.Text = "■";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnLeft.Location = new System.Drawing.Point(47, 48);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(48, 40);
+            this.btnLeft.TabIndex = 175;
+            this.btnLeft.Tag = "6";
+            this.btnLeft.Text = "<";
+            this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            this.btnLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // btnRight
+            // 
+            this.btnRight.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnRight.Location = new System.Drawing.Point(152, 48);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(48, 40);
+            this.btnRight.TabIndex = 176;
+            this.btnRight.Tag = "7";
+            this.btnRight.Text = ">";
+            this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.Click += new System.EventHandler(this.btnAutoTsuibi_Click);
+            this.btnRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Location = new System.Drawing.Point(196, 206);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(58, 34);
+            this.btnConnect.TabIndex = 1;
+            this.btnConnect.Tag = "1";
+            this.btnConnect.Text = "接続";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(3, 211);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(192, 24);
+            this.comboBox1.TabIndex = 0;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // btnDefKikaiBack
+            // 
+            this.btnDefKikaiBack.BackColor = System.Drawing.SystemColors.Control;
+            this.btnDefKikaiBack.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnDefKikaiBack.Location = new System.Drawing.Point(3, 141);
+            this.btnDefKikaiBack.Name = "btnDefKikaiBack";
+            this.btnDefKikaiBack.Size = new System.Drawing.Size(101, 28);
+            this.btnDefKikaiBack.TabIndex = 168;
+            this.btnDefKikaiBack.Text = "器械点設定";
+            this.btnDefKikaiBack.UseVisualStyleBackColor = true;
+            this.btnDefKikaiBack.Click += new System.EventHandler(this.btnDefKikaiBack_Click);
+            // 
+            // SelKikaiTenBackTenBtn1
+            // 
+            this.SelKikaiTenBackTenBtn1.BackColor = System.Drawing.SystemColors.Control;
+            this.SelKikaiTenBackTenBtn1.Enabled = false;
+            this.SelKikaiTenBackTenBtn1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.SelKikaiTenBackTenBtn1.Location = new System.Drawing.Point(2, 172);
+            this.SelKikaiTenBackTenBtn1.Name = "SelKikaiTenBackTenBtn1";
+            this.SelKikaiTenBackTenBtn1.Size = new System.Drawing.Size(101, 28);
+            this.SelKikaiTenBackTenBtn1.TabIndex = 168;
+            this.SelKikaiTenBackTenBtn1.Text = "器械点測定";
+            this.SelKikaiTenBackTenBtn1.UseVisualStyleBackColor = true;
+            this.SelKikaiTenBackTenBtn1.Click += new System.EventHandler(this.SelKikaiTenBackTenBtn1_Click);
             // 
             // tabGPS
             // 
-            tabGPS.Controls.Add(cBoxGPS);
-            tabGPS.Controls.Add(label27);
-            tabGPS.Controls.Add(cBoxKei);
-            tabGPS.Controls.Add(comboBox2);
-            tabGPS.Controls.Add(btnConnect2);
-            tabGPS.Controls.Add(label20);
-            tabGPS.Controls.Add(cBoxGPSStatus);
-            tabGPS.Controls.Add(label24);
-            tabGPS.Controls.Add(textBoxKikaikou2);
-            tabGPS.Controls.Add(label25);
-            tabGPS.Controls.Add(labelStatus2);
-            tabGPS.Controls.Add(labelGPS1);
-            tabGPS.Controls.Add(labelGPS2);
-            tabGPS.Location = new Point(4, 26);
-            tabGPS.Margin = new Padding(4, 4, 4, 4);
-            tabGPS.Name = "tabGPS";
-            tabGPS.Padding = new Padding(4, 4, 4, 4);
-            tabGPS.Size = new Size(286, 292);
-            tabGPS.TabIndex = 3;
-            tabGPS.Text = "GPS";
-            tabGPS.UseVisualStyleBackColor = true;
-            // 
-            // cBoxGPS
-            // 
-            cBoxGPS.DropDownStyle = ComboBoxStyle.DropDownList;
-            cBoxGPS.FormattingEnabled = true;
-            cBoxGPS.Items.AddRange(new object[] { "ポチスタ", "i93" });
-            cBoxGPS.Location = new Point(2, 5);
-            cBoxGPS.Margin = new Padding(4, 4, 4, 4);
-            cBoxGPS.Name = "cBoxGPS";
-            cBoxGPS.Size = new Size(100, 24);
-            cBoxGPS.TabIndex = 193;
-            cBoxGPS.SelectedIndexChanged += cBoxGPS_SelectedIndexChanged;
-            // 
-            // label27
-            // 
-            label27.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label27.Location = new Point(105, 10);
-            label27.Margin = new Padding(4, 0, 4, 0);
-            label27.Name = "label27";
-            label27.Size = new Size(91, 20);
-            label27.TabIndex = 191;
-            label27.Text = "直角座標系:";
+            this.tabGPS.Controls.Add(this.cBoxKei);
+            this.tabGPS.Controls.Add(this.labelStatus2);
+            this.tabGPS.Controls.Add(this.cBoxGPSStatus);
+            this.tabGPS.Controls.Add(this.cBoxGPS);
+            this.tabGPS.Controls.Add(this.textBoxKikaikou2);
+            this.tabGPS.Controls.Add(this.label27);
+            this.tabGPS.Controls.Add(this.labelGPS2);
+            this.tabGPS.Controls.Add(this.labelGPS1);
+            this.tabGPS.Controls.Add(this.label24);
+            this.tabGPS.Controls.Add(this.label25);
+            this.tabGPS.Controls.Add(this.btnConnect2);
+            this.tabGPS.Controls.Add(this.comboBox2);
+            this.tabGPS.Controls.Add(this.label20);
+            this.tabGPS.Location = new System.Drawing.Point(4, 4);
+            this.tabGPS.Name = "tabGPS";
+            this.tabGPS.Padding = new System.Windows.Forms.Padding(3);
+            this.tabGPS.Size = new System.Drawing.Size(257, 271);
+            this.tabGPS.TabIndex = 3;
+            this.tabGPS.Text = "GPS";
+            this.tabGPS.UseVisualStyleBackColor = true;
             // 
             // cBoxKei
             // 
-            cBoxKei.DropDownStyle = ComboBoxStyle.DropDownList;
-            cBoxKei.FormattingEnabled = true;
-            cBoxKei.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19" });
-            cBoxKei.Location = new Point(196, 5);
-            cBoxKei.Margin = new Padding(4, 4, 4, 4);
-            cBoxKei.Name = "cBoxKei";
-            cBoxKei.Size = new Size(44, 24);
-            cBoxKei.TabIndex = 196;
-            cBoxKei.SelectedIndexChanged += cBoxKei_SelectedIndexChanged;
-            // 
-            // comboBox2
-            // 
-            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(2, 42);
-            comboBox2.Margin = new Padding(4, 4, 4, 4);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(181, 24);
-            comboBox2.TabIndex = 161;
-            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
-            // 
-            // btnConnect2
-            // 
-            btnConnect2.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnConnect2.Location = new Point(187, 41);
-            btnConnect2.Margin = new Padding(4, 4, 4, 4);
-            btnConnect2.Name = "btnConnect2";
-            btnConnect2.Size = new Size(61, 32);
-            btnConnect2.TabIndex = 162;
-            btnConnect2.Tag = "2";
-            btnConnect2.Text = "接続";
-            btnConnect2.UseVisualStyleBackColor = true;
-            btnConnect2.Click += btnConnect_Click;
-            // 
-            // label20
-            // 
-            label20.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label20.Location = new Point(2, 85);
-            label20.Margin = new Padding(4, 0, 4, 0);
-            label20.Name = "label20";
-            label20.Size = new Size(131, 20);
-            label20.TabIndex = 160;
-            label20.Text = "有効GPSステータス";
-            // 
-            // cBoxGPSStatus
-            // 
-            cBoxGPSStatus.DropDownStyle = ComboBoxStyle.DropDownList;
-            cBoxGPSStatus.FormattingEnabled = true;
-            cBoxGPSStatus.Items.AddRange(new object[] { "RTK-fix", "RTK-float", "DGPS-fix", "単独測位" });
-            cBoxGPSStatus.Location = new Point(135, 80);
-            cBoxGPSStatus.Margin = new Padding(4, 4, 4, 4);
-            cBoxGPSStatus.Name = "cBoxGPSStatus";
-            cBoxGPSStatus.Size = new Size(107, 24);
-            cBoxGPSStatus.TabIndex = 194;
-            cBoxGPSStatus.SelectedIndexChanged += cBoxGPSStatus_SelectedIndexChanged;
-            // 
-            // label24
-            // 
-            label24.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label24.Location = new Point(2, 125);
-            label24.Margin = new Padding(4, 0, 4, 0);
-            label24.Name = "label24";
-            label24.Size = new Size(65, 20);
-            label24.TabIndex = 191;
-            label24.Text = "器械高";
-            // 
-            // textBoxKikaikou2
-            // 
-            textBoxKikaikou2.BackColor = Color.FromArgb(255, 255, 128);
-            textBoxKikaikou2.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            textBoxKikaikou2.Location = new Point(70, 118);
-            textBoxKikaikou2.Margin = new Padding(4, 4, 4, 4);
-            textBoxKikaikou2.Name = "textBoxKikaikou2";
-            textBoxKikaikou2.Size = new Size(74, 29);
-            textBoxKikaikou2.TabIndex = 189;
-            textBoxKikaikou2.Tag = "3";
-            textBoxKikaikou2.Text = "1.500";
-            textBoxKikaikou2.TextAlign = HorizontalAlignment.Right;
-            textBoxKikaikou2.TextChanged += Kikaikou1_TextChanged;
-            // 
-            // label25
-            // 
-            label25.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label25.Location = new Point(149, 125);
-            label25.Margin = new Padding(4, 0, 4, 0);
-            label25.Name = "label25";
-            label25.Size = new Size(28, 20);
-            label25.TabIndex = 190;
-            label25.Text = "ｍ";
+            this.cBoxKei.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cBoxKei.FormattingEnabled = true;
+            this.cBoxKei.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"});
+            this.cBoxKei.Location = new System.Drawing.Point(201, 238);
+            this.cBoxKei.Name = "cBoxKei";
+            this.cBoxKei.Size = new System.Drawing.Size(41, 24);
+            this.cBoxKei.TabIndex = 196;
+            this.cBoxKei.SelectedIndexChanged += new System.EventHandler(this.cBoxKei_SelectedIndexChanged);
             // 
             // labelStatus2
             // 
-            labelStatus2.AutoSize = true;
-            labelStatus2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            labelStatus2.ForeColor = Color.Red;
-            labelStatus2.Location = new Point(2, 165);
-            labelStatus2.Margin = new Padding(4, 0, 4, 0);
-            labelStatus2.Name = "labelStatus2";
-            labelStatus2.Size = new Size(79, 14);
-            labelStatus2.TabIndex = 195;
-            labelStatus2.Text = "GPSの状況";
+            this.labelStatus2.AutoSize = true;
+            this.labelStatus2.ForeColor = System.Drawing.Color.Red;
+            this.labelStatus2.Location = new System.Drawing.Point(168, 3);
+            this.labelStatus2.Name = "labelStatus2";
+            this.labelStatus2.Size = new System.Drawing.Size(89, 16);
+            this.labelStatus2.TabIndex = 195;
+            this.labelStatus2.Text = "GPSの状況";
             // 
-            // labelGPS1
+            // cBoxGPSStatus
             // 
-            labelGPS1.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            labelGPS1.Location = new Point(2, 192);
-            labelGPS1.Margin = new Padding(4, 0, 4, 0);
-            labelGPS1.Name = "labelGPS1";
-            labelGPS1.Size = new Size(270, 24);
-            labelGPS1.TabIndex = 191;
-            labelGPS1.Text = "取得状況：";
+            this.cBoxGPSStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cBoxGPSStatus.FormattingEnabled = true;
+            this.cBoxGPSStatus.Items.AddRange(new object[] {
+            "RTK-fix",
+            "RTK-float",
+            "DGPS-fix",
+            "単独測位"});
+            this.cBoxGPSStatus.Location = new System.Drawing.Point(138, 120);
+            this.cBoxGPSStatus.Name = "cBoxGPSStatus";
+            this.cBoxGPSStatus.Size = new System.Drawing.Size(113, 24);
+            this.cBoxGPSStatus.TabIndex = 194;
+            this.cBoxGPSStatus.SelectedIndexChanged += new System.EventHandler(this.cBoxGPSStatus_SelectedIndexChanged);
+            // 
+            // cBoxGPS
+            // 
+            this.cBoxGPS.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cBoxGPS.FormattingEnabled = true;
+            this.cBoxGPS.Items.AddRange(new object[] {
+            "ポチスタ",
+            "i93"});
+            this.cBoxGPS.Location = new System.Drawing.Point(4, 238);
+            this.cBoxGPS.Name = "cBoxGPS";
+            this.cBoxGPS.Size = new System.Drawing.Size(104, 24);
+            this.cBoxGPS.TabIndex = 193;
+            this.cBoxGPS.SelectedIndexChanged += new System.EventHandler(this.cBoxGPS_SelectedIndexChanged);
+            // 
+            // textBoxKikaikou2
+            // 
+            this.textBoxKikaikou2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.textBoxKikaikou2.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxKikaikou2.Location = new System.Drawing.Point(65, 164);
+            this.textBoxKikaikou2.Name = "textBoxKikaikou2";
+            this.textBoxKikaikou2.Size = new System.Drawing.Size(64, 29);
+            this.textBoxKikaikou2.TabIndex = 189;
+            this.textBoxKikaikou2.Tag = "3";
+            this.textBoxKikaikou2.Text = "1.500";
+            this.textBoxKikaikou2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBoxKikaikou2.TextChanged += new System.EventHandler(this.Kikaikou1_TextChanged);
+            // 
+            // label27
+            // 
+            this.label27.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label27.Location = new System.Drawing.Point(114, 244);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(94, 16);
+            this.label27.TabIndex = 191;
+            this.label27.Text = "直角座標系:";
             // 
             // labelGPS2
             // 
-            labelGPS2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            labelGPS2.Location = new Point(2, 220);
-            labelGPS2.Margin = new Padding(4, 0, 4, 0);
-            labelGPS2.Name = "labelGPS2";
-            labelGPS2.Size = new Size(275, 24);
-            labelGPS2.TabIndex = 191;
-            labelGPS2.Text = "HDOP: 衛星数：";
+            this.labelGPS2.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelGPS2.Location = new System.Drawing.Point(15, 62);
+            this.labelGPS2.Name = "labelGPS2";
+            this.labelGPS2.Size = new System.Drawing.Size(236, 19);
+            this.labelGPS2.TabIndex = 191;
+            this.labelGPS2.Text = "HDOP: 衛星数：";
             // 
-            // panelBottomCoords
+            // labelGPS1
             // 
-            panelBottomCoords.Controls.Add(btnUpdPos);
-            panelBottomCoords.Controls.Add(textBoxX);
-            panelBottomCoords.Controls.Add(label18);
-            panelBottomCoords.Controls.Add(textBoxY);
-            panelBottomCoords.Controls.Add(label11);
-            panelBottomCoords.Controls.Add(textBoxZ);
-            panelBottomCoords.Controls.Add(label10);
-            panelBottomCoords.Controls.Add(chbContMeasure);
-            panelBottomCoords.Controls.Add(chkAutoSet);
-            panelBottomCoords.Dock = DockStyle.Bottom;
-            panelBottomCoords.Location = new Point(0, 386);
-            panelBottomCoords.Margin = new Padding(4, 4, 4, 4);
-            panelBottomCoords.Name = "panelBottomCoords";
-            panelBottomCoords.Size = new Size(290, 120);
-            panelBottomCoords.TabIndex = 175;
+            this.labelGPS1.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelGPS1.Location = new System.Drawing.Point(15, 37);
+            this.labelGPS1.Name = "labelGPS1";
+            this.labelGPS1.Size = new System.Drawing.Size(231, 19);
+            this.labelGPS1.TabIndex = 191;
+            this.labelGPS1.Text = "取得状況：";
+            // 
+            // label24
+            // 
+            this.label24.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label24.Location = new System.Drawing.Point(12, 174);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(94, 16);
+            this.label24.TabIndex = 191;
+            this.label24.Text = "器械高";
+            // 
+            // label25
+            // 
+            this.label25.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label25.Location = new System.Drawing.Point(136, 175);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(24, 16);
+            this.label25.TabIndex = 190;
+            this.label25.Text = "ｍ";
+            // 
+            // btnConnect2
+            // 
+            this.btnConnect2.Location = new System.Drawing.Point(198, 198);
+            this.btnConnect2.Name = "btnConnect2";
+            this.btnConnect2.Size = new System.Drawing.Size(56, 34);
+            this.btnConnect2.TabIndex = 162;
+            this.btnConnect2.Tag = "2";
+            this.btnConnect2.Text = "接続";
+            this.btnConnect2.UseVisualStyleBackColor = true;
+            this.btnConnect2.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(4, 204);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(191, 24);
+            this.comboBox2.TabIndex = 161;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
+            // label20
+            // 
+            this.label20.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label20.Location = new System.Drawing.Point(12, 126);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(139, 16);
+            this.label20.TabIndex = 160;
+            this.label20.Text = "有効GPSステータス";
             // 
             // btnUpdPos
             // 
-            btnUpdPos.Font = new Font("MS UI Gothic", 28F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnUpdPos.Location = new Point(174, 31);
-            btnUpdPos.Margin = new Padding(4, 4, 4, 4);
-            btnUpdPos.Name = "btnUpdPos";
-            btnUpdPos.Size = new Size(56, 45);
-            btnUpdPos.TabIndex = 164;
-            btnUpdPos.Text = "↓";
-            btnUpdPos.UseVisualStyleBackColor = true;
-            btnUpdPos.Click += button8_Click;
+            this.btnUpdPos.Font = new System.Drawing.Font("MS UI Gothic", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnUpdPos.Location = new System.Drawing.Point(191, 27);
+            this.btnUpdPos.Name = "btnUpdPos";
+            this.btnUpdPos.Size = new System.Drawing.Size(63, 44);
+            this.btnUpdPos.TabIndex = 164;
+            this.btnUpdPos.Text = "↑";
+            this.btnUpdPos.UseVisualStyleBackColor = true;
+            this.btnUpdPos.Click += new System.EventHandler(this.button8_Click);
             // 
             // textBoxX
             // 
-            textBoxX.Enabled = false;
-            textBoxX.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            textBoxX.Location = new Point(48, 5);
-            textBoxX.Margin = new Padding(4, 4, 4, 4);
-            textBoxX.Name = "textBoxX";
-            textBoxX.Size = new Size(119, 29);
-            textBoxX.TabIndex = 3;
-            textBoxX.TextAlign = HorizontalAlignment.Right;
-            // 
-            // label18
-            // 
-            label18.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label18.Location = new Point(2, 12);
-            label18.Margin = new Padding(4, 0, 4, 0);
-            label18.Name = "label18";
-            label18.Size = new Size(46, 20);
-            label18.TabIndex = 163;
-            label18.Text = "X座標";
-            // 
-            // textBoxY
-            // 
-            textBoxY.Enabled = false;
-            textBoxY.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            textBoxY.Location = new Point(48, 40);
-            textBoxY.Margin = new Padding(4, 4, 4, 4);
-            textBoxY.Name = "textBoxY";
-            textBoxY.Size = new Size(119, 29);
-            textBoxY.TabIndex = 4;
-            textBoxY.TextAlign = HorizontalAlignment.Right;
-            // 
-            // label11
-            // 
-            label11.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label11.Location = new Point(2, 48);
-            label11.Margin = new Padding(4, 0, 4, 0);
-            label11.Name = "label11";
-            label11.Size = new Size(46, 20);
-            label11.TabIndex = 162;
-            label11.Text = "Y座標";
-            // 
-            // textBoxZ
-            // 
-            textBoxZ.Enabled = false;
-            textBoxZ.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            textBoxZ.Location = new Point(48, 75);
-            textBoxZ.Margin = new Padding(4, 4, 4, 4);
-            textBoxZ.Name = "textBoxZ";
-            textBoxZ.Size = new Size(119, 29);
-            textBoxZ.TabIndex = 5;
-            textBoxZ.TextAlign = HorizontalAlignment.Right;
+            this.textBoxX.Enabled = false;
+            this.textBoxX.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxX.Location = new System.Drawing.Point(55, 6);
+            this.textBoxX.Name = "textBoxX";
+            this.textBoxX.Size = new System.Drawing.Size(127, 29);
+            this.textBoxX.TabIndex = 3;
+            this.textBoxX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label10
             // 
-            label10.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label10.Location = new Point(2, 82);
-            label10.Margin = new Padding(4, 0, 4, 0);
-            label10.Name = "label10";
-            label10.Size = new Size(46, 20);
-            label10.TabIndex = 161;
-            label10.Text = "Z座標";
+            this.label10.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label10.Location = new System.Drawing.Point(6, 74);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(48, 16);
+            this.label10.TabIndex = 161;
+            this.label10.Text = "Z座標";
+            // 
+            // textBoxZ
+            // 
+            this.textBoxZ.Enabled = false;
+            this.textBoxZ.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxZ.Location = new System.Drawing.Point(55, 64);
+            this.textBoxZ.Name = "textBoxZ";
+            this.textBoxZ.Size = new System.Drawing.Size(127, 29);
+            this.textBoxZ.TabIndex = 5;
+            this.textBoxZ.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label11
+            // 
+            this.label11.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label11.Location = new System.Drawing.Point(7, 45);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(48, 16);
+            this.label11.TabIndex = 162;
+            this.label11.Text = "Y座標";
             // 
             // chbContMeasure
             // 
-            chbContMeasure.AutoSize = true;
-            chbContMeasure.Checked = true;
-            chbContMeasure.CheckState = CheckState.Checked;
-            chbContMeasure.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            chbContMeasure.Location = new Point(172, 8);
-            chbContMeasure.Margin = new Padding(4, 4, 4, 4);
-            chbContMeasure.Name = "chbContMeasure";
-            chbContMeasure.Size = new Size(86, 18);
-            chbContMeasure.TabIndex = 173;
-            chbContMeasure.Text = "連続測定";
-            chbContMeasure.UseVisualStyleBackColor = true;
-            chbContMeasure.CheckedChanged += chbContMeasure_CheckedChanged;
+            this.chbContMeasure.AutoSize = true;
+            this.chbContMeasure.Checked = true;
+            this.chbContMeasure.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbContMeasure.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.chbContMeasure.Location = new System.Drawing.Point(188, 77);
+            this.chbContMeasure.Name = "chbContMeasure";
+            this.chbContMeasure.Size = new System.Drawing.Size(86, 18);
+            this.chbContMeasure.TabIndex = 173;
+            this.chbContMeasure.Text = "連続測定";
+            this.chbContMeasure.UseVisualStyleBackColor = true;
+            this.chbContMeasure.CheckedChanged += new System.EventHandler(this.chbContMeasure_CheckedChanged);
             // 
             // chkAutoSet
             // 
-            chkAutoSet.AutoSize = true;
-            chkAutoSet.Checked = true;
-            chkAutoSet.CheckState = CheckState.Checked;
-            chkAutoSet.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            chkAutoSet.Location = new Point(172, 80);
-            chkAutoSet.Margin = new Padding(4, 4, 4, 4);
-            chkAutoSet.Name = "chkAutoSet";
-            chkAutoSet.Size = new Size(79, 18);
-            chkAutoSet.TabIndex = 173;
-            chkAutoSet.Text = "自動Set";
-            chkAutoSet.UseVisualStyleBackColor = true;
+            this.chkAutoSet.AutoSize = true;
+            this.chkAutoSet.Checked = true;
+            this.chkAutoSet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoSet.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.chkAutoSet.Location = new System.Drawing.Point(188, 6);
+            this.chkAutoSet.Name = "chkAutoSet";
+            this.chkAutoSet.Size = new System.Drawing.Size(79, 18);
+            this.chkAutoSet.TabIndex = 173;
+            this.chkAutoSet.Text = "自動Set";
+            this.chkAutoSet.UseVisualStyleBackColor = true;
+            // 
+            // textBoxY
+            // 
+            this.textBoxY.Enabled = false;
+            this.textBoxY.Font = new System.Drawing.Font("MS UI Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxY.Location = new System.Drawing.Point(55, 35);
+            this.textBoxY.Name = "textBoxY";
+            this.textBoxY.Size = new System.Drawing.Size(127, 29);
+            this.textBoxY.TabIndex = 4;
+            this.textBoxY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label18
+            // 
+            this.label18.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label18.Location = new System.Drawing.Point(7, 16);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(48, 16);
+            this.label18.TabIndex = 163;
+            this.label18.Text = "X座標";
             // 
             // timer1
             // 
-            timer1.Tick += timer1_Tick;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // UCCtrl
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(panelCtrl);
-            Margin = new Padding(4, 4, 4, 4);
-            Name = "UCCtrl";
-            Size = new Size(292, 508);
-            panelCtrl.ResumeLayout(false);
-            tabControl4.ResumeLayout(false);
-            tabTS.ResumeLayout(false);
-            tabTS.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
-            tabGPS.ResumeLayout(false);
-            tabGPS.PerformLayout();
-            panelBottomCoords.ResumeLayout(false);
-            panelBottomCoords.PerformLayout();
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.panelCtrl);
+            this.Name = "UCCtrl";
+            this.Size = new System.Drawing.Size(271, 409);
+            this.panelCtrl.ResumeLayout(false);
+            this.panelCtrl.PerformLayout();
+            this.tabControl4.ResumeLayout(false);
+            this.tabTS.ResumeLayout(false);
+            this.tabTS.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.tabGPS.ResumeLayout(false);
+            this.tabGPS.PerformLayout();
+            this.ResumeLayout(false);
 
         }
 
         #endregion
 
         private System.Windows.Forms.Panel panelCtrl;
-        private System.Windows.Forms.Panel panelBottomCoords;
         private System.Windows.Forms.TabControl tabControl4;
         private System.Windows.Forms.TabPage tabTS;
         private System.Windows.Forms.Label labelStatus;
@@ -827,3 +789,5 @@ namespace Site7DbEditor
         public System.Windows.Forms.CheckBox chbContMeasure;
     }
 }
+
+

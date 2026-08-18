@@ -917,6 +917,8 @@ namespace Site7DbEditor {
             dgvKikai.DataSource = _db.KikaiList;
             dgvLayer.DataSource = _db.LayerList;
 
+            SyncKikaiToGblKijunP();
+
             PopulateIkouMasterCombo();
             PopulateIbutuCombos();
 
@@ -931,6 +933,13 @@ namespace Site7DbEditor {
             if (dgvKikai.Rows.Count > 0)
                 SetCurrentRowSafe(dgvKikai, 0);
             dgvKikai_SelectionChanged(this, EventArgs.Empty);
+        }
+
+        private void SyncKikaiToGblKijunP() {
+            gbl.st7Data.KijunP.KPList.Clear();
+            foreach (var k in _db.KikaiList) {
+                gbl.st7Data.KijunP.KPList.Add(new KijunPRecEx(k.Name, k.X, k.Y, k.Z, k.Layer));
+            }
         }
 
         private void PopulateIbutuCombos() {
@@ -3733,7 +3742,45 @@ namespace Site7DbEditor {
             }
             return 1;
         }
+        #endregion
 
+        #region TS & Instrument Bridge Methods
+        public void ShowZumen0() {
+            if (picMapCanvas != null && !picMapCanvas.IsDisposed) {
+                picMapCanvas.Invalidate();
+            }
+        }
+
+        public void SetMsg(string msg) {
+            if (lblStatusMessage != null && !lblStatusMessage.IsDisposed) {
+                lblStatusMessage.Text = msg;
+            }
+        }
+
+        public bool isModeKijun() {
+            return tabControlData.SelectedIndex == 2;
+        }
+
+        public bool IsYudoMode() {
+            return false;
+        }
+
+        public void SetTSYudo() { }
+        public void SetGPSYudo() { }
+        public void SetGPSKijunP() { }
+
+        public int GetTSModel() {
+            return Env.getCurTSModel();
+        }
+
+        public void SetTSKijunP() {
+            if (gbl.TStation.isChangePos) {
+                var p = gbl.TStation.curPos;
+                txtCoordX.Text = p.X.ToString("F3");
+                txtCoordY.Text = p.Y.ToString("F3");
+                txtCoordZ.Text = p.Z.ToString("F3");
+            }
+        }
         #endregion
     }
 }
