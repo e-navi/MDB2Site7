@@ -102,14 +102,14 @@ namespace Site7DbEditor {
             gbl.MField.lastValidLng = 0.0;
             ts.isKikaiDefSet = true;
             waitCount = 0;
+            L_Len2.Text = "測定中...";
+            L_Len3.Text = "---";
             timer1.Enabled = true;
             button1.Enabled = false;
 
-            if (gbl.MField.isTracking()) {
-                ts.SetFILD(true);
-            } else {
-                ts.AS_BtnClick_3();
-            }
+            // TSに測距コマンドを直接送信
+            ts.SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, true);
+            ts.SetFILD(true);
         }
         private void UpdatePlanLen() {
             KikaiMan km = gbl.KikaiMan;
@@ -140,6 +140,9 @@ namespace Site7DbEditor {
                 L_Len3.Text = (len1 - len2).ToString("0.000");
 
                 button1.Enabled = true;
+            } else if (waitCount % 20 == 0 && waitCount < 100) {
+                // 2秒ごとに再送
+                ts.SetFILD(true);
             } else if (waitCount > 150) {
                 timer1.Enabled = false;
                 ts.isKikaiDefSet = false;
