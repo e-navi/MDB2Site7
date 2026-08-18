@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36811.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site7DbEditor", "Site7DbEditor\Site7DbEditor.csproj", "{DEB1A287-4600-FADD-C1FE-A623A7F70FCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site7DrawingEditor", "Site7DrawingEditor\Site7DrawingEditor.csproj", "{DF6374F6-7A41-6E96-D4C4-69E29FBF52CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEB1A287-4600-FADD-C1FE-A623A7F70FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEB1A287-4600-FADD-C1FE-A623A7F70FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEB1A287-4600-FADD-C1FE-A623A7F70FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEB1A287-4600-FADD-C1FE-A623A7F70FCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF6374F6-7A41-6E96-D4C4-69E29FBF52CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF6374F6-7A41-6E96-D4C4-69E29FBF52CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF6374F6-7A41-6E96-D4C4-69E29FBF52CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF6374F6-7A41-6E96-D4C4-69E29FBF52CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49EF1A31-BD13-4462-83DB-4524D7DC1E91}
+	EndGlobalSection
+EndGlobal
