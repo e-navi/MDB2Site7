@@ -40,17 +40,29 @@ namespace Site7DbEditor {
         public double kh = Def.GetIniDouble("TS", "GPS器械高", 1.5);
 
         public XYZ gpsP = new XYZ();
-        double gpsH;
+        public double gpsH;
         public int gpsStatus;
-        int gpsSatelite;//衛星数
-        double gpsDOP;//DOP
-        double gpsTime;//時間
+        public int gpsSatelite; // 衛星数
+        public double gpsDOP;   // DOP
+        public double gpsTime;  // 時間
 
         public int gpsCntMode = 0;  // 0:初期 1:カウント中 2:カウント終了
         public List<XYZ> gpsList = new List<XYZ>();
         public XYZ gpsPAve = null;
 
         public BL gpsBL;
+
+        public string GetGpsStatusText()
+        {
+            return gpsStatus switch
+            {
+                4 => "RTK-Fix",
+                5 => "RTK-Float",
+                2 => "DGPS",
+                1 => "単独測位",
+                _ => "未受信"
+            };
+        }
 
 
         public Gps() {

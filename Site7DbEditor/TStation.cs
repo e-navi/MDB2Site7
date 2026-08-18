@@ -407,6 +407,10 @@ namespace Site7DbEditor {
         public void SetCom(string _com) {
             com = _com;
         }
+        public void SetCom(bool _isLN100, string _com) {
+            isLN100 = _isLN100;
+            com = _com;
+        }
         public void ShowForm() {
             //formLN100 = new FormLN100();
             //formLN100.Show();
