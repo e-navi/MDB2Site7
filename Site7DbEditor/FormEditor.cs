@@ -507,11 +507,11 @@ namespace Site7DbEditor {
                 }
             };
 
-            this.chkShowIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowIkou.CheckedChanged += (s, e) => { _vc.InvalidateBoundsCache(); picMapCanvas.Invalidate(); };
             this.chkShowIkouName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowIbutu.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowIbutu.CheckedChanged += (s, e) => { _vc.InvalidateBoundsCache(); picMapCanvas.Invalidate(); };
             this.chkShowIbutuName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowKikai.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowKikai.CheckedChanged += (s, e) => { _vc.InvalidateBoundsCache(); picMapCanvas.Invalidate(); };
             this.chkShowKikaiName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowCurve.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkColorByIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
@@ -537,7 +537,7 @@ namespace Site7DbEditor {
             this.cmbLineKind.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.txtLineNum.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.btnLineMaxPlusOne.Click += btnLineMaxPlusOne_Click;
-            this.btnResetMapZoom.Click += (s, e) => { _vc.ResetZoom(); picMapCanvas.Invalidate(); };
+            this.btnResetMapZoom.Click += (s, e) => { _vc.InvalidateBoundsCache(); _vc.ResetZoom(); picMapCanvas.Invalidate(); };
 
             this.picMapCanvas.Paint += picMapCanvas_Paint;
             this.picMapCanvas.MouseDown += picMapCanvas_MouseDown;
@@ -1384,7 +1384,7 @@ namespace Site7DbEditor {
         #region DataGridView Double Click Map Centering
 
         private void CenterMapOnPoint(double surveyX, double surveyY) {
-            _vc.UpdateMapBounds(picMapCanvas.ClientSize, _db.IkouLList, _db.IbutuList);
+            _vc.UpdateMapBounds(picMapCanvas.ClientSize, _db.IkouLList, _db.IbutuList, _db.KikaiList, chkShowIkou.Checked, chkShowIbutu.Checked, chkShowKikai.Checked);
             _vc.CenterOnPoint(surveyX, surveyY, picMapCanvas.ClientSize);
             picMapCanvas.Invalidate();
         }
@@ -3229,6 +3229,7 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_MouseDoubleClick(object? sender, MouseEventArgs e) {
+            _vc.InvalidateBoundsCache();
             _vc.ResetZoom();
             picMapCanvas.Invalidate();
         }

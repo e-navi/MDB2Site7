@@ -34,7 +34,15 @@ namespace Site7DbEditor.Services
             _isBoundsCached = false;
         }
 
-        public void UpdateMapBounds(Size canvasSize, IEnumerable<IkouLModel> ikouLList, IEnumerable<IbutuModel> ibutuList, bool forceRecalculate = false)
+        public void UpdateMapBounds(
+            Size canvasSize,
+            IEnumerable<IkouLModel> ikouLList,
+            IEnumerable<IbutuModel> ibutuList,
+            IEnumerable<KikaiModel> kikaiList,
+            bool showIkou = true,
+            bool showIbutu = true,
+            bool showKikai = true,
+            bool forceRecalculate = false)
         {
             if (_isBoundsCached && !forceRecalculate) return;
 
@@ -45,24 +53,41 @@ namespace Site7DbEditor.Services
             double posXMin = double.MaxValue, posXMax = double.MinValue;
             double posYMin = double.MaxValue, posYMax = double.MinValue;
 
-            foreach (var line in ikouLList)
+            if (showIkou && ikouLList != null)
             {
-                var pts = SqliteManager.ParsePrecsText(line.Precs);
-                foreach (var pt in pts)
+                foreach (var line in ikouLList)
                 {
-                    if (pt.Y < posXMin) posXMin = pt.Y;
-                    if (pt.Y > posXMax) posXMax = pt.Y;
-                    if (pt.X < posYMin) posYMin = pt.X;
-                    if (pt.X > posYMax) posYMax = pt.X;
+                    var pts = SqliteManager.ParsePrecsText(line.Precs);
+                    foreach (var pt in pts)
+                    {
+                        if (pt.Y < posXMin) posXMin = pt.Y;
+                        if (pt.Y > posXMax) posXMax = pt.Y;
+                        if (pt.X < posYMin) posYMin = pt.X;
+                        if (pt.X > posYMax) posYMax = pt.X;
+                    }
                 }
             }
 
-            foreach (var ibutu in ibutuList)
+            if (showIbutu && ibutuList != null)
             {
-                if (ibutu.Y < posXMin) posXMin = ibutu.Y;
-                if (ibutu.Y > posXMax) posXMax = ibutu.Y;
-                if (ibutu.X < posYMin) posYMin = ibutu.X;
-                if (ibutu.X > posYMax) posYMax = ibutu.X;
+                foreach (var ibutu in ibutuList)
+                {
+                    if (ibutu.Y < posXMin) posXMin = ibutu.Y;
+                    if (ibutu.Y > posXMax) posXMax = ibutu.Y;
+                    if (ibutu.X < posYMin) posYMin = ibutu.X;
+                    if (ibutu.X > posYMax) posYMax = ibutu.X;
+                }
+            }
+
+            if (showKikai && kikaiList != null)
+            {
+                foreach (var kikai in kikaiList)
+                {
+                    if (kikai.Y < posXMin) posXMin = kikai.Y;
+                    if (kikai.Y > posXMax) posXMax = kikai.Y;
+                    if (kikai.X < posYMin) posYMin = kikai.X;
+                    if (kikai.X > posYMax) posYMax = kikai.X;
+                }
             }
 
             if (posXMin == double.MaxValue)

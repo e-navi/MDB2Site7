@@ -40,7 +40,7 @@ namespace Site7DbEditor.Services
             if (width <= 0 || height <= 0) return;
 
             // 1. Update/Cache bounds ONCE per frame (O(N))
-            vc.UpdateMapBounds(canvasSize, db.IkouLList, db.IbutuList);
+            vc.UpdateMapBounds(canvasSize, db.IkouLList, db.IbutuList, db.KikaiList, chkShowIkou, chkShowIbutu, chkShowKikai);
 
             PointF ToCanvasPoint(double surveyX, double surveyY)
             {
