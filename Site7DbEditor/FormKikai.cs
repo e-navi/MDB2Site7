@@ -28,6 +28,7 @@ namespace Site7DbEditor {
         }
 
         private void FormKikai_Load(object sender, EventArgs e) {
+            St7Lib.CenterOnMainForm(this);
             //panel1.Width = 262;
             //this.Width = 279;
             comboBox1.SelectedIndex = gbl.KikaiMan.kmode;

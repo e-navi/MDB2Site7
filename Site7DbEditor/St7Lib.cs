@@ -142,5 +142,21 @@ namespace Site7DbEditor
             double y = (a1 * c2 - a2 * c1) / det;
             return new XYZ(x, y, 0);
         }
+
+        public static void CenterOnMainForm(System.Windows.Forms.Form form)
+        {
+            if (gbl.FormMain != null && !gbl.FormMain.IsDisposed)
+            {
+                form.Owner = gbl.FormMain;
+                form.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+                int x = gbl.FormMain.Location.X + (gbl.FormMain.Width - form.Width) / 2;
+                int y = gbl.FormMain.Location.Y + (gbl.FormMain.Height - form.Height) / 2;
+                form.Location = new System.Drawing.Point(x, y);
+            }
+            else
+            {
+                form.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            }
+        }
     }
 }

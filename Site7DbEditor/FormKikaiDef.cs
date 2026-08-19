@@ -62,6 +62,7 @@ namespace Site7DbEditor {
         }
 
         private void FormKikaiDef_Shown(object sender, EventArgs e) {
+            St7Lib.CenterOnMainForm(this);
             button1.Enabled = false;
 
             CBSelKikaiP.Items.Clear();

@@ -96,7 +96,8 @@ namespace Site7DbEditor
             {
                 gbl.FormKikai = new FormKikai();
             }
-            gbl.FormKikai.Show();
+            St7Lib.CenterOnMainForm(gbl.FormKikai);
+            gbl.FormKikai.Show(gbl.FormMain);
             gbl.FormKikai.BringToFront();
         }
 

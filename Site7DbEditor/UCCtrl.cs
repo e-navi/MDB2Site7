@@ -283,8 +283,12 @@ namespace Site7DbEditor {
                 MessageBox.Show("基準点を２点以上登録してください！");
                 return;
             }
-            gbl.FormKikaiDef = new FormKikaiDef();
-            gbl.FormKikaiDef.Show();
+            if (gbl.FormKikaiDef == null || gbl.FormKikaiDef.IsDisposed) {
+                gbl.FormKikaiDef = new FormKikaiDef();
+            }
+            St7Lib.CenterOnMainForm(gbl.FormKikaiDef);
+            gbl.FormKikaiDef.Show(gbl.FormMain);
+            gbl.FormKikaiDef.BringToFront();
         }
         private void SelKikaiTenBackTenBtn1_Click(object sender, EventArgs e) {
             //gbl.KikaiMan.formMain = this;
