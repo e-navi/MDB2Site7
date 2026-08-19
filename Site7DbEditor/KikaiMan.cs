@@ -92,10 +92,12 @@ namespace Site7DbEditor
 
         public void showForm()
         {
-            if (gbl.FormKikai is Form formKikai && !formKikai.IsDisposed)
+            if (gbl.FormKikai == null || gbl.FormKikai.IsDisposed)
             {
-                formKikai.BringToFront();
+                gbl.FormKikai = new FormKikai();
             }
+            gbl.FormKikai.Show();
+            gbl.FormKikai.BringToFront();
         }
 
         public XYZ cnvP(double lng, double angh, double angv)
