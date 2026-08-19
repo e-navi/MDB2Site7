@@ -50,8 +50,15 @@ namespace Site7DbEditor {
             Hide();
         }
         
+        private void UpdatePlanLen() {
+            KikaiMan km = gbl.KikaiMan;
+            if (km.kp != null && km.bp != null) {
+                double len1 = km.kp.CalcLen(km.bp);
+                L_Len1.Text = len1.ToString("0.000");
+            }
+        }
+
         private void FormKikaiDef_Shown(object sender, EventArgs e) {
-            //gbl.FormMain.SetSijun(true);
             button1.Enabled = false;
 
             CBSelKikaiP.Items.Clear();
@@ -63,21 +70,23 @@ namespace Site7DbEditor {
 
             ts.isKikaiDefSet = false;
 
-            // foreach (KijunPRecEx rec in gbl.st7Data.KijunP.KPList) {
             for (int i = 0; i < gbl.st7Data.KijunP.KPList.Count; i++) {
                 KijunPRecEx rec = gbl.st7Data.KijunP.KPList[i];
                 CBSelKikaiP.Items.Add(rec.Name);
                 CBSelBackP.Items.Add(rec.Name);
-                if (km.kp.Name == rec.Name) {
+                if (km.kp != null && km.kp.Name == rec.Name) {
                     kidx = i;
                 }
-                if (km.bp.Name == rec.Name) {
+                if (km.bp != null && km.bp.Name == rec.Name) {
                     bidx = i;
                 }
-
             }
-            CBSelKikaiP.SelectedIndex = kidx;
-            CBSelBackP.SelectedIndex = bidx;
+            if (CBSelKikaiP.Items.Count > 0) {
+                CBSelKikaiP.SelectedIndex = kidx;
+            }
+            if (CBSelBackP.Items.Count > 0) {
+                CBSelBackP.SelectedIndex = bidx;
+            }
             UpdatePlanLen();
         }
 
@@ -85,12 +94,15 @@ namespace Site7DbEditor {
             Hide();
         }
 
-        int waitCount = 0;
-
         private void buttonMesure01_Click(object sender, EventArgs e) {
             //後視点を視準！
             TStation ts = gbl.TStation;
             KikaiMan km = gbl.KikaiMan;
+
+            if (km.kp == null || km.bp == null) {
+                MessageBox.Show("器械点と後視点を指定してください");
+                return;
+            }
 
             double len1 = km.kp.CalcLen(km.bp);
 
@@ -98,63 +110,47 @@ namespace Site7DbEditor {
                 MessageBox.Show("器械点・後視点で異なる点を指定してください");
                 return;
             }
-            gbl.MField.isError = false;
-            gbl.MField.lastValidLng = 0.0;
             ts.isKikaiDefSet = true;
-            waitCount = 0;
-            L_Len2.Text = "測定中...";
-            L_Len3.Text = "---";
             timer1.Enabled = true;
             button1.Enabled = false;
 
-            // TSに測距コマンドを直接送信
-            ts.SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, true);
-            ts.SetFILD(true);
-        }
-        private void UpdatePlanLen() {
-            KikaiMan km = gbl.KikaiMan;
-            if (km.kp != null && km.bp != null) {
-                double len1 = km.kp.CalcLen(km.bp);
-                L_Len1.Text = len1.ToString("0.000");
-            }
+            ts.AS_BtnClick_3();
         }
 
         private void timer1_Tick(object sender, EventArgs e) {
             TStation ts = gbl.TStation;
             KikaiMan km = gbl.KikaiMan;
-            waitCount++;
 
-            double measuredSlope = gbl.MField.lng > 0 ? gbl.MField.lng : (gbl.MField.lastValidLng > 0 ? gbl.MField.lastValidLng : (ts.curLng > 0 ? ts.curLng : 0.0));
-
-            if (measuredSlope > 0) {
-                timer1.Enabled = false;
-                ts.isKikaiDefSet = false;
-
-                double len1 = km.kp.CalcLen(km.bp);
-                // 測距値（斜距離）と高度角から実測水平距離を計算
-                double vAngle = gbl.MField.angV > 0 ? gbl.MField.angV * 360.0 : (ts.curAngV > 0 ? ts.curAngV : 90.0);
-                double len2 = Math.Abs(measuredSlope * Math.Sin(St7Lib.ToRadian(vAngle)));
-
-                L_Len1.Text = len1.ToString("0.000");
-                L_Len2.Text = len2.ToString("0.000");
-                L_Len3.Text = (len1 - len2).ToString("0.000");
-
-                button1.Enabled = true;
-            } else if (waitCount % 20 == 0 && waitCount < 100) {
-                // 2秒ごとに再送
-                ts.SetFILD(true);
-            } else if (waitCount > 150) {
-                timer1.Enabled = false;
-                ts.isKikaiDefSet = false;
-                L_Len2.Text = "未測距";
-                L_Len3.Text = "---";
-                button1.Enabled = true;
+            if (ts.isKikaiDefSet) {
+                return;
             }
+            timer1.Enabled = false;
+
+            double len1 = (km.kp != null && km.bp != null) ? km.kp.CalcLen(km.bp) : 0.0;
+            
+            // TS測定値（水平距離）
+            double len2 = 0.0;
+            if (gbl.MField.lng > 0.0) {
+                // 斜距離 * sin(鉛直角)
+                double radV = gbl.MField.angV * 2.0 * Math.PI;
+                len2 = gbl.MField.lng * Math.Sin(radV);
+                if (len2 <= 0.0) {
+                    len2 = gbl.MField.lng;
+                }
+            } else if (km.kp != null && ts.curPos != null) {
+                len2 = km.kp.CalcLen(ts.curPos);
+            }
+
+            L_Len1.Text = len1.ToString("0.000");
+            L_Len2.Text = len2.ToString("0.000");
+            L_Len3.Text = (len1 - len2).ToString("0.000");
+
+            button1.Enabled = true;
         }
 
         private void CBSelKikaiP_SelectedIndexChanged(object sender, EventArgs e) {
+            KikaiMan km = gbl.KikaiMan;
             if (CBSelKikaiP.SelectedIndex >= 0 && CBSelKikaiP.SelectedIndex < gbl.st7Data.KijunP.KPList.Count) {
-                KikaiMan km = gbl.KikaiMan;
                 KijunPRecEx krec = gbl.st7Data.KijunP.KPList[CBSelKikaiP.SelectedIndex];
                 km.kp = new TINP3(krec.Name, krec.X, krec.Y, krec.Z);
                 UpdatePlanLen();
@@ -162,8 +158,8 @@ namespace Site7DbEditor {
         }
 
         private void CBSelBackP_SelectedIndexChanged(object sender, EventArgs e) {
+            KikaiMan km = gbl.KikaiMan;
             if (CBSelBackP.SelectedIndex >= 0 && CBSelBackP.SelectedIndex < gbl.st7Data.KijunP.KPList.Count) {
-                KikaiMan km = gbl.KikaiMan;
                 KijunPRecEx brec = gbl.st7Data.KijunP.KPList[CBSelBackP.SelectedIndex];
                 km.bp = new TINP3(brec.Name, brec.X, brec.Y, brec.Z);
                 UpdatePlanLen();
@@ -174,12 +170,12 @@ namespace Site7DbEditor {
                 if (Env.curTSMode0 == Env.TS_MODE_TUIBI) {
                     curTSMode = Env.curTSMode0;
 
-                    gbl.UCCtrl.SetBtns2(true);
+                    gbl.UCCtrl?.SetBtns2(true);
                 }
             } else {
                 if (curTSMode == Env.TS_MODE_TUIBI) {
-
-                    gbl.UCCtrl.SetBtns2(gbl.FormMain.isModeKijun());
+                    bool isKijun = gbl.FormMain?.isModeKijun() ?? false;
+                    gbl.UCCtrl?.SetBtns2(isKijun);
                 }
             }
         }
@@ -193,4 +189,3 @@ namespace Site7DbEditor {
 
     }
 }
-

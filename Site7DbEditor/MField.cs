@@ -9,7 +9,6 @@ namespace Site7DbEditor {
     public class MField {
         public bool isChange;
         public double lng = 0.0;
-        public double lastValidLng = 0.0;
         public double angV = 0.0;
         public double angV0 = -1.0;
         public double angH = 0.0;
@@ -126,7 +125,7 @@ namespace Site7DbEditor {
         public bool SetRec(double curLng, double curAngV, double curAngH) {
             //Log.d("MField_SetRec!","now");
             if (0 < curLng) {
-                lastValidLng = curLng;
+                //    curLng = calcHoseiLng(curLng);
             }
             if (lng != curLng || angV != curAngV || angH != curAngH) {
                 if (angH0 == -1.0) {
@@ -151,56 +150,43 @@ namespace Site7DbEditor {
             return isError;
         }
         public bool SetRecAS(String rec) {
-            if (string.IsNullOrWhiteSpace(rec)) {
-                return isError;
-            }
-            rec = rec.Trim();
-            if (rec.StartsWith("OK") || rec.StartsWith("*")) {
-                isError = false;
-            }
-            if (rec.StartsWith("E2") || rec.StartsWith("ERR") || rec.StartsWith("receive NAK")) {
+            if (rec == null) {
                 isError = true;
-                errorMessage = rec;
+                errorMessage = "受信エラー";
                 return isError;
             }
             String[] cols = rec.Split(',');
-            if (cols.Length >= 5) {
-                double curLng = St7Lib.CheckDouble(cols[4], 0.0);
-                double curAngV = St7Lib.CheckDouble(cols[3], 0.0);
-                double curAngH = St7Lib.CheckDouble(cols[2], 0.0);
-                curStatus = cols[0].Length >= 6 ? St7Lib.CheckInt(cols[0].Substring(5, 1), 0) : 0;
+            double curLng = St7Lib.CheckDouble(cols[4], 0.0);
+            double curAngV = St7Lib.CheckDouble(cols[3], 0.0);
+            double curAngH = St7Lib.CheckDouble(cols[2], 0.0);
+            curStatus = St7Lib.CheckInt(cols[0].Substring(5, 1), 0);
 
-                SetRec(curLng, curAngV / 360.0, curAngH / 360.0);
+            //修正！2026.03.12 by A.Iimuro 視準測定の時に curStatus に3が返る！
+            //if (curStatus == 5 || curStatus == 2) {
+            //if (curStatus == 5 || curStatus == 2 || curStatus == 3) {
+            if (curStatus == 5 || curStatus == 2 || curStatus == 3 || curStatus == 0) {
+                    SetRec(curLng, curAngV / 360.0, curAngH / 360.0);
                 isError = false;
-            } else if (cols.Length >= 4) {
-                // *ST1等（測角のみ）
-                double curAngV = St7Lib.CheckDouble(cols[3], 0.0);
-                double curAngH = St7Lib.CheckDouble(cols[2], 0.0);
-                curStatus = cols[0].Length >= 6 ? St7Lib.CheckInt(cols[0].Substring(5, 1), 0) : 0;
-
-                SetRec(-1.0, curAngV / 360.0, curAngH / 360.0);
-                isError = false;
-            } else if (cols.Length >= 3) {
-                double curAngV = St7Lib.CheckDouble(cols[2], 0.0);
-                double curAngH = St7Lib.CheckDouble(cols[1], 0.0);
-                SetRec(-1.0, curAngV / 360.0, curAngH / 360.0);
-                isError = false;
+            } else {
+                isError = true;
+                errorMessage = "測定できません";   
             }
             return isError;
         }
         public bool SetRecAS2(String rec) {
-            if (string.IsNullOrWhiteSpace(rec) || rec == "OK" || rec.StartsWith("OK") || rec.StartsWith("*")) {
-                return false;
-            }
-            rec = rec.Trim();
-            if (rec.StartsWith("E200") || rec.StartsWith("ERR") || rec.StartsWith("receive NAK")) {
+            if (rec == null) {
                 isError = true;
-                errorMessage = rec + ":測定できません";
+                errorMessage = "受信エラー";
                 return isError;
             }
-            String[] cols = rec.Split(new[] { ' ', '\t', ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            if (rec.StartsWith("E200")) {
+                isError = true;
+                errorMessage = "E200:測定できません";
+                return isError;
+            }
+            String[] cols = rec.Split(' ');
 
-            if (cols.Length >= 3) {
+            if (cols.Length == 4) {
                 double curLng = St7Lib.CheckDouble2(cols[0], 0.0, -4);
                 double curAngV = St7Lib.CheckDouble2(cols[1], 0.0, -5);
                 double curAngH = St7Lib.CheckDouble2(cols[2], 0.0, -5);
@@ -211,6 +197,10 @@ namespace Site7DbEditor {
                     Env.curTSMode = Env.curTSMode0;
                 }
                 isError = false;
+
+            } else {
+                isError = true;
+                errorMessage = "測定できません";
             }
             return isError;
         }
@@ -267,4 +257,3 @@ namespace Site7DbEditor {
         }
     }
 }
-

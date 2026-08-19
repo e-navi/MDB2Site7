@@ -462,9 +462,6 @@ namespace Site7DbEditor {
                 }
             };
 
-            _ucCtrl.CoordinateReceived += (x, y, z) => {
-                SetCXYZ(x, y, z);
-            };
 
             btnDetachWindow.Click += (s, e) => {
                 SetBluetoothDisplayMode(true);
@@ -556,10 +553,8 @@ namespace Site7DbEditor {
         private void EnsureUCCtrlValid() {
             if (_ucCtrl == null || _ucCtrl.IsDisposed) {
                 _ucCtrl = new UCCtrl();
-                _ucCtrl.CoordinateReceived += (x, y, z) => {
-                    SetCXYZ(x, y, z);
-                };
             }
+            _ucCtrl.setSerialPort();
         }
 
         public void SetBluetoothDisplayMode(bool isFloatingForm) {

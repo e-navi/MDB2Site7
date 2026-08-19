@@ -12,8 +12,10 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Button = System.Windows.Forms.Button;
 
-namespace Site7DbEditor {
-    public class TStation {
+namespace Site7DbEditor
+{
+    public class TStation
+    {
         //public FormMain formMain;
         //public FormLN100 formLN100 = new FormLN100();
 
@@ -113,16 +115,22 @@ namespace Site7DbEditor {
 
         public bool isKikaiDefSet = false; // 2026.05.29 by A.Iimuro 器械点測定完了フラグ。
 
-        public TStation() {
+        public TStation()
+        {
 
         }
-        public void LN100_BtnClick(Button btn, int tag) {
-            switch (tag) {
+        public void LN100_BtnClick(Button btn, int tag)
+        {
+            switch (tag)
+            {
                 case 0:
-                    if (btn.Text == "消灯") {
+                    if (btn.Text == "消灯")
+                    {
                         gbl.TStation.SetLight(false);
                         btn.Text = "点灯";
-                    } else {
+                    }
+                    else
+                    {
                         gbl.TStation.SetLight(true);
                         btn.Text = "消灯";
                     }
@@ -131,20 +139,26 @@ namespace Site7DbEditor {
 
                     break;
                 case 2: //G or V
-                    if (btn.Text == "G") {
+                    if (btn.Text == "G")
+                    {
                         gbl.TStation.SetAutoTrackMode(1);
                         btn.Text = "V";
-                    } else {
+                    }
+                    else
+                    {
                         gbl.TStation.SetAutoTrackMode(0);
                         btn.Text = "G";
                     }
                     break;
                 case 3: //自動追尾
-                    if (btn.Text == "自動追尾") {
+                    if (btn.Text == "自動追尾")
+                    {
                         gbl.TStation.SetAutoTrack(true);
                         gbl.TStation.SetFILD(true);
                         btn.Text = "中断";
-                    } else {
+                    }
+                    else
+                    {
                         gbl.TStation.SetAutoTrack(false);
                         gbl.TStation.SetFILD(false);
                         btn.Text = "自動追尾";
@@ -158,9 +172,11 @@ namespace Site7DbEditor {
                     break;
             }
         }
-        public void LN100_MouseDown(Button btn, int tag) {
+        public void LN100_MouseDown(Button btn, int tag)
+        {
             int val = rsspd;
-            switch (tag) {
+            switch (tag)
+            {
                 case 5: // <<
                     val += 2;
                     break;
@@ -177,14 +193,17 @@ namespace Site7DbEditor {
             gbl.TStation.RotateSPD(1, val);
 
         }
-        public void LN100_MouseUp(Button btn, int tag, long ms) {
+        public void LN100_MouseUp(Button btn, int tag, long ms)
+        {
 
-            switch (tag) {
+            switch (tag)
+            {
                 case 5: // <<
                 case 6: // <
                 case 7: // >
                 case 8: // >>
-                    if (ms < LONG_CLICK_THRESHOLD_MS) {
+                    if (ms < LONG_CLICK_THRESHOLD_MS)
+                    {
                         Thread.Sleep(LONG_CLICK_THRESHOLD_MS);
                     }
                     gbl.TStation.StopRotate();
@@ -193,13 +212,18 @@ namespace Site7DbEditor {
 
         }
 
-        public void AS_BtnClick(Button btn, int tag) {
-            switch (tag) {
+        public void AS_BtnClick(Button btn, int tag)
+        {
+            switch (tag)
+            {
                 case 0:
-                    if (btn.Text == "消灯") {
+                    if (btn.Text == "消灯")
+                    {
                         gbl.TStation.SetLight(false);
                         btn.Text = "点灯";
-                    } else {
+                    }
+                    else
+                    {
                         gbl.TStation.SetLight(true);
                         btn.Text = "消灯";
                     }
@@ -243,23 +267,33 @@ namespace Site7DbEditor {
                     break;
             }
         }
-        public void AS_BtnClick_3() {
-            gbl.MField.isError = false;
-            if (Env.curTSMode == Env.TS_MODE_TUIBI) {
-                if (gbl.MField.isTracking()) {  //  追尾中の場合は確実に中断
-                    SetSearchMode(false);
-                    StopRotate();
-                    StopSokutei();
-                    gbl.MField.curStatus = 0;
-                    gbl.MField.ClearLng();
-                    return;
+        public void AS_BtnClick_3()
+        {
+            if (Env.curTSMode == Env.TS_MODE_TUIBI)
+            {
+                if (gbl.MField.isTracking())
+                {  //  追尾中
+                    if (chbContMeasure.Checked)
+                    {
+                        SetSearchMode(false);
+                        StopRotate();
+                        StopSokutei();
+                        return;
+                    }
+                    else
+                    {
+                        //追尾のみの時
+                        SetFILD(true);
+                        return;
+                    }
                 }
 
-                // 停止状態から自動追尾を開始
                 SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, true);
                 SetAutoTrack(true);
                 SetSearchMode(true);
-            } else if (Env.curTSMode == Env.TS_MODE_SHIJUNSOKUTEI) {
+            }
+            else if (Env.curTSMode == Env.TS_MODE_SHIJUNSOKUTEI)
+            {
                 SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, false);
                 SetLSL(true);
                 //SetFILD(true);
@@ -268,37 +302,50 @@ namespace Site7DbEditor {
                 //SetLSL(true);で自動視準した後、それが完了するまでを待つ動作（完了時に返り値「OK+CRLF」）。10秒経つか、自動視準の返り値がOKなら先に進むことにする。
                 //BluetoothTSクラスのsendBT関数内でReceiveStrが「OK」から始まってればcurCmd=1となるとされているのでこれをOKの返り値を得た基準とする。
                 int i = 0;
-                while ((i < 10) && (curCmd != 1)) {
+                while ((i < 10) && (curCmd != 1))
+                {
                     Thread.Sleep(1000);
                     i++;
                 }
-                if (curCmd != 1) {
+                if (curCmd != 1)
+                {
                     StopSokutei();//タイムアウトに合わせて自動視準コマンドを取り止め。
                                   //gbl.ShowToast("視準失敗のため測距できませんでした。");
-                } else {
+                }
+                else
+                {
                     SetFILD(true);//問題なく自動視準できれば測定。
                 }
                 //2022/03/31 shirai add end----------------------------------
-            } else if (Env.curTSMode == Env.TS_MODE_SHIJUN) {
+            }
+            else if (Env.curTSMode == Env.TS_MODE_SHIJUN)
+            {
                 SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, false);
 
                 // 2022.01.31 by A.Iimuro. 視準のみで視準後に測定のみに変える！
-                if (gbl.MField.isAngOK()) {
+                if (gbl.MField.isAngOK())
+                {
                     gbl.MField.ClearLng();
                     SetFILD(true);
                     SetSearchMode(true);
-                } else {
+                }
+                else
+                {
                     gbl.MField.ClearLng();
                     SetLSL(true);
                     //SetFILD0(true);
                 }
-            } else if (Env.curTSMode == Env.TS_MODE_SOKUTEI) {
+            }
+            else if (Env.curTSMode == Env.TS_MODE_SOKUTEI)
+            {
                 //SetMode(Env.SokkyoMode == Env.SokkyoMode_Seimitu, false);
                 SetFILD(true);
             }
         }
-        public void AS_BtnClick_11() {
-            if (gbl.MField.isTracking()) {
+        public void AS_BtnClick_11()
+        {
+            if (gbl.MField.isTracking())
+            {
                 SetFILD(false);
                 btnAutoTsuibi.Text = "自動追尾";
             }
@@ -306,7 +353,8 @@ namespace Site7DbEditor {
             StopSokutei();
         }
 
-        private void selTSMode(Button btn) {
+        private void selTSMode(Button btn)
+        {
             // ContextMenuStrip とメニューアイテムを作成
             ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
 
@@ -329,10 +377,12 @@ namespace Site7DbEditor {
                 contextMenuStrip.Items.Add(modeLabel);
             }
             */
-            for (int i = Env.getCurTSMode(); 0 <= i; i--) {
+            for (int i = Env.getCurTSMode(); 0 <= i; i--)
+            {
                 int mode = i; // ローカル変数にキャプチャ
                 ToolStripMenuItem modeLabel = new ToolStripMenuItem(Env.getTSModeStr(mode));
-                modeLabel.Click += (_, __) => {
+                modeLabel.Click += (_, __) =>
+                {
                     Env.curTSMode0 = mode;
                     Env.curTSMode = mode;
                     btnAutoTsuibi.Text = Env.getTSModeStr(Env.curTSMode0);
@@ -343,14 +393,16 @@ namespace Site7DbEditor {
 
         }
 
-        public void AS_MouseDown(Button btn, int tag) {
+        public void AS_MouseDown(Button btn, int tag)
+        {
             //int val = rsspd + 4;
             int val = rsspd + 6;
             int max = 16;
 
             int type = 1;
 
-            switch (tag) {
+            switch (tag)
+            {
                 case 5: // <<
                     //val += 2;
                     break;
@@ -377,12 +429,14 @@ namespace Site7DbEditor {
             if (btn.Enabled)
                 gbl.TStation.RotateSPD(type, val);
         }
-        public async void AS_MouseUp(Button btn, int tag, long ms) {
+        public async void AS_MouseUp(Button btn, int tag, long ms)
+        {
 
             if (Env.UseRC == Env.UseRC_Yes)
                 return;
 
-            switch (tag) {
+            switch (tag)
+            {
                 //case 5: // <<
                 case 6: // <
                 case 7: // >
@@ -390,7 +444,8 @@ namespace Site7DbEditor {
                 case 9: // ↑
                 case 10: // ↓
                     btn.Enabled = false;
-                    if (ms < LONG_CLICK_THRESHOLD_MS * rsspd / 2) {
+                    if (ms < LONG_CLICK_THRESHOLD_MS * rsspd / 2)
+                    {
                         await Task.Delay(LONG_CLICK_THRESHOLD_MS * rsspd / 2);
                     }
                     gbl.TStation.StopRotate();
@@ -402,34 +457,43 @@ namespace Site7DbEditor {
 
 
 
-        public void SetCom(string _com) {
+        public void SetCom(string _com)
+        {
             com = _com;
         }
-        public void SetCom(bool _isLN100, string _com) {
+        public void SetCom(bool _isLN100, string _com)
+        {
             isLN100 = _isLN100;
             com = _com;
         }
-        public void ShowForm() {
+        public void ShowForm()
+        {
             //formLN100 = new FormLN100();
             //formLN100.Show();
         }
-        public void DisConnect() {
-            if (isConnect) {
+        public void DisConnect()
+        {
+            if (isConnect)
+            {
                 SetLight(false);
                 StopSokutei();
             }
-            if (serialPort != null) {
+            if (serialPort != null)
+            {
                 serialPort.Close();
                 serialPort = null;
             }
             isConnect = false;
         }
-        public void Connect() {
+        public void Connect()
+        {
             isLN100 = (gbl.FormMain.GetTSModel() == 0);
-            if (serialPort == null) {
+            if (serialPort == null)
+            {
                 serialPort = new SerialPort();
             }
-            if (serialPort.IsOpen) {
+            if (serialPort.IsOpen)
+            {
                 serialPort.Close();
             }
             serialPort.BaudRate = 115200; //変調回数(1秒あたり)
@@ -447,7 +511,8 @@ namespace Site7DbEditor {
             serialPort.WriteTimeout = 2000;
 
 
-            try {
+            try
+            {
                 //ポートの監視を開始する
                 serialPort.Open();
 
@@ -456,7 +521,9 @@ namespace Site7DbEditor {
                 else
                     serialPort.DataReceived += SerialPort_DataReceived_TSA;
 
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 //MessageBox.Show(e.Message);
                 MessageBox.Show("接続できません");
 
@@ -467,16 +534,22 @@ namespace Site7DbEditor {
             //LN100.WriteData("@LGLON,1,2,");
 
         }
-        public bool CheckConnect() {
-            if (!isConnect) {
+        public bool CheckConnect()
+        {
+            if (!isConnect)
+            {
                 return false;
             }
-            if (!serialPort.IsOpen) {
+            if (!serialPort.IsOpen)
+            {
                 return false;
             }
-            try {
+            try
+            {
                 serialPort.Write("\r");
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 //MessageBox.Show(e.ToString());
                 isConnect = false;
                 MessageBox.Show("再接続してください");
@@ -484,7 +557,8 @@ namespace Site7DbEditor {
             //Console.WriteLine("SerialPort is Connecting.");
             return isConnect;
         }
-        public string GetTCPRec(int cmd, string strCmd, int type) {
+        public string GetTCPRec(int cmd, string strCmd, int type)
+        {
             sendStr = strCmd;
             receiveStr = "";
 
@@ -496,35 +570,45 @@ namespace Site7DbEditor {
                 n = 500;
 
             int cnt = 0;
-            while ((receiveStr == "") && (cnt++ < n)) {
+            while ((receiveStr == "") && (cnt++ < n))
+            {
                 if (!isConnect)
                     break;
                 Thread.Sleep(10);
             }
-            if (receiveStr == "") {
+            if (receiveStr == "")
+            {
                 cnt++;
             }
 
             return receiveStr;
         }
-        public void WriteData(String str) {
-            if (!isConnect) {
+        public void WriteData(String str)
+        {
+            if (!isConnect)
+            {
                 return;
             }
-            if (!serialPort.IsOpen) {
+            if (!serialPort.IsOpen)
+            {
                 return;
             }
-            try {
+            try
+            {
                 serialPort.Write(str + "\r");
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 //MessageBox.Show(e.ToString());
                 MessageBox.Show("再接続してください");
                 isConnect = false;
             }
             Console.WriteLine(str);
         }
-        public void WriteData2(String str) {
-            if (!serialPort.IsOpen) {
+        public void WriteData2(String str)
+        {
+            if (!serialPort.IsOpen)
+            {
                 return;
             }
             serialPort.Write(str);
@@ -538,36 +622,43 @@ namespace Site7DbEditor {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SerialPort_DataReceived_LN100(object sender, SerialDataReceivedEventArgs e) {
+        private void SerialPort_DataReceived_LN100(object sender, SerialDataReceivedEventArgs e)
+        {
             SerialPort serialPort1 = (SerialPort)sender;
             string str = "";
-            try {
+            try
+            {
                 //receivedData = this.serialPort1.ReadLine();
                 int rbyte = serialPort1.BytesToRead;
 
-                for (int i = 0; i < rbyte; i++) {
+                for (int i = 0; i < rbyte; i++)
+                {
                     int tmp = serialPort1.ReadChar();
                     char ctmp = (char)tmp;
                     receivedBuff += ctmp;
 
-                    if (ctmp == 02) {
+                    if (ctmp == 02)
+                    {
                         receivedBuff = "";
                     }
-                    if (ctmp == 03) {
+                    if (ctmp == 03)
+                    {
                         str = receivedBuff;
                         receivedBuff = "";
 
                         // ここで受信データの処理
 
                     }
-                    if (ctmp == 13) {
+                    if (ctmp == 13)
+                    {
                         str = receivedBuff;
                         receivedBuff = "";
                         //textBox1.AppendText(str);
 
                         string[] strs = str.Split(',');
 
-                        if (strs[0].Equals("@MFILD")) {
+                        if (strs[0].Equals("@MFILD"))
+                        {
                             gbl.MField.SetRecLN100(str);
 
                             curLng = St7Lib.CheckDouble(strs[1], -1.0);
@@ -578,7 +669,9 @@ namespace Site7DbEditor {
                         receiveStr = strs[0];
                     }
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
 
 
             }
@@ -586,29 +679,36 @@ namespace Site7DbEditor {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SerialPort_DataReceived_TSA(object sender, SerialDataReceivedEventArgs e) {
+        private void SerialPort_DataReceived_TSA(object sender, SerialDataReceivedEventArgs e)
+        {
             SerialPort serialPort1 = (SerialPort)sender;
             string str = "";
-            try {
+            try
+            {
                 //receivedData = this.serialPort1.ReadLine();
                 string sendStr0 = sendStr;
                 int rbyte = serialPort1.BytesToRead;
 
-                for (int i = 0; i < rbyte; i++) {
+                for (int i = 0; i < rbyte; i++)
+                {
                     idleCnt = 0;
                     int tmp = serialPort1.ReadChar();
                     char ctmp = (char)tmp;
-                    if (ctmp != 13) {
+                    if (ctmp != 13)
+                    {
                         receivedBuff += ctmp;
                     }
 
-                    if (ctmp == '\n') {
+                    if (ctmp == '\n')
+                    {
                         receivedBuff = "";
                     }
-                    if (ctmp == 02) {
+                    if (ctmp == 02)
+                    {
                         receivedBuff = "";
                     }
-                    if (ctmp == 03) {
+                    if (ctmp == 03)
+                    {
                         str = receivedBuff;
                         receivedBuff = "";
 
@@ -616,37 +716,44 @@ namespace Site7DbEditor {
                         //receiveStr = str;
 
                     }
-                    if (ctmp == 06) {
+                    if (ctmp == 06)
+                    {
                         receiveStr = "receive ACK " + sendStr;
                         receivedBuff = "";
 
 
-                        if (sendStr.StartsWith("*TBON")) {
+                        if (sendStr.StartsWith("*TBON"))
+                        {
                             sendStr = "";//2022/02/25 Iimuro add
                             //continue;
                         }
-                        if (sendStr.StartsWith("*SJ000000")) {
+                        if (sendStr.StartsWith("*SJ000000"))
+                        {
                             sendStr = "";//2022/02/25 Iimuro add
                             //continue;
                         }
-                        if (sendStr.StartsWith("*R")) {
+                        if (sendStr.StartsWith("*R"))
+                        {
                             gbl.MField.ClearLng();
                             gbl.MField.curStatus = 0;
                             sendStr = "";//2022/02/25 Iimuro add
                             //continue;
                         }
-                        if (sendStr.StartsWith("*Q")) {
+                        if (sendStr.StartsWith("*Q"))
+                        {
                             gbl.MField.ClearLng();
                             gbl.MField.curStatus = 0;
                             sendStr = "";//2022/02/25 Iimuro add
                             //continue;
                         }
-                        if (sendStr.StartsWith("*ST0")) {
+                        if (sendStr.StartsWith("*ST0"))
+                        {
                             gbl.MField.curStatus = 0;
                             sendStr = "";//2022/02/25 Iimuro add
                             //continue;
                         }
-                        if (sendStr.StartsWith("*J")) {
+                        if (sendStr.StartsWith("*J"))
+                        {
                             sendStr = "";//2022/02/25 Iimuro add
                             //continue;
                         }
@@ -654,32 +761,49 @@ namespace Site7DbEditor {
 
 
                     }
-                    if (ctmp == 0x15) {
+                    if (ctmp == 0x15)
+                    {
                         receiveStr = "receive NAK " + sendStr;
                         receivedBuff = "";
                     }
-                    if (ctmp == 13) {   //改行コード
+                    if (ctmp == 13)
+                    {   //改行コード
                         receiveStr = receivedBuff;
                         receivedBuff = "";
                         //textBox1.AppendText(str);
 
                         string[] str0 = receiveStr.Split(',');
 
-                        if (sendStr.StartsWith("\u0014")) {
+                        if (sendStr.StartsWith('\u0014'))
+                        {
 
-                            if (string.IsNullOrWhiteSpace(receiveStr) || receiveStr == "OK" || receiveStr.StartsWith("OK")) {
+                            if (receiveStr == "")
+                            {
                                 continue;
                             }
                             str = receiveStr;
                             receivedBuff = "";
 
-                            if (!gbl.MField.SetRecAS2(str)) {
+
+                            if (!gbl.MField.SetRecAS2(str))
+                            {
                                 isChangePos = true;
+
                             }
+                            /*
+                            if (Env.TS == Env.TS_PS || Env.TS == Env.TS_DS) {  //2026.5.15 自動追尾対応TSは、STOPしないとまずい！
+                                sendStr = "\u0012";     // \u0014 の時は \u0012でないとSTOPしない
+                                curCmd = 1;
+                            } else {
+                                sendStr = "";
+                            }
+                            */
+                            // \u0014の時は、いつも \u0012で STOPしたほうがよい！と思う 2026.6.12
                             sendStr = "\u0012";     // \u0014 の時は \u0012でないとSTOPしない
                             curCmd = 1;
                         }
-                        if (str0[0].StartsWith("*ST3") || str0[0].StartsWith("*ST2")) {
+                        if (str0[0].StartsWith("*ST3") || str0[0].StartsWith("*ST2"))
+                        {
                             gbl.MField.SetRecAS(receiveStr);
 
                             curLng = St7Lib.CheckDouble(str0[4], -1.0);
@@ -690,10 +814,11 @@ namespace Site7DbEditor {
 
                             isChangePos = true;
                             str = "";
-                            int curStatus = (str0[0].Length >= 6) ? St7Lib.CheckInt(str0[0].Substring(5, 1), 0) : 0;
+                            int curStatus = St7Lib.CheckInt(str0[0].Substring(5, 1), 0);
                             gbl.MField.curStatus = curStatus;
 
-                            if (curStatus != curTuibiStatus) {
+                            if (curStatus != curTuibiStatus)
+                            {
 
                                 curTuibiStatus = curStatus;
                                 isChangeTuibiStatus = true;
@@ -723,17 +848,20 @@ namespace Site7DbEditor {
                             }
                             */
                             int bl = St7Lib.CheckInt(str0[1], -1);
-                            if (0 <= bl) {
+                            if (0 <= bl)
+                            {
                                 batteryLevel = bl;
                             }
                             //2026.03.23 by A.Iimuro 単独測定/連続測定処理
-                            if (Env.curTSMode == Env.TS_MODE_TUIBI && !chbContMeasure.Checked) {
+                            if (Env.curTSMode == Env.TS_MODE_TUIBI && !chbContMeasure.Checked)
+                            {
                                 sendStr = "*ST1";
                                 curCmd = 1;
 
                             }
                         }
-                        if (str0[0].StartsWith("*ST1")) {
+                        if (str0[0].StartsWith("*ST1"))
+                        {
                             gbl.MField.SetRecAS(receiveStr);
                             // curLng を -1 にするため、SetRec()を直接呼び出す
                             //gbl.MField.SetRecAS(receiveStr);
@@ -744,53 +872,71 @@ namespace Site7DbEditor {
 
                             gbl.MField.SetRec(curLng, curAngV / 360.0, curAngH / 360.0);
 
-                            if (Env.curTSMode == Env.TS_MODE_SHIJUN) {
+                            if (Env.curTSMode == Env.TS_MODE_SHIJUN)
+                            {
                                 Env.curTSMode = Env.TS_MODE_SOKUTEI;
                                 btnAutoTsuibi.Text = (Env.getCurTSModeStr());
                             }
                             sendStr = "";
                             //2026.03.23 by A.Iimuro 単独測定/連続測定処理
-                            if (Env.curTSMode == Env.TS_MODE_TUIBI) {
-                                if (chbContMeasure.Checked) {
+                            if (Env.curTSMode == Env.TS_MODE_TUIBI)
+                            {
+                                if (chbContMeasure.Checked)
+                                {
                                     //連続測定に切り替わった時は *ST3を送信する
                                     sendStr = "*ST3";
                                     curCmd = 1;
-                                } else {
+                                }
+                                else
+                                {
                                     //単独測定の時は追尾のみを継続する
 
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 //視準測定の時は追尾を中断する
                                 sendStr = "*ST0";
                                 curCmd = 1;
                             }
                             isChangePos = true;
                         }
-                        if (str0[0].StartsWith("OK")) {  // *TBON の時
-                            //if (sendStr0 == "*TBON" || sendStr0.StartsWith("*SJ3")) {
+                        if (str0[0].StartsWith("OK"))
+                        {  // *TBON の時
+                           //if (sendStr0 == "*TBON" || sendStr0.StartsWith("*SJ3")) {
 
-                                if ((Env.curTSMode == Env.TS_MODE_TUIBI)) {
-                                    if (chbContMeasure.Checked) {
-                                        sendStr = "*ST3";
-                                    } else {
-                                        sendStr = "*ST1";
-                                    }
-                                    curCmd = 1;
-                                } else {
-                                    if (Env.curTSMode == Env.TS_MODE_SHIJUNSOKUTEI) {
-                                        // && SendStr.startsWith("*SJ3 0")) {
-                                        sendStr = "*ST3";    // 2022.09.19 by A.Iimuro なぜか消されていた！
-                                        curCmd = 1;
-                                    } else if (Env.curTSMode == Env.TS_MODE_SHIJUN) {
-                                        sendStr = "*ST1";
-                                        curCmd = 1;
-                                    }
-                                    receiveStr = "OK " + sendStr;
+                            if ((Env.curTSMode == Env.TS_MODE_TUIBI))
+                            {
+                                if (chbContMeasure.Checked)
+                                {
+                                    sendStr = "*ST3";
                                 }
+                                else
+                                {
+                                    sendStr = "*ST1";
+                                }
+                                curCmd = 1;
+                            }
+                            else
+                            {
+                                if (Env.curTSMode == Env.TS_MODE_SHIJUNSOKUTEI)
+                                {
+                                    // && SendStr.startsWith("*SJ3 0")) {
+                                    sendStr = "*ST3";    // 2022.09.19 by A.Iimuro なぜか消されていた！
+                                    curCmd = 1;
+                                }
+                                else if (Env.curTSMode == Env.TS_MODE_SHIJUN)
+                                {
+                                    sendStr = "*ST1";
+                                    curCmd = 1;
+                                }
+                                receiveStr = "OK " + sendStr;
+                            }
                             //}
                         }
                         // 2022/02/16 Add RC ボタン RC Start------------------------------
-                        if (str0[0].StartsWith("*RCA")) {
+                        if (str0[0].StartsWith("*RCA"))
+                        {
                             /*
 							if (gbl.curTSMode == gbl.TS_MODE_TUIBI)
 								SendStr = calcChkEOR("*SJ3 1,0,,0,,,,");	//測距のみ
@@ -801,7 +947,8 @@ namespace Site7DbEditor {
 							*/
                         }
                         //長押し
-                        if (str0[0].StartsWith("*RCB")) {
+                        if (str0[0].StartsWith("*RCB"))
+                        {
                             if (Env.curTSMode == Env.TS_MODE_TUIBI)
                                 sendStr = "*SJ3 1,1,,0,,,,";    //追尾
                             else
@@ -813,18 +960,22 @@ namespace Site7DbEditor {
                 }
                 //Console.WriteLine(receiveStr);
 
-                if (sendStr != "" && !sendStr.StartsWith("\u0014")) {
+                if (sendStr != "" && !sendStr.StartsWith('\u0014'))
+                {
                     WriteData(sendStr);
                     sendStr = "";
                 }
 
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
 
 
             }
         }
-        public void resetConnect() {
+        public void resetConnect()
+        {
             if (isConnect)
                 DisConnect();
             isConnect = false;
@@ -834,26 +985,37 @@ namespace Site7DbEditor {
             btnType = -1;//2022/02/14 Iimuro Add
         }
 
-        public bool isChangeTracking() {
+        public bool isChangeTracking()
+        {
 
-            if (Env.isSupportTuibi()) {
-                if (gbl.MField.isTracking() != isTracking0) {
+            if (Env.isSupportTuibi())
+            {
+                if (gbl.MField.isTracking() != isTracking0)
+                {
                     return true;
-                } else {
+                }
+                else
+                {
                     return false;
                 }
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
 
-        public void SetImgBtn(Button btn, int _btnType) {
-            if (btnType != _btnType) {
-                if (_btnType == 1) {
+        public void SetImgBtn(Button btn, int _btnType)
+        {
+            if (btnType != _btnType)
+            {
+                if (_btnType == 1)
+                {
                     btn.Enabled = true;
                     //if (btnType != -1) gbl.sm.playSound(gbl.sm.mp3_1);
                 }
-                if (_btnType == 0) {
+                if (_btnType == 0)
+                {
                     btn.Enabled = false;
                     //if (gbl.curTSMode == gbl.TS_MODE_TUIBI)
                     //if (btnType != -1) gbl.sm.playSound(gbl.sm.mp3_3);
@@ -861,12 +1023,18 @@ namespace Site7DbEditor {
                 btnType = _btnType;
             }
         }
-        public bool SetImgBtn(Button btn) {
-            if (Env.isUseGPS()) {
-                if (Env.isUseGPSRTK()) {
-                    if (isConnect) {
+        public bool SetImgBtn(Button btn)
+        {
+            if (Env.isUseGPS())
+            {
+                if (Env.isUseGPSRTK())
+                {
+                    if (isConnect)
+                    {
                         curStatus = 1;
-                    } else {
+                    }
+                    else
+                    {
                         curStatus = 0;
                     }
                 }
@@ -876,18 +1044,22 @@ namespace Site7DbEditor {
                     SetImgBtn(btn, 0);
                 return true;
             }
-            if (isConnect) {
+            if (isConnect)
+            {
                 // 2022.01.31 by A.Iimuro. 視準のみで視準後に測定のみに変える！　Start--------
-                if (Env.curTSMode == Env.TS_MODE_SHIJUN) {
+                if (Env.curTSMode == Env.TS_MODE_SHIJUN)
+                {
                     if (gbl.MField.isAngOK())
                         btnAutoTsuibi.Text = (Env.getTSModeStr(Env.TS_MODE_SOKUTEI));
                     else
                         btnAutoTsuibi.Text = (Env.getTSModeStr(Env.TS_MODE_SHIJUN));
                 }
                 // 2022.01.31 by A.Iimuro. 視準のみで視準後に測定のみに変える！　End----------
-                if (gbl.MField.isTracking()) {
+                if (gbl.MField.isTracking())
+                {
                     //追尾中（記録可能）
-                    if (curStatus != 2) {
+                    if (curStatus != 2)
+                    {
                         //                        curStatus = 2;
                         //btn.setImageResource(R.drawable.ic_kiroku);
                         //btn.setEnabled(true);
@@ -906,15 +1078,20 @@ namespace Site7DbEditor {
                     }
                     //} else if (gbl.mfield.isLngOK()) {
                     //} else if (gbl.mfield.isLngOK() && !gbl.isSupportTuibi()) {	// 		測距　→　測距＋追尾でない！ 2020.10.22 by A.Iimuro
-                } else if (gbl.MField.isLngOK()) {  // 		測距　→　測距＋追尾でない！ 2022.01.31 by A.Iimuro
-                                                    //btn.setImageResource(R.drawable.ic_kiroku);
-                                                    //btn.setEnabled(true);
+                }
+                else if (gbl.MField.isLngOK())
+                {  // 		測距　→　測距＋追尾でない！ 2022.01.31 by A.Iimuro
+                   //btn.setImageResource(R.drawable.ic_kiroku);
+                   //btn.setEnabled(true);
                     curStatus = 1;  //2022/09/23 A.Iimuro Add
                     SetImgBtn(btn, 1);
-                } else {
+                }
+                else
+                {
                     //追尾なし（記録不可）
                     SetImgBtn(btn, 0);
-                    if (curStatus != 1) {
+                    if (curStatus != 1)
+                    {
                         curStatus = 1;
                         //btn.setImageResource(R.drawable.ic_kiroku_off);
                         //btn.setEnabled(false);
@@ -922,14 +1099,18 @@ namespace Site7DbEditor {
                         //SetSearchMode(false);
                     }
                 }
-                if (isChangeTuibiStatus) {
+                if (isChangeTuibiStatus)
+                {
                     isChangeTuibiStatus = false;
                     SetSearchMode(true);
                 }
-            } else {
+            }
+            else
+            {
                 curStatus = 0;//2022/04/07 shirai check　ここが原因でたまに繋がっているにも関わらず「接続」のアイコンが出てた。
                 SetImgBtn(btn, 0);
-                if (isConnect0 != isConnect) {
+                if (isConnect0 != isConnect)
+                {
                     isConnect0 = isConnect;
                     //btn.setImageResource(R.drawable.ic_kiroku_off);
                     //btn.setEnabled(false);
@@ -937,27 +1118,34 @@ namespace Site7DbEditor {
                     return false;
                 }
             }
-            if (curStatus != curStatus0) {
-                if (curStatus == 0) {
+            if (curStatus != curStatus0)
+            {
+                if (curStatus == 0)
+                {
                     //btn.setImageResource(R.drawable.ic_kiroku_off);
                     //btn.setEnabled(false);
                     SetImgBtn(btn, 0);
                 }
-                if (curStatus == 1) {
-                    if (curStatus0 == 2) {
+                if (curStatus == 1)
+                {
+                    if (curStatus0 == 2)
+                    {
                         // 2022.01.31 by A.Iimuro. 追尾可能TSでも測定できる様にした Start-----------
                         //if (gbl.isSupportTuibi()) {
-                        if (Env.curTSMode == Env.TS_MODE_TUIBI) {//2022/02/14 Iimuro Add 「if (gbl.curTSMode == gbl.TS_MODE_TUIBI)の条件」
+                        if (Env.curTSMode == Env.TS_MODE_TUIBI)
+                        {//2022/02/14 Iimuro Add 「if (gbl.curTSMode == gbl.TS_MODE_TUIBI)の条件」
                             //gbl.sm.playSound(gbl.sm.mp3_3);
                         }
                         SetImgBtn(btn, 0);
                         // 2022.01.31 by A.Iimuro. 追尾可能TSでも測定できる様にした End-----------
                     }
                 }
-                if (curStatus == 2) {
+                if (curStatus == 2)
+                {
                     // 2022.01.31 by A.Iimuro. 追尾可能TSでも測定できる様にした Start-----------
                     //if (gbl.isSupportTuibi()) {
-                    if (Env.curTSMode == Env.TS_MODE_TUIBI) {
+                    if (Env.curTSMode == Env.TS_MODE_TUIBI)
+                    {
                         //gbl.sm.playSound(gbl.sm.mp3_1);
                     }
                     // 2022.01.31 by A.Iimuro. 追尾可能TSでも測定できる様にした End-------------
@@ -968,10 +1156,13 @@ namespace Site7DbEditor {
             }
             return false;
         }
-        public void SetSearchMode(bool OnOff) {
+        public void SetSearchMode(bool OnOff)
+        {
             //Log.d("TS_SetSearchMode","now");
-            if (OnOff) {
-                if (gbl.MField.isTracking()) {
+            if (OnOff)
+            {
+                if (gbl.MField.isTracking())
+                {
                     isSearching = true;
                     if (chbContMeasure.Checked)
                         btnAutoTsuibi.Text = ("追尾中断");
@@ -981,14 +1172,17 @@ namespace Site7DbEditor {
                     curStatus = 2;
                     return;
                 }
-                if (gbl.MField.isSearching()) {
+                if (gbl.MField.isSearching())
+                {
                     isSearching = true;
                     btnAutoTsuibi.Text = ("サーチ中断");
                     curStatus = 1;
                     return;
                 }
-                if (!Env.isSupportTuibi()) {
-                    if (gbl.MField.isLngOK()) {
+                if (!Env.isSupportTuibi())
+                {
+                    if (gbl.MField.isLngOK())
+                    {
                         isSearching = true;
                         //btnAutoTsuibi.Text = ("測定中断");
                         btnAutoTsuibi.Text = Env.getCurTSModeStr();
@@ -1048,15 +1242,19 @@ namespace Site7DbEditor {
         }
 
 
-        public bool Init2() {
+        public bool Init2()
+        {
             string str;
 
-            if (isLN100) {
+            if (isLN100)
+            {
                 //プリズム
                 SetITRGT();
                 SetLight(true);
                 searchAreaBtn.Font = new Font(searchAreaBtn.Font.FontFamily, 10.0F, searchAreaBtn.Font.Style);
-            } else {
+            }
+            else
+            {
                 Env.initCurTSMode();
                 //                btnAutoTsuibi.Text = Env.getCurTSModeStr();
 
@@ -1065,9 +1263,12 @@ namespace Site7DbEditor {
                 GetTCPRec(1, str, 0);
 
                 //距離分解能・角度分解能
-                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI) {
+                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI)
+                {
                     GetTCPRec(1, "/Dk 0,0", 0);     //NG
-                } else {
+                }
+                else
+                {
                     // 角度分解能は、'/B'で設定可能
                 }
 
@@ -1093,65 +1294,94 @@ namespace Site7DbEditor {
 
             return true;
         }
-        private void SetSearchAreaBtn() {
-            if (isLN100) {
+        private void SetSearchAreaBtn()
+        {
+            if (isLN100)
+            {
                 searchAreaBtn.Font = new Font(searchAreaBtn.Font.FontFamily, 10.0F, searchAreaBtn.Font.Style);
-            } else {
+            }
+            else
+            {
                 searchAreaBtn.Font = new Font(searchAreaBtn.Font.FontFamily, 7.0F, searchAreaBtn.Font.Style);
                 searchAreaBtn.Text = String.Format("サーチ\n範囲\n{0:#}/{1:#}", Env.SearchH, Env.SearchV);
             }
         }
         //器械点指定
-        public bool SetKikai() {
-            if (isLN100) {
+        public bool SetKikai()
+        {
+            if (isLN100)
+            {
 
-            } else {
+            }
+            else
+            {
                 SetKP(gbl.KikaiMan.kp.X, gbl.KikaiMan.kp.Y, gbl.KikaiMan.kp.Z);
                 SetHAng(gbl.KikaiMan.angK);
             }
             return true;
         }
         //器械点
-        public bool SetKP(double x, double y, double z) {
-            if (isLN100) {
+        public bool SetKP(double x, double y, double z)
+        {
+            if (isLN100)
+            {
 
-            } else {
+            }
+            else
+            {
                 string rec = "/Da " + x.ToString("F3") + "," + y.ToString("F3") + "," + z.ToString("F3");
                 GetTCPRec(1, rec, 0);
             }
             return true;
         }
         //後視点
-        public bool SetHAng(double ang) {
-            if (isLN100) {
+        public bool SetHAng(double ang)
+        {
+            if (isLN100)
+            {
 
-            } else {
+            }
+            else
+            {
                 string rec = "/Dc " + ang2dms(ang, 0);
                 GetTCPRec(1, rec, 0);
             }
             return true;
         }
         //測定モード　高速・連続
-        public bool SetMode(bool isPrecision, bool isContinuous) {
-            if (isLN100) {
+        public bool SetMode(bool isPrecision, bool isContinuous)
+        {
+            if (isLN100)
+            {
 
-            } else {
+            }
+            else
+            {
                 string rec;
-                if (isPrecision) {
+                if (isPrecision)
+                {
                     //精密
-                    if (isContinuous) {
+                    if (isContinuous)
+                    {
                         //連続
                         rec = "Xb";
-                    } else {
+                    }
+                    else
+                    {
                         //単回
                         rec = "Xa";
                     }
-                } else {
+                }
+                else
+                {
                     //高速
-                    if (isContinuous) {
+                    if (isContinuous)
+                    {
                         //連続
                         rec = "Xd";
-                    } else {
+                    }
+                    else
+                    {
                         //単回
                         rec = "Xc";
                     }
@@ -1161,18 +1391,23 @@ namespace Site7DbEditor {
             return true;
         }
         //ターゲットタイプ設定（プリズム）
-        public bool SetITRGT() {
+        public bool SetITRGT()
+        {
 
             String ret;
-            if (isLN100) {
+            if (isLN100)
+            {
 
                 String rec = String.Format("@ITRGT,1,34,{0:#},", Env.PrismVal);
 
                 ret = GetTCPRec(CMD_ITRGT, rec, 1);
                 if (ret.Equals(""))
                     return false;
-            } else {
-                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI) {
+            }
+            else
+            {
+                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI)
+                {
                     string str = "*/PG 3,";    //360°プリズム
 
                     if (Env.Prism == 0)
@@ -1186,15 +1421,23 @@ namespace Site7DbEditor {
             }
             return true;
         }
-        public bool SetLightType(int type, int val) {
-            if (isLN100) {
+        public bool SetLightType(int type, int val)
+        {
+            if (isLN100)
+            {
 
-            } else {
-                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI) {
+            }
+            else
+            {
+                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI)
+                {
                     string str;
-                    if (type == Env.LightPat_LED) {
+                    if (type == Env.LightPat_LED)
+                    {
                         str = "*/PF 1," + (val + 1).ToString();
-                    } else {
+                    }
+                    else
+                    {
                         str = "*/PF 2,1";
                     }
                     GetTCPRec(1, str, 0);
@@ -1203,61 +1446,86 @@ namespace Site7DbEditor {
 
             return true;
         }
-        public bool SetLight(bool OnOff) {
+        public bool SetLight(bool OnOff)
+        {
 
             String ret;
-            if (isLN100) {
+            if (isLN100)
+            {
 
                 double GuideLightPat = Env.GuideLightPat;
                 double GuideLightVal = Env.GuideLightVal;
 
-                if (OnOff) {
+                if (OnOff)
+                {
                     String rec = "@LGLON," + GuideLightPat + "," + GuideLightVal + ",";
 
                     ret = GetTCPRec(CMD_LGLON, rec, 1);
-                } else {
+                }
+                else
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@LGLOF,", 2, 3, 1);
                     ret = GetTCPRec(CMD_LGLOF, "@LGLOF,", 1);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
-                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI) {
-                    if (OnOff) {
+            }
+            else
+            {
+                if (Env.getTSMode() != Env.TS_MODE_SOKUTEI)
+                {
+                    if (OnOff)
+                    {
                         SetLightType(Env.LightPat, Env.LightVal);
                         ret = GetTCPRec(CMD_LGLON, "*GLON", 0);
-                    } else {
+                    }
+                    else
+                    {
                         ret = GetTCPRec(CMD_LGLOF, "*GLOFF", 0);
                     }
                 }
             }
             return true;
         }
-        public bool SetLP(bool OnOff) {
+        public bool SetLP(bool OnOff)
+        {
             String ret;
-            if (isLN100) {
-                if (OnOff) {
+            if (isLN100)
+            {
+                if (OnOff)
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@LLPON,1,2,", 2, 3, 1);
                     ret = GetTCPRec(CMD_LLPON, "@LLPON,1,2,", 1);
-                } else {
+                }
+                else
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@LLPOF,", 2, 3, 1);
                     ret = GetTCPRec(CMD_LLPOF, "@LLPOF,", 1);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
 
             }
             return true;
         }
         //回転動作停止+測定中止
-        public bool StopSokutei() {
-            if (isLN100) {
+        public bool StopSokutei()
+        {
+            if (isLN100)
+            {
 
-            } else {
-                if (Env.curTSMode == Env.TS_MODE_SOKUTEI) {
+            }
+            else
+            {
+                if (Env.curTSMode == Env.TS_MODE_SOKUTEI)
+                {
                     GetTCPRec(CMD_MFILD, "\u0012", 1);
-                } else {
+                }
+                else
+                {
                     GetTCPRec(3, "*Q", 0);
 
                 }
@@ -1267,13 +1535,20 @@ namespace Site7DbEditor {
             return true;
         }
         //回転動作停止
-        public bool StopRotate() {
-            if (isLN100) {
+        public bool StopRotate()
+        {
+            if (isLN100)
+            {
                 SetAutoTrack(false);
-            } else {
-                if (Env.curTSMode == Env.TS_MODE_SOKUTEI) {
+            }
+            else
+            {
+                if (Env.curTSMode == Env.TS_MODE_SOKUTEI)
+                {
                     GetTCPRec(CMD_MFILD, "\u0012", 1);
-                } else {
+                }
+                else
+                {
                     GetTCPRec(3, "*R", 0);
 
                 }
@@ -1281,66 +1556,92 @@ namespace Site7DbEditor {
             return true;
         }
         //水平角０°設定
-        public bool SetZero() {
-            if (isLN100) {
+        public bool SetZero()
+        {
+            if (isLN100)
+            {
 
-            } else {
+            }
+            else
+            {
                 GetTCPRec(3, "Xh", 0);
             }
             return true;
         }
         //自動視準
-        public bool SetLSL(bool OnOff) {
+        public bool SetLSL(bool OnOff)
+        {
             String ret;
-            if (isLN100) {
-                if (OnOff) {
+            if (isLN100)
+            {
+                if (OnOff)
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@LLPON,1,2,", 2, 3, 1);
                     ret = GetTCPRec(CMD_LSLON, "@LSLON,", 1);
-                } else {
+                }
+                else
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@LLPOF,", 2, 3, 1);
                     ret = GetTCPRec(CMD_LSLOF, "@LSLOF,", 1);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
                 curTuibiStatus = 4;	//プリズム待ち（サーチ中）
-                if (OnOff) {
+                if (OnOff)
+                {
                     StopRotate();
                     SetFILD(false);
                     if (Env.UseRC == Env.UseRC_Yes)
                         GetTCPRec(1, "*SJ3 1,0,,0,,,,", 0);
                     else
                         GetTCPRec(1, "*SJ3 0,0,,0,,,,", 0);
-                } else {
+                }
+                else
+                {
                     StopRotate();
                 }
             }
             return true;
         }
-        public bool SetAutoTrackMode(int mode) {
+        public bool SetAutoTrackMode(int mode)
+        {
             autoTrackMode = mode;
             return (SetAutoTrack(true));
         }
-        public bool SetAutoTrack(bool OnOff) {
+        public bool SetAutoTrack(bool OnOff)
+        {
             String ret;
-            if (isLN100) {
-                if (OnOff) {
-                    if (autoTrackMode == 0) {
+            if (isLN100)
+            {
+                if (OnOff)
+                {
+                    if (autoTrackMode == 0)
+                    {
                         //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@RTRCK,0,", 2, 0, 0);
                         ret = GetTCPRec(CMD_RTRCK, "@RTRCK,0,", 0);
-                    } else {
+                    }
+                    else
+                    {
                         //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@RTRCK,1,", 2, 0, 0);
                         ret = GetTCPRec(CMD_RTRCK, "@RTRCK,1,", 0);
                     }
-                } else {
+                }
+                else
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@SMOTR,", 2, 0, 0);
                     ret = GetTCPRec(CMD_SMOTR, "@SMOTR,", 0);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
                 curTuibiStatus = 4;	//プリズム待ち（サーチ中）
-                if (OnOff) {
+                if (OnOff)
+                {
                     //if (btTS.curStatus2 == btTS.STATUS_BUSY)
                     //    StopRotate();
                     //else {
@@ -1350,9 +1651,12 @@ namespace Site7DbEditor {
                     //ret = btTS.getTCPRec(1,  gbl.ts.ssid, "*TBON", 0);//2022/02/25 Iimuro コメント化
 
                     //2022/02/25 Iimuro Add Start-----------------------------------
-                    if (Env.UseRC == Env.UseRC_Yes) {
+                    if (Env.UseRC == Env.UseRC_Yes)
+                    {
                         ret = GetTCPRec(1, "*SJ3 1,1,,0,,,,", 0);
-                    } else {
+                    }
+                    else
+                    {
                         // 2022/02/23 by A.Iimuro. *TBONは使わないようにする！
 
                         ret = GetTCPRec(1, "*TBON", 0);// 2022/09/19 by A.Iimuro. *TBONに戻す
@@ -1361,52 +1665,74 @@ namespace Site7DbEditor {
                     //2022/02/25 Iimuro Add End-----------------------------------
                     //btTS.getTCPRec(1,  gbl.ts.ssid, "*TBON", 1);
                     //}
-                } else {
+                }
+                else
+                {
                     StopRotate();
                 }
             }
             return true;
         }
         //測角のみ計測
-        public bool SetFILD0(bool OnOff) {
+        public bool SetFILD0(bool OnOff)
+        {
             //Log.d("TS_AS_SetFILD0", "now");
             String ret;
-            if (OnOff) {
+            if (OnOff)
+            {
                 //btTS.getTCPRec(1,  gbl.ts.ssid, "Ei", 1);
                 GetTCPRec(CMD_MFILD, "*ST1", 0);
-            } else {
+            }
+            else
+            {
                 //StopRotate();
                 GetTCPRec(CMD_MFILD, "*ST0", 0);
             }
             return true;
         }
-        public bool SetFILD(bool OnOff) {
+        public bool SetFILD(bool OnOff)
+        {
             String ret;
-            if (isLN100) {
-                if (OnOff) {
+            if (isLN100)
+            {
+                if (OnOff)
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@MFILD,0,2,", 2, 10, 1);
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@MFILD,1,1,", 2, 10, 1);
                     ret = GetTCPRec(CMD_MFILD, "@MFILD,1,1,", 0);
-                } else {
+                }
+                else
+                {
                     ret = GetTCPRec(CMD_SFILD, "@SFILD,", 0);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
-                if (OnOff) {
+            }
+            else
+            {
+                if (OnOff)
+                {
                     //btTS.getTCPRec(1,  gbl.ts.ssid, "Ei", 1);
-                    if (Env.curTSMode == Env.TS_MODE_SOKUTEI) {
+                    if (Env.curTSMode == Env.TS_MODE_SOKUTEI)
+                    {
                         ret = GetTCPRec(CMD_MFILD, "\u0014", 1);
-                    } else {
+                    }
+                    else
+                    {
                         ret = GetTCPRec(CMD_MFILD, "*ST3", 1);
                         //ret = GetTCPRec(CMD_MFILD, "*ST2", 1);
 
                     }
-                } else {
+                }
+                else
+                {
                     //btTS.getTCPRec(1,  gbl.ts.ssid, "Ei", 1);
-                    if (Env.curTSMode == Env.TS_MODE_SOKUTEI) {
+                    if (Env.curTSMode == Env.TS_MODE_SOKUTEI)
+                    {
                         ret = GetTCPRec(CMD_MFILD, "\u0012", 1);
-                    } else {
+                    }
+                    else
+                    {
                         //StopRotate();
                         ret = GetTCPRec(CMD_SFILD, "*ST0", 1);
                     }
@@ -1414,56 +1740,80 @@ namespace Site7DbEditor {
             }
             return true;
         }
-        public bool SetBATT(bool OnOff) {
+        public bool SetBATT(bool OnOff)
+        {
             String ret;
-            if (isLN100) {
-                if (OnOff) {
+            if (isLN100)
+            {
+                if (OnOff)
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@MBATT,", 2, 0, 0);
                     ret = GetTCPRec(CMD_MBATT, "@MBATT,", 0);
-                } else {
+                }
+                else
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@SBATT,", 2, 0, 0);
                     ret = GetTCPRec(CMD_SBATT, "@SBATT,", 0);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
             }
             return true;
         }
-        public bool SetTILT(bool OnOff) {
+        public bool SetTILT(bool OnOff)
+        {
             String ret;
-            if (isLN100) {
-                if (OnOff) {
+            if (isLN100)
+            {
+                if (OnOff)
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@MTILT,0,", 2, 3, 1);
                     ret = GetTCPRec(CMD_MTILT, "@MTILT,0,", 1);
-                } else {
+                }
+                else
+                {
                     //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, "@STILT,", 2, 0, 0);
                     ret = GetTCPRec(CMD_STILT, "@STILT,", 0);
                 }
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
 
             }
             return true;
         }
-        public bool SetPA(double H, double V) {
+        public bool SetPA(double H, double V)
+        {
             SetSearchMode(false);
             StopRotate();
 
             string str;
             string ret;
 
-            if (Env.UseRC == Env.UseRC_Yes) {
-                if (Env.isSupportTuibi()) {
+            if (Env.UseRC == Env.UseRC_Yes)
+            {
+                if (Env.isSupportTuibi())
+                {
                     str = String.Format("*/PA 2,1,{0:F4},{1:F4}", H, V);
-                } else {
+                }
+                else
+                {
                     str = String.Format("*/PA 2,0,{0:F4},{1:F4}", H, V);
                 }
-            } else {
-                if (Env.isSupportTuibi()) {
+            }
+            else
+            {
+                if (Env.isSupportTuibi())
+                {
                     str = String.Format("*/PA 1,1,{0:F4},{1:F4}", H, V);
-                } else {
+                }
+                else
+                {
                     str = String.Format("*/PA 1,0,{0:F4},{1:F4}", H, V);
                 }
             }
@@ -1471,10 +1821,12 @@ namespace Site7DbEditor {
 
             return true;
         }
-        public bool RotateV(double ang) {
+        public bool RotateV(double ang)
+        {
             String ret;
             String rec;
-            if (isLN100) {
+            if (isLN100)
+            {
                 ang = gbl.MField.angV + ang / 360.0;
                 if (ang < 0.18055556)
                     ang = 0.18055556;
@@ -1486,16 +1838,20 @@ namespace Site7DbEditor {
                 ret = GetTCPRec(CMD_RSPOS, rec, 1);
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
 
             }
             return true;
         }
-        public bool RotateH(double ang) {
+        public bool RotateH(double ang)
+        {
             String ret;
             String rec;
 
-            if (isLN100) {
+            if (isLN100)
+            {
                 if (ang < 0)
                     ang += 1.0;
                 if (1.0 <= ang)
@@ -1506,41 +1862,55 @@ namespace Site7DbEditor {
                 ret = GetTCPRec(CMD_RSPOS, rec, 1);
                 if (ret.Equals(""))
                     return false;
-            } else {
+            }
+            else
+            {
 
             }
             return true;
         }
-        public bool RotateSPD(int type, int n) {
+        public bool RotateSPD(int type, int n)
+        {
             String rec;
             String ret;
-            if (isLN100) {
+            if (isLN100)
+            {
                 rec = String.Format("@RSSPD,0,{0:#},", n);
                 //ret = wifiTCP.GetTCPRec(wifiUDP.serverIP, rec, 2, 0, 0);
                 ret = GetTCPRec(CMD_RSSPD, rec, 0);
                 if (ret.Equals(""))
                     return false;
-            } else {
-                if (n == 0) {
+            }
+            else
+            {
+                if (n == 0)
+                {
                     rec = "*R";
                     GetTCPRec(CMD_RSSPD, rec, 0);
                     SetFILD0(true);
-                } else {
+                }
+                else
+                {
                     SetFILD0(false);
                     StopRotate();
-                    if (type == 1) {
+                    if (type == 1)
+                    {
                         //rec = String.format("*JG %+d,0,,,,", n*2000);
                         if (n < 0)
                             rec = String.Format("*JH-{0:##}V+00", n * -1);
                         else
                             rec = String.Format("*JH+{0:##}V+00", n);
-                    } else if (type == 2) {//2022/02/25 Iimuro 条件else⇒else if (type == 2)に変更
+                    }
+                    else if (type == 2)
+                    {//2022/02/25 Iimuro 条件else⇒else if (type == 2)に変更
                         if (n < 0)
                             rec = String.Format("*JH+00V-{0:##}", n * -1);
                         else
                             rec = String.Format("*JH+00V+{0:##}", n);
-                    } else {//2022/02/25 Iimuro 条件elseとその中身追加。
-                            // type:3 RCリモートコントロール使用
+                    }
+                    else
+                    {//2022/02/25 Iimuro 条件elseとその中身追加。
+                     // type:3 RCリモートコントロール使用
                         if (n < 0)
                             rec = "*SJ101000";
                         else
@@ -1552,11 +1922,15 @@ namespace Site7DbEditor {
             return true;
         }
 
-        private string ang2dms(double ang, int type) {
-            if (type == 0) {
+        private string ang2dms(double ang, int type)
+        {
+            if (type == 0)
+            {
                 if (ang < 0)
                     ang += 1.0;
-            } else {
+            }
+            else
+            {
                 if (ang < -0.5)
                     ang += 1.0;
                 if (0.5 < ang)
@@ -1567,7 +1941,8 @@ namespace Site7DbEditor {
             return convertToSexagesimal(ang, type);
         }
         //緯度経度の度分秒->少数変換
-        public double convertToDecimal(double du, double fen, double miao) {
+        public double convertToDecimal(double du, double fen, double miao)
+        {
             if (du < 0)
                 return -(Math.Abs(du) + (Math.Abs(fen) + (Math.Abs(miao) / 60)) / 60);
 
@@ -1575,7 +1950,8 @@ namespace Site7DbEditor {
 
         }
         //少数->度分秒変換
-        public String convertToSexagesimal(double num, int type) {
+        public String convertToSexagesimal(double num, int type)
+        {
             int du = (int)Math.Floor(Math.Abs(num));    //整数部分
             double temp = getdPoint(Math.Abs(num)) * 60;
             int fen = (int)Math.Floor(temp); //整数部分
@@ -1595,7 +1971,8 @@ namespace Site7DbEditor {
 
         }
         //小数部分を取り出す
-        public double getdPoint(double num) {
+        public double getdPoint(double num)
+        {
             /*
             double d = num;
             int fInt = (int)d;
