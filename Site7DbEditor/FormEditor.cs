@@ -507,11 +507,11 @@ namespace Site7DbEditor {
                 }
             };
 
-            this.chkShowIkou.CheckedChanged += (s, e) => { _vc.InvalidateBoundsCache(); picMapCanvas.Invalidate(); };
+            this.chkShowIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowIkouName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowIbutu.CheckedChanged += (s, e) => { _vc.InvalidateBoundsCache(); picMapCanvas.Invalidate(); };
+            this.chkShowIbutu.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowIbutuName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowKikai.CheckedChanged += (s, e) => { _vc.InvalidateBoundsCache(); picMapCanvas.Invalidate(); };
+            this.chkShowKikai.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowKikaiName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowCurve.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkColorByIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
