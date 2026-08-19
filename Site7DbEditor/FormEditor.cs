@@ -935,6 +935,35 @@ namespace Site7DbEditor {
             foreach (var k in _db.KikaiList) {
                 gbl.st7Data.KijunP.KPList.Add(new KijunPRecEx(k.Name, k.X, k.Y, k.Z, k.Layer));
             }
+
+            // 器械点・後視点の実座標復元および角度初期化計算
+            string kpName = Def.GetIniStr("TS", "器械点");
+            string bpName = Def.GetIniStr("TS", "後視点");
+            var km = gbl.KikaiMan;
+
+            var kpRec = _db.KikaiList.FirstOrDefault(k => (!string.IsNullOrEmpty(k.Name) && k.Name.Equals(kpName, StringComparison.OrdinalIgnoreCase)) || $"K{k.Id}".Equals(kpName, StringComparison.OrdinalIgnoreCase));
+            if (kpRec != null) {
+                km.kp.Name = kpRec.Name;
+                km.kp.X = kpRec.X;
+                km.kp.Y = kpRec.Y;
+                km.kp.Z = kpRec.Z;
+            }
+
+            var bpRec = _db.KikaiList.FirstOrDefault(k => (!string.IsNullOrEmpty(k.Name) && k.Name.Equals(bpName, StringComparison.OrdinalIgnoreCase)) || $"K{k.Id}".Equals(bpName, StringComparison.OrdinalIgnoreCase));
+            if (bpRec != null) {
+                km.bp.Name = bpRec.Name;
+                km.bp.X = bpRec.X;
+                km.bp.Y = bpRec.Y;
+                km.bp.Z = bpRec.Z;
+            }
+
+            if (kpRec != null && bpRec != null) {
+                km.angK = km.calc2PAng(km.kp, km.bp);
+                km.ang0 = 0.0;
+                km.isCalced = true;
+            }
+
+            EnsureKikaiPointVisible();
         }
 
         private void PopulateIbutuCombos() {
