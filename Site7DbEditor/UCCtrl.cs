@@ -56,27 +56,13 @@ namespace Site7DbEditor {
 
             Ports = GetBluetoothComPorts();
 
-            // 通常のCOMポート一覧も取得して、Bluetoothに含まれていないポートがあれば補完
-            try {
-                string[] sysPorts = System.IO.Ports.SerialPort.GetPortNames();
-                foreach (string sp in sysPorts) {
-                    if (!Ports.Any(p => p.PortName.Equals(sp, StringComparison.OrdinalIgnoreCase))) {
-                        Ports.Add(new BluetoothComPortInfo {
-                            PortName = sp,
-                            Direction = "発信",
-                            DisplayName = "シリアルポート"
-                        });
-                    }
-                }
-            } catch { }
-
             int i1 = -1;
             int i2 = -1;
             var validPorts = new List<BluetoothComPortInfo>();
 
             for (int i = 0; i < Ports.Count; i++) {
                 var port = Ports[i];
-                if (port.Direction == "発信" || string.IsNullOrEmpty(port.Direction) || port.Direction == "不明") {
+                if (port.Direction == "発信") {
                     validPorts.Add(port);
                     int itemIdx = comboBox1.Items.Add(port.PortName + " " + port.DisplayName);
                     if (!string.IsNullOrEmpty(Env.ComPortTS) && port.PortName.Equals(Env.ComPortTS, StringComparison.OrdinalIgnoreCase)) {
