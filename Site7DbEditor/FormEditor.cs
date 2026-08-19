@@ -2356,9 +2356,9 @@ namespace Site7DbEditor {
             // 頂点追加（挿入）中のラバーバンド描画（前の頂点 -> マウス位置 -> 次の頂点）
             if (_isInsertingVertex && _insertingLine != null && _insertingSegmentIndex >= 0) {
                 var pts = SqliteManager.ParsePrecsText(_insertingLine.Precs);
-                if (_insertingSegmentIndex < pts.Count - 1) {
-                    var p1 = pts[_insertingSegmentIndex];
-                    var p2 = pts[_insertingSegmentIndex + 1];
+                if (pts.Count > 0) {
+                    IkouPointRecord p1 = pts[_insertingSegmentIndex < pts.Count ? _insertingSegmentIndex : pts.Count - 1];
+                    IkouPointRecord p2 = pts[(_insertingSegmentIndex + 1) % pts.Count];
                     PointF screenP1 = _vc.ToCanvasPoint(p1.X, p1.Y, picMapCanvas.Size);
                     PointF screenP2 = _vc.ToCanvasPoint(p2.X, p2.Y, picMapCanvas.Size);
                     PointF mousePt = _currentRubberBandMousePos;
@@ -2410,7 +2410,7 @@ namespace Site7DbEditor {
                 if (_insertingSegmentIndex < pts.Count - 1) {
                     avgZ = Math.Round((pts[_insertingSegmentIndex].Z + pts[_insertingSegmentIndex + 1].Z) / 2.0, 3);
                 } else if (pts.Count > 0) {
-                    avgZ = pts[_insertingSegmentIndex].Z;
+                    avgZ = Math.Round((pts[pts.Count - 1].Z + pts[0].Z) / 2.0, 3);
                 }
 
                 int insertIdx = _insertingSegmentIndex + 1;
@@ -2421,7 +2421,11 @@ namespace Site7DbEditor {
                     Z = avgZ
                 };
 
-                pts.Insert(insertIdx, newPt);
+                if (insertIdx < pts.Count) {
+                    pts.Insert(insertIdx, newPt);
+                } else {
+                    pts.Add(newPt);
+                }
 
                 // 全PIDの再整列
                 for (int i = 0; i < pts.Count; i++) {
@@ -2728,9 +2732,11 @@ namespace Site7DbEditor {
                         bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && currentPts.Count >= 3;
 
                         if (drawAsCurve) {
-                            for (int i = 0; i < currentPts.Count - 1; i++) {
+                            bool isClosed = (currentSelectedLine.Mode == 1) && (currentPts.Count >= 3);
+                            int count = isClosed ? currentPts.Count : (currentPts.Count - 1);
+                            for (int i = 0; i < count; i++) {
                                 PointF p1 = ToCanvasPointLocal(currentPts[i].X, currentPts[i].Y);
-                                PointF p2 = ToCanvasPointLocal(currentPts[i + 1].X, currentPts[i + 1].Y);
+                                PointF p2 = ToCanvasPointLocal(currentPts[(i + 1) % currentPts.Count].X, currentPts[(i + 1) % currentPts.Count].Y);
                                 float midX = (p1.X + p2.X) / 2f;
                                 float midY = (p1.Y + p2.Y) / 2f;
 
@@ -2809,9 +2815,9 @@ namespace Site7DbEditor {
                         }
                     } else if (isMidpointHit && bestMidpointIndex >= 0) {
                         var pts = SqliteManager.ParsePrecsText(bestLine.Precs);
-                        if (bestMidpointIndex < pts.Count - 1) {
+                        if (pts.Count > 0 && bestMidpointIndex < pts.Count) {
                             var p1 = pts[bestMidpointIndex];
-                            var p2 = pts[bestMidpointIndex + 1];
+                            var p2 = pts[(bestMidpointIndex + 1) % pts.Count];
                             double midX = (p1.X + p2.X) / 2.0;
                             double midY = (p1.Y + p2.Y) / 2.0;
                             double midZ = (p1.Z + p2.Z) / 2.0;
@@ -2987,9 +2993,11 @@ namespace Site7DbEditor {
                     bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && currentPts.Count >= 3;
 
                     if (drawAsCurve) {
-                        for (int i = 0; i < currentPts.Count - 1; i++) {
+                        bool isClosed = (currentSelectedLine.Mode == 1) && (currentPts.Count >= 3);
+                        int count = isClosed ? currentPts.Count : (currentPts.Count - 1);
+                        for (int i = 0; i < count; i++) {
                             PointF p1 = toCanvasPoint(currentPts[i].X, currentPts[i].Y);
-                            PointF p2 = toCanvasPoint(currentPts[i + 1].X, currentPts[i + 1].Y);
+                            PointF p2 = toCanvasPoint(currentPts[(i + 1) % currentPts.Count].X, currentPts[(i + 1) % currentPts.Count].Y);
                             float midX = (p1.X + p2.X) / 2f;
                             float midY = (p1.Y + p2.Y) / 2f;
 

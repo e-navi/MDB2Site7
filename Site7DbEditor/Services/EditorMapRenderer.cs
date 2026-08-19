@@ -330,12 +330,17 @@ namespace Site7DbEditor.Services
                         if (drawAsCurve && pts.Count > 1)
                         {
                             var polylinePts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
+                            bool isClosed = (selectedLine.Mode == 1) && (pts.Count >= 3);
                             Color grayColor = isDarkBackground
                                 ? Color.FromArgb(160, 160, 170, 185)
                                 : Color.FromArgb(170, 120, 130, 140);
                             using (var grayPen = new Pen(grayColor, 1.2f) { DashStyle = DashStyle.Dash })
                             {
                                 g.DrawLines(grayPen, polylinePts);
+                                if (isClosed)
+                                {
+                                    g.DrawLine(grayPen, polylinePts[polylinePts.Length - 1], polylinePts[0]);
+                                }
                             }
 
                             // 中間点（□）の描画
@@ -346,6 +351,18 @@ namespace Site7DbEditor.Services
                                 {
                                     PointF p1 = polylinePts[i];
                                     PointF p2 = polylinePts[i + 1];
+                                    float midX = (p1.X + p2.X) / 2f;
+                                    float midY = (p1.Y + p2.Y) / 2f;
+
+                                    g.FillRectangle(midBrush, midX - 3.5f, midY - 3.5f, 7f, 7f);
+                                    g.DrawRectangle(midPen, midX - 3.5f, midY - 3.5f, 7f, 7f);
+                                }
+
+                                // 閉曲線の場合は終点〜始点間の中間点も描画
+                                if (isClosed)
+                                {
+                                    PointF p1 = polylinePts[polylinePts.Length - 1];
+                                    PointF p2 = polylinePts[0];
                                     float midX = (p1.X + p2.X) / 2f;
                                     float midY = (p1.Y + p2.Y) / 2f;
 
