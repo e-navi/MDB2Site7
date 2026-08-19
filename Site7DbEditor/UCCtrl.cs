@@ -562,19 +562,9 @@ namespace Site7DbEditor {
 
                                 string portName = portNameObj.ToString();
 
-                                // 1. Determine direction
-                                // _LOCALMFG is definitely Incoming.
-                                // _DEV_, _VID&, _PID& are definitely Outgoing.
-                                string direction = "不明";
-                                if (typeKeyName.IndexOf("_LOCALMFG", StringComparison.OrdinalIgnoreCase) >= 0)
-                                    direction = "着信";
-                                else if (typeKeyName.IndexOf("_DEV_", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                         typeKeyName.IndexOf("_VID&", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                         typeKeyName.IndexOf("_PID&", StringComparison.OrdinalIgnoreCase) >= 0)
-                                    direction = "発信";
-
-                                // 2. Determine Display Name
+                                // 2. Determine Display Name & Direction
                                 string displayName = "";
+                                string direction = "着信";
                                 using (var parentInstanceKey = typeKey.OpenSubKey(instanceKeyName)) {
                                     // Try to get FriendlyName first (it might be the device name set by the user/driver)
                                     string friendlyName = parentInstanceKey?.GetValue("FriendlyName")?.ToString();
@@ -586,6 +576,8 @@ namespace Site7DbEditor {
                                         if (parts.Length > 1)
                                             serviceDesc = parts[parts.Length - 1];
                                     }
+
+                                    direction = DetermineDirection(typeKeyName, instanceKeyName, friendlyName ?? "", serviceDesc ?? "");
 
                                     // If FriendlyName contains a COM port in parentheses, it's generic.
                                     bool isGenericFriendly = !string.IsNullOrEmpty(friendlyName) &&
@@ -702,6 +694,29 @@ namespace Site7DbEditor {
                 return match.Groups[1].Value;
 
             return null;
+        }
+
+        static string DetermineDirection(string typeKeyName, string instanceKeyName, string friendlyName, string serviceDesc) {
+            string combinedText = $"{friendlyName} {serviceDesc}";
+            if (combinedText.IndexOf("Incoming", StringComparison.OrdinalIgnoreCase) >= 0 || combinedText.Contains("着信")) {
+                return "着信";
+            }
+            if (combinedText.IndexOf("Outgoing", StringComparison.OrdinalIgnoreCase) >= 0 || combinedText.Contains("発信")) {
+                return "発信";
+            }
+
+            string mac = ExtractMac(typeKeyName);
+            if (string.IsNullOrEmpty(mac))
+                mac = ExtractMac(instanceKeyName);
+
+            if (!string.IsNullOrEmpty(mac)) {
+                if (mac == "000000000000")
+                    return "着信";
+
+                return "発信";
+            }
+
+            return "着信";
         }
 
         static int ExtractNumber(string text) {
