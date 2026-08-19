@@ -29,7 +29,11 @@ namespace Site7DbEditor {
         public UCCtrl() {
             InitializeComponent();
 
-            tabControl4.SelectedIndex = Env.TSGPS;
+            int savedTab = Def.GetIniInt("TS", "TSGPS", 0);
+            if (savedTab >= 0 && savedTab < tabControl4.TabCount) {
+                tabControl4.SelectedIndex = savedTab;
+            }
+            Env.TSGPS = tabControl4.SelectedIndex;
             cBoxTS.SelectedIndex = Env.TS;
             cBoxGPS.SelectedIndex = Env.GPS;
             cBoxKei.SelectedIndex = Env.KeiNum - 1;
@@ -132,6 +136,8 @@ namespace Site7DbEditor {
             textBoxY.Text = y.ToString("0.000");
             textBoxZ.Text = z.ToString("0.000");
 
+            gbl.FormMain?.EnsureKikaiPointVisible();
+
             if (!gbl.FormMain.isModeKijun()) {
                 if (btnUpdPos.Enabled && chkAutoSet.Checked) {
                     gbl.FormMain.SetCXYZ(x, y, z);
@@ -149,6 +155,7 @@ namespace Site7DbEditor {
 
         private void tabControl4_SelectedIndexChanged(object sender, EventArgs e) {
             Env.TSGPS = tabControl4.SelectedIndex;
+            Def.SetIniInt("TS", "TSGPS", Env.TSGPS);
         }
         public void SetBtns() {
             btnUp.Enabled = btnDown.Enabled = (cBoxTS.SelectedIndex == 1 || cBoxTS.SelectedIndex == 2);

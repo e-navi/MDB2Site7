@@ -27,6 +27,8 @@ namespace Site7DbEditor {
 
             Def.SetIniStr("TS", "器械点", km.kp.Name);
             Def.SetIniStr("TS", "後視点", km.bp.Name);
+            Env.KPName = km.kp.Name;
+            Env.BPName = km.bp.Name;
 
             km.angK = km.calc2PAng(km.kp, km.bp);
 
@@ -46,6 +48,7 @@ namespace Site7DbEditor {
                 km.ang0 = 0.0;
             }
             //ts.SetITRGT();
+            gbl.FormMain?.EnsureKikaiPointVisible();
             gbl.FormMain?.ShowZumen0();
             Hide();
         }

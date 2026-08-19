@@ -184,15 +184,39 @@ namespace Site7DbEditor.Services
             // 3. Draw Control Points (基準点)
             if (chkShowKikai)
             {
+                string currentKpName = gbl.KikaiMan.kp?.Name ?? Env.KPName ?? Def.GetIniStr("TS", "器械点");
+                string currentBpName = gbl.KikaiMan.bp?.Name ?? Env.BPName ?? Def.GetIniStr("TS", "後視点");
+
+                Color kpTextColor = Color.FromArgb(239, 35, 60);
+                Color bpTextColor = isDarkBackground ? Color.FromArgb(0, 200, 255) : Color.FromArgb(0, 102, 204);
+
                 using (var kikaiBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
                 using (var kikaiPen = new Pen(Color.Yellow, 1.5f))
                 using (var selectPen = new Pen(Color.FromArgb(0, 225, 255), 3f))
+                using (var markFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
+                using (var kpTextBrush = new SolidBrush(kpTextColor))
+                using (var bpTextBrush = new SolidBrush(bpTextColor))
+                using (var sfFar = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center })
                 {
                     foreach (var kikai in db.KikaiList)
                     {
                         PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
                         g.FillEllipse(kikaiBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
                         g.DrawEllipse((activeTabIndex == 2 && kikai.Id == selectedKikaiId) ? selectPen : kikaiPen, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+
+                        // 器械点 / 後視点 の文字描画 (基準点シンボルの左側)
+                        string kikaiName = string.IsNullOrEmpty(kikai.Name) ? $"K{kikai.Id}" : kikai.Name;
+                        bool isKp = !string.IsNullOrEmpty(currentKpName) && kikaiName.Equals(currentKpName, StringComparison.OrdinalIgnoreCase);
+                        bool isBp = !string.IsNullOrEmpty(currentBpName) && kikaiName.Equals(currentBpName, StringComparison.OrdinalIgnoreCase);
+
+                        if (isKp)
+                        {
+                            g.DrawString("器", markFont, kpTextBrush, pt.X - 6f, pt.Y, sfFar);
+                        }
+                        else if (isBp)
+                        {
+                            g.DrawString("後", markFont, bpTextBrush, pt.X - 6f, pt.Y, sfFar);
+                        }
                     }
                 }
             }
@@ -362,6 +386,62 @@ namespace Site7DbEditor.Services
                             }
                         }
                     }
+                }
+            }
+
+            // 6. 器械点から現在の測定点へのラバーバンド描画
+            double kpX = 0.0, kpY = 0.0;
+            bool hasKp = false;
+            var km = gbl.KikaiMan;
+            if (km.kp != null && (km.kp.X != 0.0 || km.kp.Y != 0.0))
+            {
+                kpX = km.kp.X;
+                kpY = km.kp.Y;
+                hasKp = true;
+            }
+            else
+            {
+                string kpName = km.kp?.Name ?? Env.KPName ?? Def.GetIniStr("TS", "器械点");
+                if (!string.IsNullOrEmpty(kpName))
+                {
+                    var kikai = db.KikaiList.FirstOrDefault(k => (!string.IsNullOrEmpty(k.Name) && k.Name.Equals(kpName, StringComparison.OrdinalIgnoreCase)) || $"K{k.Id}".Equals(kpName, StringComparison.OrdinalIgnoreCase));
+                    if (kikai != null)
+                    {
+                        kpX = kikai.X;
+                        kpY = kikai.Y;
+                        hasKp = true;
+                    }
+                }
+            }
+
+            XYZ? curMeasurePos = null;
+            if (Env.TSGPS == Env.TSGPS_GPS)
+            {
+                if (gbl.Gps.curPos != null && (gbl.Gps.curPos.X != 0.0 || gbl.Gps.curPos.Y != 0.0))
+                {
+                    curMeasurePos = gbl.Gps.curPos;
+                }
+            }
+            else
+            {
+                if (gbl.TStation.curPos != null && (gbl.TStation.curPos.X != 0.0 || gbl.TStation.curPos.Y != 0.0))
+                {
+                    curMeasurePos = gbl.TStation.curPos;
+                }
+            }
+
+            if (hasKp && curMeasurePos != null)
+            {
+                PointF kpPt = ToCanvasPoint(kpX, kpY);
+                PointF curPt = ToCanvasPoint(curMeasurePos.X, curMeasurePos.Y);
+
+                using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = DashStyle.Dash })
+                using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
+                using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255)))
+                {
+                    g.DrawLine(rubberPen, kpPt, curPt);
+                    g.FillEllipse(targetBrush, curPt.X - 4f, curPt.Y - 4f, 8f, 8f);
+                    g.DrawEllipse(targetPen, curPt.X - 7f, curPt.Y - 7f, 14f, 14f);
                 }
             }
         }

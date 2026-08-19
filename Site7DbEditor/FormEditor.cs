@@ -3746,6 +3746,38 @@ namespace Site7DbEditor {
             }
         }
 
+        public void EnsureKikaiPointVisible() {
+            if (picMapCanvas == null || picMapCanvas.IsDisposed || _vc == null) return;
+
+            double kpX = 0.0;
+            double kpY = 0.0;
+            bool hasKp = false;
+
+            var km = gbl.KikaiMan;
+            if (km.kp != null && (km.kp.X != 0.0 || km.kp.Y != 0.0)) {
+                kpX = km.kp.X;
+                kpY = km.kp.Y;
+                hasKp = true;
+            } else {
+                string kpName = km.kp?.Name ?? Env.KPName ?? Def.GetIniStr("TS", "器械点");
+                if (!string.IsNullOrEmpty(kpName)) {
+                    var kikai = _db.KikaiList.FirstOrDefault(k => (!string.IsNullOrEmpty(k.Name) && k.Name.Equals(kpName, StringComparison.OrdinalIgnoreCase)) || $"K{k.Id}".Equals(kpName, StringComparison.OrdinalIgnoreCase));
+                    if (kikai != null) {
+                        kpX = kikai.X;
+                        kpY = kikai.Y;
+                        hasKp = true;
+                    }
+                }
+            }
+
+            if (hasKp) {
+                if (!_vc.IsPointInView(kpX, kpY, picMapCanvas.ClientSize, 40f)) {
+                    CenterMapOnPoint(kpX, kpY);
+                    picMapCanvas.Invalidate();
+                }
+            }
+        }
+
         public void SetMsg(string msg) {
             if (lblStatusMessage != null && !lblStatusMessage.IsDisposed) {
                 lblStatusMessage.Text = msg;

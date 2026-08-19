@@ -131,6 +131,14 @@ namespace Site7DbEditor.Services
             PanOffsetMap = new PointF(-(bx - cx) * ZoomFactorMap, -(by - cy) * ZoomFactorMap);
         }
 
+        public bool IsPointInView(double surveyX, double surveyY, Size canvasSize, float margin = 30f)
+        {
+            if (canvasSize.Width <= 0 || canvasSize.Height <= 0 || MapScale <= 0) return false;
+            PointF pt = ToCanvasPoint(surveyX, surveyY, canvasSize);
+            return pt.X >= margin && pt.X <= (canvasSize.Width - margin) &&
+                   pt.Y >= margin && pt.Y <= (canvasSize.Height - margin);
+        }
+
         public (double surveyX, double surveyY) CanvasToSurvey(PointF canvasPt, Size canvasSize)
         {
             int width = canvasSize.Width;
