@@ -2110,13 +2110,6 @@ namespace Site7DbEditor {
                         selectedLine.X = Math.Round(pts.Average(p => p.X), 3);
                         selectedLine.Y = Math.Round(pts.Average(p => p.Y), 3);
                         selectedLine.Z = Math.Round(pts.Average(p => p.Z), 3);
-
-                        if (pts.Count > 1) {
-                            var f = pts.First();
-                            var l = pts.Last();
-                            bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
-                            selectedLine.Mode = match ? 1 : 0;
-                        }
                     } else {
                         selectedLine.X = 0;
                         selectedLine.Y = 0;
@@ -2441,13 +2434,6 @@ namespace Site7DbEditor {
                     _insertingLine.X = Math.Round(pts.Average(p => p.X), 3);
                     _insertingLine.Y = Math.Round(pts.Average(p => p.Y), 3);
                     _insertingLine.Z = Math.Round(pts.Average(p => p.Z), 3);
-
-                    if (pts.Count > 1) {
-                        var f = pts.First();
-                        var l = pts.Last();
-                        bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
-                        _insertingLine.Mode = match ? 1 : 0;
-                    }
                 }
 
                 _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, _insertingLine, originalInsert, _db.CurrentDbPath);
@@ -2487,8 +2473,27 @@ namespace Site7DbEditor {
             var pts = SqliteManager.ParsePrecsText(_movingLine.Precs);
 
             if (_movingVertexIndex < pts.Count) {
-                pts[_movingVertexIndex].X = Math.Round(newSurveyX, 3);
-                pts[_movingVertexIndex].Y = Math.Round(newSurveyY, 3);
+                double newX = Math.Round(newSurveyX, 3);
+                double newY = Math.Round(newSurveyY, 3);
+
+                // 閉合線（Mode == 1）で先頭と末尾が同一座標の場合の連動
+                if (_movingLine.Mode == 1 && pts.Count > 1) {
+                    var f = pts.First();
+                    var l = pts.Last();
+                    bool hadSameEndpoints = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015);
+                    if (hadSameEndpoints) {
+                        if (_movingVertexIndex == 0) {
+                            pts[pts.Count - 1].X = newX;
+                            pts[pts.Count - 1].Y = newY;
+                        } else if (_movingVertexIndex == pts.Count - 1) {
+                            pts[0].X = newX;
+                            pts[0].Y = newY;
+                        }
+                    }
+                }
+
+                pts[_movingVertexIndex].X = newX;
+                pts[_movingVertexIndex].Y = newY;
 
                 _movingLine.Precs = SqliteManager.FormatPrecsText(pts);
 
@@ -2496,13 +2501,6 @@ namespace Site7DbEditor {
                     _movingLine.X = Math.Round(pts.Average(p => p.X), 3);
                     _movingLine.Y = Math.Round(pts.Average(p => p.Y), 3);
                     _movingLine.Z = Math.Round(pts.Average(p => p.Z), 3);
-
-                    if (pts.Count > 1) {
-                        var f = pts.First();
-                        var l = pts.Last();
-                        bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
-                        _movingLine.Mode = match ? 1 : 0;
-                    }
                 }
 
                 _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, _movingLine, originalMove, _db.CurrentDbPath);
