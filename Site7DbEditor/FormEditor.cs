@@ -147,6 +147,16 @@ namespace Site7DbEditor {
 
             dgvIkou.DataBindingComplete += (s, e) => ApplyDgvIkouColumns();
             dgvIkouL.DataBindingComplete += (s, e) => ApplyDgvIkouLColumns();
+            dgvIkouL.CellFormatting += (s, e) => {
+                if (e.RowIndex >= 0 && e.ColumnIndex >= 0) {
+                    if (dgvIkouL.Columns[e.ColumnIndex].Name == "Mode" && e.Value != null) {
+                        if (int.TryParse(e.Value.ToString(), out int modeVal)) {
+                            e.Value = modeVal == 1 ? "閉合" : (modeVal == 2 ? "標高点" : "開放");
+                            e.FormattingApplied = true;
+                        }
+                    }
+                }
+            };
             dgvPrecs.DataBindingComplete += (s, e) => ApplyDgvPrecsColumns();
             dgvIbutu.DataBindingComplete += (s, e) => ApplyDgvIbutuColumns();
             dgvKikai.DataBindingComplete += (s, e) => ApplyDgvKikaiColumns();
@@ -1547,13 +1557,6 @@ namespace Site7DbEditor {
                     selectedLine.X = Math.Round(pts.Average(p => p.X), 3);
                     selectedLine.Y = Math.Round(pts.Average(p => p.Y), 3);
                     selectedLine.Z = Math.Round(pts.Average(p => p.Z), 3);
-
-                    if (pts.Count > 1) {
-                        var f = pts.First();
-                        var l = pts.Last();
-                        bool match = (Math.Abs(f.X - l.X) < 0.0015 && Math.Abs(f.Y - l.Y) < 0.0015 && Math.Abs(f.Z - l.Z) < 0.010);
-                        selectedLine.Mode = match ? 1 : 0;
-                    }
                     dgvIkouL.Refresh();
                 }
 
