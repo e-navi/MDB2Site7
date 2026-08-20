@@ -833,16 +833,9 @@ namespace Site7DbEditor {
         }
 
         private void btnOpenDb_Click(object? sender, EventArgs e) {
-            using (var ofd = new OpenFileDialog()) {
-                ofd.Filter = "Site7 SQLite DB (*.db3;*.db;*.sqlite)|*.db3;*.db;*.sqlite|All Files (*.*)|*.*";
-                string defaultFolder = @"C:\SITE7\GENBA\DATA";
-                if (!Directory.Exists(defaultFolder)) {
-                    try { Directory.CreateDirectory(defaultFolder); } catch { }
-                }
-                ofd.InitialDirectory = defaultFolder;
-
-                if (ofd.ShowDialog() == DialogResult.OK) {
-                    LoadDatabase(ofd.FileName);
+            using (var launcher = new FormLauncher()) {
+                if (launcher.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath)) {
+                    LoadDatabase(launcher.SelectedDbPath);
                 }
             }
         }

@@ -9,8 +9,21 @@ namespace Site7DbEditor
         static void Main(string[] args)
         {
             ApplicationConfiguration.Initialize();
-            string? dbPath = args.Length > 0 ? args[0] : null;
-            Application.Run(new FormEditor(dbPath));
+
+            // コマンドライン引数で直接DBが渡された場合は直接エディタを起動
+            if (args.Length > 0 && !string.IsNullOrEmpty(args[0]))
+            {
+                Application.Run(new FormEditor(args[0]));
+                return;
+            }
+
+            // 起動時に現場選択ランチャーを表示
+            using var launcher = new FormLauncher();
+            if (launcher.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath))
+            {
+                var editor = new FormEditor(launcher.SelectedDbPath);
+                Application.Run(editor);
+            }
         }    
     }
 }
