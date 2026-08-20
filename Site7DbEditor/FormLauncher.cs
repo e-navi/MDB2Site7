@@ -485,17 +485,30 @@ namespace Site7DbEditor
         private void PopulateListView()
         {
             dgvSites.Rows.Clear();
-            foreach (var site in _filteredSites)
+            string lastOpenedDb = Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
+            int selectRowIdx = -1;
+
+            for (int i = 0; i < _filteredSites.Count; i++)
             {
+                var site = _filteredSites[i];
                 Image thumb = site.GetThumbnailImage() ?? CreateDefaultPlaceholderImage();
                 int rowIdx = dgvSites.Rows.Add(thumb, site.Name, site.DisplayUpdatedAt, site.DisplaySize);
                 dgvSites.Rows[rowIdx].Tag = site;
+
+                if (!string.IsNullOrEmpty(lastOpenedDb) &&
+                    (string.Equals(site.DbPath, lastOpenedDb, StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(site.FolderPath, lastOpenedDb, StringComparison.OrdinalIgnoreCase)))
+                {
+                    selectRowIdx = rowIdx;
+                }
             }
 
             if (dgvSites.Rows.Count > 0)
             {
-                dgvSites.Rows[0].Selected = true;
-                _selectedSite = dgvSites.Rows[0].Tag as SiteItem;
+                int targetIdx = (selectRowIdx >= 0) ? selectRowIdx : 0;
+                dgvSites.Rows[targetIdx].Selected = true;
+                try { dgvSites.CurrentCell = dgvSites.Rows[targetIdx].Cells[1]; } catch { }
+                _selectedSite = dgvSites.Rows[targetIdx].Tag as SiteItem;
                 UpdatePreviewCard(_selectedSite);
             }
             else
@@ -740,6 +753,7 @@ namespace Site7DbEditor
 
             this.SelectedDbPath = _selectedSite.DbPath;
             this.IsGaigyoMode = isGaigyo;
+            Def.SetIniStr("Site7DbEditor", "LastOpenedDb", _selectedSite.DbPath);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

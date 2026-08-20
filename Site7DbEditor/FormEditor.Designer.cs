@@ -234,9 +234,6 @@ namespace Site7DbEditor
             panelHeader.BackColor = Color.FromArgb(27, 28, 46);
             panelHeader.Controls.Add(lblDbStatus);
             panelHeader.Controls.Add(btnSaveDb);
-            panelHeader.Controls.Add(lblQuickDb);
-            panelHeader.Controls.Add(cmbQuickDbSelect);
-            panelHeader.Controls.Add(btnOpenDb);
             panelHeader.Controls.Add(lblSubHeader);
             panelHeader.Controls.Add(lblHeaderTitle);
             panelHeader.Dock = DockStyle.Top;
@@ -270,41 +267,6 @@ namespace Site7DbEditor
             btnSaveDb.TabIndex = 5;
             btnSaveDb.Text = "💾 SQLite DB保存";
             btnSaveDb.UseVisualStyleBackColor = false;
-            // 
-            // lblQuickDb
-            // 
-            lblQuickDb.AutoSize = true;
-            lblQuickDb.ForeColor = Color.White;
-            lblQuickDb.Location = new Point(500, 17);
-            lblQuickDb.Name = "lblQuickDb";
-            lblQuickDb.Size = new Size(58, 15);
-            lblQuickDb.TabIndex = 3;
-            lblQuickDb.Text = "現場選択:";
-            // 
-            // cmbQuickDbSelect
-            // 
-            cmbQuickDbSelect.BackColor = Color.FromArgb(43, 45, 66);
-            cmbQuickDbSelect.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbQuickDbSelect.FlatStyle = FlatStyle.Flat;
-            cmbQuickDbSelect.ForeColor = Color.White;
-            cmbQuickDbSelect.FormattingEnabled = true;
-            cmbQuickDbSelect.Location = new Point(570, 13);
-            cmbQuickDbSelect.Name = "cmbQuickDbSelect";
-            cmbQuickDbSelect.Size = new Size(240, 23);
-            cmbQuickDbSelect.TabIndex = 4;
-            // 
-            // btnOpenDb
-            // 
-            btnOpenDb.BackColor = Color.FromArgb(53, 55, 76);
-            btnOpenDb.FlatStyle = FlatStyle.Flat;
-            btnOpenDb.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            btnOpenDb.ForeColor = Color.White;
-            btnOpenDb.Location = new Point(355, 7);
-            btnOpenDb.Name = "btnOpenDb";
-            btnOpenDb.Size = new Size(130, 35);
-            btnOpenDb.TabIndex = 2;
-            btnOpenDb.Text = "📂 DBフォルダ選択";
-            btnOpenDb.UseVisualStyleBackColor = false;
             // 
             // lblSubHeader
             // 

@@ -17,12 +17,22 @@ namespace Site7DbEditor
                 return;
             }
 
-            // 起動時に現場選択ランチャーを表示
-            using var launcher = new FormLauncher();
-            if (launcher.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath))
+            // 現場選択ランチャー ⇄ エディタ の遷移ループ
+            while (true)
             {
-                var editor = new FormEditor(launcher.SelectedDbPath, launcher.IsGaigyoMode);
-                Application.Run(editor);
+                using var launcher = new FormLauncher();
+                var result = launcher.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath))
+                {
+                    var editor = new FormEditor(launcher.SelectedDbPath, launcher.IsGaigyoMode);
+                    Application.Run(editor);
+                    // エディタ終了後は再びループ先頭に戻り、ランチャーを表示
+                }
+                else
+                {
+                    // ランチャーで「終了」または×ボタン押下時はループを抜けて終了
+                    break;
+                }
             }
         }    
     }

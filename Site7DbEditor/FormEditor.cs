@@ -316,10 +316,7 @@ namespace Site7DbEditor {
             this.Resize += (s, e) => UpdatePanelWidthsDisplay();
             this.panelMapLeft.Resize += (s, e) => UpdatePanelWidthsDisplay();
             this.panelMapRight.Resize += (s, e) => UpdatePanelWidthsDisplay();
-            this.panelMapRight.VisibleChanged += (s, e) => UpdatePanelWidthsDisplay();
             this.picMapCanvas.SizeChanged += (s, e) => { _vc.InvalidateBoundsCache(); UpdatePanelWidthsDisplay(); picMapCanvas.Invalidate(); };
-            this.btnOpenDb.Click += btnOpenDb_Click;
-            this.cmbQuickDbSelect.SelectedIndexChanged += cmbQuickDbSelect_SelectedIndexChanged;
             this.btnSaveDb.Click += btnSaveDb_Click;
 
             this.dgvIkou.SelectionChanged += dgvIkou_SelectionChanged;
@@ -760,7 +757,11 @@ namespace Site7DbEditor {
         }
 
         private void FormEditor_Load(object? sender, EventArgs e) {
-            PopulateQuickDbList(_initialDbPath);
+            string targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
+            if (!string.IsNullOrEmpty(targetDb) && File.Exists(targetDb)) {
+                LoadDatabase(targetDb);
+            }
+
             InitBatchUpdateControls();
 
             if (IsGaigyoMode) {
@@ -776,77 +777,6 @@ namespace Site7DbEditor {
 
             UpdateWindowTitle();
             UpdatePanelWidthsDisplay();
-        }
-
-        private void PopulateQuickDbList(string? targetDb = null) {
-            cmbQuickDbSelect.Items.Clear();
-
-            string defaultFolder = @"C:\SITE7\GENBA\DATA";
-            if (!Directory.Exists(defaultFolder)) {
-                try { Directory.CreateDirectory(defaultFolder); } catch { }
-            }
-
-            var searchFolders = new[] { defaultFolder, @"c:\Proj\Antigravity\MDB2Site7\ExportedSite7" };
-            string lastOpenedDb = !string.IsNullOrEmpty(targetDb) ? targetDb : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
-
-            foreach (var folder in searchFolders) {
-                if (Directory.Exists(folder)) {
-                    var files = Directory.GetFiles(folder, "*.db3", SearchOption.AllDirectories)
-                        .Concat(Directory.GetFiles(folder, "*.db", SearchOption.AllDirectories))
-                        .Concat(Directory.GetFiles(folder, "*.sqlite", SearchOption.AllDirectories))
-                        .Distinct();
-
-                    foreach (var file in files) {
-                        string parent = Path.GetFileName(Path.GetDirectoryName(file) ?? "");
-                        string fileName = Path.GetFileName(file);
-                        string displayName = string.IsNullOrEmpty(parent) ? fileName : $"{parent}\\{fileName}";
-                        if (folder == defaultFolder)
-                            displayName = $"[GENBA] {displayName}";
-
-                        cmbQuickDbSelect.Items.Add(new DbItem { DisplayName = displayName, FullPath = file });
-                    }
-                }
-            }
-
-            int selectIdx = -1;
-            if (!string.IsNullOrEmpty(lastOpenedDb) && File.Exists(lastOpenedDb)) {
-                for (int i = 0; i < cmbQuickDbSelect.Items.Count; i++) {
-                    if (cmbQuickDbSelect.Items[i] is DbItem item &&
-                        string.Equals(item.FullPath, lastOpenedDb, StringComparison.OrdinalIgnoreCase)) {
-                        selectIdx = i;
-                        break;
-                    }
-                }
-
-                if (selectIdx == -1) {
-                    string parent = Path.GetFileName(Path.GetDirectoryName(lastOpenedDb) ?? "");
-                    string fileName = Path.GetFileName(lastOpenedDb);
-                    string displayName = string.IsNullOrEmpty(parent) ? fileName : $"{parent}\\{fileName}";
-                    var newItem = new DbItem { DisplayName = displayName, FullPath = lastOpenedDb };
-                    cmbQuickDbSelect.Items.Insert(0, newItem);
-                    selectIdx = 0;
-                }
-            }
-
-            if (selectIdx >= 0 && selectIdx < cmbQuickDbSelect.Items.Count) {
-                cmbQuickDbSelect.SelectedIndex = selectIdx;
-            } else if (cmbQuickDbSelect.Items.Count > 0) {
-                cmbQuickDbSelect.SelectedIndex = 0;
-            }
-        }
-
-        private void cmbQuickDbSelect_SelectedIndexChanged(object? sender, EventArgs e) {
-            if (cmbQuickDbSelect.SelectedItem is DbItem item) {
-                LoadDatabase(item.FullPath);
-            }
-        }
-
-        private void btnOpenDb_Click(object? sender, EventArgs e) {
-            using (var launcher = new FormLauncher()) {
-                if (launcher.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath)) {
-                    LoadDatabase(launcher.SelectedDbPath);
-                }
-            }
         }
 
         private void LoadDatabase(string dbPath) {
