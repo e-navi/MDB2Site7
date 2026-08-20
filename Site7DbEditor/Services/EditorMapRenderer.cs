@@ -326,14 +326,24 @@ namespace Site7DbEditor.Services
                         bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
                         bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
 
+                        Color grayColor = isDarkBackground
+                            ? Color.FromArgb(160, 160, 170, 185)
+                            : Color.FromArgb(180, 100, 110, 125);
+                        Color vertexPenColor = isDarkBackground
+                            ? Color.FromArgb(255, 220, 0)
+                            : Color.FromArgb(190, 85, 0);
+                        Color vertexBrushColor = isDarkBackground
+                            ? Color.FromArgb(230, 255, 255, 255)
+                            : Color.FromArgb(255, 255, 255, 255);
+                        Color pidTextColor = isDarkBackground
+                            ? Color.FromArgb(255, 220, 0)
+                            : Color.FromArgb(15, 23, 42);
+
                         // 曲線表示時に、ベースとなる折れ線を薄いグレー(破線)で表示し、中間点に□マークを表示
                         if (drawAsCurve && pts.Count > 1)
                         {
                             var polylinePts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                             bool isClosed = (selectedLine.Mode == 1) && (pts.Count >= 3);
-                            Color grayColor = isDarkBackground
-                                ? Color.FromArgb(160, 160, 170, 185)
-                                : Color.FromArgb(170, 120, 130, 140);
                             using (var grayPen = new Pen(grayColor, 1.2f) { DashStyle = DashStyle.Dash })
                             {
                                 g.DrawLines(grayPen, polylinePts);
@@ -344,8 +354,8 @@ namespace Site7DbEditor.Services
                             }
 
                             // 中間点（□）の描画
-                            using (var midPen = new Pen(Color.FromArgb(255, 220, 0), 1.5f))
-                            using (var midBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
+                            using (var midPen = new Pen(vertexPenColor, 1.5f))
+                            using (var midBrush = new SolidBrush(vertexBrushColor))
                             {
                                 for (int i = 0; i < polylinePts.Length - 1; i++)
                                 {
@@ -372,10 +382,10 @@ namespace Site7DbEditor.Services
                             }
                         }
 
-                        using (var vertexPen = new Pen(Color.FromArgb(255, 220, 0), 1.5f))
-                        using (var vertexBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
+                        using (var vertexPen = new Pen(vertexPenColor, 1.5f))
+                        using (var vertexBrush = new SolidBrush(vertexBrushColor))
                         using (var pidFont = new Font("Yu Gothic UI", 8.0F, FontStyle.Bold))
-                        using (var pidBrush = new SolidBrush(Color.FromArgb(255, 220, 0)))
+                        using (var pidBrush = new SolidBrush(pidTextColor))
                         {
                             for (int i = 0; i < pts.Count; i++)
                             {
@@ -393,7 +403,8 @@ namespace Site7DbEditor.Services
                         if (selectedPointIndex >= 0 && selectedPointIndex < pts.Count)
                         {
                             PointF targetPt = ToCanvasPoint(pts[selectedPointIndex].X, pts[selectedPointIndex].Y);
-                            using (var targetPen = new Pen(Color.FromArgb(255, 214, 10), 2.5f))
+                            Color targetPenColor = isDarkBackground ? Color.FromArgb(255, 214, 10) : Color.FromArgb(220, 38, 38);
+                            using (var targetPen = new Pen(targetPenColor, 2.5f))
                             using (var dotBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
                             {
                                 g.DrawEllipse(targetPen, targetPt.X - 9f, targetPt.Y - 9f, 18f, 18f);
