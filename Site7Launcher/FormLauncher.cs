@@ -51,6 +51,7 @@ namespace Site7Launcher
         private Button btnNewSite = null!;
         private Button btnOpenGaigyo = null!;
         private Button btnOpenNaigyo = null!;
+        private Button btnTool = null!;
         private Button btnExit = null!;
 
         public FormLauncher()
@@ -182,8 +183,8 @@ namespace Site7Launcher
             {
                 Text = "＋ 新規現場",
                 Location = new Point(20, 12),
-                Size = new Size(130, 38),
-                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
+                Size = new Size(115, 38),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(30, 41, 59),
                 FlatStyle = FlatStyle.Flat
@@ -193,11 +194,10 @@ namespace Site7Launcher
 
             btnOpenGaigyo = new Button
             {
-                Text = "📡 外業で開く",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Location = new Point(630, 12),
-                Size = new Size(130, 38),
-                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
+                Text = "📡 外業",
+                Location = new Point(145, 12),
+                Size = new Size(110, 38),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(34, 197, 94),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
@@ -207,11 +207,10 @@ namespace Site7Launcher
 
             btnOpenNaigyo = new Button
             {
-                Text = "💻 内業で開く",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Location = new Point(770, 12),
-                Size = new Size(130, 38),
-                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
+                Text = "💻 内業",
+                Location = new Point(265, 12),
+                Size = new Size(110, 38),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(14, 116, 144),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
@@ -219,12 +218,24 @@ namespace Site7Launcher
             btnOpenNaigyo.FlatAppearance.BorderSize = 0;
             btnOpenNaigyo.Click += (s, e) => LaunchSiteEditor(isGaigyo: false);
 
+            btnTool = new Button
+            {
+                Text = "🛠 ツール",
+                Location = new Point(385, 12),
+                Size = new Size(100, 38),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
+                BackColor = Color.FromArgb(238, 242, 246),
+                ForeColor = Color.FromArgb(51, 65, 85),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnTool.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
+            btnTool.Click += (s, e) => MessageBox.Show("Site7 ツール機能は順次提供予定です。", "ツール", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             btnExit = new Button
             {
                 Text = "✖ 終了",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Location = new Point(910, 12),
-                Size = new Size(110, 38),
+                Location = new Point(495, 12),
+                Size = new Size(95, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 245, 249),
                 ForeColor = Color.FromArgb(100, 116, 139),
@@ -234,7 +245,7 @@ namespace Site7Launcher
             btnExit.Click += (s, e) => this.Close();
 
             panelFooter.Controls.AddRange(new Control[] {
-                btnNewSite, btnOpenGaigyo, btnOpenNaigyo, btnExit
+                btnNewSite, btnOpenGaigyo, btnOpenNaigyo, btnTool, btnExit
             });
 
             // 3. Main Panel (Container)
@@ -250,6 +261,7 @@ namespace Site7Launcher
             {
                 Dock = DockStyle.Fill,
                 Orientation = Orientation.Vertical,
+                FixedPanel = FixedPanel.Panel2,
                 SplitterWidth = 8,
                 Panel1MinSize = 50,
                 Panel2MinSize = 50,
@@ -260,9 +272,9 @@ namespace Site7Launcher
             {
                 try
                 {
-                    if (splitListPreview.Width > 450)
+                    if (splitListPreview.Width > 300)
                     {
-                        splitListPreview.SplitterDistance = Math.Max(200, splitListPreview.Width - 360);
+                        splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 235);
                     }
                 }
                 catch { }
@@ -310,28 +322,28 @@ namespace Site7Launcher
             panelDgvWrapper.Controls.Add(dgvSites);
             splitListPreview.Panel1.Controls.Add(panelDgvWrapper);
 
-            // Preview Card Panel
+            // Preview Card Panel (幅235px固定)
             panelPreviewCard = new Panel
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
-                Padding = new Padding(15),
+                Padding = new Padding(12),
                 AutoScroll = true
             };
 
             var lblPreviewHeader = new Label
             {
                 Text = "現場プレビュー",
-                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(15, 12),
+                Location = new Point(12, 10),
                 AutoSize = true
             };
 
             picPreview = new PictureBox
             {
-                Location = new Point(15, 42),
-                Size = new Size(256, 256),
+                Location = new Point(12, 35),
+                Size = new Size(200, 200),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White
@@ -340,10 +352,10 @@ namespace Site7Launcher
             lblPreviewName = new Label
             {
                 Text = "現場名: -",
-                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(15, 310),
-                Size = new Size(300, 26),
+                Location = new Point(12, 245),
+                Size = new Size(205, 24),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 AutoEllipsis = true
             };
@@ -351,30 +363,30 @@ namespace Site7Launcher
             lblPreviewDate = new Label
             {
                 Text = "更新日時: -",
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
+                Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(15, 340),
-                Size = new Size(300, 20),
+                Location = new Point(12, 272),
+                Size = new Size(205, 18),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
             lblPreviewSize = new Label
             {
                 Text = "データ容量: -",
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
+                Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(15, 365),
-                Size = new Size(300, 20),
+                Location = new Point(12, 294),
+                Size = new Size(205, 18),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
             lblPreviewPath = new Label
             {
                 Text = "フォルダ: -",
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
+                Font = new Font("Yu Gothic UI", 8F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(15, 395),
-                Size = new Size(300, 44),
+                Location = new Point(12, 316),
+                Size = new Size(205, 42),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 AutoEllipsis = true
             };
