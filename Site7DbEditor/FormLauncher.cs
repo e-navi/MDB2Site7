@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Site7DbEditor.Models;
 using Site7DbEditor.Services;
@@ -68,7 +69,8 @@ namespace Site7DbEditor
 
         private void InitializeComponent()
         {
-            this.Text = "遺跡調査システム Site7 - 現場選択";
+            string versionStr = GetAppVersionString();
+            this.Text = $"遺跡調査システム Site7 - 現場選択  {versionStr}";
             this.Size = new Size(1060, 700);
             this.MinimumSize = new Size(880, 560);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -100,7 +102,7 @@ namespace Site7DbEditor
 
             var lblSubtitle = new Label
             {
-                Text = "現場管理ランチャー",
+                Text = $"現場管理ランチャー  {versionStr}",
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(120, 130, 145),
                 Location = new Point(255, 14),
@@ -889,6 +891,36 @@ namespace Site7DbEditor
             catch (Exception ex)
             {
                 MessageBox.Show($"MdbFdbExporter の起動に失敗しました: {ex.Message}", "起動エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static string GetAppVersionString()
+        {
+            try
+            {
+                string infoVersion = System.Reflection.Assembly.GetExecutingAssembly()
+                    .GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()?
+                    .InformationalVersion ?? "0.9.2";
+
+                string verStr = "v0.9.2";
+                string gitHash = "";
+
+                if (infoVersion.Contains("+"))
+                {
+                    var parts = infoVersion.Split('+');
+                    verStr = $"v{parts[0]}";
+                    gitHash = parts[1].Length >= 7 ? parts[1].Substring(0, 7) : parts[1];
+                }
+                else
+                {
+                    verStr = $"v{infoVersion}";
+                }
+
+                return !string.IsNullOrEmpty(gitHash) ? $"{verStr} ({gitHash})" : verStr;
+            }
+            catch
+            {
+                return "v0.9.2";
             }
         }
     }
