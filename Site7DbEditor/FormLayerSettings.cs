@@ -284,17 +284,36 @@ namespace Site7DbEditor
 
             e.DrawBackground();
             string txt = cmb.Items[e.Index]?.ToString() ?? "";
-            Color col = e.Index < EditorLayerService.LayerTableColors.Length
+            Color col = (e.Index + 1 < EditorLayerService.LayerTableColors.Length)
                 ? EditorLayerService.LayerTableColors[e.Index + 1]
                 : e.ForeColor;
 
-            if (col == Color.FromArgb(0, 0, 0)) col = Color.Black;
+            // 色見本四角形（スウォッチ）の描画
+            int boxSize = 14;
+            int boxX = e.Bounds.X + 4;
+            int boxY = e.Bounds.Y + (e.Bounds.Height - boxSize) / 2;
 
             using (var b = new SolidBrush(col))
+            {
+                e.Graphics.FillRectangle(b, boxX, boxY, boxSize, boxSize);
+            }
+            using (var borderPen = new Pen(Color.FromArgb(120, 120, 120)))
+            {
+                e.Graphics.DrawRectangle(borderPen, boxX, boxY, boxSize, boxSize);
+            }
+
+            // テキストの描画 (白など明るい色の場合はテキストを濃色にして視認性を確保)
+            Color textColor = col;
+            if (col.R > 220 && col.G > 220 && col.B > 220)
+            {
+                textColor = Color.FromArgb(60, 60, 60);
+            }
+
+            using (var textBrush = new SolidBrush(textColor))
             using (var font = new Font("Yu Gothic UI", 10F, FontStyle.Bold))
             {
                 float ym = (e.Bounds.Height - e.Graphics.MeasureString(txt, font).Height) / 2;
-                e.Graphics.DrawString(txt, font, b, e.Bounds.X + 2, e.Bounds.Y + ym);
+                e.Graphics.DrawString(txt, font, textBrush, boxX + boxSize + 6, e.Bounds.Y + ym);
             }
 
             e.DrawFocusRectangle();

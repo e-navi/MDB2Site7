@@ -135,7 +135,7 @@ namespace Site7DbEditor.Services
                     int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
                     Color color = chkColorByIkou
                         ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
-                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList);
+                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, isDarkBackground);
 
                     if (screenPts.Length > 1)
                     {
@@ -162,7 +162,7 @@ namespace Site7DbEditor.Services
                     foreach (var ibutu in db.IbutuList)
                     {
                         PointF pt = ToCanvasPoint(ibutu.X, ibutu.Y);
-                        Color ibutuColor = EditorLayerService.GetLayerColor(ibutu.Layer, db.LayerList);
+                        Color ibutuColor = EditorLayerService.GetLayerColor(ibutu.Layer, db.LayerList, isDarkBackground);
 
                         using (var ibutuBrush = new SolidBrush(ibutuColor))
                         {
@@ -285,7 +285,7 @@ namespace Site7DbEditor.Services
 
                             PointF pt = ToCanvasPoint(ibutu.X, ibutu.Y);
                             SizeF textSize = g.MeasureString(nameText, labelFont);
-                            Color ibutuColor = EditorLayerService.GetLayerColor(ibutu.Layer, db.LayerList);
+                            Color ibutuColor = EditorLayerService.GetLayerColor(ibutu.Layer, db.LayerList, isDarkBackground);
 
                             using (var ibutuLabelBrush = new SolidBrush(ibutuColor))
                             {

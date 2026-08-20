@@ -29,7 +29,7 @@ namespace Site7DbEditor.Services
         public static readonly Color[] LayerTableColors = new Color[]
         {
             Color.FromArgb(200, 200, 200), // 0: デフォルト灰/白
-            Color.FromArgb(240, 240, 240), // 1:  黒 (キャンバス上では視認性のため白/明灰 240, 240, 240)
+            Color.FromArgb(0, 0, 0),       // 1:  黒 (0, 0, 0)
             Color.FromArgb(255, 60, 60),   // 2:  赤 (255, 60, 60)
             Color.FromArgb(60, 220, 60),   // 3:  緑 (60, 220, 60)
             Color.FromArgb(60, 160, 255),  // 4:  青 (60, 160, 255)
@@ -47,7 +47,7 @@ namespace Site7DbEditor.Services
             Color.FromArgb(140, 140, 140)  // 16: 暗灰 (140, 140, 140)
         };
 
-        public static Color GetLayerColor(int layerId, IEnumerable<LayerModel> layerList)
+        public static Color GetLayerColor(int layerId, IEnumerable<LayerModel> layerList, bool isDarkBackground = true)
         {
             int searchId = layerId;
             var matchedLayer = layerList.FirstOrDefault(l => l.Id == searchId);
@@ -56,41 +56,39 @@ namespace Site7DbEditor.Services
                 matchedLayer = layerList.FirstOrDefault(l => l.Id == (layerId + 48));
             }
 
-            if (matchedLayer != null)
+            int colorIdx = matchedLayer != null ? matchedLayer.Color : (((layerId - 1) % 16) + 1);
+            if (colorIdx < 1 || colorIdx >= LayerTableColors.Length) colorIdx = 1;
+
+            if (colorIdx == 1)
             {
-                int colorIdx = matchedLayer.Color;
-                if (colorIdx >= 1 && colorIdx < LayerTableColors.Length)
-                {
-                    Color col = LayerTableColors[colorIdx];
-                    if (col.R == 0 && col.G == 0 && col.B == 0) return Color.FromArgb(240, 240, 240);
-                    return col;
-                }
+                // 1: 黒 (黒背景時は視認性のため白/明灰、白背景時は純粋な黒)
+                return isDarkBackground ? Color.FromArgb(240, 240, 240) : Color.FromArgb(0, 0, 0);
+            }
+            if (colorIdx == 8)
+            {
+                // 8: 白 (白背景時は視認性のため暗灰、黒背景時は純粋な白)
+                return isDarkBackground ? Color.FromArgb(255, 255, 255) : Color.FromArgb(100, 100, 100);
             }
 
-            int fallbackIdx = ((layerId - 1) % 16) + 1;
-            if (fallbackIdx < 1 || fallbackIdx >= LayerTableColors.Length) fallbackIdx = 1;
-            return LayerTableColors[fallbackIdx];
+            return LayerTableColors[colorIdx];
         }
 
-        public static Color GetControlColor(int layerId, IEnumerable<LayerModel> layerList)
+        public static Color GetControlColor(int layerId, IEnumerable<LayerModel> layerList, bool isDarkBackground = true)
         {
             var matchedLayer = layerList.FirstOrDefault(l => l.Id == layerId);
-            if (matchedLayer != null)
+            int colorIdx = matchedLayer != null ? matchedLayer.Color : (((layerId - 1) % 16) + 1);
+            if (colorIdx < 1 || colorIdx >= LayerTableColors.Length) colorIdx = 1;
+
+            if (colorIdx == 1)
             {
-                int colorIdx = matchedLayer.Color;
-                if (colorIdx >= 1 && colorIdx < LayerTableColors.Length)
-                {
-                    if (colorIdx == 1) return Color.FromArgb(20, 20, 20);
-                    if (colorIdx == 8) return Color.FromArgb(140, 140, 140);
-                    return LayerTableColors[colorIdx];
-                }
+                return isDarkBackground ? Color.FromArgb(240, 240, 240) : Color.FromArgb(20, 20, 20);
+            }
+            if (colorIdx == 8)
+            {
+                return isDarkBackground ? Color.FromArgb(255, 255, 255) : Color.FromArgb(120, 120, 120);
             }
 
-            int fallbackIdx = ((layerId - 1) % 16) + 1;
-            if (fallbackIdx == 1) return Color.FromArgb(20, 20, 20);
-            if (fallbackIdx == 8) return Color.FromArgb(140, 140, 140);
-            if (fallbackIdx >= 1 && fallbackIdx < LayerTableColors.Length) return LayerTableColors[fallbackIdx];
-            return Color.FromArgb(20, 20, 20);
+            return LayerTableColors[colorIdx];
         }
     }
 }
