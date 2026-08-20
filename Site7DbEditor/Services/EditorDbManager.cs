@@ -158,7 +158,12 @@ namespace Site7DbEditor.Services
             }
         }
 
-        public void SaveDatabase(string dbPath)
+        public void SaveDatabase(
+            string dbPath,
+            bool showIkou = true,
+            bool showIbutu = true,
+            bool showKikai = true,
+            bool drawCurve = true)
         {
             if (string.IsNullOrEmpty(dbPath) || !File.Exists(dbPath)) return;
 
@@ -286,7 +291,7 @@ namespace Site7DbEditor.Services
             }
 
             // DB保存完了後、同じフォルダに256x256の全図サムネイル(SITE7.png)を白背景で保存
-            EditorMapRenderer.SaveThumbnail(dbPath, this);
+            EditorMapRenderer.SaveThumbnail(dbPath, this, showIkou, showIbutu, showKikai, drawCurve);
         }
 
         public static bool MatchesFilter(string val, string op, string filterVal)

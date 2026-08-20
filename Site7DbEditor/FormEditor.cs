@@ -2285,7 +2285,7 @@ namespace Site7DbEditor {
                 return;
 
             try {
-                _db.SaveDatabase(_db.CurrentDbPath);
+                _db.SaveDatabase(_db.CurrentDbPath, chkShowIkou.Checked, chkShowIbutu.Checked, chkShowKikai.Checked, chkShowCurve.Checked);
                 _logService.Clear(_db.CurrentDbPath);
                 MessageBox.Show("✔ SQLite DB に正常に上書き保存しました！", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } catch (Exception ex) {
@@ -3407,7 +3407,7 @@ namespace Site7DbEditor {
 
                 if (res == DialogResult.Yes) {
                     try {
-                        _db.SaveDatabase(_db.CurrentDbPath);
+                        _db.SaveDatabase(_db.CurrentDbPath, chkShowIkou.Checked, chkShowIbutu.Checked, chkShowKikai.Checked, chkShowCurve.Checked);
                         _logService.Clear(_db.CurrentDbPath);
                     } catch (Exception ex) {
                         MessageBox.Show($"DB保存時にエラーが発生しました: {ex.Message}", "保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);

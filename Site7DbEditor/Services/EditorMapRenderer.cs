@@ -166,7 +166,7 @@ namespace Site7DbEditor.Services
             // 2. Draw Artifacts (遺物)
             if (chkShowIbutu)
             {
-                using (var glowPen = new Pen(Color.FromArgb(180, 255, 0, 128), 3f))
+                using (var glowPen = new Pen(Color.FromArgb(180, 255, 0, 128), 2f))
                 {
                     foreach (var ibutu in db.IbutuList)
                     {
@@ -177,14 +177,14 @@ namespace Site7DbEditor.Services
                         {
                             if (activeTabIndex == 1 && ibutu.Id == selectedIbutuId)
                             {
-                                g.DrawEllipse(glowPen, pt.X - 7f, pt.Y - 7f, 14f, 14f);
-                                g.FillEllipse(ibutuBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
-                                g.DrawEllipse(Pens.White, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                                g.DrawEllipse(glowPen, pt.X - 5.5f, pt.Y - 5.5f, 11f, 11f);
+                                g.FillEllipse(ibutuBrush, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
+                                g.DrawEllipse(Pens.White, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
                             }
                             else
                             {
-                                g.FillEllipse(ibutuBrush, pt.X - 4f, pt.Y - 4f, 8f, 8f);
-                                g.DrawEllipse(Pens.White, pt.X - 4f, pt.Y - 4f, 8f, 8f);
+                                g.FillEllipse(ibutuBrush, pt.X - 2.5f, pt.Y - 2.5f, 5f, 5f);
+                                g.DrawEllipse(Pens.White, pt.X - 2.5f, pt.Y - 2.5f, 5f, 5f);
                             }
                         }
                     }
@@ -198,8 +198,8 @@ namespace Site7DbEditor.Services
                 string currentBpName = gbl.KikaiMan.bp?.Name ?? Env.BPName ?? Def.GetIniStr("TS", "後視点");
 
                 using (var kikaiBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(0, 225, 255) : Color.FromArgb(0, 120, 200)))
-                using (var kikaiPen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.5f))
-                using (var selectPen = new Pen(Color.FromArgb(255, 220, 0), 2.5f))
+                using (var kikaiPen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.2f))
+                using (var selectPen = new Pen(Color.FromArgb(255, 220, 0), 2f))
                 using (var kpTextBrush = new SolidBrush(Color.FromArgb(255, 100, 100)))
                 using (var bpTextBrush = new SolidBrush(Color.FromArgb(100, 200, 255)))
                 using (var markFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
@@ -208,8 +208,16 @@ namespace Site7DbEditor.Services
                     foreach (var kikai in db.KikaiList)
                     {
                         PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
-                        g.FillEllipse(kikaiBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
-                        g.DrawEllipse((activeTabIndex == 2 && kikai.Id == selectedKikaiId) ? selectPen : kikaiPen, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                        if (activeTabIndex == 2 && kikai.Id == selectedKikaiId)
+                        {
+                            g.FillEllipse(kikaiBrush, pt.X - 4.5f, pt.Y - 4.5f, 9f, 9f);
+                            g.DrawEllipse(selectPen, pt.X - 4.5f, pt.Y - 4.5f, 9f, 9f);
+                        }
+                        else
+                        {
+                            g.FillEllipse(kikaiBrush, pt.X - 3f, pt.Y - 3f, 6f, 6f);
+                            g.DrawEllipse(kikaiPen, pt.X - 3f, pt.Y - 3f, 6f, 6f);
+                        }
 
                         // 器械点 / 後視点 の文字描画 (基準点シンボルの左側)
                         string kikaiName = string.IsNullOrEmpty(kikai.Name) ? $"K{kikai.Id}" : kikai.Name;
@@ -218,11 +226,11 @@ namespace Site7DbEditor.Services
 
                         if (isKp)
                         {
-                            g.DrawString("器", markFont, kpTextBrush, pt.X - 6f, pt.Y, sfFar);
+                            g.DrawString("器", markFont, kpTextBrush, pt.X - 5f, pt.Y, sfFar);
                         }
                         else if (isBp)
                         {
-                            g.DrawString("後", markFont, bpTextBrush, pt.X - 6f, pt.Y, sfFar);
+                            g.DrawString("後", markFont, bpTextBrush, pt.X - 5f, pt.Y, sfFar);
                         }
                     }
                 }
@@ -478,7 +486,13 @@ namespace Site7DbEditor.Services
         /// <summary>
         /// 印刷イメージの白背景で256x256の全図サムネイル(SITE7.png)をデータベースと同じフォルダに保存します。
         /// </summary>
-        public static void SaveThumbnail(string dbPath, EditorDbManager db, bool drawCurve = true)
+        public static void SaveThumbnail(
+            string dbPath,
+            EditorDbManager db,
+            bool showIkou = true,
+            bool showIbutu = true,
+            bool showKikai = true,
+            bool drawCurve = true)
         {
             try
             {
@@ -490,7 +504,7 @@ namespace Site7DbEditor.Services
 
                 var thumbVc = new EditorMapViewController();
                 Size thumbSize = new Size(256, 256);
-                thumbVc.UpdateMapBounds(thumbSize, db.IkouLList, db.IbutuList, db.KikaiList, true, true, true);
+                thumbVc.UpdateMapBounds(thumbSize, db.IkouLList, db.IbutuList, db.KikaiList, showIkou, showIbutu, showKikai);
                 thumbVc.ResetZoom();
 
                 using (var bmp = new Bitmap(256, 256))
@@ -508,9 +522,9 @@ namespace Site7DbEditor.Services
                             selectedIbutuId: -1,
                             selectedKikaiId: -1,
                             activeTabIndex: -1,
-                            chkShowIkou: true,
-                            chkShowIbutu: true,
-                            chkShowKikai: true,
+                            chkShowIkou: showIkou,
+                            chkShowIbutu: showIbutu,
+                            chkShowKikai: showKikai,
                             chkShowCurve: drawCurve,
                             chkShowGrid: false,
                             chkColorByIkou: false,
