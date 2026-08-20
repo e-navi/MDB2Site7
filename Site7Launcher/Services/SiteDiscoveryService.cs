@@ -13,27 +13,39 @@ namespace Site7Launcher.Services
         /// </summary>
         public static string GetDefaultRootPath()
         {
-            string appDir = AppDomain.CurrentDomain.BaseDirectory;
-            // 開発環境やプロジェクト構造に合わせて探す
-            string[] candidatePaths = new[]
+            const string primaryPath = @"C:\SITE7\GENBA\DATA";
+            if (Directory.Exists(primaryPath))
             {
-                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\Site7TestData")),
-                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\Site7TestData")),
-                Path.GetFullPath(Path.Combine(appDir, @"Site7TestData")),
-                @"C:\Site7\Data",
-                @"C:\Site7Data"
-            };
-
-            foreach (var path in candidatePaths)
-            {
-                if (Directory.Exists(path)) return path;
+                return primaryPath;
             }
 
-            return AppDomain.CurrentDomain.BaseDirectory;
+            try
+            {
+                Directory.CreateDirectory(primaryPath);
+                return primaryPath;
+            }
+            catch
+            {
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string[] candidatePaths = new[]
+                {
+                    Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\Site7TestData")),
+                    Path.GetFullPath(Path.Combine(appDir, @"..\..\..\Site7TestData")),
+                    Path.GetFullPath(Path.Combine(appDir, @"Site7TestData"))
+                };
+
+                foreach (var path in candidatePaths)
+                {
+                    if (Directory.Exists(path)) return path;
+                }
+
+                return appDir;
+            }
         }
 
         /// <summary>
         /// 指定されたルートフォルダから現場一覧を探索して取得します。
+        /// SITE7.png が存在するフォルダのみを対象とします。
         /// </summary>
         public static List<SiteItem> DiscoverSites(string rootPath)
         {
@@ -51,9 +63,9 @@ namespace Site7Launcher.Services
                 }
             }
 
-            // 2. ルート直下に直接 DB が存在する場合
+            // 2. ルート直下に直接 SITE7.png が存在する場合
             var rootSite = ScanDirectoryForSite(rootPath, isRoot: true);
-            if (rootSite != null && !results.Any(r => r.DbPath == rootSite.DbPath))
+            if (rootSite != null && !results.Any(r => r.FolderPath.Equals(rootSite.FolderPath, StringComparison.OrdinalIgnoreCase)))
             {
                 results.Insert(0, rootSite);
             }
@@ -66,29 +78,78 @@ namespace Site7Launcher.Services
         {
             try
             {
-                // SITE7.db または *.db を検索
-                string dbPath = Path.Combine(dirPath, "SITE7.db");
-                if (!File.Exists(dbPath))
+                // SITE7.png (大文字小文字を区別しない) の存在確認
+                string[] pngFiles = Directory.GetFiles(dirPath, "SITE7.png", SearchOption.TopDirectoryOnly);
+                if (pngFiles.Length == 0)
                 {
-                    var dbFiles = Directory.GetFiles(dirPath, "*.db");
-                    if (dbFiles.Length > 0)
+                    // 大文字小文字の念のため検索
+                    pngFiles = Directory.GetFiles(dirPath, "*.png")
+                        .Where(f => Path.GetFileName(f).Equals("SITE7.png", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+
+                if (pngFiles.Length == 0)
+                {
+                    // SITE7.png がないフォルダは対象外
+                    return null;
+                }
+
+                string pngPath = pngFiles[0];
+                var pngFileInfo = new FileInfo(pngPath);
+
+                // DBファイルの探索 (SITE7.db, SITE7.db3, Site7.db3, *.db3, *.db, *.sqlite)
+                string dbPath = "";
+                long fileSizeBytes = 0;
+                DateTime lastUpdated = pngFileInfo.LastWriteTime;
+
+                string[] candidateDbNames = new[] { "SITE7.db", "SITE7.db3", "Site7.db3", "site7.db", "site7.db3" };
+                foreach (var cname in candidateDbNames)
+                {
+                    string candidatePath = Path.Combine(dirPath, cname);
+                    if (File.Exists(candidatePath))
                     {
-                        dbPath = dbFiles[0];
-                    }
-                    else
-                    {
-                        return null; // DBファイルがない場合は現場とみなさない
+                        dbPath = candidatePath;
+                        break;
                     }
                 }
 
-                var dbFileInfo = new FileInfo(dbPath);
+                if (string.IsNullOrEmpty(dbPath))
+                {
+                    var anyDbFiles = Directory.GetFiles(dirPath, "*.*")
+                        .Where(f => f.EndsWith(".db", StringComparison.OrdinalIgnoreCase) ||
+                                    f.EndsWith(".db3", StringComparison.OrdinalIgnoreCase) ||
+                                    f.EndsWith(".sqlite", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+
+                    if (anyDbFiles.Length > 0)
+                    {
+                        dbPath = anyDbFiles[0];
+                    }
+                    else
+                    {
+                        dbPath = Path.Combine(dirPath, "SITE7.db");
+                    }
+                }
+
+                if (File.Exists(dbPath))
+                {
+                    var dbInfo = new FileInfo(dbPath);
+                    fileSizeBytes = dbInfo.Length;
+                    if (dbInfo.LastWriteTime > lastUpdated)
+                    {
+                        lastUpdated = dbInfo.LastWriteTime;
+                    }
+                }
+                else
+                {
+                    fileSizeBytes = pngFileInfo.Length;
+                }
+
                 string dirName = Path.GetFileName(dirPath);
                 if (string.IsNullOrEmpty(dirName) && isRoot)
                 {
                     dirName = "ルート現場";
                 }
-
-                string pngPath = Path.Combine(dirPath, "SITE7.png");
 
                 return new SiteItem
                 {
@@ -96,9 +157,9 @@ namespace Site7Launcher.Services
                     FolderPath = dirPath,
                     DbPath = dbPath,
                     ThumbnailPath = pngPath,
-                    UpdatedAt = dbFileInfo.LastWriteTime,
-                    CreatedAt = dbFileInfo.CreationTime,
-                    FileSizeBytes = dbFileInfo.Length
+                    UpdatedAt = lastUpdated,
+                    CreatedAt = Directory.GetCreationTime(dirPath),
+                    FileSizeBytes = fileSizeBytes
                 };
             }
             catch
