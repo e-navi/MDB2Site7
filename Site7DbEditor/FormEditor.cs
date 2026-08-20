@@ -34,6 +34,10 @@ namespace Site7DbEditor {
         private IkouLModel? _insertingLine = null;
         private int _insertingSegmentIndex = -1;
 
+        private bool _isSettingLabelPos = false;
+        private IkouLModel? _labelPosTargetLine = null;
+        private IkouModel? _labelPosTargetIkou = null;
+
         private Point _currentRubberBandMousePos = Point.Empty;
 
         private readonly EditorDbManager _db = new EditorDbManager();
@@ -545,8 +549,8 @@ namespace Site7DbEditor {
             this.cmbIkouKind.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.txtIkouNum.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.btnMaxPlusOne.Click += btnMaxPlusOne_Click;
-            this.btnSetPos.Click += (s, e) => MessageBox.Show("平面図上の表示位置をクリック指定してください。", "表示位置指定", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.btnLineSetPos.Click += (s, e) => MessageBox.Show("平面図上の表示位置をクリック指定してください。", "表示位置指定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.btnSetPos.Click += btnSetPos_Click;
+            this.btnLineSetPos.Click += btnLineSetPos_Click;
             this.cmbLineKind.SelectedIndexChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.cmbLineKind.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.txtLineNum.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
@@ -1553,7 +1557,7 @@ namespace Site7DbEditor {
             if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine && dgvPrecs.DataSource is BindingList<IkouPointRecord> pts) {
                 selectedLine.Precs = SqliteManager.FormatPrecsText(pts.ToList());
 
-                if (pts.Count > 0) {
+                if (pts.Count > 0 && selectedLine.X == 0 && selectedLine.Y == 0) {
                     selectedLine.X = Math.Round(pts.Average(p => p.X), 3);
                     selectedLine.Y = Math.Round(pts.Average(p => p.Y), 3);
                     selectedLine.Z = Math.Round(pts.Average(p => p.Z), 3);
@@ -1870,6 +1874,43 @@ namespace Site7DbEditor {
                 UpdateUIState();
                 picMapCanvas.Invalidate();
             }
+        }
+
+        private void btnSetPos_Click(object? sender, EventArgs e) {
+            if (GetSelectedDataBoundItem<IkouModel>(dgvIkou) is IkouModel selectedIkou) {
+                _isSettingLabelPos = true;
+                _labelPosTargetIkou = selectedIkou;
+                _labelPosTargetLine = null;
+                _currentRubberBandMousePos = Point.Empty;
+                picMapCanvas.Cursor = Cursors.Cross;
+                _clickNotifyToolTip.Show($"📍 【{selectedIkou.Name}】の新しい表示位置を平面図上でクリックしてください\n（右クリックまたはEscでキャンセル）", picMapCanvas, 20, 20, 3500);
+                picMapCanvas.Invalidate();
+            } else {
+                MessageBox.Show("対象の遺構を選択してください。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnLineSetPos_Click(object? sender, EventArgs e) {
+            if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                _isSettingLabelPos = true;
+                _labelPosTargetLine = selectedLine;
+                _labelPosTargetIkou = null;
+                _currentRubberBandMousePos = Point.Empty;
+                picMapCanvas.Cursor = Cursors.Cross;
+                _clickNotifyToolTip.Show($"📍 【{selectedLine.Name}】の新しい表示位置を平面図上でクリックしてください\n（右クリックまたはEscでキャンセル）", picMapCanvas, 20, 20, 3500);
+                picMapCanvas.Invalidate();
+            } else {
+                MessageBox.Show("対象の遺構線を選択してください。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void CancelLabelPosSetting() {
+            _isSettingLabelPos = false;
+            _labelPosTargetLine = null;
+            _labelPosTargetIkou = null;
+            _currentRubberBandMousePos = Point.Empty;
+            picMapCanvas.Cursor = Cursors.Default;
+            picMapCanvas.Invalidate();
         }
 
         private void btnLineMaxPlusOne_Click(object? sender, EventArgs e) {
@@ -2334,6 +2375,51 @@ namespace Site7DbEditor {
                     }
                 }
             }
+
+            // 表示位置指定中のラバーバンド描画（現状の表示位置 -> マウス位置）
+            if (_isSettingLabelPos && !_currentRubberBandMousePos.IsEmpty) {
+                PointF? startPt = null;
+                string labelPreview = "";
+                if (_labelPosTargetLine != null) {
+                    var pts = SqliteManager.ParsePrecsText(_labelPosTargetLine.Precs);
+                    if (_labelPosTargetLine.X != 0.0 || _labelPosTargetLine.Y != 0.0) {
+                        startPt = _vc.ToCanvasPoint(_labelPosTargetLine.X, _labelPosTargetLine.Y, picMapCanvas.Size);
+                    } else if (pts.Count > 0) {
+                        startPt = _vc.ToCanvasPoint(pts[0].X, pts[0].Y, picMapCanvas.Size);
+                    }
+                    labelPreview = _labelPosTargetLine.Name;
+                } else if (_labelPosTargetIkou != null) {
+                    if (_labelPosTargetIkou.X != 0.0 || _labelPosTargetIkou.Y != 0.0) {
+                        startPt = _vc.ToCanvasPoint(_labelPosTargetIkou.X, _labelPosTargetIkou.Y, picMapCanvas.Size);
+                    }
+                    labelPreview = _labelPosTargetIkou.Name;
+                }
+
+                if (startPt.HasValue) {
+                    PointF endPt = _currentRubberBandMousePos;
+                    using (var rubberPen = new Pen(Color.FromArgb(255, 140, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                    using (var targetPen = new Pen(Color.FromArgb(255, 140, 0), 2f))
+                    using (var targetBrush = new SolidBrush(Color.FromArgb(200, 255, 140, 0)))
+                    using (var previewFont = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
+                    using (var textBrush = new SolidBrush(Color.FromArgb(255, 240, 200)))
+                    using (var bgBrush = new SolidBrush(Color.FromArgb(200, 30, 30, 30))) {
+                        // 原点（現状位置）からマウス位置へラバーバンド
+                        e.Graphics.DrawLine(rubberPen, startPt.Value, endPt);
+                        e.Graphics.FillEllipse(targetBrush, startPt.Value.X - 4f, startPt.Value.Y - 4f, 8f, 8f);
+
+                        // 先端（ターゲット）
+                        e.Graphics.FillEllipse(targetBrush, endPt.X - 4f, endPt.Y - 4f, 8f, 8f);
+                        e.Graphics.DrawEllipse(targetPen, endPt.X - 8f, endPt.Y - 8f, 16f, 16f);
+
+                        // プレビュー文字描画
+                        if (!string.IsNullOrEmpty(labelPreview)) {
+                            var sz = e.Graphics.MeasureString(labelPreview, previewFont);
+                            e.Graphics.FillRectangle(bgBrush, endPt.X + 12f, endPt.Y - sz.Height / 2f, sz.Width + 6f, sz.Height);
+                            e.Graphics.DrawString(labelPreview, previewFont, textBrush, endPt.X + 15f, endPt.Y - sz.Height / 2f);
+                        }
+                    }
+                }
+            }
         }
 
         private void ApplyVertexInsert(Point screenLocation) {
@@ -2442,7 +2528,8 @@ namespace Site7DbEditor {
 
                 _movingLine.Precs = SqliteManager.FormatPrecsText(pts);
 
-                if (pts.Count > 0) {
+                // 既に表示位置 (X, Y) が設定されている場合は位置を保持し、未設定（0, 0）の場合のみ初期重心を設定
+                if (pts.Count > 0 && _movingLine.X == 0 && _movingLine.Y == 0) {
                     _movingLine.X = Math.Round(pts.Average(p => p.X), 3);
                     _movingLine.Y = Math.Round(pts.Average(p => p.Y), 3);
                     _movingLine.Z = Math.Round(pts.Average(p => p.Z), 3);
@@ -2475,6 +2562,37 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_MouseDown(object? sender, MouseEventArgs e) {
+            if (_isSettingLabelPos) {
+                if (e.Button == MouseButtons.Left) {
+                    var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
+                    double setX = Math.Round(newSurveyX, 3);
+                    double setY = Math.Round(newSurveyY, 3);
+
+                    if (_labelPosTargetLine != null) {
+                        var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, _labelPosTargetLine);
+                        _labelPosTargetLine.X = setX;
+                        _labelPosTargetLine.Y = setY;
+                        _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, _labelPosTargetLine, original, _db.CurrentDbPath);
+                        dgvIkouL.Refresh();
+                        _clickNotifyToolTip.Show($"✔ 【{_labelPosTargetLine.Name}】の表示位置を設定しました (X={setX:F3}, Y={setY:F3})", picMapCanvas, e.X + 10, e.Y - 25, 2000);
+                    } else if (_labelPosTargetIkou != null) {
+                        var original = (IkouModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOU, _labelPosTargetIkou);
+                        _labelPosTargetIkou.X = setX;
+                        _labelPosTargetIkou.Y = setY;
+                        _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOU, _labelPosTargetIkou, original, _db.CurrentDbPath);
+                        dgvIkou.Refresh();
+                        _clickNotifyToolTip.Show($"✔ 【{_labelPosTargetIkou.Name}】の表示位置を設定しました (X={setX:F3}, Y={setY:F3})", picMapCanvas, e.X + 10, e.Y - 25, 2000);
+                    }
+
+                    CancelLabelPosSetting();
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelLabelPosSetting();
+                    _clickNotifyToolTip.Show("⏹ 表示位置指定をキャンセルしました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
+                    return;
+                }
+            }
+
             if (_isMovingVertex) {
                 if (e.Button == MouseButtons.Left) {
                     ApplyVertexMove(e.Location);
@@ -2584,7 +2702,7 @@ namespace Site7DbEditor {
                 picMapCanvas.Invalidate();
             }
 
-            if (_isMovingVertex || _isInsertingVertex) {
+            if (_isMovingVertex || _isInsertingVertex || _isSettingLabelPos) {
                 _currentRubberBandMousePos = e.Location;
                 picMapCanvas.Invalidate();
                 return;
@@ -3368,7 +3486,24 @@ namespace Site7DbEditor {
         }
 
         private void FormEditor_KeyDown(object? sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.Z) {
+            if (e.KeyCode == Keys.Escape) {
+                if (_isSettingLabelPos) {
+                    CancelLabelPosSetting();
+                    _clickNotifyToolTip.Show("⏹ 表示位置指定をキャンセルしました", picMapCanvas, 20, 20, 1200);
+                    e.Handled = true;
+                    return;
+                }
+                if (_isMovingVertex) {
+                    CancelVertexMove();
+                    e.Handled = true;
+                    return;
+                }
+                if (_isInsertingVertex) {
+                    CancelVertexInsert();
+                    e.Handled = true;
+                    return;
+                }
+            } else if (e.Control && e.KeyCode == Keys.Z) {
                 ExecuteUndo();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
