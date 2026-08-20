@@ -64,8 +64,8 @@ namespace Site7Launcher
         private void InitializeComponent()
         {
             this.Text = "遺跡調査システム Site7 - 現場選択";
-            this.Size = new Size(1000, 680);
-            this.MinimumSize = new Size(820, 520);
+            this.Size = new Size(1060, 700);
+            this.MinimumSize = new Size(880, 560);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
             this.BackColor = Color.FromArgb(244, 246, 249);
@@ -108,14 +108,14 @@ namespace Site7Launcher
                 Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 110, 125),
                 Location = new Point(16, 45),
-                Size = new Size(380, 20),
+                Size = new Size(420, 20),
                 AutoEllipsis = true
             };
 
             btnBrowseFolder = new Button
             {
                 Text = "📂 フォルダ変更",
-                Location = new Point(400, 40),
+                Location = new Point(445, 40),
                 Size = new Size(115, 28),
                 Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
                 BackColor = Color.FromArgb(235, 238, 243),
@@ -126,8 +126,8 @@ namespace Site7Launcher
 
             txtSearch = new TextBox
             {
-                Location = new Point(530, 40),
-                Size = new Size(200, 26),
+                Location = new Point(575, 40),
+                Size = new Size(220, 26),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
                 PlaceholderText = "🔍 現場名を検索..."
             };
@@ -136,7 +136,7 @@ namespace Site7Launcher
             btnViewList = new Button
             {
                 Text = "📄 リスト",
-                Location = new Point(745, 38),
+                Location = new Point(810, 38),
                 Size = new Size(95, 30),
                 Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
                 BackColor = Color.FromArgb(0, 122, 255),
@@ -149,7 +149,7 @@ namespace Site7Launcher
             btnViewGrid = new Button
             {
                 Text = "🖼 グリッド",
-                Location = new Point(845, 38),
+                Location = new Point(915, 38),
                 Size = new Size(95, 30),
                 Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
                 BackColor = Color.FromArgb(235, 238, 243),
@@ -195,7 +195,7 @@ namespace Site7Launcher
             {
                 Text = "📡 外業で開く",
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Location = new Point(570, 12),
+                Location = new Point(630, 12),
                 Size = new Size(130, 38),
                 Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(34, 197, 94),
@@ -209,7 +209,7 @@ namespace Site7Launcher
             {
                 Text = "💻 内業で開く",
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Location = new Point(710, 12),
+                Location = new Point(770, 12),
                 Size = new Size(130, 38),
                 Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(14, 116, 144),
@@ -223,7 +223,7 @@ namespace Site7Launcher
             {
                 Text = "✖ 終了",
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Location = new Point(850, 12),
+                Location = new Point(910, 12),
                 Size = new Size(110, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 245, 249),
@@ -250,8 +250,10 @@ namespace Site7Launcher
             {
                 Dock = DockStyle.Fill,
                 Orientation = Orientation.Vertical,
-                SplitterDistance = 600,
+                SplitterDistance = 640,
                 SplitterWidth = 8,
+                Panel1MinSize = 350,
+                Panel2MinSize = 320,
                 BackColor = Color.FromArgb(244, 246, 249)
             };
 
@@ -268,11 +270,22 @@ namespace Site7Launcher
                 MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
-                RowTemplate = { Height = 34 }
+                RowTemplate = { Height = 46 }
             };
+
+            var colThumb = new DataGridViewImageColumn
+            {
+                Name = "Thumb",
+                HeaderText = "図面",
+                Width = 54,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                ImageLayout = DataGridViewImageCellLayout.Zoom,
+                Resizable = DataGridViewTriState.False
+            };
+            dgvSites.Columns.Add(colThumb);
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Name", HeaderText = "現場名", FillWeight = 45 });
-            dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "UpdatedAt", HeaderText = "最終更新日時", FillWeight = 30 });
-            dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Size", HeaderText = "サイズ", FillWeight = 25 });
+            dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "UpdatedAt", HeaderText = "最終更新日時", FillWeight = 32 });
+            dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Size", HeaderText = "サイズ", FillWeight = 23 });
             dgvSites.SelectionChanged += DgvSites_SelectionChanged;
             dgvSites.CellDoubleClick += (s, e) => LaunchSiteEditor(isGaigyo: false);
 
@@ -290,7 +303,8 @@ namespace Site7Launcher
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
-                Padding = new Padding(15)
+                Padding = new Padding(15),
+                AutoScroll = true
             };
 
             var lblPreviewHeader = new Label
@@ -304,7 +318,7 @@ namespace Site7Launcher
 
             picPreview = new PictureBox
             {
-                Location = new Point(15, 45),
+                Location = new Point(15, 42),
                 Size = new Size(256, 256),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 BorderStyle = BorderStyle.FixedSingle,
@@ -316,8 +330,9 @@ namespace Site7Launcher
                 Text = "現場名: -",
                 Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(15, 315),
-                Size = new Size(320, 26),
+                Location = new Point(15, 310),
+                Size = new Size(300, 26),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 AutoEllipsis = true
             };
 
@@ -326,8 +341,9 @@ namespace Site7Launcher
                 Text = "更新日時: -",
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(15, 345),
-                Size = new Size(320, 20)
+                Location = new Point(15, 340),
+                Size = new Size(300, 20),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
             lblPreviewSize = new Label
@@ -335,8 +351,9 @@ namespace Site7Launcher
                 Text = "データ容量: -",
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(15, 370),
-                Size = new Size(320, 20)
+                Location = new Point(15, 365),
+                Size = new Size(300, 20),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
             lblPreviewPath = new Label
@@ -344,8 +361,9 @@ namespace Site7Launcher
                 Text = "フォルダ: -",
                 Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(15, 400),
-                Size = new Size(320, 40),
+                Location = new Point(15, 395),
+                Size = new Size(300, 44),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 AutoEllipsis = true
             };
 
@@ -438,7 +456,8 @@ namespace Site7Launcher
             dgvSites.Rows.Clear();
             foreach (var site in _filteredSites)
             {
-                int rowIdx = dgvSites.Rows.Add(site.Name, site.DisplayUpdatedAt, site.DisplaySize);
+                Image thumb = site.GetThumbnailImage() ?? CreateDefaultPlaceholderImage();
+                int rowIdx = dgvSites.Rows.Add(thumb, site.Name, site.DisplayUpdatedAt, site.DisplaySize);
                 dgvSites.Rows[rowIdx].Tag = site;
             }
 
