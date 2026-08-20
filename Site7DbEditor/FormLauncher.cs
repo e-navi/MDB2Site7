@@ -11,7 +11,10 @@ namespace Site7DbEditor
 {
     public class FormLauncher : Form
     {
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string? SelectedDbPath { get; private set; } = null;
+
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool IsGaigyoMode { get; private set; } = false;
 
         private string _currentRootFolder = "";

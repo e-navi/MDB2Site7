@@ -57,8 +57,12 @@ namespace Site7DbEditor {
         private string _currentGenbaName = "";
         private string? _initialDbPath = null;
 
-        public FormEditor(string? initialDbPath = null) {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsGaigyoMode { get; set; } = false;
+
+        public FormEditor(string? initialDbPath = null, bool isGaigyo = false) {
             _initialDbPath = initialDbPath;
+            IsGaigyoMode = isGaigyo;
             InitializeComponent();
             gbl.FormMain = this;
             SetupStyles();
@@ -68,10 +72,6 @@ namespace Site7DbEditor {
             tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             tabControlData_SelectedIndexChanged(this, EventArgs.Empty);
             WireDebugLayoutInfo();
-
-            if (!string.IsNullOrEmpty(_initialDbPath) && File.Exists(_initialDbPath)) {
-                this.Shown += (s, e) => LoadDatabase(_initialDbPath);
-            }
         }
 
         private void InitAppVersionAndTitle() {
@@ -100,10 +100,11 @@ namespace Site7DbEditor {
         }
 
         public void UpdateWindowTitle() {
+            string modeTag = IsGaigyoMode ? "【外業】" : "【内業】";
             if (!string.IsNullOrEmpty(_currentGenbaName)) {
-                this.Text = $"SITE7 遺跡調査システム  [{_currentGenbaName}]  {_appVersionString}";
+                this.Text = $"SITE7 遺跡調査システム {modeTag} [{_currentGenbaName}]  {_appVersionString}";
             } else {
-                this.Text = $"SITE7 遺跡調査システム  {_appVersionString}";
+                this.Text = $"SITE7 遺跡調査システム {modeTag}  {_appVersionString}";
             }
         }
 
@@ -759,17 +760,25 @@ namespace Site7DbEditor {
         }
 
         private void FormEditor_Load(object? sender, EventArgs e) {
-            PopulateQuickDbList();
+            PopulateQuickDbList(_initialDbPath);
             InitBatchUpdateControls();
 
-            SetBluetoothDisplayMode(false);
+            if (IsGaigyoMode) {
+                panelMapRight.Visible = true;
+                SetBluetoothDisplayMode(false);
+            } else {
+                panelMapRight.Visible = false;
+                if (_dlgBth != null && !_dlgBth.IsDisposed) {
+                    _dlgBth.Close();
+                    _dlgBth = null;
+                }
+            }
 
+            UpdateWindowTitle();
             UpdatePanelWidthsDisplay();
         }
 
-
-
-        private void PopulateQuickDbList() {
+        private void PopulateQuickDbList(string? targetDb = null) {
             cmbQuickDbSelect.Items.Clear();
 
             string defaultFolder = @"C:\SITE7\GENBA\DATA";
@@ -778,7 +787,7 @@ namespace Site7DbEditor {
             }
 
             var searchFolders = new[] { defaultFolder, @"c:\Proj\Antigravity\MDB2Site7\ExportedSite7" };
-            string lastOpenedDb = Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
+            string lastOpenedDb = !string.IsNullOrEmpty(targetDb) ? targetDb : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
 
             foreach (var folder in searchFolders) {
                 if (Directory.Exists(folder)) {

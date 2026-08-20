@@ -21,7 +21,7 @@ namespace Site7DbEditor
             using var launcher = new FormLauncher();
             if (launcher.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath))
             {
-                var editor = new FormEditor(launcher.SelectedDbPath);
+                var editor = new FormEditor(launcher.SelectedDbPath, launcher.IsGaigyoMode);
                 Application.Run(editor);
             }
         }    
