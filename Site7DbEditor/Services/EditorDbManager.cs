@@ -284,6 +284,9 @@ namespace Site7DbEditor.Services
                     trans.Commit();
                 }
             }
+
+            // DB保存完了後、同じフォルダに256x256の全図サムネイル(SITE7.png)を白背景で保存
+            EditorMapRenderer.SaveThumbnail(dbPath, this);
         }
 
         public static bool MatchesFilter(string val, string op, string filterVal)

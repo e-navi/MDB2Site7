@@ -474,5 +474,63 @@ namespace Site7DbEditor.Services
                 }
             }
         }
+
+        /// <summary>
+        /// 印刷イメージの白背景で256x256の全図サムネイル(SITE7.png)をデータベースと同じフォルダに保存します。
+        /// </summary>
+        public static void SaveThumbnail(string dbPath, EditorDbManager db, bool drawCurve = true)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(dbPath)) return;
+                string? dir = Path.GetDirectoryName(dbPath);
+                if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return;
+
+                string pngPath = Path.Combine(dir, "SITE7.png");
+
+                var thumbVc = new EditorMapViewController();
+                Size thumbSize = new Size(256, 256);
+                thumbVc.UpdateMapBounds(thumbSize, db.IkouLList, db.IbutuList, db.KikaiList, true, true, true);
+                thumbVc.ResetZoom();
+
+                using (var bmp = new Bitmap(256, 256))
+                {
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        DrawMapCanvas(
+                            g,
+                            thumbSize,
+                            thumbVc,
+                            db,
+                            selectedIkouId: -1,
+                            selectedLid: -1,
+                            selectedPointIndex: -1,
+                            selectedIbutuId: -1,
+                            selectedKikaiId: -1,
+                            activeTabIndex: -1,
+                            chkShowIkou: true,
+                            chkShowIbutu: true,
+                            chkShowKikai: true,
+                            chkShowCurve: drawCurve,
+                            chkShowGrid: false,
+                            chkColorByIkou: false,
+                            isLayerVisible: null,
+                            showIkouName: false,
+                            showIbutuName: false,
+                            showKikaiName: false,
+                            isDarkBackground: false,
+                            chkShowBgImage: false,
+                            chkShowBgPointCloud: false
+                        );
+                    }
+
+                    bmp.Save(pngPath, System.Drawing.Imaging.ImageFormat.Png);
+                }
+            }
+            catch
+            {
+                // サムネイル保存失敗時はメイン保存処理をブロックしない
+            }
+        }
     }
 }
