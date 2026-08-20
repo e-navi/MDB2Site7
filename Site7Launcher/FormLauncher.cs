@@ -272,6 +272,7 @@ namespace Site7Launcher
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
                 RowTemplate = { Height = 46 }
             };
+            dgvSites.DataError += (s, e) => { e.ThrowException = false; };
 
             var colThumb = new DataGridViewImageColumn
             {
