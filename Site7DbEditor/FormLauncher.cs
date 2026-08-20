@@ -211,16 +211,29 @@ namespace Site7DbEditor
 
             btnOpenNaigyo = new Button
             {
-                Text = "💻 内業",
+                Text = "💻 内業 ▾",
                 Location = new Point(265, 12),
-                Size = new Size(110, 38),
+                Size = new Size(115, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(14, 116, 144),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
             btnOpenNaigyo.FlatAppearance.BorderSize = 0;
-            btnOpenNaigyo.Click += (s, e) => ConfirmAndOpenSite(isGaigyo: false);
+
+            var menuNaigyo = new ContextMenuStrip
+            {
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
+                ShowImageMargin = false
+            };
+            var itemSeiri = new ToolStripMenuItem("📑 遺跡調査整理", null, (s, e) => ConfirmAndOpenSite(isGaigyo: false));
+            var itemDrawing = new ToolStripMenuItem("📐 遺構図作成", null, (s, e) => LaunchDrawingEditor());
+            menuNaigyo.Items.AddRange(new ToolStripItem[] { itemSeiri, itemDrawing });
+
+            btnOpenNaigyo.Click += (s, e) =>
+            {
+                menuNaigyo.Show(btnOpenNaigyo, new Point(0, -menuNaigyo.PreferredSize.Height));
+            };
 
             btnTool = new Button
             {
@@ -756,6 +769,71 @@ namespace Site7DbEditor
             Def.SetIniStr("Site7DbEditor", "LastOpenedDb", _selectedSite.DbPath);
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void LaunchDrawingEditor()
+        {
+            if (_selectedSite == null || string.IsNullOrEmpty(_selectedSite.DbPath))
+            {
+                MessageBox.Show("開く現場を選択してください。", "選択確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            Def.SetIniStr("Site7DbEditor", "LastOpenedDb", _selectedSite.DbPath);
+
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+            string[] candidateExePaths = new[]
+            {
+                Path.Combine(appDir, "Site7DrawingEditor.exe"),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\Site7DrawingEditor\bin\Debug\net9.0-windows\Site7DrawingEditor.exe")),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\Site7DrawingEditor\bin\Release\net9.0-windows\Site7DrawingEditor.exe")),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\Site7DrawingEditor\bin\Debug\net9.0-windows\Site7DrawingEditor.exe")),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\Site7DrawingEditor\bin\Debug\net9.0-windows\Site7DrawingEditor.exe"))
+            };
+
+            string? targetExe = candidateExePaths.FirstOrDefault(File.Exists);
+
+            try
+            {
+                if (targetExe != null)
+                {
+                    var psi = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = targetExe,
+                        Arguments = $"\"{_selectedSite.DbPath}\"",
+                        UseShellExecute = true
+                    };
+                    System.Diagnostics.Process.Start(psi);
+                }
+                else
+                {
+                    string projectPath = Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\Site7DrawingEditor\Site7DrawingEditor.csproj"));
+                    if (!File.Exists(projectPath))
+                    {
+                        projectPath = Path.GetFullPath(Path.Combine(appDir, @"..\..\..\Site7DrawingEditor\Site7DrawingEditor.csproj"));
+                    }
+
+                    if (File.Exists(projectPath))
+                    {
+                        var psi = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = $"run --project \"{projectPath}\" -- \"{_selectedSite.DbPath}\"",
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+                        };
+                        System.Diagnostics.Process.Start(psi);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Site7DrawingEditor が見つかりませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Site7DrawingEditor の起動に失敗しました: {ex.Message}", "起動エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -7,11 +7,12 @@ namespace Site7DrawingEditor
     internal static class Program
     {
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             ApplicationConfiguration.Initialize();
-            Application.Run(new FormDrawingEditor());
+            string? dbPath = args.Length > 0 ? args[0] : null;
+            Application.Run(new FormDrawingEditor(dbPath));
         }
     }
 }

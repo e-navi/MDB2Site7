@@ -25,11 +25,16 @@ namespace Site7DrawingEditor
             public override string ToString() => DisplayName;
         }
 
-        public FormDrawingEditor()
+        public FormDrawingEditor(string? initialDbPath = null)
         {
             InitializeComponent();
             SetupStyles();
             WireEvents();
+
+            if (!string.IsNullOrEmpty(initialDbPath) && File.Exists(initialDbPath))
+            {
+                this.Shown += (s, e) => LoadDatabase(initialDbPath);
+            }
         }
 
         private void SetupStyles()
