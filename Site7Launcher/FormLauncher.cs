@@ -250,11 +250,22 @@ namespace Site7Launcher
             {
                 Dock = DockStyle.Fill,
                 Orientation = Orientation.Vertical,
-                SplitterDistance = 640,
                 SplitterWidth = 8,
-                Panel1MinSize = 350,
-                Panel2MinSize = 320,
+                Panel1MinSize = 50,
+                Panel2MinSize = 50,
                 BackColor = Color.FromArgb(244, 246, 249)
+            };
+
+            this.Load += (s, e) =>
+            {
+                try
+                {
+                    if (splitListPreview.Width > 450)
+                    {
+                        splitListPreview.SplitterDistance = Math.Max(200, splitListPreview.Width - 360);
+                    }
+                }
+                catch { }
             };
 
             dgvSites = new DataGridView
