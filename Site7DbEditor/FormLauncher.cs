@@ -246,7 +246,7 @@ namespace Site7DbEditor
                 FlatStyle = FlatStyle.Flat
             };
             btnTool.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnTool.Click += (s, e) => MessageBox.Show("Site7 ツール機能は順次提供予定です。", "ツール", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            btnTool.Click += (s, e) => LaunchMdbFdbExporter();
 
             btnExit = new Button
             {
@@ -833,6 +833,62 @@ namespace Site7DbEditor
             catch (Exception ex)
             {
                 MessageBox.Show($"Site7DrawingEditor の起動に失敗しました: {ex.Message}", "起動エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LaunchMdbFdbExporter()
+        {
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+            string[] candidateExePaths = new[]
+            {
+                Path.Combine(appDir, "MdbFdbExporter.exe"),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\MdbFdbExporter\bin\Debug\net9.0-windows\MdbFdbExporter.exe")),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\MdbFdbExporter\bin\Release\net9.0-windows\MdbFdbExporter.exe")),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\..\MdbFdbExporter\bin\Debug\net9.0-windows\MdbFdbExporter.exe")),
+                Path.GetFullPath(Path.Combine(appDir, @"..\..\MdbFdbExporter\bin\Debug\net9.0-windows\MdbFdbExporter.exe"))
+            };
+
+            string? targetExe = candidateExePaths.FirstOrDefault(File.Exists);
+
+            try
+            {
+                if (targetExe != null)
+                {
+                    var psi = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = targetExe,
+                        UseShellExecute = true
+                    };
+                    System.Diagnostics.Process.Start(psi);
+                }
+                else
+                {
+                    string projectPath = Path.GetFullPath(Path.Combine(appDir, @"..\..\..\..\MdbFdbExporter\MdbFdbExporter.csproj"));
+                    if (!File.Exists(projectPath))
+                    {
+                        projectPath = Path.GetFullPath(Path.Combine(appDir, @"..\..\..\MdbFdbExporter\MdbFdbExporter.csproj"));
+                    }
+
+                    if (File.Exists(projectPath))
+                    {
+                        var psi = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = $"run --project \"{projectPath}\"",
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+                        };
+                        System.Diagnostics.Process.Start(psi);
+                    }
+                    else
+                    {
+                        MessageBox.Show("MdbFdbExporter が見つかりませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"MdbFdbExporter の起動に失敗しました: {ex.Message}", "起動エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
