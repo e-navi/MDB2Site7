@@ -84,7 +84,7 @@ namespace Site7DbEditor
             panelCtrl.Controls.Add(panelBottomCoords);
             panelCtrl.Dock = DockStyle.Fill;
             panelCtrl.Location = new Point(0, 0);
-            panelCtrl.Margin = new Padding(4, 4, 4, 4);
+            panelCtrl.Margin = new Padding(4);
             panelCtrl.Name = "panelCtrl";
             panelCtrl.Size = new Size(292, 508);
             panelCtrl.TabIndex = 172;
@@ -94,9 +94,9 @@ namespace Site7DbEditor
             tabControl4.Controls.Add(tabTS);
             tabControl4.Controls.Add(tabGPS);
             tabControl4.Dock = DockStyle.Bottom;
-            tabControl4.Font = new Font("MS UI Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            tabControl4.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             tabControl4.Location = new Point(0, 64);
-            tabControl4.Margin = new Padding(4, 4, 4, 4);
+            tabControl4.Margin = new Padding(4);
             tabControl4.Multiline = true;
             tabControl4.Name = "tabControl4";
             tabControl4.SelectedIndex = 0;
@@ -131,11 +131,11 @@ namespace Site7DbEditor
             tabTS.Controls.Add(trackBar1);
             tabTS.Controls.Add(btnDown);
             tabTS.Controls.Add(labelStatus);
-            tabTS.Location = new Point(4, 26);
-            tabTS.Margin = new Padding(4, 4, 4, 4);
+            tabTS.Location = new Point(4, 23);
+            tabTS.Margin = new Padding(4);
             tabTS.Name = "tabTS";
-            tabTS.Padding = new Padding(4, 4, 4, 4);
-            tabTS.Size = new Size(282, 292);
+            tabTS.Padding = new Padding(4);
+            tabTS.Size = new Size(282, 295);
             tabTS.TabIndex = 2;
             tabTS.Text = "TS";
             tabTS.UseVisualStyleBackColor = true;
@@ -146,30 +146,31 @@ namespace Site7DbEditor
             cBoxTS.FormattingEnabled = true;
             cBoxTS.Items.AddRange(new object[] { "LN100/150", "PS-A GT100 MS(自動追尾)", "DS-AC PS-AC GT-500(自動視準)", "OS ES GM(手動視準)" });
             cBoxTS.Location = new Point(2, 5);
-            cBoxTS.Margin = new Padding(4, 4, 4, 4);
+            cBoxTS.Margin = new Padding(4);
             cBoxTS.Name = "cBoxTS";
-            cBoxTS.Size = new Size(244, 24);
+            cBoxTS.Size = new Size(244, 21);
             cBoxTS.TabIndex = 182;
             cBoxTS.SelectionChangeCommitted += cBoxTS_SelectedIndexChanged;
             // 
             // comboBox1
             // 
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.Font = new Font("MS UI Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 128);
             comboBox1.FormattingEnabled = true;
             comboBox1.Location = new Point(2, 42);
-            comboBox1.Margin = new Padding(4, 4, 4, 4);
+            comboBox1.Margin = new Padding(4);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(181, 24);
+            comboBox1.Size = new Size(191, 21);
             comboBox1.TabIndex = 0;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // btnConnect
             // 
             btnConnect.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnConnect.Location = new Point(186, 39);
-            btnConnect.Margin = new Padding(4, 4, 4, 4);
+            btnConnect.Location = new Point(195, 34);
+            btnConnect.Margin = new Padding(4);
             btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(61, 32);
+            btnConnect.Size = new Size(51, 36);
             btnConnect.TabIndex = 1;
             btnConnect.Tag = "1";
             btnConnect.Text = "接続";
@@ -181,7 +182,7 @@ namespace Site7DbEditor
             btnDefKikaiBack.BackColor = SystemColors.Control;
             btnDefKikaiBack.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDefKikaiBack.Location = new Point(2, 80);
-            btnDefKikaiBack.Margin = new Padding(4, 4, 4, 4);
+            btnDefKikaiBack.Margin = new Padding(4);
             btnDefKikaiBack.Name = "btnDefKikaiBack";
             btnDefKikaiBack.Size = new Size(97, 35);
             btnDefKikaiBack.TabIndex = 168;
@@ -204,7 +205,7 @@ namespace Site7DbEditor
             Kikaikou1.BackColor = Color.FromArgb(255, 255, 128);
             Kikaikou1.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Kikaikou1.Location = new Point(156, 80);
-            Kikaikou1.Margin = new Padding(4, 4, 4, 4);
+            Kikaikou1.Margin = new Padding(4);
             Kikaikou1.Name = "Kikaikou1";
             Kikaikou1.Size = new Size(69, 29);
             Kikaikou1.TabIndex = 183;
@@ -229,7 +230,7 @@ namespace Site7DbEditor
             SelKikaiTenBackTenBtn1.Enabled = false;
             SelKikaiTenBackTenBtn1.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
             SelKikaiTenBackTenBtn1.Location = new Point(2, 119);
-            SelKikaiTenBackTenBtn1.Margin = new Padding(4, 4, 4, 4);
+            SelKikaiTenBackTenBtn1.Margin = new Padding(4);
             SelKikaiTenBackTenBtn1.Name = "SelKikaiTenBackTenBtn1";
             SelKikaiTenBackTenBtn1.Size = new Size(97, 35);
             SelKikaiTenBackTenBtn1.TabIndex = 168;
@@ -252,7 +253,7 @@ namespace Site7DbEditor
             Mirrorkou1.BackColor = Color.FromArgb(255, 255, 128);
             Mirrorkou1.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Mirrorkou1.Location = new Point(156, 119);
-            Mirrorkou1.Margin = new Padding(4, 4, 4, 4);
+            Mirrorkou1.Margin = new Padding(4);
             Mirrorkou1.Name = "Mirrorkou1";
             Mirrorkou1.Size = new Size(69, 29);
             Mirrorkou1.TabIndex = 184;
@@ -275,7 +276,7 @@ namespace Site7DbEditor
             // 
             btnLight.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnLight.Location = new Point(1, 158);
-            btnLight.Margin = new Padding(4, 4, 4, 4);
+            btnLight.Margin = new Padding(4);
             btnLight.Name = "btnLight";
             btnLight.Size = new Size(48, 40);
             btnLight.TabIndex = 170;
@@ -288,7 +289,7 @@ namespace Site7DbEditor
             // 
             btnSearch.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnSearch.Location = new Point(50, 158);
-            btnSearch.Margin = new Padding(4, 4, 4, 4);
+            btnSearch.Margin = new Padding(4);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(48, 40);
             btnSearch.TabIndex = 171;
@@ -302,7 +303,7 @@ namespace Site7DbEditor
             btnUp.Enabled = false;
             btnUp.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnUp.Location = new Point(99, 158);
-            btnUp.Margin = new Padding(4, 4, 4, 4);
+            btnUp.Margin = new Padding(4);
             btnUp.Name = "btnUp";
             btnUp.Size = new Size(48, 40);
             btnUp.TabIndex = 172;
@@ -317,7 +318,7 @@ namespace Site7DbEditor
             // 
             btnAutoTsuibi.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnAutoTsuibi.Location = new Point(148, 158);
-            btnAutoTsuibi.Margin = new Padding(4, 4, 4, 4);
+            btnAutoTsuibi.Margin = new Padding(4);
             btnAutoTsuibi.Name = "btnAutoTsuibi";
             btnAutoTsuibi.Size = new Size(84, 40);
             btnAutoTsuibi.TabIndex = 181;
@@ -330,7 +331,7 @@ namespace Site7DbEditor
             // 
             btnSijun.Font = new Font("MS UI Gothic", 11F, FontStyle.Regular, GraphicsUnit.Point, 128);
             btnSijun.Location = new Point(233, 158);
-            btnSijun.Margin = new Padding(4, 4, 4, 4);
+            btnSijun.Margin = new Padding(4);
             btnSijun.Name = "btnSijun";
             btnSijun.Size = new Size(21, 40);
             btnSijun.TabIndex = 181;
@@ -343,7 +344,7 @@ namespace Site7DbEditor
             // 
             btnLeft2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnLeft2.Location = new Point(1, 200);
-            btnLeft2.Margin = new Padding(4, 4, 4, 4);
+            btnLeft2.Margin = new Padding(4);
             btnLeft2.Name = "btnLeft2";
             btnLeft2.Size = new Size(48, 40);
             btnLeft2.TabIndex = 173;
@@ -358,7 +359,7 @@ namespace Site7DbEditor
             // 
             btnLeft.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnLeft.Location = new Point(50, 200);
-            btnLeft.Margin = new Padding(4, 4, 4, 4);
+            btnLeft.Margin = new Padding(4);
             btnLeft.Name = "btnLeft";
             btnLeft.Size = new Size(48, 40);
             btnLeft.TabIndex = 175;
@@ -373,7 +374,7 @@ namespace Site7DbEditor
             // 
             btnStop.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnStop.Location = new Point(102, 200);
-            btnStop.Margin = new Padding(4, 4, 4, 4);
+            btnStop.Margin = new Padding(4);
             btnStop.Name = "btnStop";
             btnStop.Size = new Size(40, 40);
             btnStop.TabIndex = 177;
@@ -386,7 +387,7 @@ namespace Site7DbEditor
             // 
             btnRight.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnRight.Location = new Point(145, 200);
-            btnRight.Margin = new Padding(4, 4, 4, 4);
+            btnRight.Margin = new Padding(4);
             btnRight.Name = "btnRight";
             btnRight.Size = new Size(48, 40);
             btnRight.TabIndex = 176;
@@ -401,7 +402,7 @@ namespace Site7DbEditor
             // 
             btnRight2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnRight2.Location = new Point(195, 200);
-            btnRight2.Margin = new Padding(4, 4, 4, 4);
+            btnRight2.Margin = new Padding(4);
             btnRight2.Name = "btnRight2";
             btnRight2.Size = new Size(48, 40);
             btnRight2.TabIndex = 174;
@@ -417,7 +418,7 @@ namespace Site7DbEditor
             trackBar1.AutoSize = false;
             trackBar1.LargeChange = 1;
             trackBar1.Location = new Point(-1, 242);
-            trackBar1.Margin = new Padding(4, 4, 4, 4);
+            trackBar1.Margin = new Padding(4);
             trackBar1.Maximum = 5;
             trackBar1.Minimum = 2;
             trackBar1.Name = "trackBar1";
@@ -431,7 +432,7 @@ namespace Site7DbEditor
             btnDown.Enabled = false;
             btnDown.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDown.Location = new Point(99, 242);
-            btnDown.Margin = new Padding(4, 4, 4, 4);
+            btnDown.Margin = new Padding(4);
             btnDown.Name = "btnDown";
             btnDown.Size = new Size(48, 40);
             btnDown.TabIndex = 179;
@@ -469,11 +470,11 @@ namespace Site7DbEditor
             tabGPS.Controls.Add(labelStatus2);
             tabGPS.Controls.Add(labelGPS1);
             tabGPS.Controls.Add(labelGPS2);
-            tabGPS.Location = new Point(4, 26);
-            tabGPS.Margin = new Padding(4, 4, 4, 4);
+            tabGPS.Location = new Point(4, 23);
+            tabGPS.Margin = new Padding(4);
             tabGPS.Name = "tabGPS";
-            tabGPS.Padding = new Padding(4, 4, 4, 4);
-            tabGPS.Size = new Size(286, 292);
+            tabGPS.Padding = new Padding(4);
+            tabGPS.Size = new Size(282, 295);
             tabGPS.TabIndex = 3;
             tabGPS.Text = "GPS";
             tabGPS.UseVisualStyleBackColor = true;
@@ -484,9 +485,9 @@ namespace Site7DbEditor
             cBoxGPS.FormattingEnabled = true;
             cBoxGPS.Items.AddRange(new object[] { "ポチスタ", "i93" });
             cBoxGPS.Location = new Point(2, 5);
-            cBoxGPS.Margin = new Padding(4, 4, 4, 4);
+            cBoxGPS.Margin = new Padding(4);
             cBoxGPS.Name = "cBoxGPS";
-            cBoxGPS.Size = new Size(100, 24);
+            cBoxGPS.Size = new Size(100, 21);
             cBoxGPS.TabIndex = 193;
             cBoxGPS.SelectedIndexChanged += cBoxGPS_SelectedIndexChanged;
             // 
@@ -506,30 +507,31 @@ namespace Site7DbEditor
             cBoxKei.FormattingEnabled = true;
             cBoxKei.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19" });
             cBoxKei.Location = new Point(196, 5);
-            cBoxKei.Margin = new Padding(4, 4, 4, 4);
+            cBoxKei.Margin = new Padding(4);
             cBoxKei.Name = "cBoxKei";
-            cBoxKei.Size = new Size(44, 24);
+            cBoxKei.Size = new Size(44, 21);
             cBoxKei.TabIndex = 196;
             cBoxKei.SelectedIndexChanged += cBoxKei_SelectedIndexChanged;
             // 
             // comboBox2
             // 
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox2.Font = new Font("MS UI Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 128);
             comboBox2.FormattingEnabled = true;
             comboBox2.Location = new Point(2, 42);
-            comboBox2.Margin = new Padding(4, 4, 4, 4);
+            comboBox2.Margin = new Padding(4);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(181, 24);
+            comboBox2.Size = new Size(194, 21);
             comboBox2.TabIndex = 161;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
             // btnConnect2
             // 
             btnConnect2.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnConnect2.Location = new Point(187, 41);
-            btnConnect2.Margin = new Padding(4, 4, 4, 4);
+            btnConnect2.Location = new Point(196, 35);
+            btnConnect2.Margin = new Padding(4);
             btnConnect2.Name = "btnConnect2";
-            btnConnect2.Size = new Size(61, 32);
+            btnConnect2.Size = new Size(51, 35);
             btnConnect2.TabIndex = 162;
             btnConnect2.Tag = "2";
             btnConnect2.Text = "接続";
@@ -552,9 +554,9 @@ namespace Site7DbEditor
             cBoxGPSStatus.FormattingEnabled = true;
             cBoxGPSStatus.Items.AddRange(new object[] { "RTK-fix", "RTK-float", "DGPS-fix", "単独測位" });
             cBoxGPSStatus.Location = new Point(135, 80);
-            cBoxGPSStatus.Margin = new Padding(4, 4, 4, 4);
+            cBoxGPSStatus.Margin = new Padding(4);
             cBoxGPSStatus.Name = "cBoxGPSStatus";
-            cBoxGPSStatus.Size = new Size(107, 24);
+            cBoxGPSStatus.Size = new Size(107, 21);
             cBoxGPSStatus.TabIndex = 194;
             cBoxGPSStatus.SelectedIndexChanged += cBoxGPSStatus_SelectedIndexChanged;
             // 
@@ -573,7 +575,7 @@ namespace Site7DbEditor
             textBoxKikaikou2.BackColor = Color.FromArgb(255, 255, 128);
             textBoxKikaikou2.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
             textBoxKikaikou2.Location = new Point(70, 118);
-            textBoxKikaikou2.Margin = new Padding(4, 4, 4, 4);
+            textBoxKikaikou2.Margin = new Padding(4);
             textBoxKikaikou2.Name = "textBoxKikaikou2";
             textBoxKikaikou2.Size = new Size(74, 29);
             textBoxKikaikou2.TabIndex = 189;
@@ -637,7 +639,7 @@ namespace Site7DbEditor
             panelBottomCoords.Controls.Add(chkAutoSet);
             panelBottomCoords.Dock = DockStyle.Bottom;
             panelBottomCoords.Location = new Point(0, 386);
-            panelBottomCoords.Margin = new Padding(4, 4, 4, 4);
+            panelBottomCoords.Margin = new Padding(4);
             panelBottomCoords.Name = "panelBottomCoords";
             panelBottomCoords.Size = new Size(290, 120);
             panelBottomCoords.TabIndex = 175;
@@ -646,7 +648,7 @@ namespace Site7DbEditor
             // 
             btnUpdPos.Font = new Font("MS UI Gothic", 28F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnUpdPos.Location = new Point(174, 31);
-            btnUpdPos.Margin = new Padding(4, 4, 4, 4);
+            btnUpdPos.Margin = new Padding(4);
             btnUpdPos.Name = "btnUpdPos";
             btnUpdPos.Size = new Size(56, 45);
             btnUpdPos.TabIndex = 164;
@@ -659,7 +661,7 @@ namespace Site7DbEditor
             textBoxX.Enabled = false;
             textBoxX.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
             textBoxX.Location = new Point(48, 5);
-            textBoxX.Margin = new Padding(4, 4, 4, 4);
+            textBoxX.Margin = new Padding(4);
             textBoxX.Name = "textBoxX";
             textBoxX.Size = new Size(119, 29);
             textBoxX.TabIndex = 3;
@@ -680,7 +682,7 @@ namespace Site7DbEditor
             textBoxY.Enabled = false;
             textBoxY.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
             textBoxY.Location = new Point(48, 40);
-            textBoxY.Margin = new Padding(4, 4, 4, 4);
+            textBoxY.Margin = new Padding(4);
             textBoxY.Name = "textBoxY";
             textBoxY.Size = new Size(119, 29);
             textBoxY.TabIndex = 4;
@@ -701,7 +703,7 @@ namespace Site7DbEditor
             textBoxZ.Enabled = false;
             textBoxZ.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
             textBoxZ.Location = new Point(48, 75);
-            textBoxZ.Margin = new Padding(4, 4, 4, 4);
+            textBoxZ.Margin = new Padding(4);
             textBoxZ.Name = "textBoxZ";
             textBoxZ.Size = new Size(119, 29);
             textBoxZ.TabIndex = 5;
@@ -724,7 +726,7 @@ namespace Site7DbEditor
             chbContMeasure.CheckState = CheckState.Checked;
             chbContMeasure.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             chbContMeasure.Location = new Point(172, 8);
-            chbContMeasure.Margin = new Padding(4, 4, 4, 4);
+            chbContMeasure.Margin = new Padding(4);
             chbContMeasure.Name = "chbContMeasure";
             chbContMeasure.Size = new Size(86, 18);
             chbContMeasure.TabIndex = 173;
@@ -739,7 +741,7 @@ namespace Site7DbEditor
             chkAutoSet.CheckState = CheckState.Checked;
             chkAutoSet.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             chkAutoSet.Location = new Point(172, 80);
-            chkAutoSet.Margin = new Padding(4, 4, 4, 4);
+            chkAutoSet.Margin = new Padding(4);
             chkAutoSet.Name = "chkAutoSet";
             chkAutoSet.Size = new Size(79, 18);
             chkAutoSet.TabIndex = 173;
@@ -755,7 +757,7 @@ namespace Site7DbEditor
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panelCtrl);
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "UCCtrl";
             Size = new Size(292, 508);
             panelCtrl.ResumeLayout(false);
