@@ -55,8 +55,10 @@ namespace Site7DbEditor {
 
         private string _appVersionString = "v0.9.1";
         private string _currentGenbaName = "";
+        private string? _initialDbPath = null;
 
-        public FormEditor() {
+        public FormEditor(string? initialDbPath = null) {
+            _initialDbPath = initialDbPath;
             InitializeComponent();
             gbl.FormMain = this;
             SetupStyles();
@@ -66,6 +68,10 @@ namespace Site7DbEditor {
             tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             tabControlData_SelectedIndexChanged(this, EventArgs.Empty);
             WireDebugLayoutInfo();
+
+            if (!string.IsNullOrEmpty(_initialDbPath) && File.Exists(_initialDbPath)) {
+                this.Shown += (s, e) => LoadDatabase(_initialDbPath);
+            }
         }
 
         private void InitAppVersionAndTitle() {

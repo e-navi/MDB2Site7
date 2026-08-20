@@ -6,10 +6,11 @@ namespace Site7DbEditor
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new FormEditor());
+            string? dbPath = args.Length > 0 ? args[0] : null;
+            Application.Run(new FormEditor(dbPath));
         }    
     }
 }
