@@ -139,16 +139,25 @@ namespace Site7DbEditor.Services
 
                     if (screenPts.Length > 1)
                     {
+                        bool isClosed = (line.Mode == 1 && screenPts.Length >= 3);
                         if (isSelectedFeature)
                         {
                             using (var linePen = new Pen(color, 2.8f))
+                            {
                                 g.DrawLines(linePen, screenPts);
+                                if (isClosed)
+                                    g.DrawLine(linePen, screenPts[screenPts.Length - 1], screenPts[0]);
+                            }
                         }
                         else
                         {
                             float penWidth = (layer != null && layer.Width > 0) ? (float)layer.Width : 1.5f;
                             using (var linePen = new Pen(color, penWidth))
+                            {
                                 g.DrawLines(linePen, screenPts);
+                                if (isClosed)
+                                    g.DrawLine(linePen, screenPts[screenPts.Length - 1], screenPts[0]);
+                            }
                         }
                     }
                 }
@@ -174,28 +183,26 @@ namespace Site7DbEditor.Services
                             }
                             else
                             {
-                                g.FillEllipse(ibutuBrush, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
+                                g.FillEllipse(ibutuBrush, pt.X - 4f, pt.Y - 4f, 8f, 8f);
+                                g.DrawEllipse(Pens.White, pt.X - 4f, pt.Y - 4f, 8f, 8f);
                             }
                         }
                     }
                 }
             }
 
-            // 3. Draw Control Points (基準点)
+            // 3. Draw Stations / Control Points (基準点)
             if (chkShowKikai)
             {
                 string currentKpName = gbl.KikaiMan.kp?.Name ?? Env.KPName ?? Def.GetIniStr("TS", "器械点");
                 string currentBpName = gbl.KikaiMan.bp?.Name ?? Env.BPName ?? Def.GetIniStr("TS", "後視点");
 
-                Color kpTextColor = Color.FromArgb(239, 35, 60);
-                Color bpTextColor = isDarkBackground ? Color.FromArgb(0, 200, 255) : Color.FromArgb(0, 102, 204);
-
-                using (var kikaiBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
-                using (var kikaiPen = new Pen(Color.Yellow, 1.5f))
-                using (var selectPen = new Pen(Color.FromArgb(0, 225, 255), 3f))
+                using (var kikaiBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(0, 225, 255) : Color.FromArgb(0, 120, 200)))
+                using (var kikaiPen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.5f))
+                using (var selectPen = new Pen(Color.FromArgb(255, 220, 0), 2.5f))
+                using (var kpTextBrush = new SolidBrush(Color.FromArgb(255, 100, 100)))
+                using (var bpTextBrush = new SolidBrush(Color.FromArgb(100, 200, 255)))
                 using (var markFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
-                using (var kpTextBrush = new SolidBrush(kpTextColor))
-                using (var bpTextBrush = new SolidBrush(bpTextColor))
                 using (var sfFar = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center })
                 {
                     foreach (var kikai in db.KikaiList)
@@ -240,25 +247,16 @@ namespace Site7DbEditor.Services
                             var pts = SqliteManager.ParsePrecsText(line.Precs);
                             if (pts.Count == 0) continue;
 
-                            ikouDict.TryGetValue(line.Id, out string? ikouName);
-                            ikouName ??= "";
+                            string ikouName = ikouDict.TryGetValue(line.Id, out var iname) ? iname : $"遺構{line.Id}";
+                            string lineName = string.IsNullOrEmpty(line.Name) ? $"L{line.Lid}" : line.Name;
+                            string nameText = $"{ikouName}:{lineName}";
 
-                            string lineName = line.Name ?? "";
-                            string labelText = "";
+                            PointF labelPt = (line.X != 0.0 || line.Y != 0.0)
+                                ? ToCanvasPoint(line.X, line.Y)
+                                : ToCanvasPoint(pts[0].X, pts[0].Y);
 
-                            if (!string.IsNullOrEmpty(ikouName) && !string.IsNullOrEmpty(lineName))
-                                labelText = $"{ikouName}:{lineName}";
-                            else if (!string.IsNullOrEmpty(ikouName))
-                                labelText = ikouName;
-                            else if (!string.IsNullOrEmpty(lineName))
-                                labelText = lineName;
-
-                            if (string.IsNullOrEmpty(labelText)) continue;
-
-                            PointF midPt = ToCanvasPoint(pts[pts.Count / 2].X, pts[pts.Count / 2].Y);
-                            SizeF textSize = g.MeasureString(labelText, labelFont);
-
-                            g.DrawString(labelText, labelFont, ikouLabelBrush, midPt.X + 4, midPt.Y - textSize.Height / 2f);
+                            SizeF textSize = g.MeasureString(nameText, labelFont);
+                            g.DrawString(nameText, labelFont, ikouLabelBrush, labelPt.X - textSize.Width / 2f, labelPt.Y - textSize.Height / 2f);
                         }
                     }
                 }
@@ -302,25 +300,24 @@ namespace Site7DbEditor.Services
                         foreach (var kikai in db.KikaiList)
                         {
                             string nameText = string.IsNullOrEmpty(kikai.Name) ? $"K{kikai.Id}" : kikai.Name;
-
                             PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
                             SizeF textSize = g.MeasureString(nameText, labelFont);
-
                             g.DrawString(nameText, labelFont, kikaiLabelBrush, pt.X + 6, pt.Y - textSize.Height / 2f);
                         }
                     }
                 }
             }
 
-            // 5. 選択中の遺構線のマーク(〇)・折れ線ガイド(薄いグレー)・点番号(PID)を最前面描画
-            if (chkShowIkou && activeTabIndex == 0)
+            // 5. Draw Selected Line Vertices (頂点〇) and Midpoints (中間点□)
+            if (activeTabIndex == 0 && selectedIkouId >= 0 && selectedLid >= 0)
             {
                 var selectedLine = db.IkouLList.FirstOrDefault(l => l.Id == selectedIkouId && l.Lid == selectedLid);
                 if (selectedLine != null)
                 {
-                    var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
-                    if (pts.Count > 0)
+                    int selectedLineLayerIdx = selectedLine.Layer >= 49 ? (selectedLine.Layer - 48) : selectedLine.Layer;
+                    if (isLayerVisible == null || isLayerVisible(selectedLineLayerIdx))
                     {
+                        var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
                         int dbLayerId = selectedLine.Layer >= 49 ? selectedLine.Layer : (selectedLine.Layer + 48);
                         var layer = db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
                         bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
@@ -339,21 +336,25 @@ namespace Site7DbEditor.Services
                             ? Color.FromArgb(255, 220, 0)
                             : Color.FromArgb(15, 23, 42);
 
-                        // 曲線表示時に、ベースとなる折れ線を薄いグレー(破線)で表示し、中間点に□マークを表示
-                        if (drawAsCurve && pts.Count > 1)
+                        // 頂点数が2点以上の場合、中間点に□マークを表示（曲線表示時はベース折れ線を薄いグレー破線で表示）
+                        if (pts.Count > 1)
                         {
                             var polylinePts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                             bool isClosed = (selectedLine.Mode == 1) && (pts.Count >= 3);
-                            using (var grayPen = new Pen(grayColor, 1.2f) { DashStyle = DashStyle.Dash })
+
+                            if (drawAsCurve)
                             {
-                                g.DrawLines(grayPen, polylinePts);
-                                if (isClosed)
+                                using (var grayPen = new Pen(grayColor, 1.2f) { DashStyle = DashStyle.Dash })
                                 {
-                                    g.DrawLine(grayPen, polylinePts[polylinePts.Length - 1], polylinePts[0]);
+                                    g.DrawLines(grayPen, polylinePts);
+                                    if (isClosed)
+                                    {
+                                        g.DrawLine(grayPen, polylinePts[polylinePts.Length - 1], polylinePts[0]);
+                                    }
                                 }
                             }
 
-                            // 中間点（□）の描画
+                            // 中間点（□）の描画（曲線・折線問わず表示）
                             using (var midPen = new Pen(vertexPenColor, 1.5f))
                             using (var midBrush = new SolidBrush(vertexBrushColor))
                             {
@@ -368,7 +369,7 @@ namespace Site7DbEditor.Services
                                     g.DrawRectangle(midPen, midX - 3.5f, midY - 3.5f, 7f, 7f);
                                 }
 
-                                // 閉曲線の場合は終点〜始点間の中間点も描画
+                                // 閉合の場合は終点〜始点間の中間点も描画
                                 if (isClosed)
                                 {
                                     PointF p1 = polylinePts[polylinePts.Length - 1];

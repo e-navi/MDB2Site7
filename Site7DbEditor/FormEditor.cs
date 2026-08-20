@@ -2724,29 +2724,22 @@ namespace Site7DbEditor {
                         }
                     }
 
-                    // 1-2. 中間点（□）判定（頂点でヒットしていない、かつ曲線描画時）
+                    // 1-2. 中間点（□）判定（頂点でヒットしていない場合）
                     if (!isVertexHit && currentPts.Count > 1) {
-                        int dbLayerId = currentSelectedLine.Layer >= 49 ? currentSelectedLine.Layer : (currentSelectedLine.Layer + 48);
-                        var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
-                        bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && currentPts.Count >= 3;
+                        bool isClosed = (currentSelectedLine.Mode == 1) && (currentPts.Count >= 3);
+                        int count = isClosed ? currentPts.Count : (currentPts.Count - 1);
+                        for (int i = 0; i < count; i++) {
+                            PointF p1 = ToCanvasPointLocal(currentPts[i].X, currentPts[i].Y);
+                            PointF p2 = ToCanvasPointLocal(currentPts[(i + 1) % currentPts.Count].X, currentPts[(i + 1) % currentPts.Count].Y);
+                            float midX = (p1.X + p2.X) / 2f;
+                            float midY = (p1.Y + p2.Y) / 2f;
 
-                        if (drawAsCurve) {
-                            bool isClosed = (currentSelectedLine.Mode == 1) && (currentPts.Count >= 3);
-                            int count = isClosed ? currentPts.Count : (currentPts.Count - 1);
-                            for (int i = 0; i < count; i++) {
-                                PointF p1 = ToCanvasPointLocal(currentPts[i].X, currentPts[i].Y);
-                                PointF p2 = ToCanvasPointLocal(currentPts[(i + 1) % currentPts.Count].X, currentPts[(i + 1) % currentPts.Count].Y);
-                                float midX = (p1.X + p2.X) / 2f;
-                                float midY = (p1.Y + p2.Y) / 2f;
-
-                                double md = Math.Sqrt((midX - mousePos.X) * (midX - mousePos.X) + (midY - mousePos.Y) * (midY - mousePos.Y));
-                                if (md < minDist) {
-                                    minDist = md;
-                                    bestLine = currentSelectedLine;
-                                    bestMidpointIndex = i;
-                                    isMidpointHit = true;
-                                }
+                            double md = Math.Sqrt((midX - mousePos.X) * (midX - mousePos.X) + (midY - mousePos.Y) * (midY - mousePos.Y));
+                            if (md < minDist) {
+                                minDist = md;
+                                bestLine = currentSelectedLine;
+                                bestMidpointIndex = i;
+                                isMidpointHit = true;
                             }
                         }
                     }
@@ -2789,8 +2782,9 @@ namespace Site7DbEditor {
                                 screenPts = pts.Select(p => ToCanvasPointLocal(p.X, p.Y)).ToArray();
                             }
 
-                            for (int i = 0; i < screenPts.Length - 1; i++) {
-                                double sd = EditorMapViewController.DistanceToLineSegment(mousePos, screenPts[i], screenPts[i + 1]);
+                            int segCount = (line.Mode == 1 && screenPts.Length >= 3) ? screenPts.Length : (screenPts.Length - 1);
+                            for (int i = 0; i < segCount; i++) {
+                                double sd = EditorMapViewController.DistanceToLineSegment(mousePos, screenPts[i], screenPts[(i + 1) % screenPts.Length]);
                                 if (sd < minDist) {
                                     minDist = sd;
                                     bestLine = line;
@@ -2985,29 +2979,22 @@ namespace Site7DbEditor {
                     }
                 }
 
-                // 中間点（□）判定（頂点でヒットしていない、かつ曲線描画時）
+                // 中間点（□）判定（頂点でヒットしていない場合）
                 if (!isVertexHit && currentPts.Count > 1) {
-                    int dbLayerId = currentSelectedLine.Layer >= 49 ? currentSelectedLine.Layer : (currentSelectedLine.Layer + 48);
-                    var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                    bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
-                    bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && currentPts.Count >= 3;
+                    bool isClosed = (currentSelectedLine.Mode == 1) && (currentPts.Count >= 3);
+                    int count = isClosed ? currentPts.Count : (currentPts.Count - 1);
+                    for (int i = 0; i < count; i++) {
+                        PointF p1 = toCanvasPoint(currentPts[i].X, currentPts[i].Y);
+                        PointF p2 = toCanvasPoint(currentPts[(i + 1) % currentPts.Count].X, currentPts[(i + 1) % currentPts.Count].Y);
+                        float midX = (p1.X + p2.X) / 2f;
+                        float midY = (p1.Y + p2.Y) / 2f;
 
-                    if (drawAsCurve) {
-                        bool isClosed = (currentSelectedLine.Mode == 1) && (currentPts.Count >= 3);
-                        int count = isClosed ? currentPts.Count : (currentPts.Count - 1);
-                        for (int i = 0; i < count; i++) {
-                            PointF p1 = toCanvasPoint(currentPts[i].X, currentPts[i].Y);
-                            PointF p2 = toCanvasPoint(currentPts[(i + 1) % currentPts.Count].X, currentPts[(i + 1) % currentPts.Count].Y);
-                            float midX = (p1.X + p2.X) / 2f;
-                            float midY = (p1.Y + p2.Y) / 2f;
-
-                            double md = Math.Sqrt((midX - clickPos.X) * (midX - clickPos.X) + (midY - clickPos.Y) * (midY - clickPos.Y));
-                            if (md < minDist) {
-                                minDist = md;
-                                bestLine = currentSelectedLine;
-                                bestMidpointIndex = i;
-                                isMidpointHit = true;
-                            }
+                        double md = Math.Sqrt((midX - clickPos.X) * (midX - clickPos.X) + (midY - clickPos.Y) * (midY - clickPos.Y));
+                        if (md < minDist) {
+                            minDist = md;
+                            bestLine = currentSelectedLine;
+                            bestMidpointIndex = i;
+                            isMidpointHit = true;
                         }
                     }
                 }
@@ -3049,8 +3036,9 @@ namespace Site7DbEditor {
                             screenPts = pts.Select(p => toCanvasPoint(p.X, p.Y)).ToArray();
                         }
 
-                        for (int i = 0; i < screenPts.Length - 1; i++) {
-                            double sd = EditorMapViewController.DistanceToLineSegment(clickPos, screenPts[i], screenPts[i + 1]);
+                        int segCount = (line.Mode == 1 && screenPts.Length >= 3) ? screenPts.Length : (screenPts.Length - 1);
+                        for (int i = 0; i < segCount; i++) {
+                            double sd = EditorMapViewController.DistanceToLineSegment(clickPos, screenPts[i], screenPts[(i + 1) % screenPts.Length]);
                             if (sd < minDist) {
                                 minDist = sd;
                                 bestLine = line;
