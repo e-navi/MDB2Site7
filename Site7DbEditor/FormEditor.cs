@@ -2391,6 +2391,14 @@ namespace Site7DbEditor {
                 } else if (_labelPosTargetIkou != null) {
                     if (_labelPosTargetIkou.X != 0.0 || _labelPosTargetIkou.Y != 0.0) {
                         startPt = _vc.ToCanvasPoint(_labelPosTargetIkou.X, _labelPosTargetIkou.Y, picMapCanvas.Size);
+                    } else {
+                        var childLines = _db.IkouLList.Where(l => l.Id == _labelPosTargetIkou.Id).ToList();
+                        var allPts = childLines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
+                        if (allPts.Count > 0) {
+                            double avgX = allPts.Average(p => p.X);
+                            double avgY = allPts.Average(p => p.Y);
+                            startPt = _vc.ToCanvasPoint(avgX, avgY, picMapCanvas.Size);
+                        }
                     }
                     labelPreview = _labelPosTargetIkou.Name;
                 }
