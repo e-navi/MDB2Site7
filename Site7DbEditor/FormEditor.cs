@@ -540,6 +540,7 @@ namespace Site7DbEditor {
             this.chkShowBgImage.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowBgPointCloud.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowScale.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowHyoukou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
@@ -2329,7 +2330,8 @@ namespace Site7DbEditor {
                 isDarkBackground: _isDarkMapBackground,
                 chkShowBgImage: chkShowBgImage.Checked,
                 chkShowBgPointCloud: chkShowBgPointCloud.Checked,
-                chkShowHyoukou: chkShowHyoukou.Checked);
+                chkShowHyoukou: chkShowHyoukou.Checked,
+                chkShowScale: chkShowScale.Checked);
 
             // 頂点移動中のラバーバンド描画
             if (_isMovingVertex && _movingLine != null && _movingVertexIndex >= 0) {

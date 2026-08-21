@@ -161,6 +161,7 @@ namespace Site7DbEditor
             lblBottomTitle = new Label();
             btnDetachBottomPanel = new Button();
             chkShowGrid = new CheckBox();
+            chkShowScale = new CheckBox();
             tabLayer = new TabPage();
             btnDeleteLayer = new Button();
             btnAddLayer = new Button();
@@ -883,7 +884,7 @@ namespace Site7DbEditor
             chkShowCurve.CheckState = CheckState.Checked;
             chkShowCurve.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowCurve.ForeColor = Color.Black;
-            chkShowCurve.Location = new Point(6, 603);
+            chkShowCurve.Location = new Point(6, 575);
             chkShowCurve.Name = "chkShowCurve";
             chkShowCurve.Size = new Size(74, 19);
             chkShowCurve.TabIndex = 32;
@@ -895,7 +896,7 @@ namespace Site7DbEditor
             chkColorByIkou.AutoSize = true;
             chkColorByIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkColorByIkou.ForeColor = Color.Black;
-            chkColorByIkou.Location = new Point(6, 627);
+            chkColorByIkou.Location = new Point(6, 599);
             chkColorByIkou.Name = "chkColorByIkou";
             chkColorByIkou.Size = new Size(86, 19);
             chkColorByIkou.TabIndex = 33;
@@ -907,7 +908,7 @@ namespace Site7DbEditor
             chkWhiteBg.AutoSize = true;
             chkWhiteBg.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkWhiteBg.ForeColor = Color.Black;
-            chkWhiteBg.Location = new Point(6, 651);
+            chkWhiteBg.Location = new Point(6, 623);
             chkWhiteBg.Name = "chkWhiteBg";
             chkWhiteBg.Size = new Size(74, 19);
             chkWhiteBg.TabIndex = 34;
@@ -921,7 +922,7 @@ namespace Site7DbEditor
             chkShowBgImage.CheckState = CheckState.Checked;
             chkShowBgImage.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowBgImage.ForeColor = Color.FromArgb(0, 100, 200);
-            chkShowBgImage.Location = new Point(6, 146);
+            chkShowBgImage.Location = new Point(6, 126);
             chkShowBgImage.Name = "chkShowBgImage";
             chkShowBgImage.Size = new Size(74, 19);
             chkShowBgImage.TabIndex = 35;
@@ -935,12 +936,40 @@ namespace Site7DbEditor
             chkShowBgPointCloud.CheckState = CheckState.Checked;
             chkShowBgPointCloud.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowBgPointCloud.ForeColor = Color.FromArgb(0, 150, 100);
-            chkShowBgPointCloud.Location = new Point(6, 170);
+            chkShowBgPointCloud.Location = new Point(6, 148);
             chkShowBgPointCloud.Name = "chkShowBgPointCloud";
             chkShowBgPointCloud.Size = new Size(74, 19);
             chkShowBgPointCloud.TabIndex = 36;
             chkShowBgPointCloud.Text = "背景点群";
             chkShowBgPointCloud.UseVisualStyleBackColor = true;
+            // 
+            // chkShowGrid
+            // 
+            chkShowGrid.AutoSize = true;
+            chkShowGrid.Checked = true;
+            chkShowGrid.CheckState = CheckState.Checked;
+            chkShowGrid.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowGrid.ForeColor = Color.FromArgb(180, 80, 0);
+            chkShowGrid.Location = new Point(6, 170);
+            chkShowGrid.Name = "chkShowGrid";
+            chkShowGrid.Size = new Size(70, 19);
+            chkShowGrid.TabIndex = 37;
+            chkShowGrid.Text = "メッシュ";
+            chkShowGrid.UseVisualStyleBackColor = true;
+            // 
+            // chkShowScale
+            // 
+            chkShowScale.AutoSize = true;
+            chkShowScale.Checked = true;
+            chkShowScale.CheckState = CheckState.Checked;
+            chkShowScale.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowScale.ForeColor = Color.FromArgb(200, 0, 0);
+            chkShowScale.Location = new Point(6, 192);
+            chkShowScale.Name = "chkShowScale";
+            chkShowScale.Size = new Size(70, 19);
+            chkShowScale.TabIndex = 38;
+            chkShowScale.Text = "スケール";
+            chkShowScale.UseVisualStyleBackColor = true;
             // 
             // panelLeftHeader
             // 
@@ -2316,9 +2345,11 @@ namespace Site7DbEditor
             grpDspTarget.Controls.Add(label1);
             grpDspTarget.Controls.Add(chkShowBgImage);
             grpDspTarget.Controls.Add(chkShowBgPointCloud);
+            grpDspTarget.Controls.Add(chkShowGrid);
+            grpDspTarget.Controls.Add(chkShowScale);
             grpDspTarget.Location = new Point(4, 349);
             grpDspTarget.Name = "grpDspTarget";
-            grpDspTarget.Size = new Size(124, 235);
+            grpDspTarget.Size = new Size(124, 218);
             grpDspTarget.TabIndex = 37;
             grpDspTarget.TabStop = false;
             grpDspTarget.Text = "表示対象";
@@ -2580,6 +2611,7 @@ namespace Site7DbEditor
         private Panel panelMainRight;
         private Panel panelMain1;
         private CheckBox chkShowHyoukou;
+        private CheckBox chkShowScale;
         private Label label1;
         private GroupBox grpDspTarget;
     }

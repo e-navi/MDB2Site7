@@ -31,7 +31,8 @@ namespace Site7DbEditor.Services
             bool isDarkBackground = true,
             bool chkShowBgImage = true,
             bool chkShowBgPointCloud = true,
-            bool chkShowHyoukou = false)
+            bool chkShowHyoukou = false,
+            bool chkShowScale = true)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(isDarkBackground ? Color.FromArgb(16, 16, 20) : Color.FromArgb(248, 249, 250));
@@ -74,28 +75,74 @@ namespace Site7DbEditor.Services
                 }
             }
 
-            // 0. Draw Mesh/Grid (メッシュ)
+            // 0. Calculate Grid Step (メッシュ間隔を自動計算)
+            double gridStep = 10.0;
+            var topLeftSurvey = vc.CanvasToSurvey(new PointF(0, 0), canvasSize);
+            var bottomRightSurvey = vc.CanvasToSurvey(new PointF(width, height), canvasSize);
+
+            double minSurveyX = Math.Min(topLeftSurvey.surveyX, bottomRightSurvey.surveyX);
+            double maxSurveyX = Math.Max(topLeftSurvey.surveyX, bottomRightSurvey.surveyX);
+            double minSurveyY = Math.Min(topLeftSurvey.surveyY, bottomRightSurvey.surveyY);
+            double maxSurveyY = Math.Max(topLeftSurvey.surveyY, bottomRightSurvey.surveyY);
+
+            double spanX = maxSurveyX - minSurveyX;
+            double spanY = maxSurveyY - minSurveyY;
+            double maxSpan = Math.Max(spanX, spanY);
+            if (maxSpan <= 0.0001) maxSpan = 100.0;
+
+            double rawStep = maxSpan / 7.0;
+            double[] stepCandidates = new double[] {
+                0.01, 0.02, 0.05, 0.1, 0.2, 0.3, 0.5,
+                1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 30.0, 50.0,
+                100.0, 200.0, 300.0, 500.0, 1000.0, 2000.0, 3000.0, 5000.0, 10000.0
+            };
+
+            gridStep = stepCandidates[stepCandidates.Length - 1];
+            for (int i = 0; i < stepCandidates.Length; i++)
+            {
+                if (stepCandidates[i] >= rawStep)
+                {
+                    gridStep = stepCandidates[i];
+                    break;
+                }
+            }
+
+            // 0. Draw Mesh/Grid (メッシュ & 座標値ラベル)
             if (chkShowGrid)
             {
-                using (var gridPen = new Pen(isDarkBackground ? Color.FromArgb(35, 120, 120, 140) : Color.FromArgb(220, 222, 225), 1f) { DashStyle = DashStyle.Dot })
+                using (var gridPen = new Pen(isDarkBackground ? Color.FromArgb(40, 140, 140, 160) : Color.FromArgb(220, 222, 225), 1f) { DashStyle = DashStyle.Dot })
+                using (var coordFont = new Font("Yu Gothic UI", 8.0F, FontStyle.Regular))
+                using (var coordBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(255, 110, 110) : Color.FromArgb(210, 0, 0)))
                 {
-                    int gridStep = 10;
-                    double startGridX = Math.Floor(vc.PosXMin / gridStep) * gridStep;
-                    double endGridX = Math.Ceiling(vc.PosXMax / gridStep) * gridStep;
-                    double startGridY = Math.Floor(vc.PosYMin / gridStep) * gridStep;
-                    double endGridY = Math.Ceiling(vc.PosYMax / gridStep) * gridStep;
+                    double startGridY = Math.Floor(minSurveyY / gridStep) * gridStep;
+                    double endGridY = Math.Ceiling(maxSurveyY / gridStep) * gridStep;
+                    double startGridX = Math.Floor(minSurveyX / gridStep) * gridStep;
+                    double endGridX = Math.Ceiling(maxSurveyX / gridStep) * gridStep;
 
-                    for (double gx = startGridX; gx <= endGridX; gx += gridStep)
+                    // 縦メッシュ線（SurveyY = 一定）
+                    for (double gy = startGridY; gy <= endGridY + (gridStep * 0.1); gy += gridStep)
                     {
-                        PointF p1 = ToCanvasPoint(vc.PosYMin, gx);
-                        PointF p2 = ToCanvasPoint(vc.PosYMax, gx);
-                        g.DrawLine(gridPen, p1, p2);
+                        PointF p = ToCanvasPoint((minSurveyX + maxSurveyX) / 2.0, gy);
+                        if (p.X < -20 || p.X > width + 20) continue;
+
+                        g.DrawLine(gridPen, p.X, 0, p.X, height);
+
+                        string label = (gridStep < 1) ? gy.ToString("0.0") : gy.ToString("0");
+                        var sz = g.MeasureString(label, coordFont);
+                        g.DrawString(label, coordFont, coordBrush, p.X - sz.Width / 2f, 4f);
                     }
-                    for (double gy = startGridY; gy <= endGridY; gy += gridStep)
+
+                    // 横メッシュ線（SurveyX = 一定）
+                    for (double gx = startGridX; gx <= endGridX + (gridStep * 0.1); gx += gridStep)
                     {
-                        PointF p1 = ToCanvasPoint(gy, vc.PosXMin);
-                        PointF p2 = ToCanvasPoint(gy, vc.PosXMax);
-                        g.DrawLine(gridPen, p1, p2);
+                        PointF p = ToCanvasPoint(gx, (minSurveyY + maxSurveyY) / 2.0);
+                        if (p.Y < -20 || p.Y > height + 20) continue;
+
+                        g.DrawLine(gridPen, 0, p.Y, width, p.Y);
+
+                        string label = (gridStep < 1) ? gx.ToString("0.0") : gx.ToString("0");
+                        var sz = g.MeasureString(label, coordFont);
+                        g.DrawString(label, coordFont, coordBrush, 4f, p.Y - sz.Height / 2f);
                     }
                 }
             }
@@ -540,6 +587,51 @@ namespace Site7DbEditor.Services
                     g.DrawLine(rubberPen, kpPt, curPt);
                     g.FillEllipse(targetBrush, curPt.X - 4f, curPt.Y - 4f, 8f, 8f);
                     g.DrawEllipse(targetPen, curPt.X - 7f, curPt.Y - 7f, 14f, 14f);
+                }
+            }
+
+            // 7. Draw Scale Bar (スケールバー)
+            if (chkShowScale)
+            {
+                double scaleDist = gridStep * 2.0; // メッシュサイズ × 2
+                PointF p0 = ToCanvasPoint(minSurveyX, minSurveyY);
+                PointF p1 = ToCanvasPoint(minSurveyX, minSurveyY + scaleDist);
+                float scalePixWidth = (float)Math.Abs(p1.X - p0.X);
+
+                if (scalePixWidth >= 15f && scalePixWidth <= width * 0.95f)
+                {
+                    float cx = width / 2f;
+                    float barY = height - 18f;
+                    float startX = cx - scalePixWidth / 2f;
+                    float endX = startX + scalePixWidth;
+
+                    Color scaleColor = isDarkBackground ? Color.FromArgb(255, 100, 100) : Color.FromArgb(210, 0, 0);
+                    using (var scalePen = new Pen(scaleColor, 1.5f))
+                    using (var scaleFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
+                    using (var scaleBrush = new SolidBrush(scaleColor))
+                    {
+                        // 主横線
+                        g.DrawLine(scalePen, startX, barY, endX, barY);
+
+                        // 両端ヒゲ線 (高さ 10px)
+                        g.DrawLine(scalePen, startX, barY - 5f, startX, barY + 5f);
+                        g.DrawLine(scalePen, endX, barY - 5f, endX, barY + 5f);
+
+                        // 5分割（2メッシュで合計10分割）目盛り
+                        int totalDivs = 10;
+                        float stepPix = scalePixWidth / totalDivs;
+                        for (int i = 1; i < totalDivs; i++)
+                        {
+                            float tx = startX + i * stepPix;
+                            float tickH = (i == 5) ? 4.5f : 2.5f; // 中央（1メッシュ区切り）は少し長め
+                            g.DrawLine(scalePen, tx, barY - tickH, tx, barY + tickH);
+                        }
+
+                        // テキスト（例: "10M"）
+                        string label = (scaleDist < 1) ? $"{scaleDist:0.0}M" : $"{scaleDist:0}M";
+                        var sz = g.MeasureString(label, scaleFont);
+                        g.DrawString(label, scaleFont, scaleBrush, cx - sz.Width / 2f, barY - sz.Height - 2f);
+                    }
                 }
             }
         }
