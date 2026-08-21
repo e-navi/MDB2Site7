@@ -408,8 +408,8 @@ namespace Site7DbEditor.Services
                             ? Color.FromArgb(255, 220, 0)
                             : Color.FromArgb(15, 23, 42);
 
-                        // 頂点数が2点以上の場合、中間点に□マークを表示（曲線表示時はベース折れ線を薄いグレー破線で表示）
-                        if (pts.Count > 1)
+                        // 頂点数が2点以上かつ標高点（Mode == 2）でない場合、中間点に□マークを表示（曲線表示時はベース折れ線を薄いグレー破線で表示）
+                        if (selectedLine.Mode != 2 && pts.Count > 1)
                         {
                             var polylinePts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                             bool isClosed = (selectedLine.Mode == 1) && (pts.Count >= 3);

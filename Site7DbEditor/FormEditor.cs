@@ -650,7 +650,24 @@ namespace Site7DbEditor {
 
             if (isFloatingForm) {
                 Point targetLoc = panelMapLeft.PointToScreen(Point.Empty);
-                Size targetSize = panelMapLeft.Size;
+
+                // panelLeftContent内の全コントロールが完全に収まる高さを算出
+                int maxBottom = 0;
+                foreach (Control c in panelLeftContent.Controls) {
+                    int b = c.Location.Y + c.Height;
+                    if (b > maxBottom) maxBottom = b;
+                }
+                int requiredHeight = Math.Max(maxBottom + 45, 620);
+
+                var screen = Screen.FromPoint(targetLoc);
+                int maxHeight = screen.WorkingArea.Height - 40;
+                int finalHeight = Math.Min(requiredHeight, maxHeight);
+
+                int finalY = targetLoc.Y;
+                if (finalY + finalHeight > screen.WorkingArea.Bottom) {
+                    finalY = Math.Max(screen.WorkingArea.Top + 10, screen.WorkingArea.Bottom - finalHeight);
+                }
+                targetLoc = new Point(targetLoc.X, finalY);
 
                 if (_dlgLeft == null || _dlgLeft.IsDisposed) {
                     _dlgLeft = new FormLeftPanelCtrl();
@@ -675,9 +692,7 @@ namespace Site7DbEditor {
 
                 _dlgLeft.StartPosition = FormStartPosition.Manual;
                 _dlgLeft.Location = targetLoc;
-                if (targetSize.Width > 0 && targetSize.Height > 0) {
-                    _dlgLeft.Size = targetSize;
-                }
+                _dlgLeft.Size = new Size(panelMapLeft.Width, finalHeight);
                 _dlgLeft.Show(this);
             } else {
                 if (_dlgLeft != null && !_dlgLeft.IsDisposed) {
