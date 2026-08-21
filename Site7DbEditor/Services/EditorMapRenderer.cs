@@ -120,35 +120,32 @@ namespace Site7DbEditor.Services
 
                     bool isSelectedFeature = (activeTabIndex == 0 && line.Id == selectedIkouId);
 
-                    // ★ Mode == 2 (標高点): 線はつながず、遺構ONなら点のみ、標高ONならZ値を描画
+                    // ★ Mode == 2 (標高点): 線はつながず、遺構ONなら小さな点のみ、標高ONならZ値を小さく描画
                     if (line.Mode == 2)
                     {
                         if (chkShowIkou)
                         {
-                            using (var ptBrush = new SolidBrush(color))
-                            using (var ptPen = new Pen(isSelectedFeature ? Color.FromArgb(255, 230, 0) : color, isSelectedFeature ? 1.8f : 1.2f))
+                            using (var ptBrush = new SolidBrush(isSelectedFeature ? Color.FromArgb(255, 230, 0) : color))
                             {
+                                float r = isSelectedFeature ? 2.0f : 1.5f;
                                 foreach (var p in pts)
                                 {
                                     PointF sp = ToCanvasPoint(p.X, p.Y);
-                                    g.FillEllipse(ptBrush, sp.X - 2.5f, sp.Y - 2.5f, 5f, 5f);
-                                    g.DrawEllipse(ptPen, sp.X - 4.5f, sp.Y - 4.5f, 9f, 9f);
-                                    g.DrawLine(ptPen, sp.X - 6f, sp.Y, sp.X + 6f, sp.Y);
-                                    g.DrawLine(ptPen, sp.X, sp.Y - 6f, sp.X, sp.Y + 6f);
+                                    g.FillEllipse(ptBrush, sp.X - r, sp.Y - r, r * 2f, r * 2f);
                                 }
                             }
                         }
 
                         if (chkShowHyoukou)
                         {
-                            using (var zFont = new Font("Yu Gothic UI", 7.5F, FontStyle.Regular))
-                            using (var zBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(180, 255, 180) : Color.FromArgb(0, 100, 0)))
+                            using (var zFont = new Font("Yu Gothic UI", 6.5F, FontStyle.Regular))
+                            using (var zBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(140, 200, 140) : Color.FromArgb(30, 100, 30)))
                             {
                                 foreach (var p in pts)
                                 {
                                     PointF sp = ToCanvasPoint(p.X, p.Y);
                                     string zText = p.Z.ToString("0.000");
-                                    g.DrawString(zText, zFont, zBrush, sp.X + 6f, sp.Y - 7f);
+                                    g.DrawString(zText, zFont, zBrush, sp.X + 3f, sp.Y - 5f);
                                 }
                             }
                         }

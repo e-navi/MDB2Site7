@@ -651,16 +651,11 @@ namespace Site7DbEditor {
             if (isFloatingForm) {
                 Point targetLoc = panelMapLeft.PointToScreen(Point.Empty);
 
-                // panelLeftContent内の全コントロールが完全に収まる高さを算出
-                int maxBottom = 0;
-                foreach (Control c in panelLeftContent.Controls) {
-                    int b = c.Location.Y + c.Height;
-                    if (b > maxBottom) maxBottom = b;
-                }
-                int requiredHeight = Math.Max(maxBottom + 45, 620);
+                // コントロール最下部(chkWhiteBg: 670px) + ヘッダー(32px) + 下部マージン
+                int requiredHeight = 728;
 
                 var screen = Screen.FromPoint(targetLoc);
-                int maxHeight = screen.WorkingArea.Height - 40;
+                int maxHeight = screen.WorkingArea.Height - 30;
                 int finalHeight = Math.Min(requiredHeight, maxHeight);
 
                 int finalY = targetLoc.Y;
@@ -685,6 +680,7 @@ namespace Site7DbEditor {
                 }
 
                 panelLeftHeader.Visible = false;
+                panelLeftContent.AutoScroll = (finalHeight < requiredHeight);
                 panelMapLeft.Dock = DockStyle.Fill;
                 if (!_dlgLeft.panelLeftContent.Controls.Contains(panelMapLeft)) {
                     _dlgLeft.panelLeftContent.Controls.Add(panelMapLeft);
@@ -692,7 +688,7 @@ namespace Site7DbEditor {
 
                 _dlgLeft.StartPosition = FormStartPosition.Manual;
                 _dlgLeft.Location = targetLoc;
-                _dlgLeft.Size = new Size(panelMapLeft.Width, finalHeight);
+                _dlgLeft.ClientSize = new Size(136, finalHeight);
                 _dlgLeft.Show(this);
             } else {
                 if (_dlgLeft != null && !_dlgLeft.IsDisposed) {
@@ -704,6 +700,7 @@ namespace Site7DbEditor {
                 }
 
                 panelLeftHeader.Visible = true;
+                panelLeftContent.AutoScroll = true;
                 panelMapLeft.Dock = DockStyle.Left;
                 if (!panelMain1.Controls.Contains(panelMapLeft)) {
                     panelMain1.Controls.Add(panelMapLeft);
