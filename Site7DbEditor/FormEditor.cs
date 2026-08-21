@@ -51,6 +51,11 @@ namespace Site7DbEditor {
         private FormBottomPanelCtrl? _dlgBottom = null;
         private bool _isBottomPanelFloating = false;
         private FormDrawingFrame? _formDrawingFrame = null;
+        private bool _isSettingFrameCenter = false;
+        private bool _isSettingFrameRotation = false;
+        private double _previewFrameCenterX = 0.0;
+        private double _previewFrameCenterY = 0.0;
+        private double _previewFrameRotation = 0.0;
 
         public class DbItem {
             public string DisplayName { get; set; } = "";
@@ -530,7 +535,8 @@ namespace Site7DbEditor {
                 if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
                     _formDrawingFrame = new FormDrawingFrame(_db);
                     _formDrawingFrame.FrameChanged += (sender, ev) => picMapCanvas.Invalidate();
-                    _formDrawingFrame.ThreePointsRequested += (sender, ev) => StartThreePointsFrameMode();
+                    _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
+                    _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
                 }
                 _formDrawingFrame.SyncFromService();
                 if (!_formDrawingFrame.Visible) {
@@ -601,9 +607,38 @@ namespace Site7DbEditor {
             }
         }
 
-        private void StartThreePointsFrameMode() {
-            // ステップ3で3点指示ロジックを実装
-            MessageBox.Show("図枠の3点指示モードは次のステップ（ステップ3）で実装予定です。", "図枠3点指示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        private void StartMoveFrameCenterMode() {
+            _isSettingFrameCenter = true;
+            _isSettingFrameRotation = false;
+            _isSettingLabelPos = false;
+            _previewFrameCenterX = DrawingFrameService.Instance.CenterX;
+            _previewFrameCenterY = DrawingFrameService.Instance.CenterY;
+            _previewFrameRotation = DrawingFrameService.Instance.RotationAngleDeg;
+            picMapCanvas.Cursor = Cursors.Cross;
+            if (lblStatusCoords != null) lblStatusCoords.Text = "【図枠 中心移動モード】地図上をクリックして中心位置を確定（右クリック/Escでキャンセル）";
+            picMapCanvas.Invalidate();
+        }
+
+        private void StartSetFrameRotationMode() {
+            _isSettingFrameRotation = true;
+            _isSettingFrameCenter = false;
+            _isSettingLabelPos = false;
+            _previewFrameCenterX = DrawingFrameService.Instance.CenterX;
+            _previewFrameCenterY = DrawingFrameService.Instance.CenterY;
+            _previewFrameRotation = DrawingFrameService.Instance.RotationAngleDeg;
+            picMapCanvas.Cursor = Cursors.Cross;
+            if (lblStatusCoords != null) lblStatusCoords.Text = "【図枠 回転指定モード】マウスを動かして角度をプレビュー、クリックで確定（右クリック/Escでキャンセル）";
+            picMapCanvas.Invalidate();
+        }
+
+        private void CancelFrameInteractiveMode() {
+            if (_isSettingFrameCenter || _isSettingFrameRotation) {
+                _isSettingFrameCenter = false;
+                _isSettingFrameRotation = false;
+                picMapCanvas.Cursor = Cursors.Default;
+                if (lblStatusCoords != null) lblStatusCoords.Text = "";
+                picMapCanvas.Invalidate();
+            }
         }
 
         private void EnsureUCCtrlValid() {
@@ -2480,6 +2515,24 @@ namespace Site7DbEditor {
                     }
                 }
             }
+
+            // 図枠中心移動 / 回転指定中のラバーバンド描画
+            if ((_isSettingFrameCenter || _isSettingFrameRotation) && !_currentRubberBandMousePos.IsEmpty) {
+                double cx = _isSettingFrameCenter ? _previewFrameCenterX : DrawingFrameService.Instance.CenterX;
+                double cy = _isSettingFrameCenter ? _previewFrameCenterY : DrawingFrameService.Instance.CenterY;
+                double angle = _isSettingFrameRotation ? _previewFrameRotation : DrawingFrameService.Instance.RotationAngleDeg;
+
+                DrawingFrameService.Instance.DrawRubberBandFrame(
+                    e.Graphics,
+                    _vc,
+                    picMapCanvas.Size,
+                    cx,
+                    cy,
+                    angle,
+                    _currentRubberBandMousePos,
+                    _isSettingFrameRotation
+                );
+            }
         }
 
         private void ApplyVertexInsert(Point screenLocation) {
@@ -2622,6 +2675,51 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_MouseDown(object? sender, MouseEventArgs e) {
+            if (_isSettingFrameCenter) {
+                if (e.Button == MouseButtons.Left) {
+                    var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
+                    var frame = DrawingFrameService.Instance;
+                    frame.CenterX = Math.Round(newSurveyX, 3);
+                    frame.CenterY = Math.Round(newSurveyY, 3);
+                    _isSettingFrameCenter = false;
+                    picMapCanvas.Cursor = Cursors.Default;
+                    _formDrawingFrame?.SyncFromService();
+                    if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 図枠の中心を設定しました (X={frame.CenterX:F3}, Y={frame.CenterY:F3})";
+                    _clickNotifyToolTip.Show($"✔ 図枠の中心を設定しました (X={frame.CenterX:F3}, Y={frame.CenterY:F3})", picMapCanvas, e.X + 10, e.Y - 25, 1800);
+                    picMapCanvas.Invalidate();
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelFrameInteractiveMode();
+                    _clickNotifyToolTip.Show("⏹ 図枠中心移動をキャンセルしました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
+                    return;
+                }
+            }
+
+            if (_isSettingFrameRotation) {
+                if (e.Button == MouseButtons.Left) {
+                    var (clickSurveyX, clickSurveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
+                    var frame = DrawingFrameService.Instance;
+                    double dx = clickSurveyX - frame.CenterX;
+                    double dy = clickSurveyY - frame.CenterY;
+                    double angleDeg = Math.Atan2(-dx, dy) * 180.0 / Math.PI;
+                    if (angleDeg < -180.0) angleDeg += 360.0;
+                    if (angleDeg > 180.0) angleDeg -= 360.0;
+
+                    frame.RotationAngleDeg = Math.Round(angleDeg, 2);
+                    _isSettingFrameRotation = false;
+                    picMapCanvas.Cursor = Cursors.Default;
+                    _formDrawingFrame?.SyncFromService();
+                    if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 図枠の回転角度を設定しました ({frame.RotationAngleDeg:F2}°)";
+                    _clickNotifyToolTip.Show($"✔ 図枠の回転角度を設定しました ({frame.RotationAngleDeg:F2}°)", picMapCanvas, e.X + 10, e.Y - 25, 1800);
+                    picMapCanvas.Invalidate();
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelFrameInteractiveMode();
+                    _clickNotifyToolTip.Show("⏹ 図枠回転指定をキャンセルしました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
+                    return;
+                }
+            }
+
             if (_isSettingLabelPos) {
                 if (e.Button == MouseButtons.Left) {
                     var (newSurveyX, newSurveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
@@ -2755,6 +2853,33 @@ namespace Site7DbEditor {
                 } else {
                     lblStatusCoords.Text = $"X: {surveyX:F3}   Y: {surveyY:F3}";
                 }
+            }
+
+            if (_isSettingFrameCenter) {
+                _previewFrameCenterX = surveyX;
+                _previewFrameCenterY = surveyY;
+                _currentRubberBandMousePos = e.Location;
+                if (lblStatusCoords != null) {
+                    lblStatusCoords.Text = $"【図枠 中心移動】X: {surveyX:F3}, Y: {surveyY:F3} (クリックで確定 / 右クリックでキャンセル)";
+                }
+                picMapCanvas.Invalidate();
+                return;
+            }
+
+            if (_isSettingFrameRotation) {
+                var frame = DrawingFrameService.Instance;
+                double dx = surveyX - frame.CenterX;
+                double dy = surveyY - frame.CenterY;
+                double angleDeg = Math.Atan2(-dx, dy) * 180.0 / Math.PI;
+                if (angleDeg < -180.0) angleDeg += 360.0;
+                if (angleDeg > 180.0) angleDeg -= 360.0;
+                _previewFrameRotation = angleDeg;
+                _currentRubberBandMousePos = e.Location;
+                if (lblStatusCoords != null) {
+                    lblStatusCoords.Text = $"【図枠 回転指定】角度: {angleDeg:F2}° (クリックで確定 / 右クリックでキャンセル)";
+                }
+                picMapCanvas.Invalidate();
+                return;
             }
 
             if (chkScreenInput.Checked && tabControlData.SelectedIndex == 0) {
@@ -3547,6 +3672,12 @@ namespace Site7DbEditor {
 
         private void FormEditor_KeyDown(object? sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Escape) {
+                if (_isSettingFrameCenter || _isSettingFrameRotation) {
+                    CancelFrameInteractiveMode();
+                    _clickNotifyToolTip.Show("⏹ 図枠設定をキャンセルしました", picMapCanvas, 20, 20, 1200);
+                    e.Handled = true;
+                    return;
+                }
                 if (_isSettingLabelPos) {
                     CancelLabelPosSetting();
                     _clickNotifyToolTip.Show("⏹ 表示位置指定をキャンセルしました", picMapCanvas, 20, 20, 1200);

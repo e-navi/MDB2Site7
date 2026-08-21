@@ -12,7 +12,8 @@ namespace Site7DbEditor
         private bool _isUpdatingUi = false;
 
         public event EventHandler? FrameChanged;
-        public event EventHandler? ThreePointsRequested;
+        public event EventHandler? MoveCenterRequested;
+        public event EventHandler? SetRotationRequested;
 
         public FormDrawingFrame(EditorDbManager? db = null)
         {
@@ -92,8 +93,12 @@ namespace Site7DbEditor
 
             this.btnFitAll.Click += (s, e) => FitToAllData();
 
-            this.btnThreePoints.Click += (s, e) => {
-                ThreePointsRequested?.Invoke(this, EventArgs.Empty);
+            this.btnMoveCenter.Click += (s, e) => {
+                MoveCenterRequested?.Invoke(this, EventArgs.Empty);
+            };
+
+            this.btnSetRotation.Click += (s, e) => {
+                SetRotationRequested?.Invoke(this, EventArgs.Empty);
             };
         }
 

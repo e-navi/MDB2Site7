@@ -33,7 +33,8 @@ namespace Site7DbEditor
             this.numCenterY = new System.Windows.Forms.NumericUpDown();
             this.lblRotation = new System.Windows.Forms.Label();
             this.numRotation = new System.Windows.Forms.NumericUpDown();
-            this.btnThreePoints = new System.Windows.Forms.Button();
+            this.btnMoveCenter = new System.Windows.Forms.Button();
+            this.btnSetRotation = new System.Windows.Forms.Button();
             this.btnFitAll = new System.Windows.Forms.Button();
             this.btnResetRotation = new System.Windows.Forms.Button();
             this.grpMargin = new System.Windows.Forms.GroupBox();
@@ -178,7 +179,8 @@ namespace Site7DbEditor
             // 
             this.grpTransform.Controls.Add(this.btnResetRotation);
             this.grpTransform.Controls.Add(this.btnFitAll);
-            this.grpTransform.Controls.Add(this.btnThreePoints);
+            this.grpTransform.Controls.Add(this.btnMoveCenter);
+            this.grpTransform.Controls.Add(this.btnSetRotation);
             this.grpTransform.Controls.Add(this.numRotation);
             this.grpTransform.Controls.Add(this.lblRotation);
             this.grpTransform.Controls.Add(this.numCenterY);
@@ -189,7 +191,7 @@ namespace Site7DbEditor
             this.grpTransform.ForeColor = System.Drawing.Color.White;
             this.grpTransform.Location = new System.Drawing.Point(12, 156);
             this.grpTransform.Name = "grpTransform";
-            this.grpTransform.Size = new System.Drawing.Size(260, 148);
+            this.grpTransform.Size = new System.Drawing.Size(260, 175);
             this.grpTransform.TabIndex = 3;
             this.grpTransform.TabStop = false;
             this.grpTransform.Text = "中心座標 & 回転";
@@ -290,26 +292,37 @@ namespace Site7DbEditor
             this.btnResetRotation.Text = "0°リセット";
             this.btnResetRotation.UseVisualStyleBackColor = false;
             // 
-            // btnThreePoints
+            // btnMoveCenter
             // 
-            this.btnThreePoints.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.btnThreePoints.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnThreePoints.Location = new System.Drawing.Point(11, 105);
-            this.btnThreePoints.Name = "btnThreePoints";
-            this.btnThreePoints.Size = new System.Drawing.Size(112, 28);
-            this.btnThreePoints.TabIndex = 7;
-            this.btnThreePoints.Text = "📐 3点指示";
-            this.btnThreePoints.UseVisualStyleBackColor = false;
+            this.btnMoveCenter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.btnMoveCenter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMoveCenter.Location = new System.Drawing.Point(11, 102);
+            this.btnMoveCenter.Name = "btnMoveCenter";
+            this.btnMoveCenter.Size = new System.Drawing.Size(112, 28);
+            this.btnMoveCenter.TabIndex = 7;
+            this.btnMoveCenter.Text = "📍 中心移動";
+            this.btnMoveCenter.UseVisualStyleBackColor = false;
+            // 
+            // btnSetRotation
+            // 
+            this.btnSetRotation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(80)))), ((int)(((byte)(0)))));
+            this.btnSetRotation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetRotation.Location = new System.Drawing.Point(135, 102);
+            this.btnSetRotation.Name = "btnSetRotation";
+            this.btnSetRotation.Size = new System.Drawing.Size(112, 28);
+            this.btnSetRotation.TabIndex = 8;
+            this.btnSetRotation.Text = "🔄 回転指定";
+            this.btnSetRotation.UseVisualStyleBackColor = false;
             // 
             // btnFitAll
             // 
             this.btnFitAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(140)))), ((int)(((byte)(90)))));
             this.btnFitAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFitAll.Location = new System.Drawing.Point(135, 105);
+            this.btnFitAll.Location = new System.Drawing.Point(11, 136);
             this.btnFitAll.Name = "btnFitAll";
-            this.btnFitAll.Size = new System.Drawing.Size(112, 28);
-            this.btnFitAll.TabIndex = 8;
-            this.btnFitAll.Text = "🔍 現場フィット";
+            this.btnFitAll.Size = new System.Drawing.Size(236, 28);
+            this.btnFitAll.TabIndex = 9;
+            this.btnFitAll.Text = "🔍 現場全体にフィット";
             this.btnFitAll.UseVisualStyleBackColor = false;
             // 
             // grpMargin
@@ -324,7 +337,7 @@ namespace Site7DbEditor
             this.grpMargin.Controls.Add(this.lblMarginL);
             this.grpMargin.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.grpMargin.ForeColor = System.Drawing.Color.White;
-            this.grpMargin.Location = new System.Drawing.Point(12, 310);
+            this.grpMargin.Location = new System.Drawing.Point(12, 338);
             this.grpMargin.Name = "grpMargin";
             this.grpMargin.Size = new System.Drawing.Size(260, 80);
             this.grpMargin.TabIndex = 4;
@@ -441,7 +454,7 @@ namespace Site7DbEditor
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnClose.ForeColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(167, 396);
+            this.btnClose.Location = new System.Drawing.Point(167, 424);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(105, 28);
             this.btnClose.TabIndex = 5;
@@ -453,7 +466,7 @@ namespace Site7DbEditor
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(32)))), ((int)(((byte)(42)))));
-            this.ClientSize = new System.Drawing.Size(284, 432);
+            this.ClientSize = new System.Drawing.Size(284, 460);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.grpMargin);
             this.Controls.Add(this.grpTransform);
@@ -505,7 +518,8 @@ namespace Site7DbEditor
         private System.Windows.Forms.Label lblRotation;
         private System.Windows.Forms.NumericUpDown numRotation;
         private System.Windows.Forms.Button btnResetRotation;
-        public System.Windows.Forms.Button btnThreePoints;
+        public System.Windows.Forms.Button btnMoveCenter;
+        public System.Windows.Forms.Button btnSetRotation;
         private System.Windows.Forms.Button btnFitAll;
         private System.Windows.Forms.GroupBox grpMargin;
         private System.Windows.Forms.Label lblMarginL;

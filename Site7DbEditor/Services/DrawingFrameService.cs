@@ -87,25 +87,34 @@ namespace Site7DbEditor.Services
         /// </summary>
         public (double surveyX, double surveyY)[] GetOuterCornersSurvey()
         {
-            var (wM, hM) = GetFrameDimensionsMeters();
-            double halfW = wM / 2.0; // 東西方向ローカル
-            double halfH = hM / 2.0; // 南北方向ローカル
+            return GetOuterCornersSurvey(CenterX, CenterY, RotationAngleDeg);
+        }
 
-            // ローカル4隅 (u: 東西, v: 南北)
+        public (double surveyX, double surveyY)[] GetOuterCornersSurvey(double cx, double cy, double angleDeg)
+        {
+            var (wM, hM) = GetFrameDimensionsMeters();
+            double halfW = wM / 2.0;
+            double halfH = hM / 2.0;
+
             (double u, double v)[] localCorners = new (double, double)[] {
-                (-halfW, -halfH), // 左下
-                ( halfW, -halfH), // 右下
-                ( halfW,  halfH), // 右上
-                (-halfW,  halfH)  // 左上
+                (-halfW, -halfH),
+                ( halfW, -halfH),
+                ( halfW,  halfH),
+                (-halfW,  halfH)
             };
 
-            return TransformLocalToSurvey(localCorners, CenterX, CenterY, RotationAngleDeg);
+            return TransformLocalToSurvey(localCorners, cx, cy, angleDeg);
         }
 
         /// <summary>
         /// 内枠の4頂点（測量座標: 北X, 東Y）を取得
         /// </summary>
         public (double surveyX, double surveyY)[] GetInnerCornersSurvey()
+        {
+            return GetInnerCornersSurvey(CenterX, CenterY, RotationAngleDeg);
+        }
+
+        public (double surveyX, double surveyY)[] GetInnerCornersSurvey(double cx, double cy, double angleDeg)
         {
             var (innerWM, innerHM, offsetEastM, offsetNorthM) = GetInnerFrameDimensionsMeters();
             double halfW = innerWM / 2.0;
@@ -118,7 +127,7 @@ namespace Site7DbEditor.Services
                 (offsetEastM - halfW, offsetNorthM + halfH)
             };
 
-            return TransformLocalToSurvey(localCorners, CenterX, CenterY, RotationAngleDeg);
+            return TransformLocalToSurvey(localCorners, cx, cy, angleDeg);
         }
 
         /// <summary>
@@ -143,6 +152,54 @@ namespace Site7DbEditor.Services
                 result[i] = (cx + rotatedNorth, cy + rotatedEast);
             }
             return result;
+        }
+
+        /// <summary>
+        /// ラバーバンド用の図枠プレビュー描画（中心移動・回転指定時）
+        /// </summary>
+        public void DrawRubberBandFrame(Graphics g, EditorMapViewController vc, Size canvasSize, double cx, double cy, double angleDeg, Point mouseScreenPos, bool isRotating)
+        {
+            if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
+
+            var outerCorners = GetOuterCornersSurvey(cx, cy, angleDeg);
+            var innerCorners = GetInnerCornersSurvey(cx, cy, angleDeg);
+
+            PointF[] outerScreen = new PointF[outerCorners.Length];
+            for (int i = 0; i < outerCorners.Length; i++)
+            {
+                outerScreen[i] = vc.ToCanvasPoint(outerCorners[i].surveyX, outerCorners[i].surveyY, canvasSize);
+            }
+
+            PointF[] innerScreen = new PointF[innerCorners.Length];
+            for (int i = 0; i < innerCorners.Length; i++)
+            {
+                innerScreen[i] = vc.ToCanvasPoint(innerCorners[i].surveyX, innerCorners[i].surveyY, canvasSize);
+            }
+
+            // ラバーバンドペン（黄色点線）
+            using (var outerPen = new Pen(Color.FromArgb(255, 230, 0), 2.0f) { DashStyle = DashStyle.Dash })
+            using (var innerPen = new Pen(Color.FromArgb(0, 225, 255), 1.5f) { DashStyle = DashStyle.Dot })
+            using (var centerPen = new Pen(Color.FromArgb(255, 100, 100), 1.8f))
+            {
+                g.DrawPolygon(outerPen, outerScreen);
+                g.DrawPolygon(innerPen, innerScreen);
+
+                // 中心点
+                PointF centerScreen = vc.ToCanvasPoint(cx, cy, canvasSize);
+                g.DrawLine(centerPen, centerScreen.X - 10f, centerScreen.Y, centerScreen.X + 10f, centerScreen.Y);
+                g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 10f, centerScreen.X, centerScreen.Y + 10f);
+                g.DrawEllipse(centerPen, centerScreen.X - 5f, centerScreen.Y - 5f, 10f, 10f);
+
+                // 回転モードの場合、中心からマウス位置へのラバーバンド線
+                if (isRotating)
+                {
+                    using (var rayPen = new Pen(Color.FromArgb(255, 80, 80), 2f) { DashStyle = DashStyle.Dash })
+                    {
+                        g.DrawLine(rayPen, centerScreen, mouseScreenPos);
+                        g.FillEllipse(Brushes.Red, mouseScreenPos.X - 4f, mouseScreenPos.Y - 4f, 8f, 8f);
+                    }
+                }
+            }
         }
 
         /// <summary>
