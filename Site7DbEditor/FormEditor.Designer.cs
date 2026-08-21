@@ -2027,13 +2027,6 @@ namespace Site7DbEditor
             btnDetachBottomPanel.Text = "↗ 分離";
             btnDetachBottomPanel.UseVisualStyleBackColor = false;
             // 
-            // chkShowGrid
-            // 
-            chkShowGrid.Location = new Point(0, 0);
-            chkShowGrid.Name = "chkShowGrid";
-            chkShowGrid.Size = new Size(104, 24);
-            chkShowGrid.TabIndex = 0;
-            // 
             // tabLayer
             // 
             tabLayer.BackColor = Color.FromArgb(20, 20, 25);

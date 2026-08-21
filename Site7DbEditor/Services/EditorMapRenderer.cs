@@ -328,51 +328,54 @@ namespace Site7DbEditor.Services
             using (var ikouLineLabelBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(0, 225, 255) : Color.FromArgb(0, 120, 200)))
             using (var kikaiLabelBrush = new SolidBrush(isDarkBackground ? Color.White : Color.DarkBlue))
             {
-                if (showIkouName || activeTabIndex == 0)
+                // 遺構の名称チェックボックスがONの時
+                if (showIkouName)
                 {
-                    if (chkShowIkou)
+                    // 1. 遺構名（IkouModel.Name）の描画
+                    foreach (var ikou in db.IkouList)
                     {
-                        // 1. 遺構名（IkouModel.Name）の描画
-                        foreach (var ikou in db.IkouList)
+                        if (string.IsNullOrEmpty(ikou.Name)) continue;
+
+                        PointF ikouLabelPt;
+                        if (ikou.X != 0.0 || ikou.Y != 0.0)
                         {
-                            if (string.IsNullOrEmpty(ikou.Name)) continue;
-
-                            PointF ikouLabelPt;
-                            if (ikou.X != 0.0 || ikou.Y != 0.0)
-                            {
-                                ikouLabelPt = ToCanvasPoint(ikou.X, ikou.Y);
-                            }
-                            else
-                            {
-                                var childLines = db.IkouLList.Where(l => l.Id == ikou.Id).ToList();
-                                var allPts = childLines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
-                                if (allPts.Count == 0) continue;
-                                double avgX = allPts.Average(p => p.X);
-                                double avgY = allPts.Average(p => p.Y);
-                                ikouLabelPt = ToCanvasPoint(avgX, avgY);
-                            }
-
-                            SizeF ikouTextSize = g.MeasureString(ikou.Name, ikouMasterFont);
-                            g.DrawString(ikou.Name, ikouMasterFont, ikouMasterBrush, ikouLabelPt.X - ikouTextSize.Width / 2f, ikouLabelPt.Y - ikouTextSize.Height / 2f);
+                            ikouLabelPt = ToCanvasPoint(ikou.X, ikou.Y);
+                        }
+                        else
+                        {
+                            var childLines = db.IkouLList.Where(l => l.Id == ikou.Id).ToList();
+                            var allPts = childLines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
+                            if (allPts.Count == 0) continue;
+                            double avgX = allPts.Average(p => p.X);
+                            double avgY = allPts.Average(p => p.Y);
+                            ikouLabelPt = ToCanvasPoint(avgX, avgY);
                         }
 
-                        // 2. 遺構線名（IkouLModel.Name）の描画
-                        foreach (var line in db.IkouLList)
+                        SizeF ikouTextSize = g.MeasureString(ikou.Name, ikouMasterFont);
+                        g.DrawString(ikou.Name, ikouMasterFont, ikouMasterBrush, ikouLabelPt.X - ikouTextSize.Width / 2f, ikouLabelPt.Y - ikouTextSize.Height / 2f);
+                    }
+
+                    // 2. 遺構線名（IkouLModel.Name）の描画: 選択された遺構線のみ表示
+                    if (selectedIkouId >= 0 && selectedLid >= 0)
+                    {
+                        var line = db.IkouLList.FirstOrDefault(l => l.Id == selectedIkouId && l.Lid == selectedLid);
+                        if (line != null)
                         {
                             int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
-                            if (isLayerVisible != null && !isLayerVisible(layerIdx)) continue;
+                            if (isLayerVisible == null || isLayerVisible(layerIdx))
+                            {
+                                var pts = SqliteManager.ParsePrecsText(line.Precs);
+                                if (pts.Count > 0)
+                                {
+                                    string lineName = string.IsNullOrEmpty(line.Name) ? $"L{line.Lid}" : line.Name;
+                                    PointF labelPt = (line.X != 0.0 || line.Y != 0.0)
+                                        ? ToCanvasPoint(line.X, line.Y)
+                                        : ToCanvasPoint(pts[0].X, pts[0].Y);
 
-                            var pts = SqliteManager.ParsePrecsText(line.Precs);
-                            if (pts.Count == 0) continue;
-
-                            string lineName = string.IsNullOrEmpty(line.Name) ? $"L{line.Lid}" : line.Name;
-
-                            PointF labelPt = (line.X != 0.0 || line.Y != 0.0)
-                                ? ToCanvasPoint(line.X, line.Y)
-                                : ToCanvasPoint(pts[0].X, pts[0].Y);
-
-                            SizeF textSize = g.MeasureString(lineName, lineLabelFont);
-                            g.DrawString(lineName, lineLabelFont, ikouLineLabelBrush, labelPt.X - textSize.Width / 2f, labelPt.Y - textSize.Height / 2f);
+                                    SizeF textSize = g.MeasureString(lineName, lineLabelFont);
+                                    g.DrawString(lineName, lineLabelFont, ikouLineLabelBrush, labelPt.X - textSize.Width / 2f, labelPt.Y - textSize.Height / 2f);
+                                }
+                            }
                         }
                     }
                 }
