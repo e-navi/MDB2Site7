@@ -50,6 +50,7 @@ namespace Site7DbEditor {
         private bool _isLeftPanelFloating = false;
         private FormBottomPanelCtrl? _dlgBottom = null;
         private bool _isBottomPanelFloating = false;
+        private FormDrawingFrame? _formDrawingFrame = null;
 
         public class DbItem {
             public string DisplayName { get; set; } = "";
@@ -525,6 +526,20 @@ namespace Site7DbEditor {
                 }
             };
 
+            btnDrawingFrame.Click += (s, e) => {
+                if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
+                    _formDrawingFrame = new FormDrawingFrame(_db);
+                    _formDrawingFrame.FrameChanged += (sender, ev) => picMapCanvas.Invalidate();
+                    _formDrawingFrame.ThreePointsRequested += (sender, ev) => StartThreePointsFrameMode();
+                }
+                _formDrawingFrame.SyncFromService();
+                if (!_formDrawingFrame.Visible) {
+                    _formDrawingFrame.Show(this);
+                } else {
+                    _formDrawingFrame.BringToFront();
+                }
+            };
+
             this.chkShowIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowIkouName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowIbutu.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
@@ -584,6 +599,11 @@ namespace Site7DbEditor {
                     frame.CenterY = _db.KikaiList.Average(k => k.Y);
                 }
             }
+        }
+
+        private void StartThreePointsFrameMode() {
+            // ステップ3で3点指示ロジックを実装
+            MessageBox.Show("図枠の3点指示モードは次のステップ（ステップ3）で実装予定です。", "図枠3点指示", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void EnsureUCCtrlValid() {
