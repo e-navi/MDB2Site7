@@ -1,0 +1,210 @@
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+
+namespace Site7DbEditor.Services
+{
+    public class DrawingFrameService
+    {
+        private static DrawingFrameService? _instance;
+        public static DrawingFrameService Instance => _instance ??= new DrawingFrameService();
+
+        // 状態・パラメータ
+        public bool IsVisible { get; set; } = true;
+        public string PaperSizeName { get; set; } = "A3"; // A4, A3, A2, A1, A0
+        public bool IsLandscape { get; set; } = true;     // 横向き
+        public double Scale { get; set; } = 200.0;        // 縮尺 (例: 200 = 1/200)
+        public double CenterX { get; set; } = 0.0;        // 測量X (北方向)
+        public double CenterY { get; set; } = 0.0;        // 測量Y (東方向)
+        public double RotationAngleDeg { get; set; } = 0.0; // 回転角度（度単位、反時計回り）
+
+        // 余白（用紙上のミリメートル単位）
+        public double MarginLeftMm { get; set; } = 20.0;
+        public double MarginRightMm { get; set; } = 10.0;
+        public double MarginTopMm { get; set; } = 10.0;
+        public double MarginBottomMm { get; set; } = 10.0;
+
+        /// <summary>
+        /// 用紙サイズ（mm）を取得 (幅, 高さ) ※Landscape/Portrait考慮
+        /// </summary>
+        public (double widthMm, double heightMm) GetPaperDimensionsMm()
+        {
+            double w = 420.0, h = 297.0; // Default A3
+            switch (PaperSizeName.ToUpperInvariant())
+            {
+                case "A4": w = 297.0; h = 210.0; break;
+                case "A3": w = 420.0; h = 297.0; break;
+                case "A2": w = 594.0; h = 420.0; break;
+                case "A1": w = 841.0; h = 594.0; break;
+                case "A0": w = 1189.0; h = 841.0; break;
+            }
+
+            if (!IsLandscape)
+            {
+                // 縦向きの場合は入れ替え
+                var temp = w;
+                w = h;
+                h = temp;
+            }
+            return (w, h);
+        }
+
+        /// <summary>
+        /// 実空間（メートル）での外枠の幅・高さを取得
+        /// </summary>
+        public (double widthM, double heightM) GetFrameDimensionsMeters()
+        {
+            var (wMm, hMm) = GetPaperDimensionsMm();
+            double wM = (wMm / 1000.0) * Scale;
+            double hM = (hMm / 1000.0) * Scale;
+            return (wM, hM);
+        }
+
+        /// <summary>
+        /// 実空間（メートル）での内枠の幅・高さを取得
+        /// </summary>
+        public (double widthM, double heightM, double offsetEastM, double offsetNorthM) GetInnerFrameDimensionsMeters()
+        {
+            var (wMm, hMm) = GetPaperDimensionsMm();
+            double innerWMm = Math.Max(10.0, wMm - (MarginLeftMm + MarginRightMm));
+            double innerHMm = Math.Max(10.0, hMm - (MarginTopMm + MarginBottomMm));
+
+            double innerWM = (innerWMm / 1000.0) * Scale;
+            double innerHM = (innerHMm / 1000.0) * Scale;
+
+            // マージン非対称による中心からのズレ（ローカル座標）
+            double offsetEastMm = (MarginLeftMm - MarginRightMm) / 2.0;
+            double offsetNorthMm = (MarginBottomMm - MarginTopMm) / 2.0;
+
+            double offsetEastM = (offsetEastMm / 1000.0) * Scale;
+            double offsetNorthM = (offsetNorthMm / 1000.0) * Scale;
+
+            return (innerWM, innerHM, offsetEastM, offsetNorthM);
+        }
+
+        /// <summary>
+        /// 外枠の4頂点（測量座標: 北X, 東Y）を取得（左下、右下、右上、左上）
+        /// </summary>
+        public (double surveyX, double surveyY)[] GetOuterCornersSurvey()
+        {
+            var (wM, hM) = GetFrameDimensionsMeters();
+            double halfW = wM / 2.0; // 東西方向ローカル
+            double halfH = hM / 2.0; // 南北方向ローカル
+
+            // ローカル4隅 (u: 東西, v: 南北)
+            (double u, double v)[] localCorners = new (double, double)[] {
+                (-halfW, -halfH), // 左下
+                ( halfW, -halfH), // 右下
+                ( halfW,  halfH), // 右上
+                (-halfW,  halfH)  // 左上
+            };
+
+            return TransformLocalToSurvey(localCorners, CenterX, CenterY, RotationAngleDeg);
+        }
+
+        /// <summary>
+        /// 内枠の4頂点（測量座標: 北X, 東Y）を取得
+        /// </summary>
+        public (double surveyX, double surveyY)[] GetInnerCornersSurvey()
+        {
+            var (innerWM, innerHM, offsetEastM, offsetNorthM) = GetInnerFrameDimensionsMeters();
+            double halfW = innerWM / 2.0;
+            double halfH = innerHM / 2.0;
+
+            (double u, double v)[] localCorners = new (double, double)[] {
+                (offsetEastM - halfW, offsetNorthM - halfH),
+                (offsetEastM + halfW, offsetNorthM - halfH),
+                (offsetEastM + halfW, offsetNorthM + halfH),
+                (offsetEastM - halfW, offsetNorthM + halfH)
+            };
+
+            return TransformLocalToSurvey(localCorners, CenterX, CenterY, RotationAngleDeg);
+        }
+
+        /// <summary>
+        /// ローカル座標系(u: 東西, v: 南北)から測量座標系(北X, 東Y)への回転・平行移動
+        /// </summary>
+        private (double surveyX, double surveyY)[] TransformLocalToSurvey((double u, double v)[] locals, double cx, double cy, double angleDeg)
+        {
+            double rad = angleDeg * Math.PI / 180.0;
+            double cos = Math.Cos(rad);
+            double sin = Math.Sin(rad);
+
+            var result = new (double, double)[locals.Length];
+            for (int i = 0; i < locals.Length; i++)
+            {
+                double u = locals[i].u;
+                double v = locals[i].v;
+
+                // u = 東方向(Y軸), v = 北方向(X軸)
+                double rotatedNorth = v * cos - u * sin;
+                double rotatedEast  = v * sin + u * cos;
+
+                result[i] = (cx + rotatedNorth, cy + rotatedEast);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// マップキャンバスに図枠を描画
+        /// </summary>
+        public void DrawFrame(Graphics g, EditorMapViewController vc, Size canvasSize, bool isDarkBackground)
+        {
+            if (!IsVisible) return;
+            if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
+
+            var outerCorners = GetOuterCornersSurvey();
+            var innerCorners = GetInnerCornersSurvey();
+
+            PointF[] outerScreen = new PointF[outerCorners.Length];
+            for (int i = 0; i < outerCorners.Length; i++)
+            {
+                outerScreen[i] = vc.ToCanvasPoint(outerCorners[i].surveyX, outerCorners[i].surveyY, canvasSize);
+            }
+
+            PointF[] innerScreen = new PointF[innerCorners.Length];
+            for (int i = 0; i < innerCorners.Length; i++)
+            {
+                innerScreen[i] = vc.ToCanvasPoint(innerCorners[i].surveyX, innerCorners[i].surveyY, canvasSize);
+            }
+
+            // 外枠ペン（黒または白）
+            Color outerColor = isDarkBackground ? Color.FromArgb(240, 240, 245) : Color.FromArgb(15, 15, 20);
+            Color innerColor = isDarkBackground ? Color.FromArgb(0, 210, 255) : Color.FromArgb(0, 140, 220);
+            Color centerColor = isDarkBackground ? Color.FromArgb(255, 180, 0) : Color.FromArgb(220, 100, 0);
+
+            // 1. 外枠の描画 (太線実線)
+            using (var outerPen = new Pen(outerColor, 2.2f))
+            {
+                g.DrawPolygon(outerPen, outerScreen);
+            }
+
+            // 2. 内枠の描画 (作図範囲: シアン実線)
+            using (var innerPen = new Pen(innerColor, 1.4f))
+            {
+                g.DrawPolygon(innerPen, innerScreen);
+            }
+
+            // 3. 中心マーク（十字線）
+            PointF centerScreen = vc.ToCanvasPoint(CenterX, CenterY, canvasSize);
+            using (var centerPen = new Pen(centerColor, 1.5f))
+            {
+                g.DrawLine(centerPen, centerScreen.X - 8f, centerScreen.Y, centerScreen.X + 8f, centerScreen.Y);
+                g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 8f, centerScreen.X, centerScreen.Y + 8f);
+                g.DrawEllipse(centerPen, centerScreen.X - 4f, centerScreen.Y - 4f, 8f, 8f);
+            }
+
+            // 4. 図枠情報ラベル（外枠の左上外側に表示）
+            PointF infoPos = outerScreen[3]; // 左上
+            string infoText = $"全図枠 [{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} ({RotationAngleDeg:0.0}°)]";
+            using (var infoFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
+            using (var infoBgBrush = new SolidBrush(Color.FromArgb(180, 20, 20, 25)))
+            using (var infoTextBrush = new SolidBrush(outerColor))
+            {
+                var sz = g.MeasureString(infoText, infoFont);
+                g.FillRectangle(infoBgBrush, infoPos.X, infoPos.Y - sz.Height - 4f, sz.Width + 8f, sz.Height + 2f);
+                g.DrawString(infoText, infoFont, infoTextBrush, infoPos.X + 4f, infoPos.Y - sz.Height - 3f);
+            }
+        }
+    }
+}

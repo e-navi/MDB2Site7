@@ -568,6 +568,22 @@ namespace Site7DbEditor {
             this.picMapCanvas.MouseLeave += (s, e) => {
                 if (lblStatusCoords != null) lblStatusCoords.Text = "";
             };
+
+            InitDrawingFrameDefaults();
+        }
+
+        private void InitDrawingFrameDefaults() {
+            var frame = DrawingFrameService.Instance;
+            if (frame.CenterX == 0.0 && frame.CenterY == 0.0) {
+                var allPts = _db.IkouLList.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
+                if (allPts.Count > 0) {
+                    frame.CenterX = allPts.Average(p => p.X);
+                    frame.CenterY = allPts.Average(p => p.Y);
+                } else if (_db.KikaiList.Count > 0) {
+                    frame.CenterX = _db.KikaiList.Average(k => k.X);
+                    frame.CenterY = _db.KikaiList.Average(k => k.Y);
+                }
+            }
         }
 
         private void EnsureUCCtrlValid() {

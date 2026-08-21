@@ -593,6 +593,9 @@ namespace Site7DbEditor.Services
                 }
             }
 
+            // 6. Draw Drawing Frame (全図図枠: 外枠・内枠・中心点)
+            DrawingFrameService.Instance.DrawFrame(g, vc, canvasSize, isDarkBackground);
+
             // 7. Draw Scale Bar (スケールバー)
             if (chkShowScale)
             {
