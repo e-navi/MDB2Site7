@@ -30,7 +30,8 @@ namespace Site7DbEditor.Services
             bool showKikaiName = true,
             bool isDarkBackground = true,
             bool chkShowBgImage = true,
-            bool chkShowBgPointCloud = true)
+            bool chkShowBgPointCloud = true,
+            bool chkShowHyoukou = false)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(isDarkBackground ? Color.FromArgb(16, 16, 20) : Color.FromArgb(248, 249, 250));
@@ -40,7 +41,7 @@ namespace Site7DbEditor.Services
             if (width <= 0 || height <= 0) return;
 
             // 1. Update/Cache bounds ONCE per frame (O(N))
-            vc.UpdateMapBounds(canvasSize, db.IkouLList, db.IbutuList, db.KikaiList, chkShowIkou, chkShowIbutu, chkShowKikai);
+            vc.UpdateMapBounds(canvasSize, db.IkouLList, db.IbutuList, db.KikaiList, chkShowIkou || chkShowHyoukou, chkShowIbutu, chkShowKikai);
 
             PointF ToCanvasPoint(double surveyX, double surveyY)
             {
@@ -100,7 +101,7 @@ namespace Site7DbEditor.Services
             }
 
             // 1. Draw Features (遺構L)
-            if (chkShowIkou)
+            if (chkShowIkou || chkShowHyoukou)
             {
                 var spline = new Xross_Spline();
 
@@ -111,6 +112,52 @@ namespace Site7DbEditor.Services
 
                     var pts = SqliteManager.ParsePrecsText(line.Precs);
                     if (pts.Count == 0) continue;
+
+                    int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                    Color color = chkColorByIkou
+                        ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
+                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, isDarkBackground);
+
+                    bool isSelectedFeature = (activeTabIndex == 0 && line.Id == selectedIkouId);
+
+                    // ★ Mode == 2 (標高点): 線はつながず、遺構ONなら点のみ、標高ONならZ値を描画
+                    if (line.Mode == 2)
+                    {
+                        if (chkShowIkou)
+                        {
+                            using (var ptBrush = new SolidBrush(color))
+                            using (var ptPen = new Pen(isSelectedFeature ? Color.FromArgb(255, 230, 0) : color, isSelectedFeature ? 1.8f : 1.2f))
+                            {
+                                foreach (var p in pts)
+                                {
+                                    PointF sp = ToCanvasPoint(p.X, p.Y);
+                                    g.FillEllipse(ptBrush, sp.X - 2.5f, sp.Y - 2.5f, 5f, 5f);
+                                    g.DrawEllipse(ptPen, sp.X - 4.5f, sp.Y - 4.5f, 9f, 9f);
+                                    g.DrawLine(ptPen, sp.X - 6f, sp.Y, sp.X + 6f, sp.Y);
+                                    g.DrawLine(ptPen, sp.X, sp.Y - 6f, sp.X, sp.Y + 6f);
+                                }
+                            }
+                        }
+
+                        if (chkShowHyoukou)
+                        {
+                            using (var zFont = new Font("Yu Gothic UI", 7.5F, FontStyle.Regular))
+                            using (var zBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(180, 255, 180) : Color.FromArgb(0, 100, 0)))
+                            {
+                                foreach (var p in pts)
+                                {
+                                    PointF sp = ToCanvasPoint(p.X, p.Y);
+                                    string zText = p.Z.ToString("0.000");
+                                    g.DrawString(zText, zFont, zBrush, sp.X + 6f, sp.Y - 7f);
+                                }
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    // ★ Mode != 2 (通常の折線・曲線): chkShowIkou が ON の時のみ描画
+                    if (!chkShowIkou) continue;
 
                     int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
                     var layer = db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
@@ -129,13 +176,6 @@ namespace Site7DbEditor.Services
                     {
                         screenPts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                     }
-
-                    bool isSelectedFeature = (activeTabIndex == 0 && line.Id == selectedIkouId);
-
-                    int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                    Color color = chkColorByIkou
-                        ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
-                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, isDarkBackground);
 
                     if (screenPts.Length > 1)
                     {
