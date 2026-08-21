@@ -177,11 +177,16 @@ namespace Site7DbEditor.Services
             }
 
             // ラバーバンドペン（黄色点線）
-            using (var outerPen = new Pen(Color.FromArgb(255, 230, 0), 2.0f) { DashStyle = DashStyle.Dash })
-            using (var innerPen = new Pen(Color.FromArgb(0, 225, 255), 1.5f) { DashStyle = DashStyle.Dot })
+            using (var outerPen = new Pen(Color.FromArgb(255, 230, 0), 1.6f) { DashStyle = DashStyle.Dash })
+            using (var thickPen = new Pen(Color.FromArgb(255, 230, 0), 3.6f) { DashStyle = DashStyle.Dash })
+            using (var innerPen = new Pen(Color.FromArgb(0, 225, 255), 1.4f) { DashStyle = DashStyle.Dot })
             using (var centerPen = new Pen(Color.FromArgb(255, 100, 100), 1.8f))
             {
                 g.DrawPolygon(outerPen, outerScreen);
+                // 下辺 (0:左下 -> 1:右下) と 右辺 (1:右下 -> 2:右上) を太線で強調
+                g.DrawLine(thickPen, outerScreen[0], outerScreen[1]);
+                g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
+
                 g.DrawPolygon(innerPen, innerScreen);
 
                 // 中心点
@@ -230,10 +235,14 @@ namespace Site7DbEditor.Services
             Color innerColor = isDarkBackground ? Color.FromArgb(0, 210, 255) : Color.FromArgb(0, 140, 220);
             Color centerColor = isDarkBackground ? Color.FromArgb(255, 180, 0) : Color.FromArgb(220, 100, 0);
 
-            // 1. 外枠の描画 (太線実線)
-            using (var outerPen = new Pen(outerColor, 2.2f))
+            // 1. 外枠の描画（全体は通常実線、下辺と右辺は太線で用紙の向きを明示）
+            using (var outerPen = new Pen(outerColor, 1.5f))
+            using (var thickPen = new Pen(outerColor, 3.8f))
             {
                 g.DrawPolygon(outerPen, outerScreen);
+                // 下辺 (0:左下 -> 1:右下) と 右辺 (1:右下 -> 2:右上) を太線で強調
+                g.DrawLine(thickPen, outerScreen[0], outerScreen[1]);
+                g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
             }
 
             // 2. 内枠の描画 (作図範囲: シアン実線)
