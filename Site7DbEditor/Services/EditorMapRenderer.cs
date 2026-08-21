@@ -355,11 +355,11 @@ namespace Site7DbEditor.Services
                         g.DrawString(ikou.Name, ikouMasterFont, ikouMasterBrush, ikouLabelPt.X - ikouTextSize.Width / 2f, ikouLabelPt.Y - ikouTextSize.Height / 2f);
                     }
 
-                    // 2. 遺構線名（IkouLModel.Name）の描画: 選択された遺構線のみ表示
-                    if (selectedIkouId >= 0 && selectedLid >= 0)
+                    // 2. 遺構線名（IkouLModel.Name）の描画: 選択された遺構のすべての遺構線名を表示
+                    if (selectedIkouId >= 0)
                     {
-                        var line = db.IkouLList.FirstOrDefault(l => l.Id == selectedIkouId && l.Lid == selectedLid);
-                        if (line != null)
+                        var childLines = db.IkouLList.Where(l => l.Id == selectedIkouId).ToList();
+                        foreach (var line in childLines)
                         {
                             int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
                             if (isLayerVisible == null || isLayerVisible(layerIdx))
