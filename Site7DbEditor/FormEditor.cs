@@ -2842,12 +2842,15 @@ namespace Site7DbEditor {
                     var frame = DrawingFrameService.Instance;
                     frame.CenterX = Math.Round(newSurveyX, 3);
                     frame.CenterY = Math.Round(newSurveyY, 3);
+                    frame.SaveToIni();
                     _isSettingFrameCenter = false;
                     picMapCanvas.Cursor = Cursors.Default;
+                    picDrawingPreview.Cursor = Cursors.Default;
                     _formDrawingFrame?.SyncFromService();
                     if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 図枠の中心を設定しました (X={frame.CenterX:F3}, Y={frame.CenterY:F3})";
                     _clickNotifyToolTip.Show($"✔ 図枠の中心を設定しました (X={frame.CenterX:F3}, Y={frame.CenterY:F3})", picMapCanvas, e.X + 10, e.Y - 25, 1800);
                     picMapCanvas.Invalidate();
+                    picDrawingPreview.Invalidate();
                     return;
                 } else if (e.Button == MouseButtons.Right) {
                     CancelFrameInteractiveMode();
@@ -2867,12 +2870,15 @@ namespace Site7DbEditor {
                     if (angleDeg > 180.0) angleDeg -= 360.0;
 
                     frame.RotationAngleDeg = Math.Round(angleDeg, 2);
+                    frame.SaveToIni();
                     _isSettingFrameRotation = false;
                     picMapCanvas.Cursor = Cursors.Default;
+                    picDrawingPreview.Cursor = Cursors.Default;
                     _formDrawingFrame?.SyncFromService();
                     if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 図枠の回転角度を設定しました ({frame.RotationAngleDeg:F2}°)";
                     _clickNotifyToolTip.Show($"✔ 図枠の回転角度を設定しました ({frame.RotationAngleDeg:F2}°)", picMapCanvas, e.X + 10, e.Y - 25, 1800);
                     picMapCanvas.Invalidate();
+                    picDrawingPreview.Invalidate();
                     return;
                 } else if (e.Button == MouseButtons.Right) {
                     CancelFrameInteractiveMode();
@@ -2889,12 +2895,15 @@ namespace Site7DbEditor {
                     frame.NorthArrowCustomSurveyX = Math.Round(clickSurveyX, 3);
                     frame.NorthArrowCustomSurveyY = Math.Round(clickSurveyY, 3);
                     frame.HasCustomNorthArrowPos = true;
+                    frame.SaveToIni();
                     _isSettingNorthArrowPos = false;
                     picMapCanvas.Cursor = Cursors.Default;
+                    picDrawingPreview.Cursor = Cursors.Default;
                     _formDrawingFrame?.SyncFromService();
                     if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 方位記号の配置位置を設定しました (X={frame.NorthArrowCustomSurveyX:F3}, Y={frame.NorthArrowCustomSurveyY:F3})";
                     _clickNotifyToolTip.Show($"✔ 方位記号の位置を設定しました", picMapCanvas, e.X + 10, e.Y - 25, 1800);
                     picMapCanvas.Invalidate();
+                    picDrawingPreview.Invalidate();
                     return;
                 } else if (e.Button == MouseButtons.Right) {
                     CancelFrameInteractiveMode();
