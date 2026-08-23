@@ -539,7 +539,13 @@ namespace Site7DbEditor {
             InitButtonThemes();
 
             btnLayerSettings.Click += (s, e) => {
-                using (var form = new FormLayerSettings(_db)) {
+                int tabIdx = tabControlData.SelectedIndex;
+                LayerGroup initialGroup = tabIdx switch {
+                    1 => LayerGroup.Ibutu,
+                    2 => LayerGroup.Kikai,
+                    _ => LayerGroup.Ikou
+                };
+                using (var form = new FormLayerSettings(_db, initialGroup)) {
                     if (form.ShowDialog(this) == DialogResult.OK) {
                         LayerDefinitionService.Instance.LoadAll(_db.CurrentDbPath);
                         PopulateIkouLineLayerCombo();
