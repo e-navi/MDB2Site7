@@ -27,15 +27,19 @@ namespace Site7DbEditor.Services
 
         // 付加要素設定
         public bool ShowNorthArrow { get; set; } = true;    // 方位記号表示
-        public string NorthArrowPosition { get; set; } = "右上"; // 右上, 左上, 右下, 左下
-        public bool ShowScaleBar { get; set; } = true;      // スケールバー表示
-        public string ScaleBarPosition { get; set; } = "右下";   // 右下, 左下, 右上, 左上
+        public double NorthArrowSizeMm { get; set; } = 15.0; // 方位記号サイズ（mm）
+        public string NorthArrowPosition { get; set; } = "右上"; // 右上, 左上, 右下, 左下, カスタム
+        public double NorthArrowCustomSurveyX { get; set; } = 0.0; // カスタム指定時の測量X
+        public double NorthArrowCustomSurveyY { get; set; } = 0.0; // カスタム指定時の測量Y
+        public bool HasCustomNorthArrowPos { get; set; } = false;
 
-        // 余白（用紙上のミリメートル単位）
-        public double MarginLeftMm { get; set; } = 20.0;
-        public double MarginRightMm { get; set; } = 10.0;
-        public double MarginTopMm { get; set; } = 10.0;
-        public double MarginBottomMm { get; set; } = 10.0;
+        public bool ShowScaleBar { get; set; } = true;      // スケールバー表示
+        public string ScaleBarPosition { get; set; } = "中下";   // 中下, 右下
+
+        // 枠余白・間隔（用紙上のミリメートル単位）
+        public double MarginLeftMm { get; set; } = 20.0;       // 外枠余白: 左 (mm)
+        public double MarginOtherMm { get; set; } = 10.0;      // 外枠余白: 左以外 [上・右・下] (mm)
+        public double OuterInnerSpacingMm { get; set; } = 10.0; // 外枠と内枠の間隔 (mm)
 
         /// <summary>
         /// 現在の有効なピッチ（実空間メートル）を取得
@@ -68,7 +72,6 @@ namespace Site7DbEditor.Services
 
             if (!IsLandscape)
             {
-                // 縦向きの場合は入れ替え
                 var temp = w;
                 w = h;
                 h = temp;
@@ -77,9 +80,9 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// 実空間（メートル）での外枠の幅・高さを取得
+        /// 実空間（メートル）での図枠（用紙外周）の幅・高さを取得
         /// </summary>
-        public (double widthM, double heightM) GetFrameDimensionsMeters()
+        public (double widthM, double heightM) GetPaperDimensionsMeters()
         {
             var (wMm, hMm) = GetPaperDimensionsMm();
             double wM = (wMm / 1000.0) * Scale;
@@ -88,38 +91,47 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
+        /// 実空間（メートル）での外枠の幅・高さを取得
+        /// </summary>
+        public (double widthM, double heightM, double offsetEastM, double offsetNorthM) GetOuterFrameDimensionsMeters()
+        {
+            var (wMm, hMm) = GetPaperDimensionsMm();
+            double outerWMm = Math.Max(10.0, wMm - (MarginLeftMm + MarginOtherMm));
+            double outerHMm = Math.Max(10.0, hMm - (MarginOtherMm * 2.0));
+
+            double outerWM = (outerWMm / 1000.0) * Scale;
+            double outerHM = (outerHMm / 1000.0) * Scale;
+
+            // マージン非対称による中心からのズレ（ローカル座標）
+            double offsetEastMm = (MarginLeftMm - MarginOtherMm) / 2.0;
+            double offsetNorthMm = 0.0;
+
+            double offsetEastM = (offsetEastMm / 1000.0) * Scale;
+            double offsetNorthM = (offsetNorthMm / 1000.0) * Scale;
+
+            return (outerWM, outerHM, offsetEastM, offsetNorthM);
+        }
+
+        /// <summary>
         /// 実空間（メートル）での内枠の幅・高さを取得
         /// </summary>
         public (double widthM, double heightM, double offsetEastM, double offsetNorthM) GetInnerFrameDimensionsMeters()
         {
-            var (wMm, hMm) = GetPaperDimensionsMm();
-            double innerWMm = Math.Max(10.0, wMm - (MarginLeftMm + MarginRightMm));
-            double innerHMm = Math.Max(10.0, hMm - (MarginTopMm + MarginBottomMm));
+            var (outerWM, outerHM, offsetEastM, offsetNorthM) = GetOuterFrameDimensionsMeters();
+            double spacingM = (OuterInnerSpacingMm / 1000.0) * Scale;
 
-            double innerWM = (innerWMm / 1000.0) * Scale;
-            double innerHM = (innerHMm / 1000.0) * Scale;
-
-            // マージン非対称による中心からのズレ（ローカル座標）
-            double offsetEastMm = (MarginLeftMm - MarginRightMm) / 2.0;
-            double offsetNorthMm = (MarginBottomMm - MarginTopMm) / 2.0;
-
-            double offsetEastM = (offsetEastMm / 1000.0) * Scale;
-            double offsetNorthM = (offsetNorthMm / 1000.0) * Scale;
+            double innerWM = Math.Max(1.0, outerWM - spacingM * 2.0);
+            double innerHM = Math.Max(1.0, outerHM - spacingM * 2.0);
 
             return (innerWM, innerHM, offsetEastM, offsetNorthM);
         }
 
         /// <summary>
-        /// 外枠の4頂点（測量座標: 北X, 東Y）を取得（左下、右下、右上、左上）
+        /// 図枠（用紙外形）の4頂点（測量座標: 北X, 東Y）を取得
         /// </summary>
-        public (double surveyX, double surveyY)[] GetOuterCornersSurvey()
+        public (double surveyX, double surveyY)[] GetPaperCornersSurvey(double cx, double cy, double angleDeg)
         {
-            return GetOuterCornersSurvey(CenterX, CenterY, RotationAngleDeg);
-        }
-
-        public (double surveyX, double surveyY)[] GetOuterCornersSurvey(double cx, double cy, double angleDeg)
-        {
-            var (wM, hM) = GetFrameDimensionsMeters();
+            var (wM, hM) = GetPaperDimensionsMeters();
             double halfW = wM / 2.0;
             double halfH = hM / 2.0;
 
@@ -133,9 +145,27 @@ namespace Site7DbEditor.Services
             return TransformLocalToSurvey(localCorners, cx, cy, angleDeg);
         }
 
-        /// <summary>
-        /// 内枠の4頂点（測量座標: 北X, 東Y）を取得
-        /// </summary>
+        public (double surveyX, double surveyY)[] GetOuterCornersSurvey()
+        {
+            return GetOuterCornersSurvey(CenterX, CenterY, RotationAngleDeg);
+        }
+
+        public (double surveyX, double surveyY)[] GetOuterCornersSurvey(double cx, double cy, double angleDeg)
+        {
+            var (outerWM, outerHM, offsetEastM, offsetNorthM) = GetOuterFrameDimensionsMeters();
+            double halfW = outerWM / 2.0;
+            double halfH = outerHM / 2.0;
+
+            (double u, double v)[] localCorners = new (double, double)[] {
+                (offsetEastM - halfW, offsetNorthM - halfH),
+                (offsetEastM + halfW, offsetNorthM - halfH),
+                (offsetEastM + halfW, offsetNorthM + halfH),
+                (offsetEastM - halfW, offsetNorthM + halfH)
+            };
+
+            return TransformLocalToSurvey(localCorners, cx, cy, angleDeg);
+        }
+
         public (double surveyX, double surveyY)[] GetInnerCornersSurvey()
         {
             return GetInnerCornersSurvey(CenterX, CenterY, RotationAngleDeg);
@@ -188,32 +218,29 @@ namespace Site7DbEditor.Services
         {
             if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
 
+            var paperCorners = GetPaperCornersSurvey(cx, cy, angleDeg);
             var outerCorners = GetOuterCornersSurvey(cx, cy, angleDeg);
             var innerCorners = GetInnerCornersSurvey(cx, cy, angleDeg);
 
-            PointF[] outerScreen = new PointF[outerCorners.Length];
-            for (int i = 0; i < outerCorners.Length; i++)
-            {
-                outerScreen[i] = vc.ToCanvasPoint(outerCorners[i].surveyX, outerCorners[i].surveyY, canvasSize);
-            }
+            PointF[] paperScreen = ToScreenPoints(vc, paperCorners, canvasSize);
+            PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
+            PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
 
-            PointF[] innerScreen = new PointF[innerCorners.Length];
-            for (int i = 0; i < innerCorners.Length; i++)
-            {
-                innerScreen[i] = vc.ToCanvasPoint(innerCorners[i].surveyX, innerCorners[i].surveyY, canvasSize);
-            }
-
-            // ラバーバンドペン（黄色点線）
+            using (var paperPen = new Pen(Color.FromArgb(180, 200, 200, 200), 1.2f) { DashStyle = DashStyle.Dot })
             using (var outerPen = new Pen(Color.FromArgb(255, 230, 0), 1.6f) { DashStyle = DashStyle.Dash })
             using (var thickPen = new Pen(Color.FromArgb(255, 230, 0), 3.6f) { DashStyle = DashStyle.Dash })
             using (var innerPen = new Pen(Color.FromArgb(0, 225, 255), 1.4f) { DashStyle = DashStyle.Dot })
             using (var centerPen = new Pen(Color.FromArgb(255, 100, 100), 1.8f))
             {
-                g.DrawPolygon(outerPen, outerScreen);
-                // 下辺 (0:左下 -> 1:右下) と 右辺 (1:右下 -> 2:右上) を太線で強調
-                g.DrawLine(thickPen, outerScreen[0], outerScreen[1]);
-                g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
+                // 1. 図枠（用紙外周）
+                g.DrawPolygon(paperPen, paperScreen);
 
+                // 2. 外枠
+                g.DrawPolygon(outerPen, outerScreen);
+                g.DrawLine(thickPen, outerScreen[0], outerScreen[1]); // 下辺
+                g.DrawLine(thickPen, outerScreen[1], outerScreen[2]); // 右辺
+
+                // 3. 内枠
                 g.DrawPolygon(innerPen, innerScreen);
 
                 // 中心点
@@ -222,7 +249,6 @@ namespace Site7DbEditor.Services
                 g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 10f, centerScreen.X, centerScreen.Y + 10f);
                 g.DrawEllipse(centerPen, centerScreen.X - 5f, centerScreen.Y - 5f, 10f, 10f);
 
-                // 回転モードの場合、中心からマウス位置へのラバーバンド線
                 if (isRotating)
                 {
                     using (var rayPen = new Pen(Color.FromArgb(255, 80, 80), 2f) { DashStyle = DashStyle.Dash })
@@ -242,29 +268,29 @@ namespace Site7DbEditor.Services
             if (!IsVisible) return;
             if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
 
+            var paperCorners = GetPaperCornersSurvey(CenterX, CenterY, RotationAngleDeg);
             var outerCorners = GetOuterCornersSurvey();
             var innerCorners = GetInnerCornersSurvey();
 
-            PointF[] outerScreen = new PointF[outerCorners.Length];
-            for (int i = 0; i < outerCorners.Length; i++)
-            {
-                outerScreen[i] = vc.ToCanvasPoint(outerCorners[i].surveyX, outerCorners[i].surveyY, canvasSize);
-            }
-
-            PointF[] innerScreen = new PointF[innerCorners.Length];
-            for (int i = 0; i < innerCorners.Length; i++)
-            {
-                innerScreen[i] = vc.ToCanvasPoint(innerCorners[i].surveyX, innerCorners[i].surveyY, canvasSize);
-            }
+            PointF[] paperScreen = ToScreenPoints(vc, paperCorners, canvasSize);
+            PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
+            PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
 
             // 配色ペン・ブラシ
+            Color paperColor = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.FromArgb(160, 160, 170);
             Color outerColor = isDarkBackground ? Color.FromArgb(240, 240, 245) : Color.FromArgb(20, 20, 25);
             Color innerColor = isDarkBackground ? Color.FromArgb(0, 210, 255) : Color.FromArgb(0, 130, 210);
             Color centerColor = isDarkBackground ? Color.FromArgb(255, 180, 0) : Color.FromArgb(220, 100, 0);
             Color tomboColor = isDarkBackground ? Color.FromArgb(200, 255, 100, 100) : Color.FromArgb(220, 180, 20, 20);
             Color coordColor = isDarkBackground ? Color.FromArgb(220, 220, 230) : Color.FromArgb(40, 40, 50);
 
-            // 1. 外枠の描画（全体は通常実線、下辺と右辺は太線で用紙の向きを明示）
+            // 1. 図枠（用紙外形）の描画（細線）
+            using (var paperPen = new Pen(paperColor, 1.0f) { DashStyle = DashStyle.Dash })
+            {
+                g.DrawPolygon(paperPen, paperScreen);
+            }
+
+            // 2. 外枠の描画（通常実線、下辺と右辺は太線で用紙の向きを明示）
             using (var outerPen = new Pen(outerColor, 1.5f))
             using (var thickPen = new Pen(outerColor, 3.8f))
             {
@@ -274,16 +300,16 @@ namespace Site7DbEditor.Services
                 g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
             }
 
-            // 2. 内枠の描画 (作図範囲: シアン実線)
+            // 3. 内枠の描画 (作図範囲: シアン実線)
             using (var innerPen = new Pen(innerColor, 1.4f))
             {
                 g.DrawPolygon(innerPen, innerScreen);
             }
 
-            // 3. トンボ (+) & 格子線 & 外枠・内枠間座標値の描画
+            // 4. トンボ (+) & 格子線 & 外枠・内枠間座標値の描画
             DrawTomboAndCoordinates(g, vc, canvasSize, innerCorners, isDarkBackground, tomboColor, coordColor);
 
-            // 4. 中心マーク（十字線）
+            // 5. 中心マーク（十字線）
             PointF centerScreen = vc.ToCanvasPoint(CenterX, CenterY, canvasSize);
             using (var centerPen = new Pen(centerColor, 1.5f))
             {
@@ -292,20 +318,20 @@ namespace Site7DbEditor.Services
                 g.DrawEllipse(centerPen, centerScreen.X - 4f, centerScreen.Y - 4f, 8f, 8f);
             }
 
-            // 5. 方位記号 (North Arrow) の描画
+            // 6. 方位記号 (North Arrow) の描画
             if (ShowNorthArrow)
             {
-                DrawNorthArrow(g, innerScreen, isDarkBackground);
+                DrawNorthArrow(g, vc, canvasSize, innerScreen, isDarkBackground);
             }
 
-            // 6. スケールバー (Scale Bar) の描画
+            // 7. スケールバー (Scale Bar) の描画
             if (ShowScaleBar)
             {
                 DrawScaleBar(g, innerScreen, isDarkBackground);
             }
 
-            // 7. 図枠情報ラベル（外枠の左上外側に表示）
-            PointF infoPos = outerScreen[3]; // 左上
+            // 8. 図枠情報ラベル（図枠の左上外側に表示）
+            PointF infoPos = paperScreen[3]; // 左上
             double effectivePitch = GetEffectivePitchMeters();
             string infoText = $"全図枠 [{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} ({RotationAngleDeg:0.0}°)] ピッチ:{effectivePitch:0.#}m";
             using (var infoFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
@@ -316,6 +342,16 @@ namespace Site7DbEditor.Services
                 g.FillRectangle(infoBgBrush, infoPos.X, infoPos.Y - sz.Height - 4f, sz.Width + 8f, sz.Height + 2f);
                 g.DrawString(infoText, infoFont, infoTextBrush, infoPos.X + 4f, infoPos.Y - sz.Height - 3f);
             }
+        }
+
+        private PointF[] ToScreenPoints(EditorMapViewController vc, (double surveyX, double surveyY)[] pts, Size canvasSize)
+        {
+            var result = new PointF[pts.Length];
+            for (int i = 0; i < pts.Length; i++)
+            {
+                result[i] = vc.ToCanvasPoint(pts[i].surveyX, pts[i].surveyY, canvasSize);
+            }
+            return result;
         }
 
         /// <summary>
@@ -381,9 +417,6 @@ namespace Site7DbEditor.Services
                             if (ShowTombo)
                             {
                                 float arm = 5.5f;
-                                // 測量X方向（北軸）と 測量Y方向（東軸）に沿った十字アーム
-                                float armNorthDx = (float)(cosRot * -arm * 0 + -sinRot * 0); // 画面上での北方向
-                                // キャンバス座標系ではYが下向きなので vc.ToCanvasPointの向きを反映
                                 PointF ptN = vc.ToCanvasPoint(sx + (pitch * 0.05), sy, canvasSize);
                                 PointF ptE = vc.ToCanvasPoint(sx, sy + (pitch * 0.05), canvasSize);
 
@@ -407,13 +440,11 @@ namespace Site7DbEditor.Services
                 // B. 外枠・内枠間の座標値表示 (X=000.000m, Y=000.000m)
                 if (ShowBorderCoords)
                 {
-                    // 測量X（北）定数線と内枠境界の交差点に "X=..." を描画
                     for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
                     {
                         DrawSingleCoordinateLabel(g, vc, canvasSize, sx, true, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush);
                     }
 
-                    // 測量Y（東）定数線と内枠境界の交差点に "Y=..." を描画
                     for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
                     {
                         DrawSingleCoordinateLabel(g, vc, canvasSize, sy, false, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush);
@@ -423,7 +454,7 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// 1本のグリッド線（X=定数 または Y=定数）が内枠と交差する外枠余白部に座標ラベルを描画
+        /// 1本のグリッド線（X=定数 または Y=定数）が内枠と交差する外枠と内枠の間に座標ラベルを描画
         /// </summary>
         private void DrawSingleCoordinateLabel(Graphics g, EditorMapViewController vc, Size canvasSize, double val, bool isXAxis, double uMin, double uMax, double vMin, double vMax, Font font, Brush textBrush, Brush bgBrush)
         {
@@ -431,90 +462,60 @@ namespace Site7DbEditor.Services
             double cos = Math.Cos(rad);
             double sin = Math.Sin(rad);
 
-            string labelText = isXAxis ? $"X={val:0.000}m" : $"Y={val:0.000}m";
+            string labelText = isXAxis ? $"X={val:0.00}m" : $"Y={val:0.00}m";
 
-            // 測量線 val と内枠4辺の交差を調べる
-            // isXAxis: 測量X = val (北=val), 測量Yを変化させる -> (dNorth = val - CenterX, dEast = t)
-            //   u = dNorth * (-sin) + dEast * cos
-            //   v = dNorth * cos + dEast * sin
-            // 交差判定: u = uMin/uMax または v = vMin/vMax
-
-            var intersections = new System.Collections.Generic.List<(double surX, double surY, double outOffsetU, double outOffsetV)>();
+            var intersections = new System.Collections.Generic.List<(double surX, double surY)>();
 
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 1) v = vMin (下辺) -> dEast = (vMin - dNorth * cos) / sin (sin != 0)
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast = (vMin - dNorth * cos) / sin;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMin - 0.01 && u <= uMax + 0.01)
-                        intersections.Add((val, CenterY + dEast, 0, -1.2));
+                    double dEast1 = (vMin - dNorth * cos) / sin;
+                    double u1 = dNorth * (-sin) + dEast1 * cos;
+                    if (u1 >= uMin - 0.01 && u1 <= uMax + 0.01) intersections.Add((val, CenterY + dEast1));
+
+                    double dEast2 = (vMax - dNorth * cos) / sin;
+                    double u2 = dNorth * (-sin) + dEast2 * cos;
+                    if (u2 >= uMin - 0.01 && u2 <= uMax + 0.01) intersections.Add((val, CenterY + dEast2));
                 }
-                // 2) v = vMax (上辺)
-                if (Math.Abs(sin) > 1e-6)
-                {
-                    double dEast = (vMax - dNorth * cos) / sin;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMin - 0.01 && u <= uMax + 0.01)
-                        intersections.Add((val, CenterY + dEast, 0, 1.2));
-                }
-                // 3) u = uMin (左辺) -> dEast = (uMin + dNorth * sin) / cos
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast = (uMin + dNorth * sin) / cos;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMin - 0.01 && v <= vMax + 0.01)
-                        intersections.Add((val, CenterY + dEast, -1.2, 0));
-                }
-                // 4) u = uMax (右辺)
-                if (Math.Abs(cos) > 1e-6)
-                {
-                    double dEast = (uMax + dNorth * sin) / cos;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMin - 0.01 && v <= vMax + 0.01)
-                        intersections.Add((val, CenterY + dEast, 1.2, 0));
+                    double dEast3 = (uMin + dNorth * sin) / cos;
+                    double v3 = dNorth * cos + dEast3 * sin;
+                    if (v3 >= vMin - 0.01 && v3 <= vMax + 0.01) intersections.Add((val, CenterY + dEast3));
+
+                    double dEast4 = (uMax + dNorth * sin) / cos;
+                    double v4 = dNorth * cos + dEast4 * sin;
+                    if (v4 >= vMin - 0.01 && v4 <= vMax + 0.01) intersections.Add((val, CenterY + dEast4));
                 }
             }
             else
             {
                 double dEast = val - CenterY;
-                // 1) u = uMin (左辺) -> dNorth = (dEast * cos - uMin) / sin
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dNorth = (dEast * cos - uMin) / sin;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMin - 0.01 && v <= vMax + 0.01)
-                        intersections.Add((CenterX + dNorth, val, -1.2, 0));
+                    double dNorth1 = (dEast * cos - uMin) / sin;
+                    double v1 = dNorth1 * cos + dEast * sin;
+                    if (v1 >= vMin - 0.01 && v1 <= vMax + 0.01) intersections.Add((CenterX + dNorth1, val));
+
+                    double dNorth2 = (dEast * cos - uMax) / sin;
+                    double v2 = dNorth2 * cos + dEast * sin;
+                    if (v2 >= vMin - 0.01 && v2 <= vMax + 0.01) intersections.Add((CenterX + dNorth2, val));
                 }
-                // 2) u = uMax (右辺)
-                if (Math.Abs(sin) > 1e-6)
-                {
-                    double dNorth = (dEast * cos - uMax) / sin;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMin - 0.01 && v <= vMax + 0.01)
-                        intersections.Add((CenterX + dNorth, val, 1.2, 0));
-                }
-                // 3) v = vMin (下辺) -> dNorth = (vMin - dEast * sin) / cos
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth = (vMin - dEast * sin) / cos;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMin - 0.01 && u <= uMax + 0.01)
-                        intersections.Add((CenterX + dNorth, val, 0, -1.2));
-                }
-                // 4) v = vMax (上辺)
-                if (Math.Abs(cos) > 1e-6)
-                {
-                    double dNorth = (vMax - dEast * sin) / cos;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMin - 0.01 && u <= uMax + 0.01)
-                        intersections.Add((CenterX + dNorth, val, 0, 1.2));
+                    double dNorth3 = (vMin - dEast * sin) / cos;
+                    double u3 = dNorth3 * (-sin) + dEast * cos;
+                    if (u3 >= uMin - 0.01 && u3 <= uMax + 0.01) intersections.Add((CenterX + dNorth3, val));
+
+                    double dNorth4 = (vMax - dEast * sin) / cos;
+                    double u4 = dNorth4 * (-sin) + dEast * cos;
+                    if (u4 >= uMin - 0.01 && u4 <= uMax + 0.01) intersections.Add((CenterX + dNorth4, val));
                 }
             }
 
-            foreach (var (surX, surY, offU, offV) in intersections)
+            foreach (var (surX, surY) in intersections)
             {
                 PointF pt = vc.ToCanvasPoint(surX, surY, canvasSize);
                 var sz = g.MeasureString(labelText, font);
@@ -529,22 +530,36 @@ namespace Site7DbEditor.Services
         /// <summary>
         /// 方位記号（北矢印マーク）の描画
         /// </summary>
-        private void DrawNorthArrow(Graphics g, PointF[] innerScreen, bool isDarkBackground)
+        private void DrawNorthArrow(Graphics g, EditorMapViewController vc, Size canvasSize, PointF[] innerScreen, bool isDarkBackground)
         {
-            PointF anchor = GetCornerPoint(innerScreen, NorthArrowPosition, 28f);
+            PointF anchor;
+            if (NorthArrowPosition == "カスタム" && HasCustomNorthArrowPos)
+            {
+                anchor = vc.ToCanvasPoint(NorthArrowCustomSurveyX, NorthArrowCustomSurveyY, canvasSize);
+            }
+            else
+            {
+                anchor = GetCornerPoint(innerScreen, NorthArrowPosition, 28f);
+            }
+
+            // 画面上の長さ (用紙mm -> 画面ピクセル換算)
+            float innerPixelWidth = (float)Math.Sqrt(Math.Pow(innerScreen[1].X - innerScreen[0].X, 2) + Math.Pow(innerScreen[1].Y - innerScreen[0].Y, 2));
+            var (innerWMm, _) = GetPaperDimensionsMm();
+            innerWMm = Math.Max(10.0, innerWMm - (MarginLeftMm + MarginOtherMm + OuterInnerSpacingMm * 2.0));
+            float pixelPerMm = innerPixelWidth / (float)innerWMm;
+
+            float length = (float)Math.Max(16.0, NorthArrowSizeMm * pixelPerMm * 1.5);
+            float width = length * 0.28f;
 
             // 北方向の角度（画面上ではRotationAngleDegに応じて回転）
             float needleRad = (float)(-RotationAngleDeg * Math.PI / 180.0);
-            float length = 24f;
-            float width = 7f;
-
             float cos = (float)Math.Cos(needleRad);
             float sin = (float)Math.Sin(needleRad);
 
             // 北の先端
             PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
             // 尾部中心
-            PointF tail = new PointF(anchor.X + sin * (length * 0.4f), anchor.Y + cos * (length * 0.4f));
+            PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
             // 左右の翼
             PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
             PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
@@ -554,14 +569,10 @@ namespace Site7DbEditor.Services
             using (var outlinePen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.2f))
             using (var font = new Font("Arial", 8.5F, FontStyle.Bold))
             {
-                // 左半分（黒/塗りつぶし）
                 g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
-                // 右半分（白/薄色）
                 g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
-                // 輪郭
                 g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
 
-                // "N" 文字の描画
                 string nStr = "N";
                 var nSz = g.MeasureString(nStr, font);
                 PointF nPos = new PointF(tip.X - sin * 10f - (nSz.Width / 2f), tip.Y - cos * 10f - (nSz.Height / 2f));
@@ -574,21 +585,25 @@ namespace Site7DbEditor.Services
         /// </summary>
         private void DrawScaleBar(Graphics g, PointF[] innerScreen, bool isDarkBackground)
         {
-            PointF anchor = GetCornerPoint(innerScreen, ScaleBarPosition, 20f);
+            PointF anchor;
+            if (ScaleBarPosition == "中下")
+            {
+                // 内枠下辺の中央
+                anchor = new PointF((innerScreen[0].X + innerScreen[1].X) / 2f, (innerScreen[0].Y + innerScreen[1].Y) / 2f - 20f);
+            }
+            else
+            {
+                // 右下
+                anchor = GetCornerPoint(innerScreen, "右下", 20f);
+            }
 
-            // 縮尺に応じた適切な実距離バー長さ (例: 1/200 -> 10m/20m, 1/500 -> 20m/50m, 1/100 -> 5m/10m)
             double barMeters = (Scale >= 500) ? 50.0 : (Scale >= 200) ? 20.0 : 10.0;
             double halfBarMeters = barMeters / 2.0;
-
-            // 用紙上のミリメートル -> 実空間 -> キャンバス上のピクセル長さを算出
-            // Scale 1/200 で 20m = 用紙上 100mm
             double barMm = (barMeters / Scale) * 1000.0;
 
-            // キャンバス上での長さを内枠の角の画面ピクセル比率から算出
-            // innerScreen[0] -> innerScreen[1] (内枠下辺の幅)
             float innerPixelWidth = (float)Math.Sqrt(Math.Pow(innerScreen[1].X - innerScreen[0].X, 2) + Math.Pow(innerScreen[1].Y - innerScreen[0].Y, 2));
             var (innerWMm, _) = GetPaperDimensionsMm();
-            innerWMm = Math.Max(10.0, innerWMm - (MarginLeftMm + MarginRightMm));
+            innerWMm = Math.Max(10.0, innerWMm - (MarginLeftMm + MarginOtherMm + OuterInnerSpacingMm * 2.0));
 
             float barPixelWidth = (float)(innerPixelWidth * (barMm / innerWMm));
             if (barPixelWidth < 30f || barPixelWidth > 400f) barPixelWidth = 100f;
@@ -605,14 +620,12 @@ namespace Site7DbEditor.Services
             using (var pen = new Pen(primaryColor, 1.2f))
             using (var font = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold))
             {
-                // 左半分・右半分のブロック
                 float midX = leftX + (barPixelWidth / 2f);
                 g.FillRectangle(primaryBrush, leftX, topY, barPixelWidth / 2f, barHeight);
                 g.FillRectangle(secondaryBrush, midX, topY, barPixelWidth / 2f, barHeight);
                 g.DrawRectangle(pen, leftX, topY, barPixelWidth, barHeight);
                 g.DrawLine(pen, midX, topY, midX, topY + barHeight);
 
-                // 目盛ラベル: "0", "halfM", "barMeters m"
                 string l0 = "0";
                 string lMid = $"{halfBarMeters:0}";
                 string lEnd = $"{barMeters:0}m (1/{Scale:0})";
@@ -641,4 +654,3 @@ namespace Site7DbEditor.Services
         }
     }
 }
-

@@ -53,6 +53,7 @@ namespace Site7DbEditor {
         private FormDrawingFrame? _formDrawingFrame = null;
         private bool _isSettingFrameCenter = false;
         private bool _isSettingFrameRotation = false;
+        private bool _isSettingNorthArrowPos = false;
         private double _previewFrameCenterX = 0.0;
         private double _previewFrameCenterY = 0.0;
         private double _previewFrameRotation = 0.0;
@@ -537,6 +538,7 @@ namespace Site7DbEditor {
                     _formDrawingFrame.FrameChanged += (sender, ev) => picMapCanvas.Invalidate();
                     _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
                     _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
+                    _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
                 }
                 _formDrawingFrame.SyncFromService();
                 if (!_formDrawingFrame.Visible) {
@@ -610,6 +612,7 @@ namespace Site7DbEditor {
         private void StartMoveFrameCenterMode() {
             _isSettingFrameCenter = true;
             _isSettingFrameRotation = false;
+            _isSettingNorthArrowPos = false;
             _isSettingLabelPos = false;
             _previewFrameCenterX = DrawingFrameService.Instance.CenterX;
             _previewFrameCenterY = DrawingFrameService.Instance.CenterY;
@@ -622,6 +625,7 @@ namespace Site7DbEditor {
         private void StartSetFrameRotationMode() {
             _isSettingFrameRotation = true;
             _isSettingFrameCenter = false;
+            _isSettingNorthArrowPos = false;
             _isSettingLabelPos = false;
             _previewFrameCenterX = DrawingFrameService.Instance.CenterX;
             _previewFrameCenterY = DrawingFrameService.Instance.CenterY;
@@ -631,10 +635,21 @@ namespace Site7DbEditor {
             picMapCanvas.Invalidate();
         }
 
+        private void StartPickNorthPosMode() {
+            _isSettingNorthArrowPos = true;
+            _isSettingFrameCenter = false;
+            _isSettingFrameRotation = false;
+            _isSettingLabelPos = false;
+            picMapCanvas.Cursor = Cursors.Cross;
+            if (lblStatusCoords != null) lblStatusCoords.Text = "【方位記号 位置指示モード】地図上をクリックして配置位置を指定（右クリック/Escでキャンセル）";
+            picMapCanvas.Invalidate();
+        }
+
         private void CancelFrameInteractiveMode() {
-            if (_isSettingFrameCenter || _isSettingFrameRotation) {
+            if (_isSettingFrameCenter || _isSettingFrameRotation || _isSettingNorthArrowPos) {
                 _isSettingFrameCenter = false;
                 _isSettingFrameRotation = false;
+                _isSettingNorthArrowPos = false;
                 picMapCanvas.Cursor = Cursors.Default;
                 if (lblStatusCoords != null) lblStatusCoords.Text = "";
                 picMapCanvas.Invalidate();
@@ -2716,6 +2731,28 @@ namespace Site7DbEditor {
                 } else if (e.Button == MouseButtons.Right) {
                     CancelFrameInteractiveMode();
                     _clickNotifyToolTip.Show("⏹ 図枠回転指定をキャンセルしました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
+                    return;
+                }
+            }
+
+            if (_isSettingNorthArrowPos) {
+                if (e.Button == MouseButtons.Left) {
+                    var (clickSurveyX, clickSurveyY) = _vc.CanvasToSurvey(e.Location, picMapCanvas.Size);
+                    var frame = DrawingFrameService.Instance;
+                    frame.NorthArrowPosition = "カスタム";
+                    frame.NorthArrowCustomSurveyX = Math.Round(clickSurveyX, 3);
+                    frame.NorthArrowCustomSurveyY = Math.Round(clickSurveyY, 3);
+                    frame.HasCustomNorthArrowPos = true;
+                    _isSettingNorthArrowPos = false;
+                    picMapCanvas.Cursor = Cursors.Default;
+                    _formDrawingFrame?.SyncFromService();
+                    if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 方位記号の配置位置を設定しました (X={frame.NorthArrowCustomSurveyX:F3}, Y={frame.NorthArrowCustomSurveyY:F3})";
+                    _clickNotifyToolTip.Show($"✔ 方位記号の位置を設定しました", picMapCanvas, e.X + 10, e.Y - 25, 1800);
+                    picMapCanvas.Invalidate();
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelFrameInteractiveMode();
+                    _clickNotifyToolTip.Show("⏹ 方位記号位置指定をキャンセルしました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
                     return;
                 }
             }

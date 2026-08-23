@@ -14,6 +14,7 @@ namespace Site7DbEditor
         public event EventHandler? FrameChanged;
         public event EventHandler? MoveCenterRequested;
         public event EventHandler? SetRotationRequested;
+        public event EventHandler? PickNorthPosRequested;
 
         public FormDrawingFrame(EditorDbManager? db = null)
         {
@@ -28,7 +29,6 @@ namespace Site7DbEditor
         {
             this.BackColor = Color.FromArgb(28, 30, 38);
             
-            // TabControlの背景
             foreach (TabPage tab in tabSettings.TabPages)
             {
                 tab.BackColor = Color.FromArgb(30, 32, 42);
@@ -76,7 +76,6 @@ namespace Site7DbEditor
         {
             this.Load += FormDrawingFrame_Load;
             this.FormClosing += (s, e) => {
-                // 閉じるボタンが押されたら閉じる代わりに非表示（Hide）
                 if (e.CloseReason == CloseReason.UserClosing)
                 {
                     e.Cancel = true;
@@ -126,14 +125,20 @@ namespace Site7DbEditor
             };
             this.numPitchMeters.ValueChanged += (s, e) => OnValueChanged();
 
-            // 余白・付加
-            this.numMarginL.ValueChanged += (s, e) => OnValueChanged();
-            this.numMarginR.ValueChanged += (s, e) => OnValueChanged();
-            this.numMarginT.ValueChanged += (s, e) => OnValueChanged();
-            this.numMarginB.ValueChanged += (s, e) => OnValueChanged();
+            // 余白・間隔
+            this.numMarginLeft.ValueChanged += (s, e) => OnValueChanged();
+            this.numMarginOther.ValueChanged += (s, e) => OnValueChanged();
+            this.numSpacing.ValueChanged += (s, e) => OnValueChanged();
 
+            // 方位記号
             this.chkShowNorthArrow.CheckedChanged += (s, e) => OnValueChanged();
+            this.numNorthSize.ValueChanged += (s, e) => OnValueChanged();
             this.cmbNorthPos.SelectedIndexChanged += (s, e) => OnValueChanged();
+            this.btnPickNorthPos.Click += (s, e) => {
+                PickNorthPosRequested?.Invoke(this, EventArgs.Empty);
+            };
+
+            // スケールバー
             this.chkShowScaleBar.CheckedChanged += (s, e) => OnValueChanged();
             this.cmbScaleBarPos.SelectedIndexChanged += (s, e) => OnValueChanged();
         }
@@ -154,7 +159,6 @@ namespace Site7DbEditor
                 var frame = DrawingFrameService.Instance;
                 chkVisible.Checked = frame.IsVisible;
 
-                // 用紙 & 向き
                 int idx = cmbPaperSize.FindStringExact(frame.PaperSizeName);
                 cmbPaperSize.SelectedIndex = idx >= 0 ? idx : 1; // Default A3
 
@@ -185,20 +189,20 @@ namespace Site7DbEditor
                 numPitchMeters.Value = (decimal)Math.Max(0.1, frame.PitchMeters);
                 UpdateEffectivePitchLabel();
 
-                // 余白
-                numMarginL.Value = (decimal)frame.MarginLeftMm;
-                numMarginR.Value = (decimal)frame.MarginRightMm;
-                numMarginT.Value = (decimal)frame.MarginTopMm;
-                numMarginB.Value = (decimal)frame.MarginBottomMm;
+                // 余白・間隔
+                numMarginLeft.Value = (decimal)frame.MarginLeftMm;
+                numMarginOther.Value = (decimal)frame.MarginOtherMm;
+                numSpacing.Value = (decimal)frame.OuterInnerSpacingMm;
 
                 // 方位記号 & スケールバー
                 chkShowNorthArrow.Checked = frame.ShowNorthArrow;
+                numNorthSize.Value = (decimal)Math.Max(5.0, frame.NorthArrowSizeMm);
                 int nIdx = cmbNorthPos.FindStringExact(frame.NorthArrowPosition);
                 cmbNorthPos.SelectedIndex = nIdx >= 0 ? nIdx : 0; // Default "右上"
 
                 chkShowScaleBar.Checked = frame.ShowScaleBar;
                 int sIdx = cmbScaleBarPos.FindStringExact(frame.ScaleBarPosition);
-                cmbScaleBarPos.SelectedIndex = sIdx >= 0 ? sIdx : 0; // Default "右下"
+                cmbScaleBarPos.SelectedIndex = sIdx >= 0 ? sIdx : 0; // Default "中下"
             }
             finally
             {
@@ -238,17 +242,18 @@ namespace Site7DbEditor
             frame.IsPitchAuto = rdoPitchAuto.Checked;
             frame.PitchMeters = (double)numPitchMeters.Value;
 
-            // 余白
-            frame.MarginLeftMm = (double)numMarginL.Value;
-            frame.MarginRightMm = (double)numMarginR.Value;
-            frame.MarginTopMm = (double)numMarginT.Value;
-            frame.MarginBottomMm = (double)numMarginB.Value;
+            // 余白・間隔
+            frame.MarginLeftMm = (double)numMarginLeft.Value;
+            frame.MarginOtherMm = (double)numMarginOther.Value;
+            frame.OuterInnerSpacingMm = (double)numSpacing.Value;
 
             // 付加
             frame.ShowNorthArrow = chkShowNorthArrow.Checked;
+            frame.NorthArrowSizeMm = (double)numNorthSize.Value;
             frame.NorthArrowPosition = cmbNorthPos.SelectedItem?.ToString() ?? "右上";
+
             frame.ShowScaleBar = chkShowScaleBar.Checked;
-            frame.ScaleBarPosition = cmbScaleBarPos.SelectedItem?.ToString() ?? "右下";
+            frame.ScaleBarPosition = cmbScaleBarPos.SelectedItem?.ToString() ?? "中下";
 
             UpdateEffectivePitchLabel();
 
@@ -298,16 +303,14 @@ namespace Site7DbEditor
             frame.RotationAngleDeg = 0.0;
 
             // 内枠寸法（mm）
-            var (wMm, hMm) = frame.GetPaperDimensionsMm();
-            double innerWMm = Math.Max(10.0, wMm - (frame.MarginLeftMm + frame.MarginRightMm));
-            double innerHMm = Math.Max(10.0, hMm - (frame.MarginTopMm + frame.MarginBottomMm));
+            var (innerWMm, innerHMm, _, _) = frame.GetInnerFrameDimensionsMeters();
+            innerWMm = (innerWMm / frame.Scale) * 1000.0;
+            innerHMm = (innerHMm / frame.Scale) * 1000.0;
 
-            // 実空間 m / (用紙 mm / 1000) = 縮尺
             double scaleX = rangeX / (innerHMm / 1000.0);
             double scaleY = rangeY / (innerWMm / 1000.0);
             double fitScale = Math.Max(scaleX, scaleY) * 1.1; // 10%余裕
 
-            // キリの良い標準縮尺に切り上げ
             double[] standardScales = new double[] { 50, 100, 200, 250, 300, 500, 1000, 2000, 5000, 10000 };
             double finalScale = standardScales[standardScales.Length - 1];
             foreach (var s in standardScales)
