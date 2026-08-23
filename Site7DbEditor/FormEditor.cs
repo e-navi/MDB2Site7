@@ -1538,10 +1538,16 @@ namespace Site7DbEditor {
                     if (selectedKikai != null) {
                         txtKikaiName.Text = selectedKikai.Name ?? "";
 
-                        string targetLayer = selectedKikai.Layer < 10 ? $"L0{selectedKikai.Layer}" : $"L{selectedKikai.Layer}";
+                        int normLayer = selectedKikai.Layer >= 17 && selectedKikai.Layer <= 32 ? selectedKikai.Layer - 16 : selectedKikai.Layer;
+                        if (normLayer < 1) normLayer = 1;
+                        if (normLayer > 16) normLayer = ((normLayer - 1) % 16) + 1;
+
+                        string targetLayer = $"K{normLayer:D2}";
                         int lIdx = cmbKikaiLayer.FindString(targetLayer);
                         if (lIdx >= 0)
                             cmbKikaiLayer.SelectedIndex = lIdx;
+                        else if (cmbKikaiLayer.Items.Count >= normLayer)
+                            cmbKikaiLayer.SelectedIndex = normLayer - 1;
                         else
                             cmbKikaiLayer.Text = $"{targetLayer} 基準点{targetLayer}";
 
@@ -2239,11 +2245,14 @@ namespace Site7DbEditor {
         }
 
         private int GetSelectedIbutuLayer() {
-            string text = cmbIbutuLayer.SelectedItem?.ToString() ?? cmbIbutuLayer.Text;
-            if (text.StartsWith("L") && int.TryParse(text.Substring(1, 2), out int layerVal)) {
+            if (cmbIbutuLayer.SelectedIndex >= 0 && cmbIbutuLayer.SelectedIndex < 16) {
+                return cmbIbutuLayer.SelectedIndex + 1;
+            }
+            string text = cmbIbutuLayer.SelectedItem?.ToString() ?? cmbIbutuLayer.Text ?? "";
+            if (text.Length >= 3 && int.TryParse(text.Substring(1, 2), out int layerVal)) {
                 return layerVal;
             }
-            return 5;
+            return 1;
         }
 
         private void btnIbutuMaxPlusOne_Click(object? sender, EventArgs e) {
@@ -2256,9 +2265,12 @@ namespace Site7DbEditor {
         }
 
         private int GetSelectedKikaiLayer() {
-            string text = cmbKikaiLayer.SelectedItem?.ToString() ?? cmbKikaiLayer.Text;
-            if (text.StartsWith("L") && int.TryParse(text.Substring(1, 2), out int layerVal)) {
-                return layerVal;
+            if (cmbKikaiLayer.SelectedIndex >= 0 && cmbKikaiLayer.SelectedIndex < 16) {
+                return cmbKikaiLayer.SelectedIndex + 1;
+            }
+            string text = cmbKikaiLayer.SelectedItem?.ToString() ?? cmbKikaiLayer.Text ?? "";
+            if (text.Length >= 3 && int.TryParse(text.Substring(1, 2), out int layerVal)) {
+                return layerVal >= 17 && layerVal <= 32 ? layerVal - 16 : layerVal;
             }
             return 1;
         }
