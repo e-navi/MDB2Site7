@@ -88,8 +88,8 @@ namespace Site7DbEditor
         public string Name { get; set; } = "";
         public int Color { get; set; } = 1; // 1-16
         public int Mark { get; set; } = 1;  // 1:〇 2:□ 3:△ 4:⦿
-        public double Size { get; set; } = 5.0; // 1-20
+        public double Size { get; set; } = 1.0; // 1-20
         public int Width { get; set; } = 1; // 1-5
-        public int LType { get; set; } = 1; // 1:折れ線 2:曲線
+        public int LType { get; set; } = 1; // 1:折線 2:曲線
     }
 }
