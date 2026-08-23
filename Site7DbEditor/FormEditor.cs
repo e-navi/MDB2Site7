@@ -549,7 +549,8 @@ namespace Site7DbEditor {
                 UpdateDrawingPreviewState();
                 if (!_formDrawingFrame.Visible) {
                     var screen = Screen.FromControl(this);
-                    int posX = this.Location.X + this.Width - _formDrawingFrame.Width - 40;
+                    // メインウィンドウ左側（左操作パネルの右隣）に配置して右側の図面プレビューを見やすくする
+                    int posX = this.Location.X + 140;
                     int posY = this.Location.Y + 80;
                     if (posX + _formDrawingFrame.Width > screen.WorkingArea.Right)
                         posX = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;

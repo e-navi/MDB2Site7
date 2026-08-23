@@ -1325,7 +1325,8 @@ namespace Site7DbEditor.Services
 
                 float length = (float)Math.Max(12.0f, (float)(NorthArrowSizeMm * zoom));
                 float width = length * 0.28f;
-                float needleRad = (float)(-RotationAngleDeg * Math.PI / 180.0);
+                // 印刷用紙上での北方向（図枠の回転角 RotationAngleDeg に連動）
+                float needleRad = (float)(RotationAngleDeg * Math.PI / 180.0);
                 float cos = (float)Math.Cos(needleRad);
                 float sin = (float)Math.Sin(needleRad);
 
