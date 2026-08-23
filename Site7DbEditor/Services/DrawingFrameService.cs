@@ -931,10 +931,19 @@ namespace Site7DbEditor.Services
             bool showKikai,
             bool showKikaiName,
             bool showHyoukou,
-            bool isPrinting = false)
+            bool isPrinting = false,
+            bool isMonochrome = false)
         {
             float paperW = wMm * zoom;
             float paperH = hMm * zoom;
+
+            Color AdaptColor(Color c)
+            {
+                if (!isMonochrome) return c;
+                int gray = (int)(0.299 * c.R + 0.587 * c.G + 0.114 * c.B);
+                if (gray > 160) gray = 100; // 白飛び防止
+                return Color.FromArgb(c.A, gray, gray, gray);
+            }
 
             PointF SurveyToPaperScreen(double sx, double sy)
             {
@@ -992,7 +1001,8 @@ namespace Site7DbEditor.Services
             float innerH = Math.Max(10f, outerH - spacingPx * 2f);
             RectangleF innerRect = new RectangleF(innerLeft, innerTop, innerW, innerH);
 
-            using (var innerPen = new Pen(Color.FromArgb(0, 100, 180), outerPenWidth))
+            Color innerColor = isMonochrome ? Color.FromArgb(20, 20, 20) : Color.FromArgb(0, 100, 180);
+            using (var innerPen = new Pen(innerColor, outerPenWidth))
             {
                 g.DrawRectangle(innerPen, innerRect.X, innerRect.Y, innerRect.Width, innerRect.Height);
             }
@@ -1093,9 +1103,10 @@ namespace Site7DbEditor.Services
                         if (pts.Count == 0) continue;
 
                         int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                        Color color = colorByIkou
+                        Color rawColor = colorByIkou
                             ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
                             : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, false);
+                        Color color = AdaptColor(rawColor);
 
                         if (line.Mode == 2)
                         {
@@ -1114,8 +1125,9 @@ namespace Site7DbEditor.Services
                             if (showHyoukou)
                             {
                                 float zFontPx = Math.Max(2.5f, (float)(2.2 * zoom));
+                                Color zColor = isMonochrome ? Color.FromArgb(40, 40, 40) : Color.FromArgb(30, 100, 30);
                                 using (var zFont = new Font("Yu Gothic UI", zFontPx, FontStyle.Regular, GraphicsUnit.Pixel))
-                                using (var zBrush = new SolidBrush(Color.FromArgb(30, 100, 30)))
+                                using (var zBrush = new SolidBrush(zColor))
                                 {
                                     foreach (var p in pts)
                                     {
@@ -1196,9 +1208,11 @@ namespace Site7DbEditor.Services
                     float ibPenWidth = Math.Max(0.35f, (float)(0.35 * zoom));
                     float ibMarkSize = Math.Max(2.5f, (float)(2.5 * zoom));
                     float ibFontPx = Math.Max(2.8f, (float)(2.6 * zoom));
-                    using (var ibutuPen = new Pen(Color.Red, ibPenWidth))
+                    Color ibColor = isMonochrome ? Color.FromArgb(20, 20, 20) : Color.Red;
+                    Color ibTextColor = isMonochrome ? Color.FromArgb(20, 20, 20) : Color.DarkRed;
+                    using (var ibutuPen = new Pen(ibColor, ibPenWidth))
                     using (var ibutuFont = new Font("Yu Gothic UI", ibFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
-                    using (var textBrush = new SolidBrush(Color.DarkRed))
+                    using (var textBrush = new SolidBrush(ibTextColor))
                     {
                         foreach (var ibutu in db.IbutuList)
                         {
@@ -1225,9 +1239,11 @@ namespace Site7DbEditor.Services
                 {
                     float kikaiSize = Math.Max(3.0f, (float)(3.5 * zoom));
                     float kFontPx = Math.Max(3.0f, (float)(3.0 * zoom));
-                    using (var kikaiBrush = new SolidBrush(Color.FromArgb(0, 120, 215)))
+                    Color kikaiColor = isMonochrome ? Color.FromArgb(30, 30, 30) : Color.FromArgb(0, 120, 215);
+                    Color kikaiTextColor = isMonochrome ? Color.FromArgb(30, 30, 30) : Color.FromArgb(0, 70, 140);
+                    using (var kikaiBrush = new SolidBrush(kikaiColor))
                     using (var kikaiFont = new Font("Yu Gothic UI", kFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
-                    using (var textBrush = new SolidBrush(Color.FromArgb(0, 70, 140)))
+                    using (var textBrush = new SolidBrush(kikaiTextColor))
                     {
                         foreach (var k in db.KikaiList)
                         {
@@ -1396,7 +1412,7 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// Windows標準印刷ダイアログ経由で図面を高解像度印刷（縮小印刷にも自動対応）
+        /// Windows標準印刷ダイアログ経由で図面を高解像度印刷（縮小印刷・モノクロ印刷にも自動対応）
         /// </summary>
         public void Print(
             IWin32Window owner,
@@ -1471,6 +1487,8 @@ namespace Site7DbEditor.Services
                                 float originX = (pageW100Inch - printedW100Inch) / 2f;
                                 float originY = (pageH100Inch - printedH100Inch) / 2f;
 
+                                bool isMonochrome = !e.PageSettings.Color || !pd.PrinterSettings.DefaultPageSettings.Color;
+
                                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                                 DrawPaperDrawingCore(
@@ -1491,7 +1509,8 @@ namespace Site7DbEditor.Services
                                     showKikai,
                                     showKikaiName,
                                     showHyoukou,
-                                    isPrinting: true
+                                    isPrinting: true,
+                                    isMonochrome: isMonochrome
                                 );
 
                                 e.HasMorePages = false;
