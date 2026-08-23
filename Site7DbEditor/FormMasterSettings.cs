@@ -75,13 +75,11 @@ namespace Site7DbEditor
                     Padding = new Padding(8)
                 };
 
-                var split = new SplitContainer
+                var pnlBtns = new Panel
                 {
-                    Dock = DockStyle.Fill,
-                    Orientation = Orientation.Vertical,
-                    FixedPanel = FixedPanel.Panel2,
-                    SplitterDistance = 740,
-                    SplitterWidth = 4,
+                    Dock = DockStyle.Right,
+                    Width = 96,
+                    Padding = new Padding(6, 4, 4, 4),
                     BackColor = Color.FromArgb(35, 38, 48)
                 };
 
@@ -124,13 +122,6 @@ namespace Site7DbEditor
                 };
 
                 dgv.Columns.AddRange(colCode, colDesc);
-
-                // Right button panel
-                var pnlBtns = new Panel
-                {
-                    Dock = DockStyle.Fill,
-                    Padding = new Padding(4)
-                };
 
                 var btnAdd = new Button
                 {
@@ -188,9 +179,8 @@ namespace Site7DbEditor
                 pnlBtns.Controls.Add(btnDel);
                 pnlBtns.Controls.Add(btnAdd);
 
-                split.Panel1.Controls.Add(dgv);
-                split.Panel2.Controls.Add(pnlBtns);
-                tabPage.Controls.Add(split);
+                tabPage.Controls.Add(dgv);
+                tabPage.Controls.Add(pnlBtns);
 
                 tabControlMasters.TabPages.Add(tabPage);
                 _gridViews[type] = dgv;
