@@ -80,7 +80,7 @@ namespace Site7DbEditor
                     Dock = DockStyle.Fill,
                     Orientation = Orientation.Vertical,
                     FixedPanel = FixedPanel.Panel2,
-                    SplitterDistance = 480,
+                    SplitterDistance = 740,
                     SplitterWidth = 4,
                     BackColor = Color.FromArgb(35, 38, 48)
                 };
@@ -114,7 +114,7 @@ namespace Site7DbEditor
                 {
                     DataPropertyName = nameof(MasterItem.Code),
                     HeaderText = "コード・略称 (入力値)",
-                    Width = 160
+                    Width = 220
                 };
                 var colDesc = new DataGridViewTextBoxColumn
                 {

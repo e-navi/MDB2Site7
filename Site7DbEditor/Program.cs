@@ -8,6 +8,7 @@ namespace Site7DbEditor
         [STAThread]
         static void Main(string[] args)
         {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             ApplicationConfiguration.Initialize();
 
             // コマンドライン引数で直接DBが渡された場合は直接エディタを起動

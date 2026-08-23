@@ -109,7 +109,7 @@ namespace Site7DbEditor
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
             this.btnSave.ForeColor = System.Drawing.Color.Black;
-            this.btnSave.Location = new System.Drawing.Point(448, 12);
+            this.btnSave.Location = new System.Drawing.Point(664, 12);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(110, 32);
             this.btnSave.TabIndex = 2;
@@ -124,7 +124,7 @@ namespace Site7DbEditor
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F);
             this.btnCancel.ForeColor = System.Drawing.Color.White;
-            this.btnCancel.Location = new System.Drawing.Point(568, 12);
+            this.btnCancel.Location = new System.Drawing.Point(784, 12);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(84, 32);
             this.btnCancel.TabIndex = 3;
@@ -136,12 +136,12 @@ namespace Site7DbEditor
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
-            this.ClientSize = new System.Drawing.Size(664, 491);
+            this.ClientSize = new System.Drawing.Size(880, 530);
             this.Controls.Add(this.panelBottom);
             this.Controls.Add(this.tabControlMasters);
             this.Controls.Add(this.lblPathInfo);
             this.Controls.Add(this.lblHeader);
-            this.MinimumSize = new System.Drawing.Size(600, 400);
+            this.MinimumSize = new System.Drawing.Size(800, 450);
             this.Name = "FormMasterSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "マスター設定・入力定義 (Def)";

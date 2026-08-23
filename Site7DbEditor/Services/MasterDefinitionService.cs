@@ -62,8 +62,22 @@ namespace Site7DbEditor.Services
             { MasterType.IbutuChiku, "遺物地区" }
         };
 
+        static MasterDefinitionService()
+        {
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            }
+            catch { }
+        }
+
         public MasterDefinitionService()
         {
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            }
+            catch { }
             foreach (MasterType type in Enum.GetValues(typeof(MasterType)))
             {
                 Masters[type] = new List<MasterItem>();
@@ -160,10 +174,16 @@ namespace Site7DbEditor.Services
 
             try
             {
-                Encoding enc = Encoding.GetEncoding(932); // Shift-JIS default for SITE7
+                try
+                {
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                }
+                catch { }
+
                 string[] lines;
                 try
                 {
+                    Encoding enc = Encoding.GetEncoding(932); // Shift-JIS
                     lines = File.ReadAllLines(filePath, enc);
                 }
                 catch
