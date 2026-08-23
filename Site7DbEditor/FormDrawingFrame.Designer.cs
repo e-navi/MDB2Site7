@@ -815,7 +815,7 @@ namespace Site7DbEditor
             this.Name = "FormDrawingFrame";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "全図・図枠設定";
+            this.Text = "図枠設定";
             this.TopMost = true;
             this.tabSettings.ResumeLayout(false);
             this.tabBasic.ResumeLayout(false);

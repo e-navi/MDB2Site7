@@ -342,7 +342,7 @@ namespace Site7DbEditor.Services
             // 8. 図枠情報ラベル（図枠の左上外側に表示）
             PointF infoPos = paperScreen[3]; // 左上
             double effectivePitch = GetEffectivePitchMeters();
-            string infoText = $"全図枠 [{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} ({RotationAngleDeg:0.0}°)] ピッチ:{effectivePitch:0.#}m";
+            string infoText = $"図枠 [{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} ({RotationAngleDeg:0.0}°)] ピッチ:{effectivePitch:0.#}m";
             using (var infoFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
             using (var infoBgBrush = new SolidBrush(Color.FromArgb(180, 20, 20, 25)))
             using (var infoTextBrush = new SolidBrush(outerColor))
@@ -955,8 +955,8 @@ namespace Site7DbEditor.Services
             g.SetClip(innerRect);
 
             // A. 格子線 (Grid Lines) の描画（内枠クリッピング内で端から端まで完全に通過）
-            using (var tomboPen = new Pen(Color.FromArgb(200, 30, 30), 1.0f))
-            using (var gridPen = new Pen(Color.FromArgb(60, 200, 30, 30), 1f) { DashStyle = DashStyle.Dash })
+            using (var tomboPen = new Pen(Color.FromArgb(160, 160, 160), 0.9f))
+            using (var gridPen = new Pen(Color.FromArgb(190, 190, 190), 0.8f) { DashStyle = DashStyle.Dash })
             {
                 if (ShowGridLines)
                 {
