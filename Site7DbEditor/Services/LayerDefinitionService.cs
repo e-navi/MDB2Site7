@@ -95,11 +95,7 @@ namespace Site7DbEditor.Services
                     _ => code
                 };
 
-                int defaultColor = group switch
-                {
-                    LayerGroup.Kikai => 2, // 赤
-                    _ => ((i - 1) % 16) + 1
-                };
+                int defaultColor = ((i - 1) % 16) + 1;
 
                 int defaultMark = group switch
                 {
