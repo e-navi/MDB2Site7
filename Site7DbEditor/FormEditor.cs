@@ -311,15 +311,7 @@ namespace Site7DbEditor {
         }
 
         private void InitRightEditControls() {
-            cmbIkouKind.Items.Clear();
-            cmbIkouKind.Items.AddRange(new object[] { "Pit", "SD", "SX", "SI", "SK", "SDa", "SB", "SP", "遺構" });
-            if (cmbIkouKind.Items.Count > 0)
-                cmbIkouKind.SelectedIndex = 0;
-
-            cmbLineKind.Items.Clear();
-            cmbLineKind.Items.AddRange(new object[] { "土師器", "須恵器", "上", "下端", "瓦", "灰", "焼土", "SP", "sp10", "sp15", "測量線" });
-            if (cmbLineKind.Items.Count > 0)
-                cmbLineKind.SelectedIndex = 0;
+            LoadMasterDefinitions();
 
             cmbLineLayer.Items.Clear();
             cmbLineLayer.Items.AddRange(new object[] { "L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L16", "L32", "L64" });
@@ -335,6 +327,25 @@ namespace Site7DbEditor {
             cmbKikaiLayer.Items.AddRange(new object[] { "L01 基準点", "L02 基準点L02", "L03 基準点L03", "L04 基準点L04", "L05 基準点L05", "L16 基準点L16" });
             if (cmbKikaiLayer.Items.Count > 0)
                 cmbKikaiLayer.SelectedIndex = 0;
+        }
+
+        private void LoadMasterDefinitions() {
+            var service = MasterDefinitionService.Instance;
+            service.LoadAll(_db.CurrentDbPath);
+            service.BindToComboBox(cmbIkouKind, MasterType.Ikou);
+            service.BindToComboBox(cmbLineKind, MasterType.IkouLine);
+            PopulateIbutuCombos();
+        }
+
+        private void OpenMasterSettings() {
+            using (var dlg = new FormMasterSettings(_db.CurrentDbPath)) {
+                if (dlg.ShowDialog(this) == DialogResult.OK) {
+                    LoadMasterDefinitions();
+                    dgvIkou_SelectionChanged(this, EventArgs.Empty);
+                    dgvIkouL_SelectionChanged(this, EventArgs.Empty);
+                    dgvIbutu_SelectionChanged(this, EventArgs.Empty);
+                }
+            }
         }
 
         private long _editingOldIkouId = -1;
@@ -1073,6 +1084,7 @@ namespace Site7DbEditor {
 
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
                 BackgroundImageService.Instance.LoadConfig(dbPath);
+                LoadMasterDefinitions();
 
                 lblDbStatus.Text = $"✔ {_db.IkouList.Count}遺構 | {_db.IkouLList.Count}線 | {_db.IbutuList.Count}遺物 | {_db.KikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
@@ -1165,35 +1177,31 @@ namespace Site7DbEditor {
         }
 
         private void PopulateIbutuCombos() {
-            var chikuSet = new HashSet<string>(_db.IbutuList.Select(i => i.Chiku).Where(s => !string.IsNullOrWhiteSpace(s)));
-            chikuSet.Add("F区 東");
-            chikuSet.Add("A区");
-            chikuSet.Add("B区");
-            chikuSet.Add("C区");
-            cmbIbutuChiku.Items.Clear();
-            cmbIbutuChiku.Items.AddRange(chikuSet.ToArray());
+            var service = MasterDefinitionService.Instance;
+            service.BindToComboBox(cmbIbutuChiku, MasterType.IbutuChiku);
+            foreach (var chiku in _db.IbutuList.Select(i => i.Chiku).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct()) {
+                if (!cmbIbutuChiku.Items.OfType<MasterItem>().Any(m => string.Equals(m.Code, chiku, StringComparison.OrdinalIgnoreCase))) {
+                    cmbIbutuChiku.Items.Add(new MasterItem { Code = chiku, Description = chiku });
+                }
+            }
             if (cmbIbutuChiku.Items.Count > 0 && string.IsNullOrEmpty(cmbIbutuChiku.Text))
                 cmbIbutuChiku.SelectedIndex = 0;
 
-            var souiSet = new HashSet<string>(_db.IbutuList.Select(i => i.Soui).Where(s => !string.IsNullOrWhiteSpace(s)));
-            souiSet.Add("黒色土層");
-            souiSet.Add("褐色土層");
-            souiSet.Add("表土層");
-            cmbIbutuSoui.Items.Clear();
-            cmbIbutuSoui.Items.AddRange(souiSet.ToArray());
+            service.BindToComboBox(cmbIbutuSoui, MasterType.IbutuSoui);
+            foreach (var soui in _db.IbutuList.Select(i => i.Soui).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct()) {
+                if (!cmbIbutuSoui.Items.OfType<MasterItem>().Any(m => string.Equals(m.Code, soui, StringComparison.OrdinalIgnoreCase))) {
+                    cmbIbutuSoui.Items.Add(new MasterItem { Code = soui, Description = soui });
+                }
+            }
             if (cmbIbutuSoui.Items.Count > 0 && string.IsNullOrEmpty(cmbIbutuSoui.Text))
                 cmbIbutuSoui.SelectedIndex = 0;
 
-            var syubetuSet = new HashSet<string>(_db.IbutuList.Select(i => i.Syubetu).Where(s => !string.IsNullOrWhiteSpace(s)));
-            syubetuSet.Add("鉄製品");
-            syubetuSet.Add("土師器");
-            syubetuSet.Add("須恵器");
-            syubetuSet.Add("陶磁器");
-            syubetuSet.Add("石器");
-            syubetuSet.Add("木製品");
-            syubetuSet.Add("遺物");
-            cmbIbutuSyubetu.Items.Clear();
-            cmbIbutuSyubetu.Items.AddRange(syubetuSet.ToArray());
+            service.BindToComboBox(cmbIbutuSyubetu, MasterType.IbutuSyubetu);
+            foreach (var syubetu in _db.IbutuList.Select(i => i.Syubetu).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct()) {
+                if (!cmbIbutuSyubetu.Items.OfType<MasterItem>().Any(m => string.Equals(m.Code, syubetu, StringComparison.OrdinalIgnoreCase))) {
+                    cmbIbutuSyubetu.Items.Add(new MasterItem { Code = syubetu, Description = syubetu });
+                }
+            }
             if (cmbIbutuSyubetu.Items.Count > 0 && string.IsNullOrEmpty(cmbIbutuSyubetu.Text))
                 cmbIbutuSyubetu.SelectedIndex = 0;
         }
@@ -1293,7 +1301,7 @@ namespace Site7DbEditor {
         private void UpdateCombinedIkouNameLabel() {
             if (_isUpdatingSelection)
                 return;
-            string prefix = cmbIkouKind.Text ?? "";
+            string prefix = MasterDefinitionService.GetSelectedCode(cmbIkouKind);
             string no = txtIkouNum.Text ?? "";
             lblIkouNameVal.Text = $"{prefix}{no}";
         }
@@ -1301,7 +1309,7 @@ namespace Site7DbEditor {
         private void UpdateCombinedLineNameLabel() {
             if (_isUpdatingSelection)
                 return;
-            string prefix = cmbLineKind.Text ?? "";
+            string prefix = MasterDefinitionService.GetSelectedCode(cmbLineKind);
             string no = txtLineNum.Text ?? "";
             lblLineNameVal.Text = $"{prefix}{no}";
         }
@@ -1322,17 +1330,7 @@ namespace Site7DbEditor {
                         txtIkouNum.Text = no;
                         lblIkouNameVal.Text = selectedIkou.Name;
 
-                        cmbIkouKind.SelectedIndex = -1;
-                        bool matched = false;
-                        foreach (var item in cmbIkouKind.Items) {
-                            if (string.Equals(item.ToString(), prefix, StringComparison.OrdinalIgnoreCase)) {
-                                cmbIkouKind.SelectedItem = item;
-                                matched = true;
-                                break;
-                            }
-                        }
-                        if (!matched)
-                            cmbIkouKind.Text = prefix;
+                        MasterDefinitionService.SelectCode(cmbIkouKind, prefix);
 
                         var lines = _db.IkouLList.Where(l => l.Id == selectedIkou.Id).ToList();
                         dgvIkouL.DataSource = new BindingList<IkouLModel>(lines);
@@ -1375,17 +1373,7 @@ namespace Site7DbEditor {
                     txtLineNum.Text = no;
                     lblLineNameVal.Text = selectedLine.Name;
 
-                    cmbLineKind.SelectedIndex = -1;
-                    bool matched = false;
-                    foreach (var item in cmbLineKind.Items) {
-                        if (string.Equals(item.ToString(), prefix, StringComparison.OrdinalIgnoreCase)) {
-                            cmbLineKind.SelectedItem = item;
-                            matched = true;
-                            break;
-                        }
-                    }
-                    if (!matched)
-                        cmbLineKind.Text = prefix;
+                    MasterDefinitionService.SelectCode(cmbLineKind, prefix);
 
                     rdoLineOpen.Checked = (selectedLine.Mode == 0);
                     rdoLineClosed.Checked = (selectedLine.Mode == 1);
@@ -1500,9 +1488,9 @@ namespace Site7DbEditor {
                     IbutuModel? selectedIbutu = GetSelectedDataBoundItem<IbutuModel>(dgvIbutu);
                     _selectedIbutuId = selectedIbutu?.Id ?? -1;
                     if (selectedIbutu != null) {
-                        cmbIbutuChiku.Text = selectedIbutu.Chiku ?? "";
-                        cmbIbutuSoui.Text = selectedIbutu.Soui ?? "";
-                        cmbIbutuSyubetu.Text = selectedIbutu.Syubetu ?? "";
+                        MasterDefinitionService.SelectCode(cmbIbutuChiku, selectedIbutu.Chiku ?? "");
+                        MasterDefinitionService.SelectCode(cmbIbutuSoui, selectedIbutu.Soui ?? "");
+                        MasterDefinitionService.SelectCode(cmbIbutuSyubetu, selectedIbutu.Syubetu ?? "");
 
                         string targetLayer = selectedIbutu.Layer < 10 ? $"L0{selectedIbutu.Layer}" : $"L{selectedIbutu.Layer}";
                         int lIdx = cmbIbutuLayer.FindString(targetLayer);
@@ -1838,7 +1826,7 @@ namespace Site7DbEditor {
         private void btnAddIkou_Click(object? sender, EventArgs e) {
             long newId = _db.IkouList.Count > 0 ? _db.IkouList.Max(i => i.Id) + 1 : 1;
 
-            string prefix = cmbIkouKind.Text.Trim();
+            string prefix = MasterDefinitionService.GetSelectedCode(cmbIkouKind);
             if (string.IsNullOrEmpty(prefix))
                 prefix = "遺構";
 
@@ -1902,7 +1890,7 @@ namespace Site7DbEditor {
                 var existingLines = _db.IkouLList.Where(l => l.Id == selectedIkou.Id).ToList();
                 long newLid = existingLines.Count > 0 ? existingLines.Max(l => l.Lid) + 1 : 1;
 
-                string prefix = cmbLineKind.Text.Trim();
+                string prefix = MasterDefinitionService.GetSelectedCode(cmbLineKind);
                 if (string.IsNullOrEmpty(prefix))
                     prefix = "線";
 
@@ -2087,7 +2075,7 @@ namespace Site7DbEditor {
         }
 
         private void btnMaxPlusOne_Click(object? sender, EventArgs e) {
-            string currentPrefix = cmbIkouKind.Text.Trim();
+            string currentPrefix = MasterDefinitionService.GetSelectedCode(cmbIkouKind);
             int maxVal = 0;
 
             foreach (var ikou in _db.IkouList) {
@@ -2107,7 +2095,7 @@ namespace Site7DbEditor {
         private void btnUpdateIkouRight_Click(object? sender, EventArgs e) {
             if (GetSelectedDataBoundItem<IkouModel>(dgvIkou) is IkouModel selected) {
                 var original = (IkouModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOU, selected);
-                string prefix = cmbIkouKind.Text.Trim();
+                string prefix = MasterDefinitionService.GetSelectedCode(cmbIkouKind);
                 if (string.IsNullOrEmpty(prefix)) prefix = "遺構";
                 string noStr = txtIkouNum.Text.Trim();
                 string fullName = BuildIkouFullNamePreview(prefix, noStr);
@@ -2160,7 +2148,7 @@ namespace Site7DbEditor {
         }
 
         private void btnLineMaxPlusOne_Click(object? sender, EventArgs e) {
-            string currentPrefix = cmbLineKind.Text.Trim();
+            string currentPrefix = MasterDefinitionService.GetSelectedCode(cmbLineKind);
             int maxVal = 0;
 
             foreach (var line in _db.IkouLList) {
@@ -2186,7 +2174,7 @@ namespace Site7DbEditor {
                     targetIkouId = targetItem.Id;
                 }
 
-                string prefix = cmbLineKind.Text.Trim();
+                string prefix = MasterDefinitionService.GetSelectedCode(cmbLineKind);
                 if (string.IsNullOrEmpty(prefix)) prefix = "線";
                 string noStr = txtLineNum.Text.Trim();
                 string fullName = BuildLineFullNamePreview(prefix, noStr);
@@ -2288,9 +2276,9 @@ namespace Site7DbEditor {
               {
                 if (GetSelectedDataBoundItem<IbutuModel>(dgvIbutu) is IbutuModel selected) {
                     var original = (IbutuModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IBUTU, selected);
-                    selected.Chiku = cmbIbutuChiku.Text.Trim();
-                    selected.Soui = cmbIbutuSoui.Text.Trim();
-                    selected.Syubetu = cmbIbutuSyubetu.Text.Trim();
+                    selected.Chiku = MasterDefinitionService.GetSelectedCode(cmbIbutuChiku);
+                    selected.Soui = MasterDefinitionService.GetSelectedCode(cmbIbutuSoui);
+                    selected.Syubetu = MasterDefinitionService.GetSelectedCode(cmbIbutuSyubetu);
                     selected.Layer = GetSelectedIbutuLayer();
                     if (int.TryParse(txtIbutuNo.Text.Trim(), out int noVal))
                         selected.No = noVal;
@@ -2447,9 +2435,9 @@ namespace Site7DbEditor {
 
                 var newItem = new IbutuModel {
                     Id = newId,
-                    Chiku = cmbIbutuChiku.Text.Trim(),
-                    Soui = cmbIbutuSoui.Text.Trim(),
-                    Syubetu = cmbIbutuSyubetu.Text.Trim(),
+                    Chiku = MasterDefinitionService.GetSelectedCode(cmbIbutuChiku),
+                    Soui = MasterDefinitionService.GetSelectedCode(cmbIbutuSoui),
+                    Syubetu = MasterDefinitionService.GetSelectedCode(cmbIbutuSyubetu),
                     Layer = GetSelectedIbutuLayer(),
                     No = targetNo,
                     X = x,

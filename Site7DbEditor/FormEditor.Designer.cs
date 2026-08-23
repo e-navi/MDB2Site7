@@ -57,6 +57,7 @@ namespace Site7DbEditor
             chkShowScale = new CheckBox();
             chkShowDrawingFrame = new CheckBox();
             btnBgSettings = new Button();
+            btnMasterSettings = new Button();
             btnEnvSettings = new Button();
             btnDrawingFrame = new Button();
             btnUndo = new Button();
@@ -510,6 +511,7 @@ namespace Site7DbEditor
             panelLeftContent.AutoScroll = true;
             panelLeftContent.Controls.Add(grpDspTarget);
             panelLeftContent.Controls.Add(btnBgSettings);
+            panelLeftContent.Controls.Add(btnMasterSettings);
             panelLeftContent.Controls.Add(btnEnvSettings);
             panelLeftContent.Controls.Add(btnDrawingFrame);
             panelLeftContent.Controls.Add(btnUndo);
@@ -744,10 +746,20 @@ namespace Site7DbEditor
             btnBgSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnBgSettings.Location = new Point(6, 5);
             btnBgSettings.Name = "btnBgSettings";
-            btnBgSettings.Size = new Size(118, 23);
+            btnBgSettings.Size = new Size(57, 23);
             btnBgSettings.TabIndex = 0;
-            btnBgSettings.Text = "背景設定";
+            btnBgSettings.Text = "背景";
             btnBgSettings.UseVisualStyleBackColor = true;
+            // 
+            // btnMasterSettings
+            // 
+            btnMasterSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnMasterSettings.Location = new Point(67, 5);
+            btnMasterSettings.Name = "btnMasterSettings";
+            btnMasterSettings.Size = new Size(57, 23);
+            btnMasterSettings.TabIndex = 1;
+            btnMasterSettings.Text = "Def設定";
+            btnMasterSettings.UseVisualStyleBackColor = true;
             // 
             // btnEnvSettings
             // 
@@ -755,7 +767,7 @@ namespace Site7DbEditor
             btnEnvSettings.Location = new Point(6, 30);
             btnEnvSettings.Name = "btnEnvSettings";
             btnEnvSettings.Size = new Size(57, 23);
-            btnEnvSettings.TabIndex = 1;
+            btnEnvSettings.TabIndex = 2;
             btnEnvSettings.Text = "TS設定";
             btnEnvSettings.UseVisualStyleBackColor = true;
             // 
@@ -2647,6 +2659,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.Panel pnlKikaiRight;
 
         private System.Windows.Forms.Button btnBgSettings;
+        private System.Windows.Forms.Button btnMasterSettings;
         private System.Windows.Forms.Button btnEnvSettings;
         private System.Windows.Forms.Button btnDrawingFrame;
         private System.Windows.Forms.Button btnUndo;
