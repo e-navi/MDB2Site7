@@ -543,6 +543,7 @@ namespace Site7DbEditor {
                     _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
                     _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
                     _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
+                    _formDrawingFrame.PrintRequested += (sender, ev) => ExecutePrintDrawing();
                 }
                 _formDrawingFrame.SyncFromService();
                 UpdateDrawingPreviewState();
@@ -684,6 +685,23 @@ namespace Site7DbEditor {
                 chkShowKikai.Checked,
                 chkShowKikaiName.Checked,
                 chkShowHyoukou.Checked);
+        }
+
+        private void ExecutePrintDrawing() {
+            DrawingFrameService.Instance.Print(
+                this,
+                _db,
+                IsMapLayerVisible,
+                chkShowCurve.Checked,
+                chkColorByIkou.Checked,
+                chkShowIkou.Checked,
+                chkShowIkouName.Checked,
+                chkShowIbutu.Checked,
+                chkShowIbutuName.Checked,
+                chkShowKikai.Checked,
+                chkShowKikaiName.Checked,
+                chkShowHyoukou.Checked
+            );
         }
 
         private void picDrawingPreview_MouseDown(object? sender, MouseEventArgs e) {

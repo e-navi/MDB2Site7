@@ -15,6 +15,7 @@ namespace Site7DbEditor
         public event EventHandler? MoveCenterRequested;
         public event EventHandler? SetRotationRequested;
         public event EventHandler? PickNorthPosRequested;
+        public event EventHandler? PrintRequested;
 
         public FormDrawingFrame(EditorDbManager? db = null)
         {
@@ -84,6 +85,7 @@ namespace Site7DbEditor
             };
 
             this.btnClose.Click += (s, e) => this.Hide();
+            this.btnPrint.Click += (s, e) => PrintRequested?.Invoke(this, EventArgs.Empty);
 
             // 基本・配置
             this.chkPreviewDrawing.CheckedChanged += (s, e) => OnValueChanged();

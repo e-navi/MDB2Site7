@@ -17,6 +17,7 @@ namespace Site7DbEditor
 
         private void InitializeComponent()
         {
+            this.btnPrint = new System.Windows.Forms.Button();
             this.chkPreviewDrawing = new System.Windows.Forms.CheckBox();
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabBasic = new System.Windows.Forms.TabPage();
@@ -802,12 +803,27 @@ namespace Site7DbEditor
             this.btnClose.Text = "閉じる";
             this.btnClose.UseVisualStyleBackColor = false;
             // 
+            // btnPrint
+            // 
+            this.btnPrint.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnPrint.ForeColor = System.Drawing.Color.White;
+            this.btnPrint.Location = new System.Drawing.Point(60, 350);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(86, 26);
+            this.btnPrint.TabIndex = 3;
+            this.btnPrint.Text = "印刷...";
+            this.btnPrint.UseVisualStyleBackColor = false;
+            // 
             // FormDrawingFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
             this.ClientSize = new System.Drawing.Size(248, 382);
+            this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabSettings);
             this.Controls.Add(this.chkPreviewDrawing);
@@ -852,6 +868,7 @@ namespace Site7DbEditor
 
         #endregion
 
+        public System.Windows.Forms.Button btnPrint;
         private System.Windows.Forms.CheckBox chkPreviewDrawing;
         private System.Windows.Forms.TabControl tabSettings;
         private System.Windows.Forms.TabPage tabBasic;

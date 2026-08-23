@@ -840,10 +840,13 @@ namespace Site7DbEditor.Services
         /// <summary>
         /// 図面プレビューキャンバス（用紙イメージ）へのリアルタイムレンダリング
         /// </summary>
+        /// <summary>
+        /// 図面プレビューキャンバス（用紙イメージ）へのリアルタイムレンダリング
+        /// </summary>
         public void DrawPaperPreview(
             Graphics g,
             Size canvasSize,
-            EditorDbManager db,
+            EditorDbManager? db,
             Func<int, bool>? isMapLayerVisible,
             bool showCurve,
             bool colorByIkou,
@@ -870,6 +873,73 @@ namespace Site7DbEditor.Services
             float paperLeft = (canvasSize.Width - paperW) / 2f;
             float paperTop = (canvasSize.Height - paperH) / 2f;
 
+            // 1. 用紙のドロップシャドウ
+            using (var shadowBrush = new SolidBrush(Color.FromArgb(80, 0, 0, 0)))
+            {
+                g.FillRectangle(shadowBrush, paperLeft + 5f, paperTop + 5f, paperW, paperH);
+            }
+
+            DrawPaperDrawingCore(
+                g,
+                paperLeft,
+                paperTop,
+                zoom,
+                (float)wMm,
+                (float)hMm,
+                db,
+                isMapLayerVisible,
+                showCurve,
+                colorByIkou,
+                showIkou,
+                showIkouName,
+                showIbutu,
+                showIbutuName,
+                showKikai,
+                showKikaiName,
+                showHyoukou,
+                isPrinting: false
+            );
+
+            // 用紙下部のインフォメーションラベル
+            string docInfo = $"【図面出力イメージ】{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} (回転 {RotationAngleDeg:0.0}°)   ピッチ: {GetEffectivePitchMeters():0.#}m";
+            using (var docFont = new Font("Yu Gothic UI", 8F, FontStyle.Bold))
+            using (var docBrush = new SolidBrush(Color.FromArgb(180, 200, 220)))
+            {
+                g.DrawString(docInfo, docFont, docBrush, paperLeft + 4f, paperTop + paperH + 4f);
+            }
+        }
+
+        /// <summary>
+        /// 用紙図面要素（外枠・内枠・トンボ・格子線・遺構線・座標値・方位記号・スケールバー）のコア描画
+        /// 画面プレビュー・高解像度プリンタ印刷の両方で共有
+        /// </summary>
+        public void DrawPaperDrawingCore(
+            Graphics g,
+            float paperLeft,
+            float paperTop,
+            float zoom,
+            float wMm,
+            float hMm,
+            EditorDbManager? dbManager,
+            Func<int, bool>? isMapLayerVisible,
+            bool showCurve,
+            bool colorByIkou,
+            bool showIkou,
+            bool showIkouName,
+            bool showIbutu,
+            bool showIbutuName,
+            bool showKikai,
+            bool showKikaiName,
+            bool showHyoukou,
+            bool isPrinting = false)
+        {
+            float paperW = wMm * zoom;
+            float paperH = hMm * zoom;
+
+            // スケーリング比率（プリンタ時は用紙1mm=約3.937単位基準）
+            float fontScale = isPrinting ? Math.Max(0.5f, zoom / 3.937f) : 1.0f;
+            float penScale = isPrinting ? Math.Max(0.5f, zoom / 3.937f) : 1.0f;
+
             PointF SurveyToPaperScreen(double sx, double sy)
             {
                 double dNorth = sx - CenterX;
@@ -889,16 +959,15 @@ namespace Site7DbEditor.Services
                 return new PointF(px, py);
             }
 
-            // 1. 用紙のドロップシャドウ & 白地用紙の描画
+            // 1. 白地用紙の描画
             RectangleF paperRect = new RectangleF(paperLeft, paperTop, paperW, paperH);
-            using (var shadowBrush = new SolidBrush(Color.FromArgb(80, 0, 0, 0)))
-            {
-                g.FillRectangle(shadowBrush, paperLeft + 5f, paperTop + 5f, paperW, paperH);
-            }
             g.FillRectangle(Brushes.White, paperRect);
-            using (var paperBorderPen = new Pen(Color.FromArgb(200, 200, 210), 1f))
+            if (!isPrinting)
             {
-                g.DrawRectangle(paperBorderPen, paperRect.X, paperRect.Y, paperRect.Width, paperRect.Height);
+                using (var paperBorderPen = new Pen(Color.FromArgb(200, 200, 210), 1f))
+                {
+                    g.DrawRectangle(paperBorderPen, paperRect.X, paperRect.Y, paperRect.Width, paperRect.Height);
+                }
             }
 
             // 2. 外枠の描画 (余白: 左 MarginLeftMm, 他 MarginOtherMm)
@@ -908,8 +977,8 @@ namespace Site7DbEditor.Services
             float outerH = paperH - (float)((MarginOtherMm * 2.0) * zoom);
             RectangleF outerRect = new RectangleF(outerLeft, outerTop, outerW, outerH);
 
-            using (var outerPen = new Pen(Color.FromArgb(20, 20, 20), 1.2f))
-            using (var thickPen = new Pen(Color.FromArgb(20, 20, 20), 2.8f))
+            using (var outerPen = new Pen(Color.FromArgb(20, 20, 20), 1.2f * penScale))
+            using (var thickPen = new Pen(Color.FromArgb(20, 20, 20), 2.8f * penScale))
             {
                 g.DrawRectangle(outerPen, outerRect.X, outerRect.Y, outerRect.Width, outerRect.Height);
                 // 下辺と右辺を太線で描画
@@ -925,7 +994,7 @@ namespace Site7DbEditor.Services
             float innerH = Math.Max(10f, outerH - spacingPx * 2f);
             RectangleF innerRect = new RectangleF(innerLeft, innerTop, innerW, innerH);
 
-            using (var innerPen = new Pen(Color.FromArgb(0, 100, 180), 1.2f))
+            using (var innerPen = new Pen(Color.FromArgb(0, 100, 180), 1.2f * penScale))
             {
                 g.DrawRectangle(innerPen, innerRect.X, innerRect.Y, innerRect.Width, innerRect.Height);
             }
@@ -934,7 +1003,6 @@ namespace Site7DbEditor.Services
             double pitch = GetEffectivePitchMeters();
             var innerCorners = GetInnerCornersSurvey();
 
-            // 内枠の測量座標範囲（内枠に格子線が表示される範囲を基準とする）
             double minSurX = double.MaxValue, maxSurX = double.MinValue;
             double minSurY = double.MaxValue, maxSurY = double.MinValue;
             foreach (var corner in innerCorners)
@@ -955,8 +1023,8 @@ namespace Site7DbEditor.Services
             g.SetClip(innerRect);
 
             // A. 格子線 (Grid Lines) の描画（内枠クリッピング内で端から端まで完全に通過）
-            using (var tomboPen = new Pen(Color.FromArgb(160, 160, 160), 0.9f))
-            using (var gridPen = new Pen(Color.FromArgb(190, 190, 190), 0.8f) { DashStyle = DashStyle.Dash })
+            using (var tomboPen = new Pen(Color.FromArgb(160, 160, 160), 0.9f * penScale))
+            using (var gridPen = new Pen(Color.FromArgb(190, 190, 190), 0.8f * penScale) { DashStyle = DashStyle.Dash })
             {
                 if (ShowGridLines)
                 {
@@ -987,7 +1055,7 @@ namespace Site7DbEditor.Services
                             PointF pt = SurveyToPaperScreen(sx, sy);
                             if (innerRect.Contains(pt))
                             {
-                                float arm = 4.5f;
+                                float arm = Math.Max(3.0f, 4.5f * penScale);
                                 PointF ptN = SurveyToPaperScreen(sx + (pitch * 0.05), sy);
                                 PointF ptE = SurveyToPaperScreen(sx, sy + (pitch * 0.05));
 
@@ -1009,158 +1077,162 @@ namespace Site7DbEditor.Services
                 }
             }
 
-            // B. 遺構線 (Ikou Lines) の描画
-            if (showIkou || showHyoukou)
+            var db = dbManager;
+            if (db != null)
             {
-                var spline = new Xross_Spline();
-                foreach (var line in db.IkouLList)
+                // B. 遺構線 (Ikou Lines) の描画
+                if (showIkou || showHyoukou)
                 {
-                    int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
-                    if (isMapLayerVisible != null && !isMapLayerVisible(layerIdx)) continue;
-
-                    var pts = SqliteManager.ParsePrecsText(line.Precs);
-                    if (pts.Count == 0) continue;
-
-                    int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                    Color color = colorByIkou
-                        ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
-                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, false);
-
-                    if (line.Mode == 2)
+                    var spline = new Xross_Spline();
+                    foreach (var line in db.IkouLList)
                     {
-                        if (showIkou)
+                        int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                        if (isMapLayerVisible != null && !isMapLayerVisible(layerIdx)) continue;
+
+                        var pts = SqliteManager.ParsePrecsText(line.Precs);
+                        if (pts.Count == 0) continue;
+
+                        int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                        Color color = colorByIkou
+                            ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
+                            : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, false);
+
+                        if (line.Mode == 2)
                         {
-                            using (var ptBrush = new SolidBrush(color))
+                            if (showIkou)
                             {
-                                foreach (var p in pts)
+                                using (var ptBrush = new SolidBrush(color))
                                 {
-                                    PointF sp = SurveyToPaperScreen(p.X, p.Y);
-                                    g.FillEllipse(ptBrush, sp.X - 1.5f, sp.Y - 1.5f, 3f, 3f);
+                                    foreach (var p in pts)
+                                    {
+                                        PointF sp = SurveyToPaperScreen(p.X, p.Y);
+                                        g.FillEllipse(ptBrush, sp.X - 1.5f * penScale, sp.Y - 1.5f * penScale, 3f * penScale, 3f * penScale);
+                                    }
+                                }
+                            }
+                            if (showHyoukou)
+                            {
+                                using (var zFont = new Font("Yu Gothic UI", 6F * fontScale, FontStyle.Regular))
+                                using (var zBrush = new SolidBrush(Color.FromArgb(30, 100, 30)))
+                                {
+                                    foreach (var p in pts)
+                                    {
+                                        PointF sp = SurveyToPaperScreen(p.X, p.Y);
+                                        g.DrawString(p.Z.ToString("0.000"), zFont, zBrush, sp.X + 2f * penScale, sp.Y - 4f * penScale);
+                                    }
+                                }
+                            }
+                            continue;
+                        }
+
+                        if (!showIkou) continue;
+
+                        var layer = db.LayerList.FirstOrDefault(l => l.Id == lineDbLayerId);
+                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        bool drawAsCurve = showCurve && isLayerCurve && pts.Count >= 3;
+
+                        PointF[] screenPts;
+                        if (drawAsCurve)
+                        {
+                            var curvePoints = (line.Mode == 1)
+                                ? spline.Calc3DCloseCurvePoints(pts, 5)
+                                : spline.Calc3DCurvePoints(pts, 5);
+                            screenPts = curvePoints.Select(p => SurveyToPaperScreen(p.X, p.Y)).ToArray();
+                        }
+                        else
+                        {
+                            screenPts = pts.Select(p => SurveyToPaperScreen(p.X, p.Y)).ToArray();
+                        }
+
+                        if (screenPts.Length > 1)
+                        {
+                            float penWidth = (layer != null && layer.Width > 0) ? (float)layer.Width : 1.2f;
+                            using (var linePen = new Pen(color, penWidth * penScale))
+                            {
+                                g.DrawLines(linePen, screenPts);
+                                if (line.Mode == 1 && screenPts.Length >= 3)
+                                {
+                                    g.DrawLine(linePen, screenPts[screenPts.Length - 1], screenPts[0]);
                                 }
                             }
                         }
-                        if (showHyoukou)
+
+                        // 頂点マーク
+                        using (var vBrush = new SolidBrush(color))
                         {
-                            using (var zFont = new Font("Yu Gothic UI", 6F, FontStyle.Regular))
-                            using (var zBrush = new SolidBrush(Color.FromArgb(30, 100, 30)))
+                            foreach (var p in pts)
                             {
-                                foreach (var p in pts)
-                                {
-                                    PointF sp = SurveyToPaperScreen(p.X, p.Y);
-                                    g.DrawString(p.Z.ToString("0.000"), zFont, zBrush, sp.X + 2f, sp.Y - 4f);
-                                }
+                                PointF sp = SurveyToPaperScreen(p.X, p.Y);
+                                g.FillRectangle(vBrush, sp.X - 1f * penScale, sp.Y - 1f * penScale, 2f * penScale, 2f * penScale);
                             }
                         }
-                        continue;
-                    }
 
-                    if (!showIkou) continue;
-
-                    var layer = db.LayerList.FirstOrDefault(l => l.Id == lineDbLayerId);
-                    bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
-                    bool drawAsCurve = showCurve && isLayerCurve && pts.Count >= 3;
-
-                    PointF[] screenPts;
-                    if (drawAsCurve)
-                    {
-                        var curvePoints = (line.Mode == 1)
-                            ? spline.Calc3DCloseCurvePoints(pts, 5)
-                            : spline.Calc3DCurvePoints(pts, 5);
-                        screenPts = curvePoints.Select(p => SurveyToPaperScreen(p.X, p.Y)).ToArray();
-                    }
-                    else
-                    {
-                        screenPts = pts.Select(p => SurveyToPaperScreen(p.X, p.Y)).ToArray();
-                    }
-
-                    if (screenPts.Length > 1)
-                    {
-                        float penWidth = (layer != null && layer.Width > 0) ? (float)layer.Width : 1.2f;
-                        using (var linePen = new Pen(color, penWidth))
+                        // 遺構線名ラベル
+                        if (showIkouName && !string.IsNullOrEmpty(line.Name))
                         {
-                            g.DrawLines(linePen, screenPts);
-                            if (line.Mode == 1 && screenPts.Length >= 3)
+                            PointF labelPt = (line.X != 0 || line.Y != 0)
+                                ? SurveyToPaperScreen(line.X, line.Y)
+                                : SurveyToPaperScreen(pts[0].X, pts[0].Y);
+
+                            using (var lFont = new Font("Yu Gothic UI", 7F * fontScale, FontStyle.Bold))
+                            using (var lBrush = new SolidBrush(Color.Black))
+                            using (var bgBrush = new SolidBrush(Color.FromArgb(200, 255, 255, 255)))
                             {
-                                g.DrawLine(linePen, screenPts[screenPts.Length - 1], screenPts[0]);
+                                var sz = g.MeasureString(line.Name, lFont);
+                                g.FillRectangle(bgBrush, labelPt.X - 1f, labelPt.Y - 1f, sz.Width + 2f, sz.Height + 2f);
+                                g.DrawString(line.Name, lFont, lBrush, labelPt.X, labelPt.Y);
                             }
                         }
                     }
+                }
 
-                    // 頂点マーク
-                    using (var vBrush = new SolidBrush(color))
+                // C. 遺物 (Ibutu Points) の描画
+                if (showIbutu)
+                {
+                    using (var ibutuPen = new Pen(Color.Red, 1.2f * penScale))
+                    using (var ibutuFont = new Font("Yu Gothic UI", 6.5F * fontScale, FontStyle.Bold))
+                    using (var textBrush = new SolidBrush(Color.DarkRed))
                     {
-                        foreach (var p in pts)
+                        foreach (var ibutu in db.IbutuList)
                         {
-                            PointF sp = SurveyToPaperScreen(p.X, p.Y);
-                            g.FillRectangle(vBrush, sp.X - 1f, sp.Y - 1f, 2f, 2f);
-                        }
-                    }
+                            PointF sp = SurveyToPaperScreen(ibutu.X, ibutu.Y);
+                            g.DrawEllipse(ibutuPen, sp.X - 2.5f * penScale, sp.Y - 2.5f * penScale, 5f * penScale, 5f * penScale);
+                            g.DrawLine(ibutuPen, sp.X - 4f * penScale, sp.Y, sp.X + 4f * penScale, sp.Y);
+                            g.DrawLine(ibutuPen, sp.X, sp.Y - 4f * penScale, sp.X, sp.Y + 4f * penScale);
 
-                    // 遺構線名ラベル
-                    if (showIkouName && !string.IsNullOrEmpty(line.Name))
-                    {
-                        PointF labelPt = (line.X != 0 || line.Y != 0)
-                            ? SurveyToPaperScreen(line.X, line.Y)
-                            : SurveyToPaperScreen(pts[0].X, pts[0].Y);
+                            if (showIbutuName)
+                            {
+                                string ibName = !string.IsNullOrEmpty(ibutu.Syubetu)
+                                    ? (ibutu.No > 0 ? $"{ibutu.Syubetu}{ibutu.No}" : ibutu.Syubetu)
+                                    : (ibutu.No > 0 ? $"No.{ibutu.No}" : $"遺物{ibutu.Id}");
 
-                        using (var lFont = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
-                        using (var lBrush = new SolidBrush(Color.Black))
-                        using (var bgBrush = new SolidBrush(Color.FromArgb(200, 255, 255, 255)))
-                        {
-                            var sz = g.MeasureString(line.Name, lFont);
-                            g.FillRectangle(bgBrush, labelPt.X - 1f, labelPt.Y - 1f, sz.Width + 2f, sz.Height + 2f);
-                            g.DrawString(line.Name, lFont, lBrush, labelPt.X, labelPt.Y);
+                                g.DrawString(ibName, ibutuFont, textBrush, sp.X + 4f * penScale, sp.Y - 4f * penScale);
+                            }
                         }
                     }
                 }
-            }
 
-            // C. 遺物 (Ibutu Points) の描画
-            if (showIbutu)
-            {
-                using (var ibutuPen = new Pen(Color.Red, 1.2f))
-                using (var ibutuFont = new Font("Yu Gothic UI", 6.5F, FontStyle.Bold))
-                using (var textBrush = new SolidBrush(Color.DarkRed))
+                // D. 基準点・機械点 (Kikai Points) の描画
+                if (showKikai)
                 {
-                    foreach (var ibutu in db.IbutuList)
+                    using (var kikaiBrush = new SolidBrush(Color.FromArgb(0, 120, 215)))
+                    using (var kikaiFont = new Font("Yu Gothic UI", 7F * fontScale, FontStyle.Bold))
+                    using (var textBrush = new SolidBrush(Color.FromArgb(0, 70, 140)))
                     {
-                        PointF sp = SurveyToPaperScreen(ibutu.X, ibutu.Y);
-                        g.DrawEllipse(ibutuPen, sp.X - 2.5f, sp.Y - 2.5f, 5f, 5f);
-                        g.DrawLine(ibutuPen, sp.X - 4f, sp.Y, sp.X + 4f, sp.Y);
-                        g.DrawLine(ibutuPen, sp.X, sp.Y - 4f, sp.X, sp.Y + 4f);
-
-                        if (showIbutuName)
+                        foreach (var k in db.KikaiList)
                         {
-                            string ibName = !string.IsNullOrEmpty(ibutu.Syubetu)
-                                ? (ibutu.No > 0 ? $"{ibutu.Syubetu}{ibutu.No}" : ibutu.Syubetu)
-                                : (ibutu.No > 0 ? $"No.{ibutu.No}" : $"遺物{ibutu.Id}");
+                            PointF sp = SurveyToPaperScreen(k.X, k.Y);
+                            PointF[] tri = new PointF[] {
+                                new PointF(sp.X, sp.Y - 4f * penScale),
+                                new PointF(sp.X - 3.5f * penScale, sp.Y + 3f * penScale),
+                                new PointF(sp.X + 3.5f * penScale, sp.Y + 3f * penScale)
+                            };
+                            g.FillPolygon(kikaiBrush, tri);
 
-                            g.DrawString(ibName, ibutuFont, textBrush, sp.X + 4f, sp.Y - 4f);
-                        }
-                    }
-                }
-            }
-
-            // D. 基準点・機械点 (Kikai Points) の描画
-            if (showKikai)
-            {
-                using (var kikaiBrush = new SolidBrush(Color.FromArgb(0, 120, 215)))
-                using (var kikaiFont = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
-                using (var textBrush = new SolidBrush(Color.FromArgb(0, 70, 140)))
-                {
-                    foreach (var k in db.KikaiList)
-                    {
-                        PointF sp = SurveyToPaperScreen(k.X, k.Y);
-                        PointF[] tri = new PointF[] {
-                            new PointF(sp.X, sp.Y - 4f),
-                            new PointF(sp.X - 3.5f, sp.Y + 3f),
-                            new PointF(sp.X + 3.5f, sp.Y + 3f)
-                        };
-                        g.FillPolygon(kikaiBrush, tri);
-
-                        if (showKikaiName && !string.IsNullOrEmpty(k.Name))
-                        {
-                            g.DrawString(k.Name, kikaiFont, textBrush, sp.X + 4f, sp.Y - 4f);
+                            if (showKikaiName && !string.IsNullOrEmpty(k.Name))
+                            {
+                                g.DrawString(k.Name, kikaiFont, textBrush, sp.X + 4f * penScale, sp.Y - 4f * penScale);
+                            }
                         }
                     }
                 }
@@ -1172,7 +1244,7 @@ namespace Site7DbEditor.Services
             // 6. 外枠・内枠間の座標表記（X=...m, Y=...m）
             if (ShowBorderCoords)
             {
-                using (var coordFont = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
+                using (var coordFont = new Font("Yu Gothic UI", 7F * fontScale, FontStyle.Bold))
                 using (var coordBrush = new SolidBrush(Color.FromArgb(40, 40, 50)))
                 using (var coordBgBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
                 {
@@ -1221,10 +1293,10 @@ namespace Site7DbEditor.Services
                         new PointF(innerRect.Right, innerRect.Top),
                         new PointF(innerRect.Left, innerRect.Top)
                     };
-                    anchor = GetCornerPoint(innerCornersScreen, NorthArrowPosition, 26f);
+                    anchor = GetCornerPoint(innerCornersScreen, NorthArrowPosition, 26f * penScale);
                 }
 
-                float length = (float)Math.Max(14.0, NorthArrowSizeMm * zoom * 1.3);
+                float length = (float)Math.Max(14.0 * penScale, NorthArrowSizeMm * zoom * 1.3);
                 float width = length * 0.28f;
                 float needleRad = (float)(-RotationAngleDeg * Math.PI / 180.0);
                 float cos = (float)Math.Cos(needleRad);
@@ -1237,8 +1309,8 @@ namespace Site7DbEditor.Services
 
                 using (var blackBrush = new SolidBrush(Color.Black))
                 using (var whiteBrush = new SolidBrush(Color.White))
-                using (var outlinePen = new Pen(Color.Black, 1.2f))
-                using (var font = new Font("Arial", 8F, FontStyle.Bold))
+                using (var outlinePen = new Pen(Color.Black, 1.2f * penScale))
+                using (var font = new Font("Arial", 8F * fontScale, FontStyle.Bold))
                 {
                     g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
                     g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
@@ -1246,7 +1318,7 @@ namespace Site7DbEditor.Services
 
                     string nStr = "N";
                     var nSz = g.MeasureString(nStr, font);
-                    PointF nPos = new PointF(tip.X - sin * 9f - (nSz.Width / 2f), tip.Y - cos * 9f - (nSz.Height / 2f));
+                    PointF nPos = new PointF(tip.X - sin * 9f * penScale - (nSz.Width / 2f), tip.Y - cos * 9f * penScale - (nSz.Height / 2f));
                     g.DrawString(nStr, font, blackBrush, nPos);
                 }
             }
@@ -1257,27 +1329,27 @@ namespace Site7DbEditor.Services
                 PointF anchor;
                 if (ScaleBarPosition == "中下")
                 {
-                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - 18f);
+                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - 18f * penScale);
                 }
                 else
                 {
-                    anchor = new PointF(innerRect.Right - 55f, innerRect.Bottom - 18f);
+                    anchor = new PointF(innerRect.Right - 55f * penScale, innerRect.Bottom - 18f * penScale);
                 }
 
                 double barMeters = (Scale >= 500) ? 50.0 : (Scale >= 200) ? 20.0 : 10.0;
                 double halfBarMeters = barMeters / 2.0;
                 double barMm = (barMeters / Scale) * 1000.0;
                 float barPixelWidth = (float)(barMm * zoom);
-                if (barPixelWidth < 30f || barPixelWidth > 300f) barPixelWidth = 80f;
+                if (barPixelWidth < 30f * penScale || barPixelWidth > 300f * penScale) barPixelWidth = 80f * penScale;
 
-                float barHeight = 4.5f;
+                float barHeight = 4.5f * penScale;
                 float leftX = anchor.X - (barPixelWidth / 2f);
                 float topY = anchor.Y;
 
                 using (var primaryBrush = new SolidBrush(Color.Black))
                 using (var secondaryBrush = new SolidBrush(Color.White))
-                using (var pen = new Pen(Color.Black, 1.1f))
-                using (var font = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
+                using (var pen = new Pen(Color.Black, 1.1f * penScale))
+                using (var font = new Font("Yu Gothic UI", 7F * fontScale, FontStyle.Bold))
                 {
                     float midX = leftX + (barPixelWidth / 2f);
                     g.FillRectangle(primaryBrush, leftX, topY, barPixelWidth / 2f, barHeight);
@@ -1285,18 +1357,123 @@ namespace Site7DbEditor.Services
                     g.DrawRectangle(pen, leftX, topY, barPixelWidth, barHeight);
                     g.DrawLine(pen, midX, topY, midX, topY + barHeight);
 
-                    g.DrawString("0", font, primaryBrush, leftX - 3f, topY - 12f);
-                    g.DrawString($"{halfBarMeters:0}", font, primaryBrush, midX - 5f, topY - 12f);
-                    g.DrawString($"{barMeters:0}m (1/{Scale:0})", font, primaryBrush, leftX + barPixelWidth - 10f, topY - 12f);
+                    g.DrawString("0", font, primaryBrush, leftX - 3f * penScale, topY - 12f * penScale);
+                    g.DrawString($"{halfBarMeters:0}", font, primaryBrush, midX - 5f * penScale, topY - 12f * penScale);
+                    g.DrawString($"{barMeters:0}m (1/{Scale:0})", font, primaryBrush, leftX + barPixelWidth - 10f * penScale, topY - 12f * penScale);
                 }
             }
+        }
 
-            // 9. 用紙下部のインフォメーションラベル
-            string docInfo = $"【図面出力イメージ】{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} (回転 {RotationAngleDeg:0.0}°)   ピッチ: {pitch:0.#}m";
-            using (var docFont = new Font("Yu Gothic UI", 8F, FontStyle.Bold))
-            using (var docBrush = new SolidBrush(Color.FromArgb(180, 200, 220)))
+        /// <summary>
+        /// Windows標準印刷ダイアログ経由で図面を高解像度印刷（縮小印刷にも自動対応）
+        /// </summary>
+        public void Print(
+            IWin32Window owner,
+            EditorDbManager? db,
+            Func<int, bool>? isMapLayerVisible,
+            bool showCurve,
+            bool colorByIkou,
+            bool showIkou,
+            bool showIkouName,
+            bool showIbutu,
+            bool showIbutuName,
+            bool showKikai,
+            bool showKikaiName,
+            bool showHyoukou)
+        {
+            try
             {
-                g.DrawString(docInfo, docFont, docBrush, paperLeft + 4f, paperTop + paperH + 4f);
+                using (var pd = new System.Drawing.Printing.PrintDocument())
+                {
+                    pd.DocumentName = $"SITE7_図面_{PaperSizeName}_{(IsLandscape ? "横" : "縦")}";
+                    pd.DefaultPageSettings.Landscape = IsLandscape;
+
+                    // プリンタでサポートされている用紙サイズがあれば図枠のサイズ(A3, A4等)をデフォルトに設定
+                    foreach (System.Drawing.Printing.PaperSize ps in pd.PrinterSettings.PaperSizes)
+                    {
+                        if (string.Equals(ps.PaperName, PaperSizeName, StringComparison.OrdinalIgnoreCase) ||
+                            ps.PaperName.StartsWith(PaperSizeName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            pd.DefaultPageSettings.PaperSize = ps;
+                            break;
+                        }
+                    }
+
+                    using (var dlg = new PrintDialog())
+                    {
+                        dlg.Document = pd;
+                        dlg.UseEXDialog = true;
+                        dlg.AllowSomePages = false;
+                        dlg.AllowSelection = false;
+
+                        if (dlg.ShowDialog(owner) == DialogResult.OK)
+                        {
+                            pd.PrintPage += (s, e) =>
+                            {
+                                if (e.Graphics == null) return;
+
+                                var (logicalWMm, logicalHMm) = GetPaperDimensionsMm();
+
+                                // 実際のプリンタ用紙サイズ (1/100インチ単位)
+                                float pageW100Inch = e.PageBounds.Width;
+                                float pageH100Inch = e.PageBounds.Height;
+
+                                // 1/100インチからmmへの変換 (1/100 inch = 0.254 mm)
+                                float physicalPageWMm = pageW100Inch * 0.254f;
+                                float physicalPageHMm = pageH100Inch * 0.254f;
+
+                                // 印刷可能マージン（左右上下各5mm程度を確保）
+                                float marginMm = 5.0f;
+                                float availWMm = Math.Max(10f, physicalPageWMm - (marginMm * 2f));
+                                float availHMm = Math.Max(10f, physicalPageHMm - (marginMm * 2f));
+
+                                // 縮小印刷比率（等倍で収まれば1.0、用紙が小さければ縮小）
+                                float scaleRatio = Math.Min(availWMm / (float)logicalWMm, availHMm / (float)logicalHMm);
+                                if (scaleRatio > 1.0f) scaleRatio = 1.0f; // 拡大はせず最大100%等倍
+
+                                // 100分の1インチ単位でのzoom（1mmあたり何1/100インチか）
+                                float zoom100InchPerMm = (1.0f / 0.254f) * scaleRatio;
+
+                                float printedW100Inch = (float)logicalWMm * zoom100InchPerMm;
+                                float printedH100Inch = (float)logicalHMm * zoom100InchPerMm;
+
+                                float originX = (pageW100Inch - printedW100Inch) / 2f;
+                                float originY = (pageH100Inch - printedH100Inch) / 2f;
+
+                                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                                DrawPaperDrawingCore(
+                                    e.Graphics,
+                                    originX,
+                                    originY,
+                                    zoom100InchPerMm,
+                                    (float)logicalWMm,
+                                    (float)logicalHMm,
+                                    db,
+                                    isMapLayerVisible,
+                                    showCurve,
+                                    colorByIkou,
+                                    showIkou,
+                                    showIkouName,
+                                    showIbutu,
+                                    showIbutuName,
+                                    showKikai,
+                                    showKikaiName,
+                                    showHyoukou,
+                                    isPrinting: true
+                                );
+
+                                e.HasMorePages = false;
+                            };
+
+                            pd.Print();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(owner, $"印刷の開始中にエラーが発生しました:\n{ex.Message}", "印刷エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
