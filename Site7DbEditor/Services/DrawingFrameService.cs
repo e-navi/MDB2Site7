@@ -1466,7 +1466,15 @@ namespace Site7DbEditor.Services
                                 e.HasMorePages = false;
                             };
 
-                            pd.Print();
+                            using (var ppd = new PrintPreviewDialog())
+                            {
+                                ppd.Document = pd;
+                                ppd.Text = $"印刷プレビュー - SITE7 図面 ({PaperSizeName} {(IsLandscape ? "横" : "縦")})";
+                                ppd.Width = 1050;
+                                ppd.Height = 750;
+                                ppd.StartPosition = FormStartPosition.CenterParent;
+                                ppd.ShowDialog(owner);
+                            }
                         }
                     }
                 }
