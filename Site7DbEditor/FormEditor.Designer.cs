@@ -562,7 +562,7 @@ namespace Site7DbEditor
             grpDspTarget.Controls.Add(chkShowDrawingFrame);
             grpDspTarget.Location = new Point(4, 349);
             grpDspTarget.Name = "grpDspTarget";
-            grpDspTarget.Size = new Size(124, 240);
+            grpDspTarget.Size = new Size(124, 248);
             grpDspTarget.TabIndex = 37;
             grpDspTarget.TabStop = false;
             grpDspTarget.Text = "表示対象";
@@ -1071,7 +1071,7 @@ namespace Site7DbEditor
             chkShowCurve.CheckState = CheckState.Checked;
             chkShowCurve.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowCurve.ForeColor = Color.Black;
-            chkShowCurve.Location = new Point(6, 600);
+            chkShowCurve.Location = new Point(6, 606);
             chkShowCurve.Name = "chkShowCurve";
             chkShowCurve.Size = new Size(74, 19);
             chkShowCurve.TabIndex = 32;
@@ -1083,7 +1083,7 @@ namespace Site7DbEditor
             chkColorByIkou.AutoSize = true;
             chkColorByIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkColorByIkou.ForeColor = Color.Black;
-            chkColorByIkou.Location = new Point(6, 624);
+            chkColorByIkou.Location = new Point(6, 630);
             chkColorByIkou.Name = "chkColorByIkou";
             chkColorByIkou.Size = new Size(86, 19);
             chkColorByIkou.TabIndex = 33;
@@ -1095,7 +1095,7 @@ namespace Site7DbEditor
             chkWhiteBg.AutoSize = true;
             chkWhiteBg.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkWhiteBg.ForeColor = Color.Black;
-            chkWhiteBg.Location = new Point(6, 648);
+            chkWhiteBg.Location = new Point(6, 654);
             chkWhiteBg.Name = "chkWhiteBg";
             chkWhiteBg.Size = new Size(74, 19);
             chkWhiteBg.TabIndex = 34;
