@@ -87,6 +87,7 @@ namespace Site7DbEditor
 
             // 基本・配置
             this.chkVisible.CheckedChanged += (s, e) => OnValueChanged();
+            this.chkPreviewDrawing.CheckedChanged += (s, e) => OnValueChanged();
             this.cmbPaperSize.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.rdoLandscape.CheckedChanged += (s, e) => OnValueChanged();
             this.rdoPortrait.CheckedChanged += (s, e) => OnValueChanged();
@@ -158,6 +159,7 @@ namespace Site7DbEditor
             {
                 var frame = DrawingFrameService.Instance;
                 chkVisible.Checked = frame.IsVisible;
+                chkPreviewDrawing.Checked = frame.IsDrawingPreviewEnabled;
 
                 int idx = cmbPaperSize.FindStringExact(frame.PaperSizeName);
                 cmbPaperSize.SelectedIndex = idx >= 0 ? idx : 1; // Default A3
@@ -223,6 +225,7 @@ namespace Site7DbEditor
 
             var frame = DrawingFrameService.Instance;
             frame.IsVisible = chkVisible.Checked;
+            frame.IsDrawingPreviewEnabled = chkPreviewDrawing.Checked;
             frame.PaperSizeName = cmbPaperSize.SelectedItem?.ToString() ?? "A3";
             frame.IsLandscape = rdoLandscape.Checked;
 

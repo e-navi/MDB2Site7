@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using Site7DbEditor;
 
 namespace Site7DbEditor.Services
 {
@@ -11,6 +14,7 @@ namespace Site7DbEditor.Services
 
         // 状態・パラメータ
         public bool IsVisible { get; set; } = true;
+        public bool IsDrawingPreviewEnabled { get; set; } = false; // 図面表示確認（2分割プレビュー）
         public string PaperSizeName { get; set; } = "A3"; // A4, A3, A2, A1, A0
         public bool IsLandscape { get; set; } = true;     // 横向き
         public double Scale { get; set; } = 200.0;        // 縮尺 (例: 200 = 1/200)
@@ -650,6 +654,548 @@ namespace Site7DbEditor.Services
                 case "右上":
                 default:
                     return new PointF(corners[2].X - inset, corners[2].Y + inset);
+            }
+        }
+
+        /// <summary>
+        /// 図面プレビューキャンバス上のスクリーン座標を測量座標 (北X, 東Y) に変換
+        /// </summary>
+        public (double surveyX, double surveyY) PaperScreenToSurvey(PointF screenPt, Size canvasSize)
+        {
+            var (wMm, hMm) = GetPaperDimensionsMm();
+            float availW = Math.Max(10f, canvasSize.Width - 36f);
+            float availH = Math.Max(10f, canvasSize.Height - 36f);
+            float zoom = Math.Min(availW / (float)wMm, availH / (float)hMm);
+
+            float paperW = (float)wMm * zoom;
+            float paperH = (float)hMm * zoom;
+            float paperLeft = (canvasSize.Width - paperW) / 2f;
+            float paperTop = (canvasSize.Height - paperH) / 2f;
+
+            float mmX = (screenPt.X - (paperLeft + paperW / 2f)) / zoom;
+            float mmY = ((paperTop + paperH / 2f) - screenPt.Y) / zoom;
+
+            double u = (mmX / 1000.0) * Scale;
+            double v = (mmY / 1000.0) * Scale;
+
+            double rad = RotationAngleDeg * Math.PI / 180.0;
+            double cos = Math.Cos(rad);
+            double sin = Math.Sin(rad);
+
+            double dNorth = v * cos - u * sin;
+            double dEast = v * sin + u * cos;
+
+            return (CenterX + dNorth, CenterY + dEast);
+        }
+
+        /// <summary>
+        /// 図面プレビューキャンバス（用紙イメージ）へのリアルタイムレンダリング
+        /// </summary>
+        public void DrawPaperPreview(
+            Graphics g,
+            Size canvasSize,
+            EditorDbManager db,
+            Func<int, bool>? isMapLayerVisible,
+            bool showCurve,
+            bool colorByIkou,
+            bool showIkou,
+            bool showIkouName,
+            bool showIbutu,
+            bool showIbutuName,
+            bool showKikai,
+            bool showKikaiName,
+            bool showHyoukou)
+        {
+            if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.Clear(Color.FromArgb(32, 34, 44)); // スタジオ暗色背景
+
+            var (wMm, hMm) = GetPaperDimensionsMm();
+            float availW = Math.Max(10f, canvasSize.Width - 36f);
+            float availH = Math.Max(10f, canvasSize.Height - 36f);
+            float zoom = Math.Min(availW / (float)wMm, availH / (float)hMm);
+
+            float paperW = (float)wMm * zoom;
+            float paperH = (float)hMm * zoom;
+            float paperLeft = (canvasSize.Width - paperW) / 2f;
+            float paperTop = (canvasSize.Height - paperH) / 2f;
+
+            PointF SurveyToPaperScreen(double sx, double sy)
+            {
+                double dNorth = sx - CenterX;
+                double dEast = sy - CenterY;
+                double rad = RotationAngleDeg * Math.PI / 180.0;
+                double cos = Math.Cos(rad);
+                double sin = Math.Sin(rad);
+
+                double u = dNorth * (-sin) + dEast * cos;
+                double v = dNorth * cos + dEast * sin;
+
+                double mmX = (u / Scale) * 1000.0;
+                double mmY = (v / Scale) * 1000.0;
+
+                float px = paperLeft + (paperW / 2f) + (float)(mmX * zoom);
+                float py = paperTop + (paperH / 2f) - (float)(mmY * zoom);
+                return new PointF(px, py);
+            }
+
+            // 1. 用紙のドロップシャドウ & 白地用紙の描画
+            RectangleF paperRect = new RectangleF(paperLeft, paperTop, paperW, paperH);
+            using (var shadowBrush = new SolidBrush(Color.FromArgb(80, 0, 0, 0)))
+            {
+                g.FillRectangle(shadowBrush, paperLeft + 5f, paperTop + 5f, paperW, paperH);
+            }
+            g.FillRectangle(Brushes.White, paperRect);
+            using (var paperBorderPen = new Pen(Color.FromArgb(200, 200, 210), 1f))
+            {
+                g.DrawRectangle(paperBorderPen, paperRect.X, paperRect.Y, paperRect.Width, paperRect.Height);
+            }
+
+            // 2. 外枠の描画 (余白: 左 MarginLeftMm, 他 MarginOtherMm)
+            float outerLeft = paperLeft + (float)(MarginLeftMm * zoom);
+            float outerTop = paperTop + (float)(MarginOtherMm * zoom);
+            float outerW = paperW - (float)((MarginLeftMm + MarginOtherMm) * zoom);
+            float outerH = paperH - (float)((MarginOtherMm * 2.0) * zoom);
+            RectangleF outerRect = new RectangleF(outerLeft, outerTop, outerW, outerH);
+
+            using (var outerPen = new Pen(Color.FromArgb(20, 20, 20), 1.2f))
+            using (var thickPen = new Pen(Color.FromArgb(20, 20, 20), 2.8f))
+            {
+                g.DrawRectangle(outerPen, outerRect.X, outerRect.Y, outerRect.Width, outerRect.Height);
+                // 下辺と右辺を太線で描画
+                g.DrawLine(thickPen, outerRect.Left, outerRect.Bottom, outerRect.Right, outerRect.Bottom);
+                g.DrawLine(thickPen, outerRect.Right, outerRect.Top, outerRect.Right, outerRect.Bottom);
+            }
+
+            // 3. 内枠の描画 (外枠から OuterInnerSpacingMm 内側)
+            float spacingPx = (float)(OuterInnerSpacingMm * zoom);
+            float innerLeft = outerLeft + spacingPx;
+            float innerTop = outerTop + spacingPx;
+            float innerW = Math.Max(10f, outerW - spacingPx * 2f);
+            float innerH = Math.Max(10f, outerH - spacingPx * 2f);
+            RectangleF innerRect = new RectangleF(innerLeft, innerTop, innerW, innerH);
+
+            using (var innerPen = new Pen(Color.FromArgb(0, 100, 180), 1.2f))
+            {
+                g.DrawRectangle(innerPen, innerRect.X, innerRect.Y, innerRect.Width, innerRect.Height);
+            }
+
+            // 4. トンボ (+) & 外枠・内枠間の座標値の計算・描画
+            double pitch = GetEffectivePitchMeters();
+            var innerCorners = GetInnerCornersSurvey();
+
+            // 内枠の測量座標範囲
+            double minSurX = double.MaxValue, maxSurX = double.MinValue;
+            double minSurY = double.MaxValue, maxSurY = double.MinValue;
+            foreach (var corner in innerCorners)
+            {
+                minSurX = Math.Min(minSurX, corner.surveyX);
+                maxSurX = Math.Max(maxSurX, corner.surveyX);
+                minSurY = Math.Min(minSurY, corner.surveyY);
+                maxSurY = Math.Max(maxSurY, corner.surveyY);
+            }
+
+            double startSurX = Math.Floor(minSurX / pitch) * pitch;
+            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch;
+            double startSurY = Math.Floor(minSurY / pitch) * pitch;
+            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch;
+
+            // 5. 内枠内クリッピングで図面要素を描画
+            var oldClip = g.Clip;
+            g.SetClip(innerRect);
+
+            // A. トンボ (+) と 格子線
+            using (var tomboPen = new Pen(Color.FromArgb(200, 30, 30), 1.0f))
+            using (var gridPen = new Pen(Color.FromArgb(60, 200, 30, 30), 1f) { DashStyle = DashStyle.Dash })
+            {
+                for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                {
+                    for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
+                    {
+                        PointF pt = SurveyToPaperScreen(sx, sy);
+                        if (innerRect.Contains(pt))
+                        {
+                            if (ShowGridLines)
+                            {
+                                PointF ptN = SurveyToPaperScreen(sx + pitch, sy);
+                                PointF ptE = SurveyToPaperScreen(sx, sy + pitch);
+                                g.DrawLine(gridPen, pt, ptN);
+                                g.DrawLine(gridPen, pt, ptE);
+                            }
+
+                            if (ShowTombo)
+                            {
+                                float arm = 4.5f;
+                                PointF ptN = SurveyToPaperScreen(sx + (pitch * 0.05), sy);
+                                PointF ptE = SurveyToPaperScreen(sx, sy + (pitch * 0.05));
+
+                                float dirNx = ptN.X - pt.X;
+                                float dirNy = ptN.Y - pt.Y;
+                                float lenN = (float)Math.Sqrt(dirNx * dirNx + dirNy * dirNy);
+                                if (lenN > 0.001f) { dirNx = dirNx / lenN * arm; dirNy = dirNy / lenN * arm; }
+
+                                float dirEx = ptE.X - pt.X;
+                                float dirEy = ptE.Y - pt.Y;
+                                float lenE = (float)Math.Sqrt(dirEx * dirEx + dirEy * dirEy);
+                                if (lenE > 0.001f) { dirEx = dirEx / lenE * arm; dirEy = dirEy / lenE * arm; }
+
+                                g.DrawLine(tomboPen, pt.X - dirNx, pt.Y - dirNy, pt.X + dirNx, pt.Y + dirNy);
+                                g.DrawLine(tomboPen, pt.X - dirEx, pt.Y - dirEy, pt.X + dirEx, pt.Y + dirEy);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // B. 遺構線 (Ikou Lines) の描画
+            if (showIkou || showHyoukou)
+            {
+                var spline = new Xross_Spline();
+                foreach (var line in db.IkouLList)
+                {
+                    int layerIdx = line.Layer >= 49 ? (line.Layer - 48) : line.Layer;
+                    if (isMapLayerVisible != null && !isMapLayerVisible(layerIdx)) continue;
+
+                    var pts = SqliteManager.ParsePrecsText(line.Precs);
+                    if (pts.Count == 0) continue;
+
+                    int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
+                    Color color = colorByIkou
+                        ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
+                        : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, false);
+
+                    if (line.Mode == 2)
+                    {
+                        if (showIkou)
+                        {
+                            using (var ptBrush = new SolidBrush(color))
+                            {
+                                foreach (var p in pts)
+                                {
+                                    PointF sp = SurveyToPaperScreen(p.X, p.Y);
+                                    g.FillEllipse(ptBrush, sp.X - 1.5f, sp.Y - 1.5f, 3f, 3f);
+                                }
+                            }
+                        }
+                        if (showHyoukou)
+                        {
+                            using (var zFont = new Font("Yu Gothic UI", 6F, FontStyle.Regular))
+                            using (var zBrush = new SolidBrush(Color.FromArgb(30, 100, 30)))
+                            {
+                                foreach (var p in pts)
+                                {
+                                    PointF sp = SurveyToPaperScreen(p.X, p.Y);
+                                    g.DrawString(p.Z.ToString("0.000"), zFont, zBrush, sp.X + 2f, sp.Y - 4f);
+                                }
+                            }
+                        }
+                        continue;
+                    }
+
+                    if (!showIkou) continue;
+
+                    var layer = db.LayerList.FirstOrDefault(l => l.Id == lineDbLayerId);
+                    bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                    bool drawAsCurve = showCurve && isLayerCurve && pts.Count >= 3;
+
+                    PointF[] screenPts;
+                    if (drawAsCurve)
+                    {
+                        var curvePoints = (line.Mode == 1)
+                            ? spline.Calc3DCloseCurvePoints(pts, 5)
+                            : spline.Calc3DCurvePoints(pts, 5);
+                        screenPts = curvePoints.Select(p => SurveyToPaperScreen(p.X, p.Y)).ToArray();
+                    }
+                    else
+                    {
+                        screenPts = pts.Select(p => SurveyToPaperScreen(p.X, p.Y)).ToArray();
+                    }
+
+                    if (screenPts.Length > 1)
+                    {
+                        float penWidth = (layer != null && layer.Width > 0) ? (float)layer.Width : 1.2f;
+                        using (var linePen = new Pen(color, penWidth))
+                        {
+                            g.DrawLines(linePen, screenPts);
+                            if (line.Mode == 1 && screenPts.Length >= 3)
+                            {
+                                g.DrawLine(linePen, screenPts[screenPts.Length - 1], screenPts[0]);
+                            }
+                        }
+                    }
+
+                    // 頂点マーク
+                    using (var vBrush = new SolidBrush(color))
+                    {
+                        foreach (var p in pts)
+                        {
+                            PointF sp = SurveyToPaperScreen(p.X, p.Y);
+                            g.FillRectangle(vBrush, sp.X - 1f, sp.Y - 1f, 2f, 2f);
+                        }
+                    }
+
+                    // 遺構線名ラベル
+                    if (showIkouName && !string.IsNullOrEmpty(line.Name))
+                    {
+                        PointF labelPt = (line.X != 0 || line.Y != 0)
+                            ? SurveyToPaperScreen(line.X, line.Y)
+                            : SurveyToPaperScreen(pts[0].X, pts[0].Y);
+
+                        using (var lFont = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
+                        using (var lBrush = new SolidBrush(Color.Black))
+                        using (var bgBrush = new SolidBrush(Color.FromArgb(200, 255, 255, 255)))
+                        {
+                            var sz = g.MeasureString(line.Name, lFont);
+                            g.FillRectangle(bgBrush, labelPt.X - 1f, labelPt.Y - 1f, sz.Width + 2f, sz.Height + 2f);
+                            g.DrawString(line.Name, lFont, lBrush, labelPt.X, labelPt.Y);
+                        }
+                    }
+                }
+            }
+
+            // C. 遺物 (Ibutu Points) の描画
+            if (showIbutu)
+            {
+                using (var ibutuPen = new Pen(Color.Red, 1.2f))
+                using (var ibutuFont = new Font("Yu Gothic UI", 6.5F, FontStyle.Bold))
+                using (var textBrush = new SolidBrush(Color.DarkRed))
+                {
+                    foreach (var ibutu in db.IbutuList)
+                    {
+                        PointF sp = SurveyToPaperScreen(ibutu.X, ibutu.Y);
+                        g.DrawEllipse(ibutuPen, sp.X - 2.5f, sp.Y - 2.5f, 5f, 5f);
+                        g.DrawLine(ibutuPen, sp.X - 4f, sp.Y, sp.X + 4f, sp.Y);
+                        g.DrawLine(ibutuPen, sp.X, sp.Y - 4f, sp.X, sp.Y + 4f);
+
+                        if (showIbutuName)
+                        {
+                            string ibName = !string.IsNullOrEmpty(ibutu.Syubetu)
+                                ? (ibutu.No > 0 ? $"{ibutu.Syubetu}{ibutu.No}" : ibutu.Syubetu)
+                                : (ibutu.No > 0 ? $"No.{ibutu.No}" : $"遺物{ibutu.Id}");
+
+                            g.DrawString(ibName, ibutuFont, textBrush, sp.X + 4f, sp.Y - 4f);
+                        }
+                    }
+                }
+            }
+
+            // D. 基準点・機械点 (Kikai Points) の描画
+            if (showKikai)
+            {
+                using (var kikaiBrush = new SolidBrush(Color.FromArgb(0, 120, 215)))
+                using (var kikaiFont = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
+                using (var textBrush = new SolidBrush(Color.FromArgb(0, 70, 140)))
+                {
+                    foreach (var k in db.KikaiList)
+                    {
+                        PointF sp = SurveyToPaperScreen(k.X, k.Y);
+                        PointF[] tri = new PointF[] {
+                            new PointF(sp.X, sp.Y - 4f),
+                            new PointF(sp.X - 3.5f, sp.Y + 3f),
+                            new PointF(sp.X + 3.5f, sp.Y + 3f)
+                        };
+                        g.FillPolygon(kikaiBrush, tri);
+
+                        if (showKikaiName && !string.IsNullOrEmpty(k.Name))
+                        {
+                            g.DrawString(k.Name, kikaiFont, textBrush, sp.X + 4f, sp.Y - 4f);
+                        }
+                    }
+                }
+            }
+
+            // クリッピング解除
+            g.Clip = oldClip;
+
+            // 6. 外枠・内枠間の座標表記（X=...m, Y=...m）
+            if (ShowBorderCoords)
+            {
+                using (var coordFont = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
+                using (var coordBrush = new SolidBrush(Color.FromArgb(40, 40, 50)))
+                using (var coordBgBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
+                {
+                    var (innerWM, innerHM, offsetEastM, offsetNorthM) = GetInnerFrameDimensionsMeters();
+                    double halfW = innerWM / 2.0;
+                    double halfH = innerHM / 2.0;
+                    double uMin = offsetEastM - halfW;
+                    double uMax = offsetEastM + halfW;
+                    double vMin = offsetNorthM - halfH;
+                    double vMax = offsetNorthM + halfH;
+
+                    for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                    {
+                        DrawSingleCoordinateLabelPaper(g, sx, true, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
+                    }
+                    for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
+                    {
+                        DrawSingleCoordinateLabelPaper(g, sy, false, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
+                    }
+                }
+            }
+
+            // 7. 方位記号 (North Arrow) の描画
+            if (ShowNorthArrow)
+            {
+                PointF anchor;
+                if (NorthArrowPosition == "カスタム" && HasCustomNorthArrowPos)
+                {
+                    anchor = SurveyToPaperScreen(NorthArrowCustomSurveyX, NorthArrowCustomSurveyY);
+                }
+                else
+                {
+                    PointF[] innerCornersScreen = new PointF[] {
+                        new PointF(innerRect.Left, innerRect.Bottom),
+                        new PointF(innerRect.Right, innerRect.Bottom),
+                        new PointF(innerRect.Right, innerRect.Top),
+                        new PointF(innerRect.Left, innerRect.Top)
+                    };
+                    anchor = GetCornerPoint(innerCornersScreen, NorthArrowPosition, 26f);
+                }
+
+                float length = (float)Math.Max(14.0, NorthArrowSizeMm * zoom * 1.3);
+                float width = length * 0.28f;
+                float needleRad = (float)(-RotationAngleDeg * Math.PI / 180.0);
+                float cos = (float)Math.Cos(needleRad);
+                float sin = (float)Math.Sin(needleRad);
+
+                PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
+                PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
+                PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
+
+                using (var blackBrush = new SolidBrush(Color.Black))
+                using (var whiteBrush = new SolidBrush(Color.White))
+                using (var outlinePen = new Pen(Color.Black, 1.2f))
+                using (var font = new Font("Arial", 8F, FontStyle.Bold))
+                {
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
+
+                    string nStr = "N";
+                    var nSz = g.MeasureString(nStr, font);
+                    PointF nPos = new PointF(tip.X - sin * 9f - (nSz.Width / 2f), tip.Y - cos * 9f - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+            }
+
+            // 8. スケールバー (Scale Bar) の描画
+            if (ShowScaleBar)
+            {
+                PointF anchor;
+                if (ScaleBarPosition == "中下")
+                {
+                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - 18f);
+                }
+                else
+                {
+                    anchor = new PointF(innerRect.Right - 55f, innerRect.Bottom - 18f);
+                }
+
+                double barMeters = (Scale >= 500) ? 50.0 : (Scale >= 200) ? 20.0 : 10.0;
+                double halfBarMeters = barMeters / 2.0;
+                double barMm = (barMeters / Scale) * 1000.0;
+                float barPixelWidth = (float)(barMm * zoom);
+                if (barPixelWidth < 30f || barPixelWidth > 300f) barPixelWidth = 80f;
+
+                float barHeight = 4.5f;
+                float leftX = anchor.X - (barPixelWidth / 2f);
+                float topY = anchor.Y;
+
+                using (var primaryBrush = new SolidBrush(Color.Black))
+                using (var secondaryBrush = new SolidBrush(Color.White))
+                using (var pen = new Pen(Color.Black, 1.1f))
+                using (var font = new Font("Yu Gothic UI", 7F, FontStyle.Bold))
+                {
+                    float midX = leftX + (barPixelWidth / 2f);
+                    g.FillRectangle(primaryBrush, leftX, topY, barPixelWidth / 2f, barHeight);
+                    g.FillRectangle(secondaryBrush, midX, topY, barPixelWidth / 2f, barHeight);
+                    g.DrawRectangle(pen, leftX, topY, barPixelWidth, barHeight);
+                    g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+
+                    g.DrawString("0", font, primaryBrush, leftX - 3f, topY - 12f);
+                    g.DrawString($"{halfBarMeters:0}", font, primaryBrush, midX - 5f, topY - 12f);
+                    g.DrawString($"{barMeters:0}m (1/{Scale:0})", font, primaryBrush, leftX + barPixelWidth - 10f, topY - 12f);
+                }
+            }
+
+            // 9. 用紙下部のインフォメーションラベル
+            string docInfo = $"【図面出力イメージ】{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} (回転 {RotationAngleDeg:0.0}°)   ピッチ: {pitch:0.#}m";
+            using (var docFont = new Font("Yu Gothic UI", 8F, FontStyle.Bold))
+            using (var docBrush = new SolidBrush(Color.FromArgb(180, 200, 220)))
+            {
+                g.DrawString(docInfo, docFont, docBrush, paperLeft + 4f, paperTop + paperH + 4f);
+            }
+        }
+
+        private void DrawSingleCoordinateLabelPaper(Graphics g, double val, bool isXAxis, double uMin, double uMax, double vMin, double vMax, Font font, Brush textBrush, Brush bgBrush, Func<double, double, PointF> surveyToScreen)
+        {
+            double rad = RotationAngleDeg * Math.PI / 180.0;
+            double cos = Math.Cos(rad);
+            double sin = Math.Sin(rad);
+
+            string labelText = isXAxis ? $"X={val:0.00}m" : $"Y={val:0.00}m";
+            var intersections = new System.Collections.Generic.List<(double surX, double surY)>();
+
+            if (isXAxis)
+            {
+                double dNorth = val - CenterX;
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double dEast1 = (vMin - dNorth * cos) / sin;
+                    double u1 = dNorth * (-sin) + dEast1 * cos;
+                    if (u1 >= uMin - 0.01 && u1 <= uMax + 0.01) intersections.Add((val, CenterY + dEast1));
+
+                    double dEast2 = (vMax - dNorth * cos) / sin;
+                    double u2 = dNorth * (-sin) + dEast2 * cos;
+                    if (u2 >= uMin - 0.01 && u2 <= uMax + 0.01) intersections.Add((val, CenterY + dEast2));
+                }
+                if (Math.Abs(cos) > 1e-6)
+                {
+                    double dEast3 = (uMin + dNorth * sin) / cos;
+                    double v3 = dNorth * cos + dEast3 * sin;
+                    if (v3 >= vMin - 0.01 && v3 <= vMax + 0.01) intersections.Add((val, CenterY + dEast3));
+
+                    double dEast4 = (uMax + dNorth * sin) / cos;
+                    double v4 = dNorth * cos + dEast4 * sin;
+                    if (v4 >= vMin - 0.01 && v4 <= vMax + 0.01) intersections.Add((val, CenterY + dEast4));
+                }
+            }
+            else
+            {
+                double dEast = val - CenterY;
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double dNorth1 = (dEast * cos - uMin) / sin;
+                    double v1 = dNorth1 * cos + dEast * sin;
+                    if (v1 >= vMin - 0.01 && v1 <= vMax + 0.01) intersections.Add((CenterX + dNorth1, val));
+
+                    double dNorth2 = (dEast * cos - uMax) / sin;
+                    double v2 = dNorth2 * cos + dEast * sin;
+                    if (v2 >= vMin - 0.01 && v2 <= vMax + 0.01) intersections.Add((CenterX + dNorth2, val));
+                }
+                if (Math.Abs(cos) > 1e-6)
+                {
+                    double dNorth3 = (vMin - dEast * sin) / cos;
+                    double u3 = dNorth3 * (-sin) + dEast * cos;
+                    if (u3 >= vMin - 0.01 && u3 <= vMax + 0.01) intersections.Add((CenterX + dNorth3, val));
+
+                    double dNorth4 = (vMax - dEast * sin) / cos;
+                    double u4 = dNorth4 * (-sin) + dEast * cos;
+                    if (u4 >= vMin - 0.01 && u4 <= vMax + 0.01) intersections.Add((CenterX + dNorth4, val));
+                }
+            }
+
+            foreach (var (surX, surY) in intersections)
+            {
+                PointF pt = surveyToScreen(surX, surY);
+                var sz = g.MeasureString(labelText, font);
+                float drawX = pt.X - (sz.Width / 2f);
+                float drawY = pt.Y - (sz.Height / 2f);
+
+                g.FillRectangle(bgBrush, drawX - 1f, drawY - 1f, sz.Width + 2f, sz.Height + 2f);
+                g.DrawString(labelText, font, textBrush, drawX, drawY);
             }
         }
     }

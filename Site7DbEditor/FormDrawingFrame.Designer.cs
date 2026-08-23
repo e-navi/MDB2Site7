@@ -18,6 +18,7 @@ namespace Site7DbEditor
         private void InitializeComponent()
         {
             this.chkVisible = new System.Windows.Forms.CheckBox();
+            this.chkPreviewDrawing = new System.Windows.Forms.CheckBox();
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabBasic = new System.Windows.Forms.TabPage();
             this.grpPaper = new System.Windows.Forms.GroupBox();
@@ -98,14 +99,26 @@ namespace Site7DbEditor
             this.chkVisible.AutoSize = true;
             this.chkVisible.Checked = true;
             this.chkVisible.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkVisible.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.chkVisible.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.chkVisible.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
             this.chkVisible.Location = new System.Drawing.Point(8, 6);
             this.chkVisible.Name = "chkVisible";
-            this.chkVisible.Size = new System.Drawing.Size(102, 19);
+            this.chkVisible.Size = new System.Drawing.Size(98, 19);
             this.chkVisible.TabIndex = 0;
-            this.chkVisible.Text = "全図図枠を表示";
+            this.chkVisible.Text = "全図図枠表示";
             this.chkVisible.UseVisualStyleBackColor = true;
+            // 
+            // chkPreviewDrawing
+            // 
+            this.chkPreviewDrawing.AutoSize = true;
+            this.chkPreviewDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.chkPreviewDrawing.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(200)))), ((int)(((byte)(0)))));
+            this.chkPreviewDrawing.Location = new System.Drawing.Point(118, 6);
+            this.chkPreviewDrawing.Name = "chkPreviewDrawing";
+            this.chkPreviewDrawing.Size = new System.Drawing.Size(98, 19);
+            this.chkPreviewDrawing.TabIndex = 1;
+            this.chkPreviewDrawing.Text = "図面表示確認";
+            this.chkPreviewDrawing.UseVisualStyleBackColor = true;
             // 
             // tabSettings
             // 
@@ -117,7 +130,7 @@ namespace Site7DbEditor
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.SelectedIndex = 0;
             this.tabSettings.Size = new System.Drawing.Size(236, 318);
-            this.tabSettings.TabIndex = 1;
+            this.tabSettings.TabIndex = 2;
             // 
             // tabBasic
             // 
@@ -811,6 +824,7 @@ namespace Site7DbEditor
             this.ClientSize = new System.Drawing.Size(248, 382);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabSettings);
+            this.Controls.Add(this.chkPreviewDrawing);
             this.Controls.Add(this.chkVisible);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormDrawingFrame";
@@ -854,6 +868,7 @@ namespace Site7DbEditor
         #endregion
 
         private System.Windows.Forms.CheckBox chkVisible;
+        private System.Windows.Forms.CheckBox chkPreviewDrawing;
         private System.Windows.Forms.TabControl tabSettings;
         private System.Windows.Forms.TabPage tabBasic;
         private System.Windows.Forms.TabPage tabTombo;

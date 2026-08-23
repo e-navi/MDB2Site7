@@ -535,12 +535,16 @@ namespace Site7DbEditor {
             btnDrawingFrame.Click += (s, e) => {
                 if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
                     _formDrawingFrame = new FormDrawingFrame(_db);
-                    _formDrawingFrame.FrameChanged += (sender, ev) => picMapCanvas.Invalidate();
+                    _formDrawingFrame.FrameChanged += (sender, ev) => {
+                        picMapCanvas.Invalidate();
+                        UpdateDrawingPreviewState();
+                    };
                     _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
                     _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
                     _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
                 }
                 _formDrawingFrame.SyncFromService();
+                UpdateDrawingPreviewState();
                 if (!_formDrawingFrame.Visible) {
                     _formDrawingFrame.Show(this);
                 } else {
@@ -548,14 +552,14 @@ namespace Site7DbEditor {
                 }
             };
 
-            this.chkShowIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowIkouName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowIbutu.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowIbutuName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowKikai.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowKikaiName.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowCurve.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkColorByIkou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowIkou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowIkouName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowIbutu.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowIbutuName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowKikai.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowKikaiName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowCurve.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkColorByIkou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
             this.chkWhiteBg.CheckedChanged += (s, e) => {
                 _isDarkMapBackground = !chkWhiteBg.Checked;
                 picMapCanvas.Invalidate();
@@ -564,7 +568,7 @@ namespace Site7DbEditor {
             this.chkShowBgPointCloud.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowScale.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowHyoukou.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowHyoukou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
                 picMapCanvas.Invalidate();
@@ -591,6 +595,11 @@ namespace Site7DbEditor {
             this.picMapCanvas.MouseLeave += (s, e) => {
                 if (lblStatusCoords != null) lblStatusCoords.Text = "";
             };
+
+            this.picDrawingPreview.Paint += picDrawingPreview_Paint;
+            this.picDrawingPreview.MouseDown += picDrawingPreview_MouseDown;
+            this.picDrawingPreview.MouseMove += picDrawingPreview_MouseMove;
+            this.picDrawingPreview.Resize += (s, e) => picDrawingPreview.Invalidate();
 
             InitDrawingFrameDefaults();
         }
@@ -635,14 +644,88 @@ namespace Site7DbEditor {
             picMapCanvas.Invalidate();
         }
 
+        private void UpdateDrawingPreviewState() {
+            bool isEnabled = DrawingFrameService.Instance.IsDrawingPreviewEnabled;
+            if (splitMapArea.Panel2Collapsed == isEnabled) {
+                splitMapArea.Panel2Collapsed = !isEnabled;
+                if (isEnabled && splitMapArea.Width > 400) {
+                    splitMapArea.SplitterDistance = splitMapArea.Width / 2;
+                }
+            }
+            if (isEnabled) {
+                var f = DrawingFrameService.Instance;
+                lblDrawingPreviewTitle.Text = $"📄 図面出力イメージ [{f.PaperSizeName} {(f.IsLandscape ? "横" : "縦")} 1/{f.Scale:0} (回転 {f.RotationAngleDeg:0.0}°)]";
+                picDrawingPreview.Invalidate();
+            }
+        }
+
+        private void picDrawingPreview_Paint(object? sender, PaintEventArgs e) {
+            DrawingFrameService.Instance.DrawPaperPreview(
+                e.Graphics,
+                picDrawingPreview.Size,
+                _db,
+                IsMapLayerVisible,
+                chkShowCurve.Checked,
+                chkColorByIkou.Checked,
+                chkShowIkou.Checked,
+                chkShowIkouName.Checked,
+                chkShowIbutu.Checked,
+                chkShowIbutuName.Checked,
+                chkShowKikai.Checked,
+                chkShowKikaiName.Checked,
+                chkShowHyoukou.Checked);
+        }
+
+        private void picDrawingPreview_MouseDown(object? sender, MouseEventArgs e) {
+            if (_isSettingNorthArrowPos) {
+                if (e.Button == MouseButtons.Left) {
+                    var (surveyX, surveyY) = DrawingFrameService.Instance.PaperScreenToSurvey(e.Location, picDrawingPreview.Size);
+                    var frame = DrawingFrameService.Instance;
+                    frame.NorthArrowPosition = "カスタム";
+                    frame.NorthArrowCustomSurveyX = Math.Round(surveyX, 3);
+                    frame.NorthArrowCustomSurveyY = Math.Round(surveyY, 3);
+                    frame.HasCustomNorthArrowPos = true;
+                    _isSettingNorthArrowPos = false;
+                    picDrawingPreview.Cursor = Cursors.Default;
+                    picMapCanvas.Cursor = Cursors.Default;
+                    _formDrawingFrame?.SyncFromService();
+                    if (lblStatusCoords != null) lblStatusCoords.Text = $"✔ 図面上の位置に方位記号を設定しました (X={frame.NorthArrowCustomSurveyX:F3}, Y={frame.NorthArrowCustomSurveyY:F3})";
+                    _clickNotifyToolTip.Show("✔ 図面上の位置に方位記号を設定しました", picDrawingPreview, e.X + 10, e.Y - 25, 1800);
+                    picDrawingPreview.Invalidate();
+                    picMapCanvas.Invalidate();
+                    return;
+                } else if (e.Button == MouseButtons.Right) {
+                    CancelFrameInteractiveMode();
+                    _clickNotifyToolTip.Show("⏹ 方位記号位置指定をキャンセルしました", picDrawingPreview, e.X + 10, e.Y - 25, 1200);
+                    return;
+                }
+            }
+        }
+
+        private void picDrawingPreview_MouseMove(object? sender, MouseEventArgs e) {
+            if (_isSettingNorthArrowPos) {
+                picDrawingPreview.Cursor = Cursors.Cross;
+                var (surveyX, surveyY) = DrawingFrameService.Instance.PaperScreenToSurvey(e.Location, picDrawingPreview.Size);
+                if (lblStatusCoords != null) {
+                    lblStatusCoords.Text = $"【方位記号 位置指示】図面上をクリックして配置 (X: {surveyX:F3}, Y: {surveyY:F3})";
+                }
+            }
+        }
+
         private void StartPickNorthPosMode() {
             _isSettingNorthArrowPos = true;
             _isSettingFrameCenter = false;
             _isSettingFrameRotation = false;
             _isSettingLabelPos = false;
             picMapCanvas.Cursor = Cursors.Cross;
-            if (lblStatusCoords != null) lblStatusCoords.Text = "【方位記号 位置指示モード】地図上をクリックして配置位置を指定（右クリック/Escでキャンセル）";
+            picDrawingPreview.Cursor = Cursors.Cross;
+            if (lblStatusCoords != null) {
+                lblStatusCoords.Text = DrawingFrameService.Instance.IsDrawingPreviewEnabled
+                    ? "【方位記号 位置指示モード】右側の図面イメージ上をクリックして配置（右クリック/Escでキャンセル）"
+                    : "【方位記号 位置指示モード】地図上をクリックして配置位置を指定（右クリック/Escでキャンセル）";
+            }
             picMapCanvas.Invalidate();
+            picDrawingPreview.Invalidate();
         }
 
         private void CancelFrameInteractiveMode() {
@@ -651,8 +734,10 @@ namespace Site7DbEditor {
                 _isSettingFrameRotation = false;
                 _isSettingNorthArrowPos = false;
                 picMapCanvas.Cursor = Cursors.Default;
+                picDrawingPreview.Cursor = Cursors.Default;
                 if (lblStatusCoords != null) lblStatusCoords.Text = "";
                 picMapCanvas.Invalidate();
+                picDrawingPreview.Invalidate();
             }
         }
 

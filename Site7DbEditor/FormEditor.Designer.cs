@@ -25,7 +25,12 @@ namespace Site7DbEditor
             cmbQuickDbSelect = new ComboBox();
             btnOpenDb = new Button();
             panelMapArea = new Panel();
+            splitMapArea = new SplitContainer();
             picMapCanvas = new PictureBox();
+            panelDrawingPreview = new Panel();
+            panelDrawingPreviewHeader = new Panel();
+            lblDrawingPreviewTitle = new Label();
+            picDrawingPreview = new PictureBox();
             panelMapRight = new Panel();
             panelRightContent = new Panel();
             panelRightHeader = new Panel();
@@ -320,7 +325,7 @@ namespace Site7DbEditor
             // 
             // panelMapArea
             // 
-            panelMapArea.Controls.Add(picMapCanvas);
+            panelMapArea.Controls.Add(splitMapArea);
             panelMapArea.Controls.Add(panelMapRight);
             panelMapArea.Controls.Add(panelMapHeader);
             panelMapArea.Dock = DockStyle.Fill;
@@ -329,15 +334,71 @@ namespace Site7DbEditor
             panelMapArea.Size = new Size(1390, 525);
             panelMapArea.TabIndex = 1;
             // 
+            // splitMapArea
+            // 
+            splitMapArea.Dock = DockStyle.Fill;
+            splitMapArea.Location = new Point(0, 35);
+            splitMapArea.Name = "splitMapArea";
+            splitMapArea.Orientation = Orientation.Vertical;
+            splitMapArea.Panel1.Controls.Add(picMapCanvas);
+            splitMapArea.Panel2.Controls.Add(panelDrawingPreview);
+            splitMapArea.Panel2Collapsed = true;
+            splitMapArea.Size = new Size(1126, 490);
+            splitMapArea.SplitterDistance = 560;
+            splitMapArea.TabIndex = 2;
+            // 
             // picMapCanvas
             // 
             picMapCanvas.BackColor = Color.FromArgb(16, 16, 20);
             picMapCanvas.Dock = DockStyle.Fill;
-            picMapCanvas.Location = new Point(0, 35);
+            picMapCanvas.Location = new Point(0, 0);
             picMapCanvas.Name = "picMapCanvas";
             picMapCanvas.Size = new Size(1126, 490);
-            picMapCanvas.TabIndex = 2;
+            picMapCanvas.TabIndex = 0;
             picMapCanvas.TabStop = false;
+            // 
+            // panelDrawingPreview
+            // 
+            panelDrawingPreview.Controls.Add(picDrawingPreview);
+            panelDrawingPreview.Controls.Add(panelDrawingPreviewHeader);
+            panelDrawingPreview.Dock = DockStyle.Fill;
+            panelDrawingPreview.Location = new Point(0, 0);
+            panelDrawingPreview.Name = "panelDrawingPreview";
+            panelDrawingPreview.Size = new Size(560, 490);
+            panelDrawingPreview.TabIndex = 0;
+            // 
+            // panelDrawingPreviewHeader
+            // 
+            panelDrawingPreviewHeader.BackColor = Color.FromArgb(24, 26, 34);
+            panelDrawingPreviewHeader.Controls.Add(lblDrawingPreviewTitle);
+            panelDrawingPreviewHeader.Dock = DockStyle.Top;
+            panelDrawingPreviewHeader.Location = new Point(0, 0);
+            panelDrawingPreviewHeader.Name = "panelDrawingPreviewHeader";
+            panelDrawingPreviewHeader.Size = new Size(560, 26);
+            panelDrawingPreviewHeader.TabIndex = 0;
+            // 
+            // lblDrawingPreviewTitle
+            // 
+            lblDrawingPreviewTitle.Dock = DockStyle.Fill;
+            lblDrawingPreviewTitle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDrawingPreviewTitle.ForeColor = Color.FromArgb(255, 200, 0);
+            lblDrawingPreviewTitle.Location = new Point(0, 0);
+            lblDrawingPreviewTitle.Name = "lblDrawingPreviewTitle";
+            lblDrawingPreviewTitle.Padding = new Padding(8, 0, 0, 0);
+            lblDrawingPreviewTitle.Size = new Size(560, 26);
+            lblDrawingPreviewTitle.TabIndex = 0;
+            lblDrawingPreviewTitle.Text = "📄 図面出力イメージ (プレビュー)";
+            lblDrawingPreviewTitle.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // picDrawingPreview
+            // 
+            picDrawingPreview.BackColor = Color.FromArgb(32, 34, 44);
+            picDrawingPreview.Dock = DockStyle.Fill;
+            picDrawingPreview.Location = new Point(0, 26);
+            picDrawingPreview.Name = "picDrawingPreview";
+            picDrawingPreview.Size = new Size(560, 464);
+            picDrawingPreview.TabIndex = 1;
+            picDrawingPreview.TabStop = false;
             // 
             // panelMapRight
             // 
@@ -2456,7 +2517,12 @@ namespace Site7DbEditor
         private System.Windows.Forms.CheckBox chkWhiteBg;
         public System.Windows.Forms.CheckBox chkShowBgImage;
         public System.Windows.Forms.CheckBox chkShowBgPointCloud;
+        private System.Windows.Forms.SplitContainer splitMapArea;
         private System.Windows.Forms.PictureBox picMapCanvas;
+        private System.Windows.Forms.Panel panelDrawingPreview;
+        private System.Windows.Forms.Panel panelDrawingPreviewHeader;
+        private System.Windows.Forms.Label lblDrawingPreviewTitle;
+        private System.Windows.Forms.PictureBox picDrawingPreview;
 
         private System.Windows.Forms.SplitContainer splitContainerBottom;
         private System.Windows.Forms.TabControl tabControlData;
