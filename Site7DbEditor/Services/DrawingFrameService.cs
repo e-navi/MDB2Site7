@@ -1201,33 +1201,36 @@ namespace Site7DbEditor.Services
                     }
                 }
 
-                // C. 遺物 (Ibutu Points) の描画
+                // C. 遺物 (Artifact Points) の描画
+                // C. 遺物 (Artifact Points) の描画
                 if (showIbutu)
                 {
-                    float ibPenWidth = Math.Max(0.35f, (float)(0.35 * zoom));
-                    float ibMarkSize = Math.Max(2.5f, (float)(2.5 * zoom));
-                    float ibFontPx = Math.Max(2.8f, (float)(2.6 * zoom));
-                    Color ibColor = isMonochrome ? Color.FromArgb(20, 20, 20) : Color.Red;
-                    Color ibTextColor = isMonochrome ? Color.FromArgb(20, 20, 20) : Color.DarkRed;
-                    using (var ibutuPen = new Pen(ibColor, ibPenWidth))
+                    float ibFontPx = Math.Max(3.0f, (float)(2.5 * zoom));
                     using (var ibutuFont = new Font("Yu Gothic UI", ibFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
-                    using (var textBrush = new SolidBrush(ibTextColor))
                     {
                         foreach (var ibutu in db.IbutuList)
                         {
                             PointF sp = SurveyToPaperScreen(ibutu.X, ibutu.Y);
-                            float halfSize = ibMarkSize / 2f;
-                            g.DrawEllipse(ibutuPen, sp.X - halfSize, sp.Y - halfSize, ibMarkSize, ibMarkSize);
-                            g.DrawLine(ibutuPen, sp.X - halfSize * 1.4f, sp.Y, sp.X + halfSize * 1.4f, sp.Y);
-                            g.DrawLine(ibutuPen, sp.X, sp.Y - halfSize * 1.4f, sp.X, sp.Y + halfSize * 1.4f);
+                            var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ibutu, ibutu.Layer);
+                            Color ibColor = isMonochrome ? Color.FromArgb(20, 20, 20) : EditorLayerService.GetIbutuColor(ibutu.Layer, false);
+                            float ibRadius = Math.Max(1.5f, (float)(layerItem.Size * 1.5 * zoom));
 
-                            if (showIbutuName)
+                            using (var ibBrush = new SolidBrush(ibColor))
+                            using (var ibPen = new Pen(ibColor, Math.Max(0.5f, (float)(0.4 * zoom))))
+                            using (var borderPen = new Pen(Color.Black, Math.Max(0.5f, (float)(0.3 * zoom))))
+                            using (var textBrush = new SolidBrush(ibColor))
                             {
-                                string ibName = !string.IsNullOrEmpty(ibutu.Syubetu)
-                                    ? (ibutu.No > 0 ? $"{ibutu.Syubetu}{ibutu.No}" : ibutu.Syubetu)
-                                    : (ibutu.No > 0 ? $"No.{ibutu.No}" : $"遺物{ibutu.Id}");
+                                var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? ibPen : borderPen;
+                                EditorLayerService.DrawPointMark(g, sp, layerItem.Mark, ibRadius, ibBrush, penToUse);
 
-                                g.DrawString(ibName, ibutuFont, textBrush, sp.X + halfSize + (float)(1.0 * zoom), sp.Y - halfSize);
+                                if (showIbutuName)
+                                {
+                                    string ibName = !string.IsNullOrEmpty(ibutu.Syubetu)
+                                        ? (ibutu.No > 0 ? $"{ibutu.Syubetu}{ibutu.No}" : ibutu.Syubetu)
+                                        : (ibutu.No > 0 ? $"No.{ibutu.No}" : $"遺物{ibutu.Id}");
+
+                                    g.DrawString(ibName, ibutuFont, textBrush, sp.X + ibRadius + (float)(1.0 * zoom), sp.Y - ibRadius);
+                                }
                             }
                         }
                     }
@@ -1236,27 +1239,28 @@ namespace Site7DbEditor.Services
                 // D. 基準点・機械点 (Kikai Points) の描画
                 if (showKikai)
                 {
-                    float kikaiSize = Math.Max(3.0f, (float)(3.5 * zoom));
                     float kFontPx = Math.Max(3.0f, (float)(3.0 * zoom));
-                    Color kikaiColor = isMonochrome ? Color.FromArgb(30, 30, 30) : Color.FromArgb(0, 120, 215);
-                    Color kikaiTextColor = isMonochrome ? Color.FromArgb(30, 30, 30) : Color.FromArgb(0, 70, 140);
-                    using (var kikaiBrush = new SolidBrush(kikaiColor))
                     using (var kikaiFont = new Font("Yu Gothic UI", kFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
-                    using (var textBrush = new SolidBrush(kikaiTextColor))
                     {
                         foreach (var k in db.KikaiList)
                         {
                             PointF sp = SurveyToPaperScreen(k.X, k.Y);
-                            PointF[] tri = new PointF[] {
-                                new PointF(sp.X, sp.Y - kikaiSize),
-                                new PointF(sp.X - kikaiSize * 0.866f, sp.Y + kikaiSize * 0.5f),
-                                new PointF(sp.X + kikaiSize * 0.866f, sp.Y + kikaiSize * 0.5f)
-                            };
-                            g.FillPolygon(kikaiBrush, tri);
+                            var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Kikai, k.Layer);
+                            Color kikaiColor = isMonochrome ? Color.FromArgb(30, 30, 30) : EditorLayerService.GetKikaiColor(k.Layer, false);
+                            float kikaiRadius = Math.Max(2.0f, (float)(layerItem.Size * 2.0 * zoom));
 
-                            if (showKikaiName && !string.IsNullOrEmpty(k.Name))
+                            using (var kikaiBrush = new SolidBrush(kikaiColor))
+                            using (var kikaiPen = new Pen(kikaiColor, Math.Max(0.6f, (float)(0.5 * zoom))))
+                            using (var borderPen = new Pen(Color.Black, Math.Max(0.5f, (float)(0.35 * zoom))))
+                            using (var textBrush = new SolidBrush(kikaiColor))
                             {
-                                g.DrawString(k.Name, kikaiFont, textBrush, sp.X + kikaiSize + (float)(1.0 * zoom), sp.Y - kikaiSize * 0.8f);
+                                var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? kikaiPen : borderPen;
+                                EditorLayerService.DrawPointMark(g, sp, layerItem.Mark, kikaiRadius, kikaiBrush, penToUse);
+
+                                if (showKikaiName && !string.IsNullOrEmpty(k.Name))
+                                {
+                                    g.DrawString(k.Name, kikaiFont, textBrush, sp.X + kikaiRadius + (float)(1.0 * zoom), sp.Y - kikaiRadius * 0.8f);
+                                }
                             }
                         }
                     }

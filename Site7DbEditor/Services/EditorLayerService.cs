@@ -96,5 +96,91 @@ namespace Site7DbEditor.Services
         {
             return GetLayerColor(layerId, layerList, isDarkBackground);
         }
+
+        public static void DrawPointMark(Graphics g, PointF center, int markType, float radius, Brush fillBrush, Pen borderPen)
+        {
+            if (radius < 1.0f) radius = 1.0f;
+
+            switch (markType)
+            {
+                case 1: // 〇 (円)
+                    g.FillEllipse(fillBrush, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    if (borderPen != null) g.DrawEllipse(borderPen, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    break;
+
+                case 2: // □ (四角)
+                    g.FillRectangle(fillBrush, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    if (borderPen != null) g.DrawRectangle(borderPen, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    break;
+
+                case 3: // △ (正三角形)
+                    PointF[] tri = new PointF[]
+                    {
+                        new PointF(center.X, center.Y - radius * 1.15f),
+                        new PointF(center.X - radius, center.Y + radius * 0.7f),
+                        new PointF(center.X + radius, center.Y + radius * 0.7f)
+                    };
+                    g.FillPolygon(fillBrush, tri);
+                    if (borderPen != null) g.DrawPolygon(borderPen, tri);
+                    break;
+
+                case 4: // ⦿ (二重円)
+                    g.FillEllipse(fillBrush, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    if (borderPen != null)
+                    {
+                        g.DrawEllipse(borderPen, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                        g.DrawEllipse(borderPen, center.X - radius * 0.45f, center.Y - radius * 0.45f, radius * 0.9f, radius * 0.9f);
+                    }
+                    break;
+
+                case 5: // ✕ (斜めクロス)
+                    if (borderPen != null)
+                    {
+                        float d = radius * 0.85f;
+                        g.DrawLine(borderPen, center.X - d, center.Y - d, center.X + d, center.Y + d);
+                        g.DrawLine(borderPen, center.X - d, center.Y + d, center.X + d, center.Y - d);
+                    }
+                    break;
+
+                case 6: // ＋ (プラス・正十字)
+                    if (borderPen != null)
+                    {
+                        g.DrawLine(borderPen, center.X - radius, center.Y, center.X + radius, center.Y);
+                        g.DrawLine(borderPen, center.X, center.Y - radius, center.X, center.Y + radius);
+                    }
+                    break;
+
+                case 7: // ◇ (菱形 / ダイヤ)
+                    PointF[] diamond = new PointF[]
+                    {
+                        new PointF(center.X, center.Y - radius * 1.15f),
+                        new PointF(center.X + radius * 0.9f, center.Y),
+                        new PointF(center.X, center.Y + radius * 1.15f),
+                        new PointF(center.X - radius * 0.9f, center.Y)
+                    };
+                    g.FillPolygon(fillBrush, diamond);
+                    if (borderPen != null) g.DrawPolygon(borderPen, diamond);
+                    break;
+
+                case 8: // ★ (星形)
+                    PointF[] star = new PointF[10];
+                    double rOuter = radius * 1.2;
+                    double rInner = radius * 0.48;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        double r = (i % 2 == 0) ? rOuter : rInner;
+                        double angle = i * Math.PI / 5.0 - Math.PI / 2.0;
+                        star[i] = new PointF((float)(center.X + r * Math.Cos(angle)), (float)(center.Y + r * Math.Sin(angle)));
+                    }
+                    g.FillPolygon(fillBrush, star);
+                    if (borderPen != null) g.DrawPolygon(borderPen, star);
+                    break;
+
+                default: // 既定: 円
+                    g.FillEllipse(fillBrush, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    if (borderPen != null) g.DrawEllipse(borderPen, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    break;
+            }
+        }
     }
 }

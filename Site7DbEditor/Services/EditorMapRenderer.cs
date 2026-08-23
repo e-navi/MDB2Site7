@@ -251,24 +251,28 @@ namespace Site7DbEditor.Services
             if (chkShowIbutu)
             {
                 using (var glowPen = new Pen(Color.FromArgb(180, 255, 0, 128), 2f))
+                using (var selectPen = new Pen(Color.FromArgb(255, 230, 0), 2f))
+                using (var borderPen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.0f))
                 {
                     foreach (var ibutu in db.IbutuList)
                     {
                         PointF pt = ToCanvasPoint(ibutu.X, ibutu.Y);
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ibutu, ibutu.Layer);
                         Color ibutuColor = EditorLayerService.GetIbutuColor(ibutu.Layer, isDarkBackground);
+                        float baseRadius = (float)Math.Clamp(layerItem.Size * 3.0, 2.5, 20.0);
 
                         using (var ibutuBrush = new SolidBrush(ibutuColor))
+                        using (var ibutuPen = new Pen(ibutuColor, 1.5f))
                         {
                             if (activeTabIndex == 1 && ibutu.Id == selectedIbutuId)
                             {
-                                g.DrawEllipse(glowPen, pt.X - 5.5f, pt.Y - 5.5f, 11f, 11f);
-                                g.FillEllipse(ibutuBrush, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
-                                g.DrawEllipse(Pens.White, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
+                                g.DrawEllipse(glowPen, pt.X - baseRadius - 3.5f, pt.Y - baseRadius - 3.5f, (baseRadius + 3.5f) * 2, (baseRadius + 3.5f) * 2);
+                                EditorLayerService.DrawPointMark(g, pt, layerItem.Mark, baseRadius + 1f, ibutuBrush, selectPen);
                             }
                             else
                             {
-                                g.FillEllipse(ibutuBrush, pt.X - 2.5f, pt.Y - 2.5f, 5f, 5f);
-                                g.DrawEllipse(Pens.White, pt.X - 2.5f, pt.Y - 2.5f, 5f, 5f);
+                                var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? ibutuPen : borderPen;
+                                EditorLayerService.DrawPointMark(g, pt, layerItem.Mark, baseRadius, ibutuBrush, penToUse);
                             }
                         }
                     }
@@ -281,9 +285,8 @@ namespace Site7DbEditor.Services
                 string currentKpName = gbl.KikaiMan.kp?.Name ?? Env.KPName ?? Def.GetIniStr("TS", "器械点");
                 string currentBpName = gbl.KikaiMan.bp?.Name ?? Env.BPName ?? Def.GetIniStr("TS", "後視点");
 
-                using (var kikaiBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(0, 225, 255) : Color.FromArgb(0, 120, 200)))
-                using (var kikaiPen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.2f))
                 using (var selectPen = new Pen(Color.FromArgb(255, 220, 0), 2f))
+                using (var borderPen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.2f))
                 using (var kpTextBrush = new SolidBrush(Color.FromArgb(255, 100, 100)))
                 using (var bpTextBrush = new SolidBrush(Color.FromArgb(100, 200, 255)))
                 using (var markFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
@@ -292,15 +295,22 @@ namespace Site7DbEditor.Services
                     foreach (var kikai in db.KikaiList)
                     {
                         PointF pt = ToCanvasPoint(kikai.X, kikai.Y);
-                        if (activeTabIndex == 2 && kikai.Id == selectedKikaiId)
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Kikai, kikai.Layer);
+                        Color kikaiColor = EditorLayerService.GetKikaiColor(kikai.Layer, isDarkBackground);
+                        float baseRadius = (float)Math.Clamp(layerItem.Size * 3.5, 3.0, 25.0);
+
+                        using (var kikaiBrush = new SolidBrush(kikaiColor))
+                        using (var kikaiPen = new Pen(kikaiColor, 1.5f))
                         {
-                            g.FillEllipse(kikaiBrush, pt.X - 4.5f, pt.Y - 4.5f, 9f, 9f);
-                            g.DrawEllipse(selectPen, pt.X - 4.5f, pt.Y - 4.5f, 9f, 9f);
-                        }
-                        else
-                        {
-                            g.FillEllipse(kikaiBrush, pt.X - 3f, pt.Y - 3f, 6f, 6f);
-                            g.DrawEllipse(kikaiPen, pt.X - 3f, pt.Y - 3f, 6f, 6f);
+                            if (activeTabIndex == 2 && kikai.Id == selectedKikaiId)
+                            {
+                                EditorLayerService.DrawPointMark(g, pt, layerItem.Mark, baseRadius + 2f, kikaiBrush, selectPen);
+                            }
+                            else
+                            {
+                                var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? kikaiPen : borderPen;
+                                EditorLayerService.DrawPointMark(g, pt, layerItem.Mark, baseRadius, kikaiBrush, penToUse);
+                            }
                         }
 
                         // 器械点 / 後視点 の文字描画 (基準点シンボルの左側)
@@ -310,11 +320,11 @@ namespace Site7DbEditor.Services
 
                         if (isKp)
                         {
-                            g.DrawString("器", markFont, kpTextBrush, pt.X - 5f, pt.Y, sfFar);
+                            g.DrawString("器", markFont, kpTextBrush, pt.X - baseRadius - 3f, pt.Y, sfFar);
                         }
                         else if (isBp)
                         {
-                            g.DrawString("後", markFont, bpTextBrush, pt.X - 5f, pt.Y, sfFar);
+                            g.DrawString("後", markFont, bpTextBrush, pt.X - baseRadius - 3f, pt.Y, sfFar);
                         }
                     }
                 }
