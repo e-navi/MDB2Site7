@@ -519,65 +519,89 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast = (vMidBottom - dNorth * cos) / sin;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double u = (vMinInner * cos - dNorth) / sin;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dEastMid = vMidBottom * sin + u * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
-                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast = (vMidTop - dNorth * cos) / sin;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double u = (vMaxInner * cos - dNorth) / sin;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dEastMid = vMidTop * sin + u * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
-                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast = (uMidLeft + dNorth * sin) / cos;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double v = (dNorth + uMinInner * sin) / cos;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dEastMid = v * sin + uMidLeft * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
-                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast = (uMidRight + dNorth * sin) / cos;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double v = (dNorth + uMaxInner * sin) / cos;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dEastMid = v * sin + uMidRight * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
             }
             else
             {
                 double dEast = val - CenterY;
-                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
-                if (Math.Abs(sin) > 1e-6)
-                {
-                    double dNorth = (dEast * cos - uMidLeft) / sin;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
-                }
-                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
-                if (Math.Abs(sin) > 1e-6)
-                {
-                    double dNorth = (dEast * cos - uMidRight) / sin;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
-                }
-                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth = (vMidBottom - dEast * sin) / cos;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
+                    double u = (dEast - vMinInner * sin) / cos;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dNorthMid = vMidBottom * cos - u * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
                 }
-                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth = (vMidTop - dEast * sin) / cos;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
+                    double u = (dEast - vMaxInner * sin) / cos;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dNorthMid = vMidTop * cos - u * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
+                }
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double v = (dEast - uMinInner * cos) / sin;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dNorthMid = v * cos - uMidLeft * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
+                }
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double v = (dEast - uMaxInner * cos) / sin;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dNorthMid = v * cos - uMidRight * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
                 }
             }
 
@@ -1274,65 +1298,89 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast = (vMidBottom - dNorth * cos) / sin;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double u = (vMinInner * cos - dNorth) / sin;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dEastMid = vMidBottom * sin + u * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
-                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast = (vMidTop - dNorth * cos) / sin;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double u = (vMaxInner * cos - dNorth) / sin;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dEastMid = vMidTop * sin + u * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
-                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast = (uMidLeft + dNorth * sin) / cos;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double v = (dNorth + uMinInner * sin) / cos;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dEastMid = v * sin + uMidLeft * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
-                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast = (uMidRight + dNorth * sin) / cos;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
+                    double v = (dNorth + uMaxInner * sin) / cos;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dEastMid = v * sin + uMidRight * cos;
+                        intersections.Add((val, CenterY + dEastMid));
+                    }
                 }
             }
             else
             {
                 double dEast = val - CenterY;
-                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
-                if (Math.Abs(sin) > 1e-6)
-                {
-                    double dNorth = (dEast * cos - uMidLeft) / sin;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
-                }
-                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
-                if (Math.Abs(sin) > 1e-6)
-                {
-                    double dNorth = (dEast * cos - uMidRight) / sin;
-                    double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
-                }
-                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth = (vMidBottom - dEast * sin) / cos;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
+                    double u = (dEast - vMinInner * sin) / cos;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dNorthMid = vMidBottom * cos - u * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
                 }
-                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth = (vMidTop - dEast * sin) / cos;
-                    double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
+                    double u = (dEast - vMaxInner * sin) / cos;
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    {
+                        double dNorthMid = vMidTop * cos - u * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
+                }
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double v = (dEast - uMinInner * cos) / sin;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dNorthMid = v * cos - uMidLeft * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
+                }
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double v = (dEast - uMaxInner * cos) / sin;
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    {
+                        double dNorthMid = v * cos - uMidRight * sin;
+                        intersections.Add((CenterX + dNorthMid, val));
+                    }
                 }
             }
 
