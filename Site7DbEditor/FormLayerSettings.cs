@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Site7DbEditor.Services;
@@ -9,6 +11,7 @@ namespace Site7DbEditor
     public class FormLayerSettings : Form
     {
         private readonly EditorDbManager _db;
+        private readonly string? _dbPath;
 
         private ComboBox comboBoxLayerG = null!;
         private ListBox listBox1 = null!;
@@ -19,47 +22,21 @@ namespace Site7DbEditor
         private ComboBox CBoxWidth = null!;
         private ComboBox CBoxLineStyle = null!;
         private Button button1 = null!;
+        private Button Save_Button = null!;
         private Button Cancel_Button = null!;
 
         public FormLayerSettings(EditorDbManager db)
         {
             _db = db;
-            EnsureAll64LayersExist();
+            _dbPath = db.CurrentDbPath;
+            LayerDefinitionService.Instance.LoadAll(_dbPath);
             InitializeComponent();
-        }
-
-        private void EnsureAll64LayersExist()
-        {
-            for (int id = 1; id <= 64; id++)
-            {
-                if (!_db.LayerList.Any(l => l.Id == id))
-                {
-                    _db.LayerList.Add(new LayerModel
-                    {
-                        Id = id,
-                        Name = GetDefaultLayerName(id),
-                        Color = (id - 1) % 16 + 1,
-                        Mark = 1,
-                        Size = 5.0,
-                        Width = 1,
-                        LType = 1
-                    });
-                }
-            }
-        }
-
-        private string GetDefaultLayerName(int id)
-        {
-            if (id >= 49 && id <= 64) return $"L{(id - 48):D2}";
-            if (id >= 1 && id <= 16) return $"L{id:D2}";
-            if (id >= 17 && id <= 32) return $"K{id - 16:D2}";
-            return $"D{id - 32:D2}";
         }
 
         private void InitializeComponent()
         {
             this.Text = "レイヤ設定";
-            this.ClientSize = new Size(470, 370);
+            this.ClientSize = new Size(490, 380);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -72,48 +49,48 @@ namespace Site7DbEditor
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Location = new Point(21, 12),
-                Size = new Size(143, 25),
+                Size = new Size(150, 25),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
             };
             comboBoxLayerG.Items.AddRange(new object[] {
-                "遺物レイヤGRP",
-                "基準点レイヤGRP",
-                "作図レイヤGRP",
-                "遺構レイヤGRP"
+                "🏛 遺構レイヤ (Layer遺構.txt)",
+                "🏺 遺物レイヤ (Layer遺物.txt)",
+                "📍 基準点レイヤ (Layer基準点.txt)",
+                "📏 作図レイヤ (Layer作図.txt)"
             });
             comboBoxLayerG.SelectedIndexChanged += ComboBoxLayerG_SelectedIndexChanged;
 
             // listBox1
             listBox1 = new ListBox
             {
-                Location = new Point(21, 42),
-                Size = new Size(143, 276),
+                Location = new Point(21, 44),
+                Size = new Size(150, 280),
                 Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Regular)
             };
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
 
             // Labels
-            var lblLayerName = CreateLabel("レイヤ名", new Point(185, 43));
-            var lblColor = CreateLabel("表示色", new Point(185, 83));
-            var lblMark = CreateLabel("マーク", new Point(185, 123));
-            var lblSize = CreateLabel("サイズ", new Point(185, 163));
-            var lblWidth = CreateLabel("線幅", new Point(185, 203));
-            var lblLineStyle = CreateLabel("線種", new Point(185, 243));
+            var lblLayerName = CreateLabel("レイヤ名", new Point(190, 45));
+            var lblColor = CreateLabel("表示色", new Point(190, 85));
+            var lblMark = CreateLabel("マーク", new Point(190, 125));
+            var lblSize = CreateLabel("サイズ", new Point(190, 165));
+            var lblWidth = CreateLabel("線幅", new Point(190, 205));
+            var lblLineStyle = CreateLabel("線種", new Point(190, 245));
 
             // Edit controls
             textBox1 = new TextBox
             {
-                Location = new Point(255, 38),
-                Size = new Size(190, 29),
-                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold)
+                Location = new Point(265, 40),
+                Size = new Size(200, 29),
+                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
 
             CBoxColor = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 DrawMode = DrawMode.OwnerDrawFixed,
-                Location = new Point(255, 78),
-                Size = new Size(125, 29),
+                Location = new Point(265, 80),
+                Size = new Size(135, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
             CBoxColor.Items.AddRange(new object[] {
@@ -125,25 +102,25 @@ namespace Site7DbEditor
             CBoxMark = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(255, 118),
-                Size = new Size(75, 29),
+                Location = new Point(265, 120),
+                Size = new Size(80, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
-            CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿" });
+            CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
 
             CBoxSize = new ComboBox
             {
-                Location = new Point(255, 158),
-                Size = new Size(75, 29),
+                Location = new Point(265, 160),
+                Size = new Size(80, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
-            CBoxSize.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "10", "20" });
+            CBoxSize.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "8", "10", "15", "20" });
 
             CBoxWidth = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(255, 198),
-                Size = new Size(60, 29),
+                Location = new Point(265, 200),
+                Size = new Size(80, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
             CBoxWidth.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
@@ -151,31 +128,43 @@ namespace Site7DbEditor
             CBoxLineStyle = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(255, 238),
-                Size = new Size(90, 29),
+                Location = new Point(265, 240),
+                Size = new Size(100, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
-            CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
+            CBoxLineStyle.Items.AddRange(new object[] { "実線/折線", "曲線", "破線", "点線" });
 
             // Buttons
             button1 = new Button
             {
-                Text = "設定",
-                Location = new Point(185, 285),
-                Size = new Size(120, 30),
+                Text = "✔ このレイヤに適用",
+                Location = new Point(190, 285),
+                Size = new Size(150, 32),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(230, 235, 245),
                 UseVisualStyleBackColor = true
             };
             button1.Click += Button1_Click;
 
+            Save_Button = new Button
+            {
+                Text = "💾 設定を保存",
+                Location = new Point(245, 335),
+                Size = new Size(120, 32),
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(56, 176, 0),
+                ForeColor = Color.Black,
+                UseVisualStyleBackColor = false
+            };
+            Save_Button.Click += Save_Button_Click;
+
             Cancel_Button = new Button
             {
                 Text = "閉じる",
-                Location = new Point(345, 325),
-                Size = new Size(100, 30),
+                Location = new Point(375, 335),
+                Size = new Size(90, 32),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                BackColor = Color.FromArgb(230, 235, 245),
+                BackColor = Color.FromArgb(220, 224, 230),
                 UseVisualStyleBackColor = true
             };
             Cancel_Button.Click += (s, e) => { this.DialogResult = DialogResult.OK; this.Close(); };
@@ -195,9 +184,10 @@ namespace Site7DbEditor
             this.Controls.Add(CBoxWidth);
             this.Controls.Add(CBoxLineStyle);
             this.Controls.Add(button1);
+            this.Controls.Add(Save_Button);
             this.Controls.Add(Cancel_Button);
 
-            comboBoxLayerG.SelectedIndex = 3; // Default to 遺構レイヤGRP (Index 3)
+            comboBoxLayerG.SelectedIndex = 0; // Default to 遺構レイヤ
         }
 
         private Label CreateLabel(string text, Point location)
@@ -206,26 +196,28 @@ namespace Site7DbEditor
             {
                 Text = text,
                 Location = location,
-                Size = new Size(62, 22),
+                Size = new Size(68, 22),
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.FromArgb(255, 228, 225), // MistyRose style
+                BackColor = Color.FromArgb(235, 238, 245),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 ForeColor = Color.Black
             };
         }
 
+        private LayerGroup GetSelectedGroup()
+        {
+            return (LayerGroup)Math.Clamp(comboBoxLayerG.SelectedIndex, 0, 3);
+        }
+
         private void ComboBoxLayerG_SelectedIndexChanged(object? sender, EventArgs e)
         {
             listBox1.Items.Clear();
-            int grpIdx = comboBoxLayerG.SelectedIndex;
-            int baseId = grpIdx * 16;
+            var group = GetSelectedGroup();
+            var items = LayerDefinitionService.Instance.Groups.TryGetValue(group, out var list) ? list : new List<LayerItem>();
 
-            for (int i = 1; i <= 16; i++)
+            foreach (var item in items)
             {
-                int layerId = baseId + i;
-                var layer = _db.LayerList.FirstOrDefault(l => l.Id == layerId);
-                string name = layer?.Name ?? "";
-                listBox1.Items.Add($"L{i:D2} {name}");
+                listBox1.Items.Add(item.DisplayText);
             }
 
             if (listBox1.Items.Count > 0)
@@ -238,44 +230,55 @@ namespace Site7DbEditor
         {
             if (listBox1.SelectedIndex < 0) return;
 
-            int grpIdx = comboBoxLayerG.SelectedIndex;
+            var group = GetSelectedGroup();
             int itemIdx = listBox1.SelectedIndex;
-            int layerId = (grpIdx * 16) + itemIdx + 1;
+            var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
 
-            var rec = _db.LayerList.FirstOrDefault(l => l.Id == layerId);
-            if (rec == null) return;
-
-            textBox1.Text = rec.Name;
-            CBoxColor.SelectedIndex = Math.Clamp(rec.Color - 1, 0, CBoxColor.Items.Count - 1);
-            CBoxMark.SelectedIndex = Math.Clamp(rec.Mark - 1, 0, CBoxMark.Items.Count - 1);
-            CBoxSize.Text = rec.Size.ToString();
-            CBoxWidth.SelectedIndex = Math.Clamp(rec.Width - 1, 0, CBoxWidth.Items.Count - 1);
-            CBoxLineStyle.SelectedIndex = (rec.LType == 2) ? 1 : 0;
+            textBox1.Text = item.Name;
+            CBoxColor.SelectedIndex = Math.Clamp(item.Color - 1, 0, CBoxColor.Items.Count - 1);
+            CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
+            CBoxSize.Text = item.Size.ToString("F1");
+            CBoxWidth.SelectedIndex = Math.Clamp(item.Width - 1, 0, CBoxWidth.Items.Count - 1);
+            CBoxLineStyle.SelectedIndex = Math.Clamp(item.LType - 1, 0, CBoxLineStyle.Items.Count - 1);
         }
 
         private void Button1_Click(object? sender, EventArgs e)
         {
             if (listBox1.SelectedIndex < 0) return;
 
-            int grpIdx = comboBoxLayerG.SelectedIndex;
+            var group = GetSelectedGroup();
             int itemIdx = listBox1.SelectedIndex;
-            int layerId = (grpIdx * 16) + itemIdx + 1;
+            var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
 
-            var rec = _db.LayerList.FirstOrDefault(l => l.Id == layerId);
-            if (rec == null)
-            {
-                rec = new LayerModel { Id = layerId };
-                _db.LayerList.Add(rec);
-            }
+            item.Name = textBox1.Text.Trim();
+            item.Color = CBoxColor.SelectedIndex + 1;
+            item.Mark = CBoxMark.SelectedIndex + 1;
+            item.Size = double.TryParse(CBoxSize.Text, out double sizeVal) ? sizeVal : 5.0;
+            item.Width = CBoxWidth.SelectedIndex + 1;
+            item.LType = CBoxLineStyle.SelectedIndex + 1;
 
-            rec.Name = textBox1.Text;
-            rec.Color = CBoxColor.SelectedIndex + 1;
-            rec.Mark = CBoxMark.SelectedIndex + 1;
-            rec.Size = double.TryParse(CBoxSize.Text, out double sizeVal) ? sizeVal : 5.0;
-            rec.Width = CBoxWidth.SelectedIndex + 1;
-            rec.LType = CBoxLineStyle.SelectedIndex + 1;
+            listBox1.Items[itemIdx] = item.DisplayText;
 
-            listBox1.Items[itemIdx] = $"L{itemIdx + 1:D2} {rec.Name}";
+            SaveLayers();
+        }
+
+        private void Save_Button_Click(object? sender, EventArgs e)
+        {
+            Button1_Click(sender, e);
+            SaveLayers();
+            MessageBox.Show(this, "レイヤ設定（Layer遺構.txt, Layer遺物.txt, Layer基準点.txt, Layer作図.txt）を保存しました。", "レイヤ設定保存", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void SaveLayers()
+        {
+            string? genbaDir = !string.IsNullOrEmpty(_dbPath) ? Path.GetDirectoryName(_dbPath) : null;
+            string targetDir = !string.IsNullOrEmpty(genbaDir) 
+                ? Path.Combine(genbaDir, "Def") 
+                : LayerDefinitionService.DefaultSystemDefDir;
+
+            LayerDefinitionService.Instance.SaveAll(targetDir);
         }
 
         private void CBoxColor_DrawItem(object? sender, DrawItemEventArgs e)
@@ -288,7 +291,6 @@ namespace Site7DbEditor
                 ? EditorLayerService.LayerTableColors[e.Index + 1]
                 : e.ForeColor;
 
-            // 色見本四角形（スウォッチ）の描画
             int boxSize = 14;
             int boxX = e.Bounds.X + 4;
             int boxY = e.Bounds.Y + (e.Bounds.Height - boxSize) / 2;
@@ -302,7 +304,6 @@ namespace Site7DbEditor
                 e.Graphics.DrawRectangle(borderPen, boxX, boxY, boxSize, boxSize);
             }
 
-            // テキストの描画 (白など明るい色の場合はテキストを濃色にして視認性を確保)
             Color textColor = col;
             if (col.R > 220 && col.G > 220 && col.B > 220)
             {

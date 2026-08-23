@@ -1102,10 +1102,9 @@ namespace Site7DbEditor.Services
                         var pts = SqliteManager.ParsePrecsText(line.Precs);
                         if (pts.Count == 0) continue;
 
-                        int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
                         Color rawColor = colorByIkou
                             ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
-                            : EditorLayerService.GetLayerColor(lineDbLayerId, db.LayerList, false);
+                            : EditorLayerService.GetIkouLineColor(line.Layer, false);
                         Color color = AdaptColor(rawColor);
 
                         if (line.Mode == 2)
@@ -1141,8 +1140,8 @@ namespace Site7DbEditor.Services
 
                         if (!showIkou) continue;
 
-                        var layer = db.LayerList.FirstOrDefault(l => l.Id == lineDbLayerId);
-                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                        bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                         bool drawAsCurve = showCurve && isLayerCurve && pts.Count >= 3;
 
                         PointF[] screenPts;
@@ -1160,7 +1159,7 @@ namespace Site7DbEditor.Services
 
                         if (screenPts.Length > 1)
                         {
-                            float lWidth = (layer != null && layer.Width > 0) ? (float)(layer.Width * 0.3 * zoom) : Math.Max(0.4f, (float)(0.35 * zoom));
+                            float lWidth = (layerItem != null && layerItem.Width > 0) ? (float)(layerItem.Width * 0.3 * zoom) : Math.Max(0.4f, (float)(0.35 * zoom));
                             using (var linePen = new Pen(color, lWidth))
                             {
                                 g.DrawLines(linePen, screenPts);

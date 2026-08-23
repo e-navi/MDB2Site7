@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -47,48 +48,53 @@ namespace Site7DbEditor.Services
             Color.FromArgb(140, 140, 140)  // 16: 暗灰 (140, 140, 140)
         };
 
-        public static Color GetLayerColor(int layerId, IEnumerable<LayerModel> layerList, bool isDarkBackground = true)
+        public static Color GetIkouLineColor(int layerNo, bool isDarkBackground = true)
         {
-            int searchId = layerId;
-            var matchedLayer = layerList.FirstOrDefault(l => l.Id == searchId);
-            if (matchedLayer == null && layerId >= 1 && layerId <= 16)
-            {
-                matchedLayer = layerList.FirstOrDefault(l => l.Id == (layerId + 48));
-            }
-
-            int colorIdx = matchedLayer != null ? matchedLayer.Color : (((layerId - 1) % 16) + 1);
-            if (colorIdx < 1 || colorIdx >= LayerTableColors.Length) colorIdx = 1;
-
-            if (colorIdx == 1)
-            {
-                // 1: 黒 (黒背景時は視認性のため白/明灰、白背景時は純粋な黒)
-                return isDarkBackground ? Color.FromArgb(240, 240, 240) : Color.FromArgb(0, 0, 0);
-            }
-            if (colorIdx == 8)
-            {
-                // 8: 白 (白背景時は視認性のため暗灰、黒背景時は純粋な白)
-                return isDarkBackground ? Color.FromArgb(255, 255, 255) : Color.FromArgb(100, 100, 100);
-            }
-
-            return LayerTableColors[colorIdx];
+            int idx = Math.Clamp(layerNo, 1, 16);
+            return LayerDefinitionService.Instance.GetColor(LayerGroup.Ikou, idx, isDarkBackground);
         }
 
-        public static Color GetControlColor(int layerId, IEnumerable<LayerModel> layerList, bool isDarkBackground = true)
+        public static Color GetIbutuColor(int layerNo, bool isDarkBackground = true)
         {
-            var matchedLayer = layerList.FirstOrDefault(l => l.Id == layerId);
-            int colorIdx = matchedLayer != null ? matchedLayer.Color : (((layerId - 1) % 16) + 1);
-            if (colorIdx < 1 || colorIdx >= LayerTableColors.Length) colorIdx = 1;
+            int idx = Math.Clamp(layerNo, 1, 16);
+            return LayerDefinitionService.Instance.GetColor(LayerGroup.Ibutu, idx, isDarkBackground);
+        }
 
-            if (colorIdx == 1)
+        public static Color GetKikaiColor(int layerNo, bool isDarkBackground = true)
+        {
+            int idx = Math.Clamp(layerNo, 1, 16);
+            return LayerDefinitionService.Instance.GetColor(LayerGroup.Kikai, idx, isDarkBackground);
+        }
+
+        public static Color GetSakuzuColor(int layerNo, bool isDarkBackground = true)
+        {
+            int idx = Math.Clamp(layerNo, 1, 16);
+            return LayerDefinitionService.Instance.GetColor(LayerGroup.Sakuzu, idx, isDarkBackground);
+        }
+
+        public static Color GetLayerColor(int layerId, IEnumerable<LayerModel>? layerList = null, bool isDarkBackground = true)
+        {
+            // 遺構 (1..16 または 49..64)
+            if (layerId >= 49 && layerId <= 64)
             {
-                return isDarkBackground ? Color.FromArgb(240, 240, 240) : Color.FromArgb(20, 20, 20);
+                return GetIkouLineColor(layerId - 48, isDarkBackground);
             }
-            if (colorIdx == 8)
+            if (layerId >= 33 && layerId <= 48)
             {
-                return isDarkBackground ? Color.FromArgb(255, 255, 255) : Color.FromArgb(120, 120, 120);
+                return GetSakuzuColor(layerId - 32, isDarkBackground);
+            }
+            if (layerId >= 17 && layerId <= 32)
+            {
+                return GetKikaiColor(layerId - 16, isDarkBackground);
             }
 
-            return LayerTableColors[colorIdx];
+            // 1..16 (遺物または遺構)
+            return GetIkouLineColor(layerId, isDarkBackground);
+        }
+
+        public static Color GetControlColor(int layerId, IEnumerable<LayerModel>? layerList = null, bool isDarkBackground = true)
+        {
+            return GetLayerColor(layerId, layerList, isDarkBackground);
         }
     }
 }

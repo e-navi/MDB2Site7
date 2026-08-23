@@ -312,21 +312,6 @@ namespace Site7DbEditor {
 
         private void InitRightEditControls() {
             LoadMasterDefinitions();
-
-            cmbLineLayer.Items.Clear();
-            cmbLineLayer.Items.AddRange(new object[] { "L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L16", "L32", "L64" });
-            if (cmbLineLayer.Items.Count > 0)
-                cmbLineLayer.SelectedIndex = 0;
-
-            cmbIbutuLayer.Items.Clear();
-            cmbIbutuLayer.Items.AddRange(new object[] { "L01 遺物L01", "L02 遺物L02", "L03 遺物L03", "L04 遺物L04", "L05 遺物L05", "L06 遺物L06", "L07 遺物L07", "L08 遺物L08", "L09 遺物L09", "L10 遺物L10", "L16 遺物L16" });
-            if (cmbIbutuLayer.Items.Count > 4)
-                cmbIbutuLayer.SelectedIndex = 4;
-
-            cmbKikaiLayer.Items.Clear();
-            cmbKikaiLayer.Items.AddRange(new object[] { "L01 基準点", "L02 基準点L02", "L03 基準点L03", "L04 基準点L04", "L05 基準点L05", "L16 基準点L16" });
-            if (cmbKikaiLayer.Items.Count > 0)
-                cmbKikaiLayer.SelectedIndex = 0;
         }
 
         private void LoadMasterDefinitions() {
@@ -335,6 +320,33 @@ namespace Site7DbEditor {
             service.BindToComboBox(cmbIkouKind, MasterType.Ikou);
             service.BindToComboBox(cmbLineKind, MasterType.IkouLine);
             PopulateIbutuCombos();
+
+            LayerDefinitionService.Instance.LoadAll(_db.CurrentDbPath);
+            PopulateIkouLineLayerCombo();
+            PopulateIbutuLayerCombo();
+            PopulateKikaiLayerCombo();
+        }
+
+        private void PopulateIbutuLayerCombo() {
+            cmbIbutuLayer.Items.Clear();
+            var items = LayerDefinitionService.Instance.Groups.TryGetValue(LayerGroup.Ibutu, out var list) ? list : LayerDefinitionService.CreateDefaultLayers(LayerGroup.Ibutu);
+            foreach (var item in items) {
+                cmbIbutuLayer.Items.Add(item.DisplayText);
+            }
+            if (cmbIbutuLayer.Items.Count > 4 && cmbIbutuLayer.SelectedIndex < 0)
+                cmbIbutuLayer.SelectedIndex = 4;
+            else if (cmbIbutuLayer.Items.Count > 0 && cmbIbutuLayer.SelectedIndex < 0)
+                cmbIbutuLayer.SelectedIndex = 0;
+        }
+
+        private void PopulateKikaiLayerCombo() {
+            cmbKikaiLayer.Items.Clear();
+            var items = LayerDefinitionService.Instance.Groups.TryGetValue(LayerGroup.Kikai, out var list) ? list : LayerDefinitionService.CreateDefaultLayers(LayerGroup.Kikai);
+            foreach (var item in items) {
+                cmbKikaiLayer.Items.Add(item.DisplayText);
+            }
+            if (cmbKikaiLayer.Items.Count > 0 && cmbKikaiLayer.SelectedIndex < 0)
+                cmbKikaiLayer.SelectedIndex = 0;
         }
 
         private void OpenMasterSettings() {
@@ -528,11 +540,13 @@ namespace Site7DbEditor {
 
             btnLayerSettings.Click += (s, e) => {
                 using (var form = new FormLayerSettings(_db)) {
-                    form.ShowDialog(this);
-                    PopulateIkouLineLayerCombo();
-                    PopulateIbutuCombos();
-                    PopulateIkouMasterCombo();
-                    picMapCanvas.Invalidate();
+                    if (form.ShowDialog(this) == DialogResult.OK) {
+                        LayerDefinitionService.Instance.LoadAll(_db.CurrentDbPath);
+                        PopulateIkouLineLayerCombo();
+                        PopulateIbutuLayerCombo();
+                        PopulateKikaiLayerCombo();
+                        picMapCanvas.Invalidate();
+                    }
                 }
             };
 
@@ -1217,15 +1231,12 @@ namespace Site7DbEditor {
 
         private void PopulateIkouLineLayerCombo() {
             cmbLineLayer.Items.Clear();
-            for (int i = 1; i <= 16; i++) {
-                int dbLayerId = 48 + i;
-                string layerCode = $"L{i:D2}";
-                var matchedLayer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                if (matchedLayer != null && !string.IsNullOrEmpty(matchedLayer.Name)) {
-                    layerCode += $" {matchedLayer.Name}";
-                }
-                cmbLineLayer.Items.Add(layerCode);
+            var items = LayerDefinitionService.Instance.Groups.TryGetValue(LayerGroup.Ikou, out var list) ? list : LayerDefinitionService.CreateDefaultLayers(LayerGroup.Ikou);
+            foreach (var item in items) {
+                cmbLineLayer.Items.Add(item.DisplayText);
             }
+            if (cmbLineLayer.Items.Count > 0 && cmbLineLayer.SelectedIndex < 0)
+                cmbLineLayer.SelectedIndex = 0;
             UpdateLayerCheckboxColors();
         }
 
@@ -1241,36 +1252,36 @@ namespace Site7DbEditor {
                 _layerToolTip = new ToolTip();
 
             int activeTab = tabControlData.SelectedIndex;
-            int baseLayerId = 48; // Default 遺構レイヤ GRP (49..64)
-            string groupName = "遺構レイヤGRP";
+            LayerGroup group = LayerGroup.Ikou;
+            string groupName = "遺構レイヤ";
 
             if (activeTab == 1) // 遺物
             {
-                baseLayerId = 0; // 遺物レイヤ GRP (1..16)
-                groupName = "遺物レイヤGRP";
+                group = LayerGroup.Ibutu;
+                groupName = "遺物レイヤ";
             } else if (activeTab == 2) // 基準点
-              {
-                baseLayerId = 16; // 基準点レイヤ GRP (17..32)
-                groupName = "基準点レイヤGRP";
+            {
+                group = LayerGroup.Kikai;
+                groupName = "基準点レイヤ";
             }
 
             if (lblIkouLayerGrpHeader != null) {
                 lblIkouLayerGrpHeader.Text = groupName;
             }
 
-            for (int i = 0; i < 16; i++) {
-                int dbLayerId = baseLayerId + (i + 1);
-                Color col = EditorLayerService.GetControlColor(dbLayerId, _db.LayerList);
-                _chkMapLayers[i].ForeColor = col;
-                _chkMapLayers[i].Text = $"L{i + 1:D2}";
+            var layerSvc = LayerDefinitionService.Instance;
 
-                var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                string layerName = layer?.Name ?? "";
-                if (!string.IsNullOrEmpty(layerName)) {
-                    _layerToolTip.SetToolTip(_chkMapLayers[i], $"L{i + 1:D2} {layerName}");
-                } else {
-                    _layerToolTip.SetToolTip(_chkMapLayers[i], $"L{i + 1:D2}");
-                }
+            for (int i = 0; i < 16; i++) {
+                int layerIdx = i + 1;
+                var chk = _chkMapLayers[i];
+                var layer = layerSvc.GetLayer(group, layerIdx);
+                Color layerColor = layerSvc.GetColor(group, layerIdx, true);
+
+                chk.ForeColor = layerColor;
+                chk.Text = layer.Code;
+
+                string toolTipText = $"{groupName}: {layer.DisplayText} (色番号: {layer.Color})";
+                _layerToolTip.SetToolTip(chk, toolTipText);
             }
         }
 
