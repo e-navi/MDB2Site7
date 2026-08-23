@@ -548,21 +548,20 @@ namespace Site7DbEditor {
                 _formDrawingFrame.SyncFromService();
                 UpdateDrawingPreviewState();
                 if (!_formDrawingFrame.Visible) {
+                    // ヘッダー直下の左上端（添付画像の位置）に配置
+                    Point targetPos = this.PointToScreen(new Point(0, panelHeader.Height));
                     var screen = Screen.FromControl(this);
-                    // メインウィンドウ左側（左操作パネルの右隣）に配置して右側の図面プレビューを見やすくする
-                    int posX = this.Location.X + 140;
-                    int posY = this.Location.Y + 80;
-                    if (posX + _formDrawingFrame.Width > screen.WorkingArea.Right)
-                        posX = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;
-                    if (posX < screen.WorkingArea.Left)
-                        posX = screen.WorkingArea.Left + 10;
-                    if (posY + _formDrawingFrame.Height > screen.WorkingArea.Bottom)
-                        posY = screen.WorkingArea.Bottom - _formDrawingFrame.Height - 10;
-                    if (posY < screen.WorkingArea.Top)
-                        posY = screen.WorkingArea.Top + 10;
+                    if (targetPos.X + _formDrawingFrame.Width > screen.WorkingArea.Right)
+                        targetPos.X = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;
+                    if (targetPos.X < screen.WorkingArea.Left)
+                        targetPos.X = screen.WorkingArea.Left;
+                    if (targetPos.Y + _formDrawingFrame.Height > screen.WorkingArea.Bottom)
+                        targetPos.Y = screen.WorkingArea.Bottom - _formDrawingFrame.Height - 10;
+                    if (targetPos.Y < screen.WorkingArea.Top)
+                        targetPos.Y = screen.WorkingArea.Top;
 
                     _formDrawingFrame.StartPosition = FormStartPosition.Manual;
-                    _formDrawingFrame.Location = new Point(posX, posY);
+                    _formDrawingFrame.Location = targetPos;
                     _formDrawingFrame.Show(this);
                 } else {
                     _formDrawingFrame.BringToFront();
