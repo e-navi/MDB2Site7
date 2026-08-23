@@ -398,29 +398,58 @@ namespace Site7DbEditor.Services
             double cosRot = Math.Cos(radSurX);
             double sinRot = Math.Sin(radSurX);
 
+            PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
+
             using (var tomboPen = new Pen(tomboColor, 1.2f))
             using (var gridPen = new Pen(Color.FromArgb(60, tomboColor), 1f) { DashStyle = DashStyle.Dash })
             using (var coordFont = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold))
             using (var coordBrush = new SolidBrush(coordColor))
             using (var coordBgBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(160, 25, 25, 35) : Color.FromArgb(180, 255, 255, 255)))
             {
-                // A. トンボ (+) と 格子線の描画
-                for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                // A. 格子線 (Grid Lines) の描画（内枠ポリゴンでクリッピングして枠端まで完全に通過）
+                if (ShowGridLines)
                 {
-                    for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
+                    var oldClip = g.Clip;
+                    using (var innerPath = new GraphicsPath())
                     {
-                        // 測量座標 -> ローカル(u, v)
-                        double dNorth = sx - CenterX;
-                        double dEast = sy - CenterY;
-                        double u = dNorth * (-sinRot) + dEast * cosRot;
-                        double v = dNorth * cosRot + dEast * sinRot;
+                        innerPath.AddPolygon(innerScreen);
+                        g.SetClip(innerPath);
 
-                        if (u >= uMin - 0.05 && u <= uMax + 0.05 && v >= vMin - 0.05 && v <= vMax + 0.05)
+                        // X一定線（東西方向）
+                        for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
                         {
-                            PointF pt = vc.ToCanvasPoint(sx, sy, canvasSize);
+                            PointF pStart = vc.ToCanvasPoint(sx, startSurY, canvasSize);
+                            PointF pEnd = vc.ToCanvasPoint(sx, endSurY, canvasSize);
+                            g.DrawLine(gridPen, pStart, pEnd);
+                        }
 
-                            if (ShowTombo)
+                        // Y一定線（南北方向）
+                        for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
+                        {
+                            PointF pStart = vc.ToCanvasPoint(startSurX, sy, canvasSize);
+                            PointF pEnd = vc.ToCanvasPoint(endSurX, sy, canvasSize);
+                            g.DrawLine(gridPen, pStart, pEnd);
+                        }
+                    }
+                    g.Clip = oldClip;
+                }
+
+                // B. トンボ (+) の描画
+                if (ShowTombo)
+                {
+                    for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                    {
+                        for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
+                        {
+                            // 測量座標 -> ローカル(u, v)
+                            double dNorth = sx - CenterX;
+                            double dEast = sy - CenterY;
+                            double u = dNorth * (-sinRot) + dEast * cosRot;
+                            double v = dNorth * cosRot + dEast * sinRot;
+
+                            if (u >= uMin - 0.05 && u <= uMax + 0.05 && v >= vMin - 0.05 && v <= vMax + 0.05)
                             {
+                                PointF pt = vc.ToCanvasPoint(sx, sy, canvasSize);
                                 float arm = 5.5f;
                                 PointF ptN = vc.ToCanvasPoint(sx + (pitch * 0.05), sy, canvasSize);
                                 PointF ptE = vc.ToCanvasPoint(sx, sy + (pitch * 0.05), canvasSize);
@@ -888,26 +917,38 @@ namespace Site7DbEditor.Services
             var oldClip = g.Clip;
             g.SetClip(innerRect);
 
-            // A. トンボ (+) と 格子線
+            // A. 格子線 (Grid Lines) の描画（内枠クリッピング内で端から端まで完全に通過）
             using (var tomboPen = new Pen(Color.FromArgb(200, 30, 30), 1.0f))
             using (var gridPen = new Pen(Color.FromArgb(60, 200, 30, 30), 1f) { DashStyle = DashStyle.Dash })
             {
-                for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                if (ShowGridLines)
                 {
+                    // X一定線（東西方向）
+                    for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                    {
+                        PointF pStart = SurveyToPaperScreen(sx, startSurY);
+                        PointF pEnd = SurveyToPaperScreen(sx, endSurY);
+                        g.DrawLine(gridPen, pStart, pEnd);
+                    }
+
+                    // Y一定線（南北方向）
                     for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
                     {
-                        PointF pt = SurveyToPaperScreen(sx, sy);
-                        if (innerRect.Contains(pt))
-                        {
-                            if (ShowGridLines)
-                            {
-                                PointF ptN = SurveyToPaperScreen(sx + pitch, sy);
-                                PointF ptE = SurveyToPaperScreen(sx, sy + pitch);
-                                g.DrawLine(gridPen, pt, ptN);
-                                g.DrawLine(gridPen, pt, ptE);
-                            }
+                        PointF pStart = SurveyToPaperScreen(startSurX, sy);
+                        PointF pEnd = SurveyToPaperScreen(endSurX, sy);
+                        g.DrawLine(gridPen, pStart, pEnd);
+                    }
+                }
 
-                            if (ShowTombo)
+                // トンボ (+) の描画
+                if (ShowTombo)
+                {
+                    for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
+                    {
+                        for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
+                        {
+                            PointF pt = SurveyToPaperScreen(sx, sy);
+                            if (innerRect.Contains(pt))
                             {
                                 float arm = 4.5f;
                                 PointF ptN = SurveyToPaperScreen(sx + (pitch * 0.05), sy);
