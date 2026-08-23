@@ -533,25 +533,40 @@ namespace Site7DbEditor {
             };
 
             btnDrawingFrame.Click += (s, e) => {
-                if (_isDrawingFrameFloating) {
-                    EnsureDrawingFrameInitialized();
-                    _formDrawingFrame!.SyncFromService();
-                    if (!_formDrawingFrame.Visible) {
-                        _formDrawingFrame.Show(this);
-                    } else {
-                        _formDrawingFrame.BringToFront();
-                    }
+                if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
+                    _formDrawingFrame = new FormDrawingFrame(_db);
+                    _formDrawingFrame.FrameChanged += (sender, ev) => {
+                        chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
+                        picMapCanvas.Invalidate();
+                        UpdateDrawingPreviewState();
+                    };
+                    _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
+                    _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
+                    _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
+                    _formDrawingFrame.PrintRequested += (sender, ev) => ExecutePrintDrawing();
+                }
+                _formDrawingFrame.SyncFromService();
+                UpdateDrawingPreviewState();
+                if (!_formDrawingFrame.Visible) {
+                    var screen = Screen.FromControl(this);
+                    int posX = this.Location.X + this.Width - _formDrawingFrame.Width - 40;
+                    int posY = this.Location.Y + 80;
+                    if (posX + _formDrawingFrame.Width > screen.WorkingArea.Right)
+                        posX = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;
+                    if (posX < screen.WorkingArea.Left)
+                        posX = screen.WorkingArea.Left + 10;
+                    if (posY + _formDrawingFrame.Height > screen.WorkingArea.Bottom)
+                        posY = screen.WorkingArea.Bottom - _formDrawingFrame.Height - 10;
+                    if (posY < screen.WorkingArea.Top)
+                        posY = screen.WorkingArea.Top + 10;
+
+                    _formDrawingFrame.StartPosition = FormStartPosition.Manual;
+                    _formDrawingFrame.Location = new Point(posX, posY);
+                    _formDrawingFrame.Show(this);
                 } else {
-                    if (panelDrawingFrame.Visible) {
-                        panelDrawingFrame.Visible = false;
-                    } else {
-                        SetDrawingFrameDisplayMode(false);
-                    }
+                    _formDrawingFrame.BringToFront();
                 }
             };
-
-            btnDetachDrawingFrame.Click += (s, e) => SetDrawingFrameDisplayMode(true);
-            btnCloseDrawingFrame.Click += (s, e) => { panelDrawingFrame.Visible = false; };
 
             this.chkShowIkou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
             this.chkShowIkouName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
@@ -906,72 +921,6 @@ namespace Site7DbEditor {
                 }
 
                 panelMapLeft.SendToBack();
-            }
-
-            _vc.InvalidateBoundsCache();
-            UpdatePanelWidthsDisplay();
-            picMapCanvas.Invalidate();
-        }
-
-        private bool _isDrawingFrameFloating = false;
-
-        private void EnsureDrawingFrameInitialized() {
-            if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
-                _formDrawingFrame = new FormDrawingFrame(_db);
-                _formDrawingFrame.FrameChanged += (sender, ev) => {
-                    chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
-                    picMapCanvas.Invalidate();
-                    UpdateDrawingPreviewState();
-                };
-                _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
-                _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
-                _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
-                _formDrawingFrame.PrintRequested += (sender, ev) => ExecutePrintDrawing();
-                _formDrawingFrame.DockToPanelRequested += (sender, ev) => SetDrawingFrameDisplayMode(false);
-                _formDrawingFrame.CloseRequested += (sender, ev) => {
-                    if (_isDrawingFrameFloating) {
-                        _formDrawingFrame.Hide();
-                    } else {
-                        panelDrawingFrame.Visible = false;
-                    }
-                };
-            }
-        }
-
-        public void SetDrawingFrameDisplayMode(bool isFloating) {
-            _isDrawingFrameFloating = isFloating;
-            EnsureDrawingFrameInitialized();
-
-            if (isFloating) {
-                if (panelDrawingFrameContent.Controls.Contains(_formDrawingFrame!.panelContent)) {
-                    panelDrawingFrameContent.Controls.Remove(_formDrawingFrame.panelContent);
-                }
-                panelDrawingFrame.Visible = false;
-
-                _formDrawingFrame.panelDockHeader.Visible = true;
-                _formDrawingFrame.panelContent.Dock = DockStyle.Fill;
-                if (!_formDrawingFrame.Controls.Contains(_formDrawingFrame.panelContent)) {
-                    _formDrawingFrame.Controls.Add(_formDrawingFrame.panelContent);
-                }
-                _formDrawingFrame.SyncFromService();
-                _formDrawingFrame.Show(this);
-                _formDrawingFrame.BringToFront();
-            } else {
-                _formDrawingFrame!.Hide();
-                _formDrawingFrame.panelDockHeader.Visible = false;
-
-                if (_formDrawingFrame.Controls.Contains(_formDrawingFrame.panelContent)) {
-                    _formDrawingFrame.Controls.Remove(_formDrawingFrame.panelContent);
-                }
-
-                _formDrawingFrame.panelContent.Dock = DockStyle.Fill;
-                if (!panelDrawingFrameContent.Controls.Contains(_formDrawingFrame.panelContent)) {
-                    panelDrawingFrameContent.Controls.Add(_formDrawingFrame.panelContent);
-                }
-
-                panelDrawingFrame.Visible = true;
-                panelDrawingFrame.BringToFront();
-                _formDrawingFrame.SyncFromService();
             }
 
             _vc.InvalidateBoundsCache();
