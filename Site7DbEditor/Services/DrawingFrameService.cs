@@ -679,8 +679,8 @@ namespace Site7DbEditor.Services
             float length = (float)Math.Max(16.0, NorthArrowSizeMm * pixelPerMm * 1.5);
             float width = length * 0.28f;
 
-            // 北方向の角度（画面上ではRotationAngleDegに応じて回転）
-            float needleRad = (float)(-RotationAngleDeg * Math.PI / 180.0);
+            // CADマップ上では常に北が画面上向き（真上）
+            float needleRad = 0f;
             float cos = (float)Math.Cos(needleRad);
             float sin = (float)Math.Sin(needleRad);
 
