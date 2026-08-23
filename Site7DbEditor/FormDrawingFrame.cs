@@ -16,6 +16,8 @@ namespace Site7DbEditor
         public event EventHandler? SetRotationRequested;
         public event EventHandler? PickNorthPosRequested;
         public event EventHandler? PrintRequested;
+        public event EventHandler? DockToPanelRequested;
+        public event EventHandler? CloseRequested;
 
         public FormDrawingFrame(EditorDbManager? db = null)
         {
@@ -84,7 +86,11 @@ namespace Site7DbEditor
                 }
             };
 
-            this.btnClose.Click += (s, e) => this.Hide();
+            this.btnClose.Click += (s, e) => {
+                this.Hide();
+                CloseRequested?.Invoke(this, EventArgs.Empty);
+            };
+            this.btnDockToPanel.Click += (s, e) => DockToPanelRequested?.Invoke(this, EventArgs.Empty);
             this.btnPrint.Click += (s, e) => PrintRequested?.Invoke(this, EventArgs.Empty);
 
             // 基本・配置

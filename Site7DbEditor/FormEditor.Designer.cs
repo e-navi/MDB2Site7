@@ -59,6 +59,12 @@ namespace Site7DbEditor
             btnBgSettings = new Button();
             btnEnvSettings = new Button();
             btnDrawingFrame = new Button();
+            panelDrawingFrame = new Panel();
+            panelDrawingFrameHeader = new Panel();
+            lblDrawingFrameTitle = new Label();
+            btnDetachDrawingFrame = new Button();
+            btnCloseDrawingFrame = new Button();
+            panelDrawingFrameContent = new Panel();
             btnUndo = new Button();
             btnRedo = new Button();
             lblIkouLayerGrpHeader = new Label();
@@ -327,6 +333,7 @@ namespace Site7DbEditor
             // panelMapArea
             // 
             panelMapArea.Controls.Add(splitMapArea);
+            panelMapArea.Controls.Add(panelDrawingFrame);
             panelMapArea.Controls.Add(panelMapRight);
             panelMapArea.Controls.Add(panelMapHeader);
             panelMapArea.Dock = DockStyle.Fill;
@@ -400,6 +407,77 @@ namespace Site7DbEditor
             picDrawingPreview.Size = new Size(560, 464);
             picDrawingPreview.TabIndex = 1;
             picDrawingPreview.TabStop = false;
+            // 
+            // panelDrawingFrame
+            // 
+            panelDrawingFrame.BackColor = Color.FromArgb(28, 30, 38);
+            panelDrawingFrame.Controls.Add(panelDrawingFrameContent);
+            panelDrawingFrame.Controls.Add(panelDrawingFrameHeader);
+            panelDrawingFrame.Dock = DockStyle.Right;
+            panelDrawingFrame.Location = new Point(876, 35);
+            panelDrawingFrame.Name = "panelDrawingFrame";
+            panelDrawingFrame.Size = new Size(250, 490);
+            panelDrawingFrame.TabIndex = 4;
+            panelDrawingFrame.Visible = false;
+            // 
+            // panelDrawingFrameContent
+            // 
+            panelDrawingFrameContent.Dock = DockStyle.Fill;
+            panelDrawingFrameContent.Location = new Point(0, 30);
+            panelDrawingFrameContent.Name = "panelDrawingFrameContent";
+            panelDrawingFrameContent.Size = new Size(250, 460);
+            panelDrawingFrameContent.TabIndex = 1;
+            // 
+            // panelDrawingFrameHeader
+            // 
+            panelDrawingFrameHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelDrawingFrameHeader.Controls.Add(lblDrawingFrameTitle);
+            panelDrawingFrameHeader.Controls.Add(btnDetachDrawingFrame);
+            panelDrawingFrameHeader.Controls.Add(btnCloseDrawingFrame);
+            panelDrawingFrameHeader.Dock = DockStyle.Top;
+            panelDrawingFrameHeader.Location = new Point(0, 0);
+            panelDrawingFrameHeader.Name = "panelDrawingFrameHeader";
+            panelDrawingFrameHeader.Size = new Size(250, 30);
+            panelDrawingFrameHeader.TabIndex = 0;
+            // 
+            // lblDrawingFrameTitle
+            // 
+            lblDrawingFrameTitle.AutoSize = true;
+            lblDrawingFrameTitle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblDrawingFrameTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblDrawingFrameTitle.Location = new Point(6, 7);
+            lblDrawingFrameTitle.Name = "lblDrawingFrameTitle";
+            lblDrawingFrameTitle.Size = new Size(79, 15);
+            lblDrawingFrameTitle.TabIndex = 0;
+            lblDrawingFrameTitle.Text = "📐 図枠設定";
+            // 
+            // btnDetachDrawingFrame
+            // 
+            btnDetachDrawingFrame.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachDrawingFrame.Dock = DockStyle.Right;
+            btnDetachDrawingFrame.FlatStyle = FlatStyle.Flat;
+            btnDetachDrawingFrame.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDetachDrawingFrame.ForeColor = Color.White;
+            btnDetachDrawingFrame.Location = new Point(156, 0);
+            btnDetachDrawingFrame.Name = "btnDetachDrawingFrame";
+            btnDetachDrawingFrame.Size = new Size(64, 30);
+            btnDetachDrawingFrame.TabIndex = 1;
+            btnDetachDrawingFrame.Text = "↗ 分離";
+            btnDetachDrawingFrame.UseVisualStyleBackColor = false;
+            // 
+            // btnCloseDrawingFrame
+            // 
+            btnCloseDrawingFrame.BackColor = Color.FromArgb(60, 64, 80);
+            btnCloseDrawingFrame.Dock = DockStyle.Right;
+            btnCloseDrawingFrame.FlatStyle = FlatStyle.Flat;
+            btnCloseDrawingFrame.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnCloseDrawingFrame.ForeColor = Color.White;
+            btnCloseDrawingFrame.Location = new Point(220, 0);
+            btnCloseDrawingFrame.Name = "btnCloseDrawingFrame";
+            btnCloseDrawingFrame.Size = new Size(30, 30);
+            btnCloseDrawingFrame.TabIndex = 2;
+            btnCloseDrawingFrame.Text = "✖";
+            btnCloseDrawingFrame.UseVisualStyleBackColor = false;
             // 
             // panelMapRight
             // 
@@ -756,7 +834,7 @@ namespace Site7DbEditor
             btnEnvSettings.Name = "btnEnvSettings";
             btnEnvSettings.Size = new Size(57, 23);
             btnEnvSettings.TabIndex = 1;
-            btnEnvSettings.Text = "環境設定";
+            btnEnvSettings.Text = "TS設定";
             btnEnvSettings.UseVisualStyleBackColor = true;
             // 
             // btnDrawingFrame
@@ -2649,6 +2727,12 @@ namespace Site7DbEditor
         private System.Windows.Forms.Button btnBgSettings;
         private System.Windows.Forms.Button btnEnvSettings;
         private System.Windows.Forms.Button btnDrawingFrame;
+        public System.Windows.Forms.Panel panelDrawingFrame;
+        public System.Windows.Forms.Panel panelDrawingFrameHeader;
+        public System.Windows.Forms.Label lblDrawingFrameTitle;
+        public System.Windows.Forms.Button btnDetachDrawingFrame;
+        public System.Windows.Forms.Button btnCloseDrawingFrame;
+        public System.Windows.Forms.Panel panelDrawingFrameContent;
         private System.Windows.Forms.Button btnUndo;
         private System.Windows.Forms.Button btnRedo;
         private System.Windows.Forms.Label lblIkouLayerGrpHeader;

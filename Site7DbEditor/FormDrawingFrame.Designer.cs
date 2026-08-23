@@ -17,6 +17,10 @@ namespace Site7DbEditor
 
         private void InitializeComponent()
         {
+            this.panelDockHeader = new System.Windows.Forms.Panel();
+            this.lblDockTitle = new System.Windows.Forms.Label();
+            this.btnDockToPanel = new System.Windows.Forms.Button();
+            this.panelContent = new System.Windows.Forms.Panel();
             this.btnPrint = new System.Windows.Forms.Button();
             this.chkPreviewDrawing = new System.Windows.Forms.CheckBox();
             this.tabSettings = new System.Windows.Forms.TabControl();
@@ -817,22 +821,74 @@ namespace Site7DbEditor
             this.btnPrint.Text = "印刷...";
             this.btnPrint.UseVisualStyleBackColor = false;
             // 
+            // panelDockHeader
+            // 
+            this.panelDockHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
+            this.panelDockHeader.Controls.Add(this.lblDockTitle);
+            this.panelDockHeader.Controls.Add(this.btnDockToPanel);
+            this.panelDockHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelDockHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelDockHeader.Name = "panelDockHeader";
+            this.panelDockHeader.Size = new System.Drawing.Size(248, 30);
+            this.panelDockHeader.TabIndex = 4;
+            this.panelDockHeader.Visible = false;
+            // 
+            // lblDockTitle
+            // 
+            this.lblDockTitle.AutoSize = true;
+            this.lblDockTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblDockTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblDockTitle.Location = new System.Drawing.Point(6, 7);
+            this.lblDockTitle.Name = "lblDockTitle";
+            this.lblDockTitle.Size = new System.Drawing.Size(79, 15);
+            this.lblDockTitle.TabIndex = 1;
+            this.lblDockTitle.Text = "📐 図枠設定";
+            // 
+            // btnDockToPanel
+            // 
+            this.btnDockToPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDockToPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
+            this.btnDockToPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDockToPanel.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnDockToPanel.ForeColor = System.Drawing.Color.White;
+            this.btnDockToPanel.Location = new System.Drawing.Point(178, 3);
+            this.btnDockToPanel.Name = "btnDockToPanel";
+            this.btnDockToPanel.Size = new System.Drawing.Size(64, 24);
+            this.btnDockToPanel.TabIndex = 0;
+            this.btnDockToPanel.Text = "↙ 復帰";
+            this.btnDockToPanel.UseVisualStyleBackColor = false;
+            // 
+            // panelContent
+            // 
+            this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
+            this.panelContent.Controls.Add(this.btnPrint);
+            this.panelContent.Controls.Add(this.btnClose);
+            this.panelContent.Controls.Add(this.tabSettings);
+            this.panelContent.Controls.Add(this.chkPreviewDrawing);
+            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContent.Location = new System.Drawing.Point(0, 30);
+            this.panelContent.Name = "panelContent";
+            this.panelContent.Size = new System.Drawing.Size(248, 382);
+            this.panelContent.TabIndex = 5;
+            // 
             // FormDrawingFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
-            this.ClientSize = new System.Drawing.Size(248, 382);
-            this.Controls.Add(this.btnPrint);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.tabSettings);
-            this.Controls.Add(this.chkPreviewDrawing);
+            this.ClientSize = new System.Drawing.Size(248, 412);
+            this.Controls.Add(this.panelContent);
+            this.Controls.Add(this.panelDockHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormDrawingFrame";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "図枠設定";
             this.TopMost = true;
+            this.panelDockHeader.ResumeLayout(false);
+            this.panelDockHeader.PerformLayout();
+            this.panelContent.ResumeLayout(false);
+            this.panelContent.PerformLayout();
             this.tabSettings.ResumeLayout(false);
             this.tabBasic.ResumeLayout(false);
             this.grpPaper.ResumeLayout(false);
@@ -868,6 +924,10 @@ namespace Site7DbEditor
 
         #endregion
 
+        public System.Windows.Forms.Panel panelDockHeader;
+        public System.Windows.Forms.Label lblDockTitle;
+        public System.Windows.Forms.Button btnDockToPanel;
+        public System.Windows.Forms.Panel panelContent;
         public System.Windows.Forms.Button btnPrint;
         private System.Windows.Forms.CheckBox chkPreviewDrawing;
         private System.Windows.Forms.TabControl tabSettings;
