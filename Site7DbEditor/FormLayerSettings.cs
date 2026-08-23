@@ -132,7 +132,7 @@ namespace Site7DbEditor
                 Size = new Size(100, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
-            CBoxLineStyle.Items.AddRange(new object[] { "実線/折線", "曲線", "破線", "点線" });
+            CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
 
             // Buttons
             button1 = new Button
@@ -239,7 +239,7 @@ namespace Site7DbEditor
             CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
             CBoxSize.Text = item.Size.ToString("F1");
             CBoxWidth.SelectedIndex = Math.Clamp(item.Width - 1, 0, CBoxWidth.Items.Count - 1);
-            CBoxLineStyle.SelectedIndex = Math.Clamp(item.LType - 1, 0, CBoxLineStyle.Items.Count - 1);
+            CBoxLineStyle.SelectedIndex = (item.LType == 2) ? 1 : 0;
         }
 
         private void Button1_Click(object? sender, EventArgs e)
@@ -253,9 +253,9 @@ namespace Site7DbEditor
             item.Name = textBox1.Text.Trim();
             item.Color = CBoxColor.SelectedIndex + 1;
             item.Mark = CBoxMark.SelectedIndex + 1;
-            item.Size = double.TryParse(CBoxSize.Text, out double sizeVal) ? sizeVal : 5.0;
+            item.Size = double.TryParse(CBoxSize.Text, out double sizeVal) ? sizeVal : 1.0;
             item.Width = CBoxWidth.SelectedIndex + 1;
-            item.LType = CBoxLineStyle.SelectedIndex + 1;
+            item.LType = (CBoxLineStyle.SelectedIndex == 1) ? 2 : 1;
 
             listBox1.Items[itemIdx] = item.DisplayText;
 

@@ -22,9 +22,9 @@ namespace Site7DbEditor.Services
         public string Name { get; set; } = "";     // レイヤ名
         public int Color { get; set; } = 1;        // 表示色番号 (1..16)
         public int Mark { get; set; } = 1;         // マーク (1..8)
-        public double Size { get; set; } = 5.0;    // サイズ
+        public double Size { get; set; } = 1.0;    // サイズ (デフォルト1.0)
         public int Width { get; set; } = 1;        // 線幅 (1..5)
-        public int LType { get; set; } = 1;        // 線種 (1:実線/折線, 2:曲線)
+        public int LType { get; set; } = 1;        // 線種 (1:折線, 2:曲線)
 
         public string DisplayText => string.IsNullOrWhiteSpace(Name) || Name == Code 
             ? Code 
@@ -107,11 +107,7 @@ namespace Site7DbEditor.Services
                     _ => 1
                 };
 
-                double defaultSize = group switch
-                {
-                    LayerGroup.Kikai => 6.0,
-                    _ => 5.0
-                };
+                double defaultSize = 1.0;
 
                 list.Add(new LayerItem
                 {
@@ -243,7 +239,7 @@ namespace Site7DbEditor.Services
                     if (parts.Length > 5 && int.TryParse(parts[5].Trim(), out int mVal))
                         mark = Math.Clamp(mVal, 1, 10);
 
-                    double size = 5.0;
+                    double size = 1.0;
                     if (parts.Length > 6 && double.TryParse(parts[6].Trim(), out double sVal))
                         size = sVal;
 
@@ -305,7 +301,7 @@ namespace Site7DbEditor.Services
             }
 
             var sb = new StringBuilder();
-            sb.AppendLine("# レイヤ番号\tレイヤ名\t色番号(1-16)\t線幅(1-5)\t線種(1:実線)\tマーク(1-8)\tサイズ(mm)");
+            sb.AppendLine("# レイヤ番号\tレイヤ名\t色番号(1-16)\t線幅(1-5)\t線種(1:折線, 2:曲線)\tマーク(1-8)\tサイズ");
 
             foreach (var item in list)
             {
