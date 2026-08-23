@@ -86,7 +86,6 @@ namespace Site7DbEditor
             this.btnClose.Click += (s, e) => this.Hide();
 
             // 基本・配置
-            this.chkVisible.CheckedChanged += (s, e) => OnValueChanged();
             this.chkPreviewDrawing.CheckedChanged += (s, e) => OnValueChanged();
             this.cmbPaperSize.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.rdoLandscape.CheckedChanged += (s, e) => OnValueChanged();
@@ -158,7 +157,6 @@ namespace Site7DbEditor
             try
             {
                 var frame = DrawingFrameService.Instance;
-                chkVisible.Checked = frame.IsVisible;
                 chkPreviewDrawing.Checked = frame.IsDrawingPreviewEnabled;
 
                 int idx = cmbPaperSize.FindStringExact(frame.PaperSizeName);
@@ -224,7 +222,6 @@ namespace Site7DbEditor
             if (_isUpdatingUi) return;
 
             var frame = DrawingFrameService.Instance;
-            frame.IsVisible = chkVisible.Checked;
             frame.IsDrawingPreviewEnabled = chkPreviewDrawing.Checked;
             frame.PaperSizeName = cmbPaperSize.SelectedItem?.ToString() ?? "A3";
             frame.IsLandscape = rdoLandscape.Checked;

@@ -518,7 +518,8 @@ namespace Site7DbEditor.Services
             double cos = Math.Cos(rad);
             double sin = Math.Sin(rad);
 
-            string labelText = isXAxis ? $"X={val:0.00}m" : $"Y={val:0.00}m";
+            string numStr = (Math.Abs(val % 1.0) < 1e-4) ? $"{val:0}m" : $"{val:0.00}m";
+            string labelText = isXAxis ? $"X={numStr}" : $"Y={numStr}";
             var intersections = new System.Collections.Generic.List<(double surX, double surY)>();
 
             if (isXAxis)
@@ -1305,7 +1306,8 @@ namespace Site7DbEditor.Services
             double cos = Math.Cos(rad);
             double sin = Math.Sin(rad);
 
-            string labelText = isXAxis ? $"X={val:0.00}m" : $"Y={val:0.00}m";
+            string numStr = (Math.Abs(val % 1.0) < 1e-4) ? $"{val:0}m" : $"{val:0.00}m";
+            string labelText = isXAxis ? $"X={numStr}" : $"Y={numStr}";
             var intersections = new System.Collections.Generic.List<(double surX, double surY)>();
 
             if (isXAxis)
