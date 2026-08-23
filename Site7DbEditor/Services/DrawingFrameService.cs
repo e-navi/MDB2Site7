@@ -368,22 +368,21 @@ namespace Site7DbEditor.Services
             double pitch = GetEffectivePitchMeters();
             if (pitch <= 0.01) return;
 
-            // 外枠の測量座標範囲（余白・外枠・内枠間のすべての交点を確実にカバー）
-            var outerCorners = GetOuterCornersSurvey();
+            // 内枠の測量座標範囲（内枠に格子線が表示される範囲を基準とする）
             double minSurX = double.MaxValue, maxSurX = double.MinValue;
             double minSurY = double.MaxValue, maxSurY = double.MinValue;
-            for (int i = 0; i < outerCorners.Length; i++)
+            for (int i = 0; i < innerCorners.Length; i++)
             {
-                minSurX = Math.Min(minSurX, outerCorners[i].surveyX);
-                maxSurX = Math.Max(maxSurX, outerCorners[i].surveyX);
-                minSurY = Math.Min(minSurY, outerCorners[i].surveyY);
-                maxSurY = Math.Max(maxSurY, outerCorners[i].surveyY);
+                minSurX = Math.Min(minSurX, innerCorners[i].surveyX);
+                maxSurX = Math.Max(maxSurX, innerCorners[i].surveyX);
+                minSurY = Math.Min(minSurY, innerCorners[i].surveyY);
+                maxSurY = Math.Max(maxSurY, innerCorners[i].surveyY);
             }
 
-            double startSurX = Math.Floor(minSurX / pitch) * pitch - pitch;
-            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch + pitch;
-            double startSurY = Math.Floor(minSurY / pitch) * pitch - pitch;
-            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch + pitch;
+            double startSurX = Math.Floor(minSurX / pitch) * pitch;
+            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch;
+            double startSurY = Math.Floor(minSurY / pitch) * pitch;
+            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch;
 
             // 内枠のローカル座標境界
             var (innerWM, innerHM, offsetEastM, offsetNorthM) = GetInnerFrameDimensionsMeters();
@@ -506,9 +505,9 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// 1本のグリッド線（X=定数 または Y=定数）が外枠/内枠の中間線と交差する点に、格子線と平行に回転して座標ラベルを描画
+        /// 1本のグリッド線（X=定数 または Y=定数）が内枠と交差する位置の外側中間線に、格子線と平行に回転して座標ラベルを描画（内枠基準）
         /// </summary>
-        private void DrawSingleCoordinateLabel(Graphics g, EditorMapViewController vc, Size canvasSize, double val, bool isXAxis, double uMidLeft, double uMidRight, double vMidBottom, double vMidTop, double uMinOuter, double uMaxOuter, double vMinOuter, double vMaxOuter, Font font, Brush textBrush, Brush bgBrush)
+        private void DrawSingleCoordinateLabel(Graphics g, EditorMapViewController vc, Size canvasSize, double val, bool isXAxis, double uMidLeft, double uMidRight, double vMidBottom, double vMidTop, double uMinInner, double uMaxInner, double vMinInner, double vMaxInner, Font font, Brush textBrush, Brush bgBrush)
         {
             double rad = RotationAngleDeg * Math.PI / 180.0;
             double cos = Math.Cos(rad);
@@ -520,65 +519,65 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 下中間線 (v = vMidBottom)
+                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dEast = (vMidBottom - dNorth * cos) / sin;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
-                // 上中間線 (v = vMidTop)
+                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dEast = (vMidTop - dNorth * cos) / sin;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
-                // 左中間線 (u = uMidLeft)
+                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dEast = (uMidLeft + dNorth * sin) / cos;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
-                // 右中間線 (u = uMidRight)
+                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dEast = (uMidRight + dNorth * sin) / cos;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
             }
             else
             {
                 double dEast = val - CenterY;
-                // 左中間線 (u = uMidLeft)
+                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dNorth = (dEast * cos - uMidLeft) / sin;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
-                // 右中間線 (u = uMidRight)
+                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dNorth = (dEast * cos - uMidRight) / sin;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
-                // 下中間線 (v = vMidBottom)
+                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dNorth = (vMidBottom - dEast * sin) / cos;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
-                // 上中間線 (v = vMidTop)
+                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dNorth = (vMidTop - dEast * sin) / cos;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
             }
 
@@ -895,12 +894,12 @@ namespace Site7DbEditor.Services
 
             // 4. トンボ (+) & 外枠・内枠間の座標値の計算・描画
             double pitch = GetEffectivePitchMeters();
-            var outerCorners = GetOuterCornersSurvey();
+            var innerCorners = GetInnerCornersSurvey();
 
-            // 外枠の測量座標範囲（余白・外枠・内枠間のすべての交点を確実にカバー）
+            // 内枠の測量座標範囲（内枠に格子線が表示される範囲を基準とする）
             double minSurX = double.MaxValue, maxSurX = double.MinValue;
             double minSurY = double.MaxValue, maxSurY = double.MinValue;
-            foreach (var corner in outerCorners)
+            foreach (var corner in innerCorners)
             {
                 minSurX = Math.Min(minSurX, corner.surveyX);
                 maxSurX = Math.Max(maxSurX, corner.surveyX);
@@ -908,10 +907,10 @@ namespace Site7DbEditor.Services
                 maxSurY = Math.Max(maxSurY, corner.surveyY);
             }
 
-            double startSurX = Math.Floor(minSurX / pitch) * pitch - pitch;
-            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch + pitch;
-            double startSurY = Math.Floor(minSurY / pitch) * pitch - pitch;
-            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch + pitch;
+            double startSurX = Math.Floor(minSurX / pitch) * pitch;
+            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch;
+            double startSurY = Math.Floor(minSurY / pitch) * pitch;
+            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch;
 
             // 5. 内枠内クリッピングで図面要素を描画
             var oldClip = g.Clip;
@@ -1263,7 +1262,7 @@ namespace Site7DbEditor.Services
             }
         }
 
-        private void DrawSingleCoordinateLabelPaper(Graphics g, double val, bool isXAxis, double uMidLeft, double uMidRight, double vMidBottom, double vMidTop, double uMinOuter, double uMaxOuter, double vMinOuter, double vMaxOuter, Font font, Brush textBrush, Brush bgBrush, Func<double, double, PointF> surveyToScreen)
+        private void DrawSingleCoordinateLabelPaper(Graphics g, double val, bool isXAxis, double uMidLeft, double uMidRight, double vMidBottom, double vMidTop, double uMinInner, double uMaxInner, double vMinInner, double vMaxInner, Font font, Brush textBrush, Brush bgBrush, Func<double, double, PointF> surveyToScreen)
         {
             double rad = RotationAngleDeg * Math.PI / 180.0;
             double cos = Math.Cos(rad);
@@ -1275,65 +1274,65 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 下中間線 (v = vMidBottom)
+                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dEast = (vMidBottom - dNorth * cos) / sin;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
-                // 上中間線 (v = vMidTop)
+                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dEast = (vMidTop - dNorth * cos) / sin;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
-                // 左中間線 (u = uMidLeft)
+                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dEast = (uMidLeft + dNorth * sin) / cos;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
-                // 右中間線 (u = uMidRight)
+                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dEast = (uMidRight + dNorth * sin) / cos;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((val, CenterY + dEast));
                 }
             }
             else
             {
                 double dEast = val - CenterY;
-                // 左中間線 (u = uMidLeft)
+                // 左中間線 (u = uMidLeft) - 内枠左辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dNorth = (dEast * cos - uMidLeft) / sin;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
-                // 右中間線 (u = uMidRight)
+                // 右中間線 (u = uMidRight) - 内枠右辺(vMinInner〜vMaxInner)を通る格子線
                 if (Math.Abs(sin) > 1e-6)
                 {
                     double dNorth = (dEast * cos - uMidRight) / sin;
                     double v = dNorth * cos + dEast * sin;
-                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
-                // 下中間線 (v = vMidBottom)
+                // 下中間線 (v = vMidBottom) - 内枠下辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dNorth = (vMidBottom - dEast * sin) / cos;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
-                // 上中間線 (v = vMidTop)
+                // 上中間線 (v = vMidTop) - 内枠上辺(uMinInner〜uMaxInner)を通る格子線
                 if (Math.Abs(cos) > 1e-6)
                 {
                     double dNorth = (vMidTop - dEast * sin) / cos;
                     double u = dNorth * (-sin) + dEast * cos;
-                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
             }
 
