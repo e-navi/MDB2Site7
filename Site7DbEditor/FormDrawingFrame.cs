@@ -27,14 +27,25 @@ namespace Site7DbEditor
         private void ApplyThemeStyles()
         {
             this.BackColor = Color.FromArgb(28, 30, 38);
-            foreach (Control c in this.Controls)
+            
+            // TabControlの背景
+            foreach (TabPage tab in tabSettings.TabPages)
+            {
+                tab.BackColor = Color.FromArgb(30, 32, 42);
+                ApplyGroupStyles(tab);
+            }
+        }
+
+        private void ApplyGroupStyles(Control parent)
+        {
+            foreach (Control c in parent.Controls)
             {
                 if (c is GroupBox grp)
                 {
                     grp.ForeColor = Color.FromArgb(220, 225, 235);
                     foreach (Control sub in grp.Controls)
                     {
-                        if (sub is Label lbl)
+                        if (sub is Label lbl && sub != lblEffectivePitch)
                         {
                             lbl.ForeColor = Color.FromArgb(190, 195, 205);
                         }
@@ -51,6 +62,10 @@ namespace Site7DbEditor
                         else if (sub is RadioButton rdo)
                         {
                             rdo.ForeColor = Color.FromArgb(220, 225, 235);
+                        }
+                        else if (sub is CheckBox chk)
+                        {
+                            chk.ForeColor = Color.FromArgb(220, 225, 235);
                         }
                     }
                 }
@@ -71,6 +86,7 @@ namespace Site7DbEditor
 
             this.btnClose.Click += (s, e) => this.Hide();
 
+            // 基本・配置
             this.chkVisible.CheckedChanged += (s, e) => OnValueChanged();
             this.cmbPaperSize.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.rdoLandscape.CheckedChanged += (s, e) => OnValueChanged();
@@ -81,11 +97,6 @@ namespace Site7DbEditor
             this.numCenterX.ValueChanged += (s, e) => OnValueChanged();
             this.numCenterY.ValueChanged += (s, e) => OnValueChanged();
             this.numRotation.ValueChanged += (s, e) => OnValueChanged();
-
-            this.numMarginL.ValueChanged += (s, e) => OnValueChanged();
-            this.numMarginR.ValueChanged += (s, e) => OnValueChanged();
-            this.numMarginT.ValueChanged += (s, e) => OnValueChanged();
-            this.numMarginB.ValueChanged += (s, e) => OnValueChanged();
 
             this.btnResetRotation.Click += (s, e) => {
                 numRotation.Value = 0;
@@ -100,6 +111,31 @@ namespace Site7DbEditor
             this.btnSetRotation.Click += (s, e) => {
                 SetRotationRequested?.Invoke(this, EventArgs.Empty);
             };
+
+            // トンボ・座標
+            this.chkShowTombo.CheckedChanged += (s, e) => OnValueChanged();
+            this.chkShowGridLines.CheckedChanged += (s, e) => OnValueChanged();
+            this.chkShowBorderCoords.CheckedChanged += (s, e) => OnValueChanged();
+            this.rdoPitchAuto.CheckedChanged += (s, e) => {
+                numPitchMeters.Enabled = rdoPitchManual.Checked;
+                OnValueChanged();
+            };
+            this.rdoPitchManual.CheckedChanged += (s, e) => {
+                numPitchMeters.Enabled = rdoPitchManual.Checked;
+                OnValueChanged();
+            };
+            this.numPitchMeters.ValueChanged += (s, e) => OnValueChanged();
+
+            // 余白・付加
+            this.numMarginL.ValueChanged += (s, e) => OnValueChanged();
+            this.numMarginR.ValueChanged += (s, e) => OnValueChanged();
+            this.numMarginT.ValueChanged += (s, e) => OnValueChanged();
+            this.numMarginB.ValueChanged += (s, e) => OnValueChanged();
+
+            this.chkShowNorthArrow.CheckedChanged += (s, e) => OnValueChanged();
+            this.cmbNorthPos.SelectedIndexChanged += (s, e) => OnValueChanged();
+            this.chkShowScaleBar.CheckedChanged += (s, e) => OnValueChanged();
+            this.cmbScaleBarPos.SelectedIndexChanged += (s, e) => OnValueChanged();
         }
 
         private void FormDrawingFrame_Load(object? sender, EventArgs e)
@@ -118,6 +154,7 @@ namespace Site7DbEditor
                 var frame = DrawingFrameService.Instance;
                 chkVisible.Checked = frame.IsVisible;
 
+                // 用紙 & 向き
                 int idx = cmbPaperSize.FindStringExact(frame.PaperSizeName);
                 cmbPaperSize.SelectedIndex = idx >= 0 ? idx : 1; // Default A3
 
@@ -130,15 +167,50 @@ namespace Site7DbEditor
                 numCenterY.Value = (decimal)frame.CenterY;
                 numRotation.Value = (decimal)frame.RotationAngleDeg;
 
+                // トンボ & ピッチ & 座標
+                chkShowTombo.Checked = frame.ShowTombo;
+                chkShowGridLines.Checked = frame.ShowGridLines;
+                chkShowBorderCoords.Checked = frame.ShowBorderCoords;
+
+                if (frame.IsPitchAuto)
+                {
+                    rdoPitchAuto.Checked = true;
+                    numPitchMeters.Enabled = false;
+                }
+                else
+                {
+                    rdoPitchManual.Checked = true;
+                    numPitchMeters.Enabled = true;
+                }
+                numPitchMeters.Value = (decimal)Math.Max(0.1, frame.PitchMeters);
+                UpdateEffectivePitchLabel();
+
+                // 余白
                 numMarginL.Value = (decimal)frame.MarginLeftMm;
                 numMarginR.Value = (decimal)frame.MarginRightMm;
                 numMarginT.Value = (decimal)frame.MarginTopMm;
                 numMarginB.Value = (decimal)frame.MarginBottomMm;
+
+                // 方位記号 & スケールバー
+                chkShowNorthArrow.Checked = frame.ShowNorthArrow;
+                int nIdx = cmbNorthPos.FindStringExact(frame.NorthArrowPosition);
+                cmbNorthPos.SelectedIndex = nIdx >= 0 ? nIdx : 0; // Default "右上"
+
+                chkShowScaleBar.Checked = frame.ShowScaleBar;
+                int sIdx = cmbScaleBarPos.FindStringExact(frame.ScaleBarPosition);
+                cmbScaleBarPos.SelectedIndex = sIdx >= 0 ? sIdx : 0; // Default "右下"
             }
             finally
             {
                 _isUpdatingUi = false;
             }
+        }
+
+        private void UpdateEffectivePitchLabel()
+        {
+            var frame = DrawingFrameService.Instance;
+            double p = frame.GetEffectivePitchMeters();
+            lblEffectivePitch.Text = $"現在の実ピッチ: {p:0.#}m (用紙換算: {(p / frame.Scale * 1000.0):0}mm)";
         }
 
         private void OnValueChanged()
@@ -159,10 +231,26 @@ namespace Site7DbEditor
             frame.CenterY = (double)numCenterY.Value;
             frame.RotationAngleDeg = (double)numRotation.Value;
 
+            // トンボ
+            frame.ShowTombo = chkShowTombo.Checked;
+            frame.ShowGridLines = chkShowGridLines.Checked;
+            frame.ShowBorderCoords = chkShowBorderCoords.Checked;
+            frame.IsPitchAuto = rdoPitchAuto.Checked;
+            frame.PitchMeters = (double)numPitchMeters.Value;
+
+            // 余白
             frame.MarginLeftMm = (double)numMarginL.Value;
             frame.MarginRightMm = (double)numMarginR.Value;
             frame.MarginTopMm = (double)numMarginT.Value;
             frame.MarginBottomMm = (double)numMarginB.Value;
+
+            // 付加
+            frame.ShowNorthArrow = chkShowNorthArrow.Checked;
+            frame.NorthArrowPosition = cmbNorthPos.SelectedItem?.ToString() ?? "右上";
+            frame.ShowScaleBar = chkShowScaleBar.Checked;
+            frame.ScaleBarPosition = cmbScaleBarPos.SelectedItem?.ToString() ?? "右下";
+
+            UpdateEffectivePitchLabel();
 
             FrameChanged?.Invoke(this, EventArgs.Empty);
         }
