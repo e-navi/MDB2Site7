@@ -497,6 +497,8 @@ namespace Site7DbEditor {
                 }
             };
 
+            btnMasterSettings.Click += (s, e) => OpenMasterSettings();
+
             btnEnvSettings.Click += (s, e) => {
                 using (var form = new FormDefEnv()) {
                     if (form.ShowDialog(this) == DialogResult.OK) {
