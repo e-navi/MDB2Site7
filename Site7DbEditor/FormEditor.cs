@@ -74,6 +74,13 @@ namespace Site7DbEditor {
         public FormEditor(string? initialDbPath = null, bool isGaigyo = false) {
             _initialDbPath = initialDbPath;
             IsGaigyoMode = isGaigyo;
+            if (!string.IsNullOrEmpty(_initialDbPath)) {
+                string? dir = Path.GetDirectoryName(_initialDbPath);
+                if (!string.IsNullOrEmpty(dir)) {
+                    Def.iniFileName = Path.Combine(dir, "SITE7.ini");
+                    DrawingFrameService.Instance.LoadFromIni();
+                }
+            }
             InitializeComponent();
             gbl.FormMain = this;
             SetupStyles();
@@ -1051,6 +1058,18 @@ namespace Site7DbEditor {
                 string folderName = Path.GetFileName(Path.GetDirectoryName(dbPath) ?? "");
                 _currentGenbaName = string.IsNullOrEmpty(folderName) ? Path.GetFileName(dbPath) : folderName;
                 UpdateWindowTitle();
+
+                string? genbaDir = Path.GetDirectoryName(dbPath);
+                if (!string.IsNullOrEmpty(genbaDir)) {
+                    Def.iniFileName = Path.Combine(genbaDir, "SITE7.ini");
+                }
+                DrawingFrameService.Instance.LoadFromIni();
+                if (chkShowDrawingFrame != null) {
+                    chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
+                }
+                if (_formDrawingFrame != null && !_formDrawingFrame.IsDisposed) {
+                    _formDrawingFrame.SyncFromService();
+                }
 
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
                 BackgroundImageService.Instance.LoadConfig(dbPath);
