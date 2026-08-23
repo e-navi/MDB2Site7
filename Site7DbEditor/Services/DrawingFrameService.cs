@@ -486,12 +486,12 @@ namespace Site7DbEditor.Services
 
                     for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
                     {
-                        DrawSingleCoordinateLabel(g, vc, canvasSize, sx, true, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush);
+                        DrawSingleCoordinateLabel(g, vc, canvasSize, sx, true, uMidLeft, uMidRight, vMidBottom, vMidTop, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush);
                     }
 
                     for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
                     {
-                        DrawSingleCoordinateLabel(g, vc, canvasSize, sy, false, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush);
+                        DrawSingleCoordinateLabel(g, vc, canvasSize, sy, false, uMidLeft, uMidRight, vMidBottom, vMidTop, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush);
                     }
                 }
             }
@@ -1182,11 +1182,11 @@ namespace Site7DbEditor.Services
 
                     for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
                     {
-                        DrawSingleCoordinateLabelPaper(g, sx, true, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
+                        DrawSingleCoordinateLabelPaper(g, sx, true, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinInner, uMaxInner, vMinInner, vMaxInner, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
                     }
                     for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
                     {
-                        DrawSingleCoordinateLabelPaper(g, sy, false, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
+                        DrawSingleCoordinateLabelPaper(g, sy, false, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinInner, uMaxInner, vMinInner, vMaxInner, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
                     }
                 }
             }
