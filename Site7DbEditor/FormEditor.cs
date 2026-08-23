@@ -536,6 +536,7 @@ namespace Site7DbEditor {
                 if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
                     _formDrawingFrame = new FormDrawingFrame(_db);
                     _formDrawingFrame.FrameChanged += (sender, ev) => {
+                        chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
                         picMapCanvas.Invalidate();
                         UpdateDrawingPreviewState();
                     };
@@ -568,6 +569,15 @@ namespace Site7DbEditor {
             this.chkShowBgPointCloud.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
             this.chkShowScale.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
+            this.chkShowDrawingFrame.CheckedChanged += (s, e) => {
+                DrawingFrameService.Instance.IsVisible = this.chkShowDrawingFrame.Checked;
+                DrawingFrameService.Instance.SaveToIni();
+                picMapCanvas.Invalidate();
+                if (_formDrawingFrame != null && !_formDrawingFrame.IsDisposed) {
+                    _formDrawingFrame.SyncFromService();
+                }
+            };
             this.chkShowHyoukou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;

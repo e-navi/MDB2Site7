@@ -55,6 +55,7 @@ namespace Site7DbEditor
             chkShowBgPointCloud = new CheckBox();
             chkShowGrid = new CheckBox();
             chkShowScale = new CheckBox();
+            chkShowDrawingFrame = new CheckBox();
             btnBgSettings = new Button();
             btnEnvSettings = new Button();
             btnDrawingFrame = new Button();
@@ -558,9 +559,10 @@ namespace Site7DbEditor
             grpDspTarget.Controls.Add(chkShowBgPointCloud);
             grpDspTarget.Controls.Add(chkShowGrid);
             grpDspTarget.Controls.Add(chkShowScale);
+            grpDspTarget.Controls.Add(chkShowDrawingFrame);
             grpDspTarget.Location = new Point(4, 349);
             grpDspTarget.Name = "grpDspTarget";
-            grpDspTarget.Size = new Size(124, 235);
+            grpDspTarget.Size = new Size(124, 240);
             grpDspTarget.TabIndex = 37;
             grpDspTarget.TabStop = false;
             grpDspTarget.Text = "表示対象";
@@ -722,6 +724,20 @@ namespace Site7DbEditor
             chkShowScale.TabIndex = 38;
             chkShowScale.Text = "スケール";
             chkShowScale.UseVisualStyleBackColor = true;
+            // 
+            // chkShowDrawingFrame
+            // 
+            chkShowDrawingFrame.AutoSize = true;
+            chkShowDrawingFrame.Checked = true;
+            chkShowDrawingFrame.CheckState = CheckState.Checked;
+            chkShowDrawingFrame.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowDrawingFrame.ForeColor = Color.FromArgb(0, 100, 180);
+            chkShowDrawingFrame.Location = new Point(6, 214);
+            chkShowDrawingFrame.Name = "chkShowDrawingFrame";
+            chkShowDrawingFrame.Size = new Size(50, 19);
+            chkShowDrawingFrame.TabIndex = 39;
+            chkShowDrawingFrame.Text = "図枠";
+            chkShowDrawingFrame.UseVisualStyleBackColor = true;
             // 
             // btnBgSettings
             // 
@@ -2684,6 +2700,7 @@ namespace Site7DbEditor
         private Panel panelMain1;
         private CheckBox chkShowHyoukou;
         private CheckBox chkShowScale;
+        private CheckBox chkShowDrawingFrame;
         private Label label1;
         private GroupBox grpDspTarget;
     }

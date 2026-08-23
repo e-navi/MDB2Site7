@@ -260,6 +260,7 @@ namespace Site7DbEditor
 
             UpdateEffectivePitchLabel();
 
+            frame.SaveToIni();
             FrameChanged?.Invoke(this, EventArgs.Empty);
         }
 

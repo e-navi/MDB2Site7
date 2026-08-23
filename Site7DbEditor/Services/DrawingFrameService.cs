@@ -12,6 +12,11 @@ namespace Site7DbEditor.Services
         private static DrawingFrameService? _instance;
         public static DrawingFrameService Instance => _instance ??= new DrawingFrameService();
 
+        public DrawingFrameService()
+        {
+            LoadFromIni();
+        }
+
         // 状態・パラメータ
         public bool IsVisible { get; set; } = true;
         public bool IsDrawingPreviewEnabled { get; set; } = false; // 図面表示確認（2分割プレビュー）
@@ -519,43 +524,47 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定 -> 中間線 (v = vMidBottom) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double u = (vMinInner * cos - dNorth) / sin;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (vMinInner * cos - dNorth) / sin;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dEastMid = vMidBottom * sin + u * cos;
+                        double uMid = (vMidBottom * cos - dNorth) / sin;
+                        double dEastMid = vMidBottom * sin + uMid * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
-                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定 -> 中間線 (v = vMidTop) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double u = (vMaxInner * cos - dNorth) / sin;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (vMaxInner * cos - dNorth) / sin;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dEastMid = vMidTop * sin + u * cos;
+                        double uMid = (vMidTop * cos - dNorth) / sin;
+                        double dEastMid = vMidTop * sin + uMid * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
-                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定 -> 中間線 (u = uMidLeft) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double v = (dNorth + uMinInner * sin) / cos;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dNorth + uMinInner * sin) / cos;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dEastMid = v * sin + uMidLeft * cos;
+                        double vMid = (dNorth + uMidLeft * sin) / cos;
+                        double dEastMid = vMid * sin + uMidLeft * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
-                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定 -> 中間線 (u = uMidRight) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double v = (dNorth + uMaxInner * sin) / cos;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dNorth + uMaxInner * sin) / cos;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dEastMid = v * sin + uMidRight * cos;
+                        double vMid = (dNorth + uMidRight * sin) / cos;
+                        double dEastMid = vMid * sin + uMidRight * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
@@ -563,43 +572,47 @@ namespace Site7DbEditor.Services
             else
             {
                 double dEast = val - CenterY;
-                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定 -> 中間線 (v = vMidBottom) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double u = (dEast - vMinInner * sin) / cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (dEast - vMinInner * sin) / cos;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dNorthMid = vMidBottom * cos - u * sin;
+                        double uMid = (dEast - vMidBottom * sin) / cos;
+                        double dNorthMid = vMidBottom * cos - uMid * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
-                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定 -> 中間線 (v = vMidTop) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double u = (dEast - vMaxInner * sin) / cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (dEast - vMaxInner * sin) / cos;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dNorthMid = vMidTop * cos - u * sin;
+                        double uMid = (dEast - vMidTop * sin) / cos;
+                        double dNorthMid = vMidTop * cos - uMid * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
-                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定 -> 中間線 (u = uMidLeft) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double v = (dEast - uMinInner * cos) / sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dEast - uMinInner * cos) / sin;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dNorthMid = v * cos - uMidLeft * sin;
+                        double vMid = (dEast - uMidLeft * cos) / sin;
+                        double dNorthMid = vMid * cos - uMidLeft * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
-                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定 -> 中間線 (u = uMidRight) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double v = (dEast - uMaxInner * cos) / sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dEast - uMaxInner * cos) / sin;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dNorthMid = v * cos - uMidRight * sin;
+                        double vMid = (dEast - uMidRight * cos) / sin;
+                        double dNorthMid = vMid * cos - uMidRight * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
@@ -1298,43 +1311,47 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
-                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定 -> 中間線 (v = vMidBottom) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double u = (vMinInner * cos - dNorth) / sin;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (vMinInner * cos - dNorth) / sin;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dEastMid = vMidBottom * sin + u * cos;
+                        double uMid = (vMidBottom * cos - dNorth) / sin;
+                        double dEastMid = vMidBottom * sin + uMid * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
-                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定 -> 中間線 (v = vMidTop) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double u = (vMaxInner * cos - dNorth) / sin;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (vMaxInner * cos - dNorth) / sin;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dEastMid = vMidTop * sin + u * cos;
+                        double uMid = (vMidTop * cos - dNorth) / sin;
+                        double dEastMid = vMidTop * sin + uMid * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
-                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定 -> 中間線 (u = uMidLeft) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double v = (dNorth + uMinInner * sin) / cos;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dNorth + uMinInner * sin) / cos;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dEastMid = v * sin + uMidLeft * cos;
+                        double vMid = (dNorth + uMidLeft * sin) / cos;
+                        double dEastMid = vMid * sin + uMidLeft * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
-                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定 -> 中間線 (u = uMidRight) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double v = (dNorth + uMaxInner * sin) / cos;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dNorth + uMaxInner * sin) / cos;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dEastMid = v * sin + uMidRight * cos;
+                        double vMid = (dNorth + uMidRight * sin) / cos;
+                        double dEastMid = vMid * sin + uMidRight * cos;
                         intersections.Add((val, CenterY + dEastMid));
                     }
                 }
@@ -1342,43 +1359,47 @@ namespace Site7DbEditor.Services
             else
             {
                 double dEast = val - CenterY;
-                // 1. 内枠下辺 (v = vMinInner) と交差するか判定
+                // 1. 内枠下辺 (v = vMinInner) と交差するか判定 -> 中間線 (v = vMidBottom) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double u = (dEast - vMinInner * sin) / cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (dEast - vMinInner * sin) / cos;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dNorthMid = vMidBottom * cos - u * sin;
+                        double uMid = (dEast - vMidBottom * sin) / cos;
+                        double dNorthMid = vMidBottom * cos - uMid * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
-                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定
+                // 2. 内枠上辺 (v = vMaxInner) と交差するか判定 -> 中間線 (v = vMidTop) 上の点
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double u = (dEast - vMaxInner * sin) / cos;
-                    if (u >= uMinInner - 0.01 && u <= uMaxInner + 0.01)
+                    double uEdge = (dEast - vMaxInner * sin) / cos;
+                    if (uEdge >= uMinInner - 0.01 && uEdge <= uMaxInner + 0.01)
                     {
-                        double dNorthMid = vMidTop * cos - u * sin;
+                        double uMid = (dEast - vMidTop * sin) / cos;
+                        double dNorthMid = vMidTop * cos - uMid * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
-                // 3. 内枠左辺 (u = uMinInner) と交差するか判定
+                // 3. 内枠左辺 (u = uMinInner) と交差するか判定 -> 中間線 (u = uMidLeft) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double v = (dEast - uMinInner * cos) / sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dEast - uMinInner * cos) / sin;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dNorthMid = v * cos - uMidLeft * sin;
+                        double vMid = (dEast - uMidLeft * cos) / sin;
+                        double dNorthMid = vMid * cos - uMidLeft * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
-                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定
+                // 4. 内枠右辺 (u = uMaxInner) と交差するか判定 -> 中間線 (u = uMidRight) 上の点
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double v = (dEast - uMaxInner * cos) / sin;
-                    if (v >= vMinInner - 0.01 && v <= vMaxInner + 0.01)
+                    double vEdge = (dEast - uMaxInner * cos) / sin;
+                    if (vEdge >= vMinInner - 0.01 && vEdge <= vMaxInner + 0.01)
                     {
-                        double dNorthMid = v * cos - uMidRight * sin;
+                        double vMid = (dEast - uMidRight * cos) / sin;
+                        double dNorthMid = vMid * cos - uMidRight * sin;
                         intersections.Add((CenterX + dNorthMid, val));
                     }
                 }
@@ -1418,6 +1439,87 @@ namespace Site7DbEditor.Services
                 g.DrawString(labelText, font, textBrush, -sz.Width / 2f, -sz.Height / 2f);
                 g.Restore(state);
             }
+        }
+
+        /// <summary>
+        /// INIファイルから図枠設定を読み込み
+        /// </summary>
+        public void LoadFromIni()
+        {
+            try
+            {
+                IsVisible = Def.GetIniInt("DRAWING_FRAME", "Visible", 1) == 1;
+                IsDrawingPreviewEnabled = Def.GetIniInt("DRAWING_FRAME", "IsDrawingPreviewEnabled", 0) == 1;
+                PaperSizeName = Def.GetIniStr("DRAWING_FRAME", "PaperSizeName");
+                if (string.IsNullOrEmpty(PaperSizeName)) PaperSizeName = "A3";
+                IsLandscape = Def.GetIniInt("DRAWING_FRAME", "IsLandscape", 1) == 1;
+                Scale = Def.GetIniDouble("DRAWING_FRAME", "Scale", 200.0);
+                CenterX = Def.GetIniDouble("DRAWING_FRAME", "CenterX", 0.0);
+                CenterY = Def.GetIniDouble("DRAWING_FRAME", "CenterY", 0.0);
+                RotationAngleDeg = Def.GetIniDouble("DRAWING_FRAME", "RotationAngleDeg", 0.0);
+
+                ShowTombo = Def.GetIniInt("DRAWING_FRAME", "ShowTombo", 1) == 1;
+                ShowGridLines = Def.GetIniInt("DRAWING_FRAME", "ShowGridLines", 0) == 1;
+                IsPitchAuto = Def.GetIniInt("DRAWING_FRAME", "IsPitchAuto", 1) == 1;
+                PitchMeters = Def.GetIniDouble("DRAWING_FRAME", "PitchMeters", 20.0);
+                ShowBorderCoords = Def.GetIniInt("DRAWING_FRAME", "ShowBorderCoords", 1) == 1;
+
+                ShowNorthArrow = Def.GetIniInt("DRAWING_FRAME", "ShowNorthArrow", 1) == 1;
+                NorthArrowSizeMm = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowSizeMm", 15.0);
+                NorthArrowPosition = Def.GetIniStr("DRAWING_FRAME", "NorthArrowPosition");
+                if (string.IsNullOrEmpty(NorthArrowPosition)) NorthArrowPosition = "右上";
+                NorthArrowCustomSurveyX = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyX", 0.0);
+                NorthArrowCustomSurveyY = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyY", 0.0);
+                HasCustomNorthArrowPos = Def.GetIniInt("DRAWING_FRAME", "HasCustomNorthArrowPos", 0) == 1;
+
+                ShowScaleBar = Def.GetIniInt("DRAWING_FRAME", "ShowScaleBar", 1) == 1;
+                ScaleBarPosition = Def.GetIniStr("DRAWING_FRAME", "ScaleBarPosition");
+                if (string.IsNullOrEmpty(ScaleBarPosition)) ScaleBarPosition = "中下";
+
+                MarginLeftMm = Def.GetIniDouble("DRAWING_FRAME", "MarginLeftMm", 20.0);
+                MarginOtherMm = Def.GetIniDouble("DRAWING_FRAME", "MarginOtherMm", 10.0);
+                OuterInnerSpacingMm = Def.GetIniDouble("DRAWING_FRAME", "OuterInnerSpacingMm", 10.0);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// INIファイルへ図枠設定を保存
+        /// </summary>
+        public void SaveToIni()
+        {
+            try
+            {
+                Def.SetIniInt("DRAWING_FRAME", "Visible", IsVisible ? 1 : 0);
+                Def.SetIniInt("DRAWING_FRAME", "IsDrawingPreviewEnabled", IsDrawingPreviewEnabled ? 1 : 0);
+                Def.SetIniStr("DRAWING_FRAME", "PaperSizeName", PaperSizeName);
+                Def.SetIniInt("DRAWING_FRAME", "IsLandscape", IsLandscape ? 1 : 0);
+                Def.SetIniDouble("DRAWING_FRAME", "Scale", Scale);
+                Def.SetIniDouble("DRAWING_FRAME", "CenterX", CenterX);
+                Def.SetIniDouble("DRAWING_FRAME", "CenterY", CenterY);
+                Def.SetIniDouble("DRAWING_FRAME", "RotationAngleDeg", RotationAngleDeg);
+
+                Def.SetIniInt("DRAWING_FRAME", "ShowTombo", ShowTombo ? 1 : 0);
+                Def.SetIniInt("DRAWING_FRAME", "ShowGridLines", ShowGridLines ? 1 : 0);
+                Def.SetIniInt("DRAWING_FRAME", "IsPitchAuto", IsPitchAuto ? 1 : 0);
+                Def.SetIniDouble("DRAWING_FRAME", "PitchMeters", PitchMeters);
+                Def.SetIniInt("DRAWING_FRAME", "ShowBorderCoords", ShowBorderCoords ? 1 : 0);
+
+                Def.SetIniInt("DRAWING_FRAME", "ShowNorthArrow", ShowNorthArrow ? 1 : 0);
+                Def.SetIniDouble("DRAWING_FRAME", "NorthArrowSizeMm", NorthArrowSizeMm);
+                Def.SetIniStr("DRAWING_FRAME", "NorthArrowPosition", NorthArrowPosition);
+                Def.SetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyX", NorthArrowCustomSurveyX);
+                Def.SetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyY", NorthArrowCustomSurveyY);
+                Def.SetIniInt("DRAWING_FRAME", "HasCustomNorthArrowPos", HasCustomNorthArrowPos ? 1 : 0);
+
+                Def.SetIniInt("DRAWING_FRAME", "ShowScaleBar", ShowScaleBar ? 1 : 0);
+                Def.SetIniStr("DRAWING_FRAME", "ScaleBarPosition", ScaleBarPosition);
+
+                Def.SetIniDouble("DRAWING_FRAME", "MarginLeftMm", MarginLeftMm);
+                Def.SetIniDouble("DRAWING_FRAME", "MarginOtherMm", MarginOtherMm);
+                Def.SetIniDouble("DRAWING_FRAME", "OuterInnerSpacingMm", OuterInnerSpacingMm);
+            }
+            catch { }
         }
     }
 }
