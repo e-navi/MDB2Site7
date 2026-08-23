@@ -444,90 +444,131 @@ namespace Site7DbEditor.Services
                 // B. 外枠・内枠間の座標値表示 (X=000.000m, Y=000.000m)
                 if (ShowBorderCoords)
                 {
+                    var (outerWM, outerHM, outerOffEastM, outerOffNorthM) = GetOuterFrameDimensionsMeters();
+                    double uMinOuter = outerOffEastM - outerWM / 2.0;
+                    double uMaxOuter = outerOffEastM + outerWM / 2.0;
+                    double vMinOuter = outerOffNorthM - outerHM / 2.0;
+                    double vMaxOuter = outerOffNorthM + outerHM / 2.0;
+
+                    double uMidLeft = (uMinOuter + uMin) / 2.0;
+                    double uMidRight = (uMaxOuter + uMax) / 2.0;
+                    double vMidBottom = (vMinOuter + vMin) / 2.0;
+                    double vMidTop = (vMaxOuter + vMax) / 2.0;
+
                     for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
                     {
-                        DrawSingleCoordinateLabel(g, vc, canvasSize, sx, true, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush);
+                        DrawSingleCoordinateLabel(g, vc, canvasSize, sx, true, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush);
                     }
 
                     for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
                     {
-                        DrawSingleCoordinateLabel(g, vc, canvasSize, sy, false, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush);
+                        DrawSingleCoordinateLabel(g, vc, canvasSize, sy, false, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush);
                     }
                 }
             }
         }
 
+        private static float NormalizeTextAngle(float deg)
+        {
+            while (deg > 90f) deg -= 180f;
+            while (deg < -90f) deg += 180f;
+            return deg;
+        }
+
         /// <summary>
-        /// 1本のグリッド線（X=定数 または Y=定数）が内枠と交差する外枠と内枠の間に座標ラベルを描画
+        /// 1本のグリッド線（X=定数 または Y=定数）が外枠/内枠の中間線と交差する点に、格子線と平行に回転して座標ラベルを描画
         /// </summary>
-        private void DrawSingleCoordinateLabel(Graphics g, EditorMapViewController vc, Size canvasSize, double val, bool isXAxis, double uMin, double uMax, double vMin, double vMax, Font font, Brush textBrush, Brush bgBrush)
+        private void DrawSingleCoordinateLabel(Graphics g, EditorMapViewController vc, Size canvasSize, double val, bool isXAxis, double uMidLeft, double uMidRight, double vMidBottom, double vMidTop, double uMinOuter, double uMaxOuter, double vMinOuter, double vMaxOuter, Font font, Brush textBrush, Brush bgBrush)
         {
             double rad = RotationAngleDeg * Math.PI / 180.0;
             double cos = Math.Cos(rad);
             double sin = Math.Sin(rad);
 
             string labelText = isXAxis ? $"X={val:0.00}m" : $"Y={val:0.00}m";
-
             var intersections = new System.Collections.Generic.List<(double surX, double surY)>();
 
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
+                // 下中間線 (v = vMidBottom)
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast1 = (vMin - dNorth * cos) / sin;
-                    double u1 = dNorth * (-sin) + dEast1 * cos;
-                    if (u1 >= uMin - 0.01 && u1 <= uMax + 0.01) intersections.Add((val, CenterY + dEast1));
-
-                    double dEast2 = (vMax - dNorth * cos) / sin;
-                    double u2 = dNorth * (-sin) + dEast2 * cos;
-                    if (u2 >= uMin - 0.01 && u2 <= uMax + 0.01) intersections.Add((val, CenterY + dEast2));
+                    double dEast = (vMidBottom - dNorth * cos) / sin;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
                 }
+                // 上中間線 (v = vMidTop)
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double dEast = (vMidTop - dNorth * cos) / sin;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                }
+                // 左中間線 (u = uMidLeft)
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast3 = (uMin + dNorth * sin) / cos;
-                    double v3 = dNorth * cos + dEast3 * sin;
-                    if (v3 >= vMin - 0.01 && v3 <= vMax + 0.01) intersections.Add((val, CenterY + dEast3));
-
-                    double dEast4 = (uMax + dNorth * sin) / cos;
-                    double v4 = dNorth * cos + dEast4 * sin;
-                    if (v4 >= vMin - 0.01 && v4 <= vMax + 0.01) intersections.Add((val, CenterY + dEast4));
+                    double dEast = (uMidLeft + dNorth * sin) / cos;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                }
+                // 右中間線 (u = uMidRight)
+                if (Math.Abs(cos) > 1e-6)
+                {
+                    double dEast = (uMidRight + dNorth * sin) / cos;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
                 }
             }
             else
             {
                 double dEast = val - CenterY;
+                // 左中間線 (u = uMidLeft)
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dNorth1 = (dEast * cos - uMin) / sin;
-                    double v1 = dNorth1 * cos + dEast * sin;
-                    if (v1 >= vMin - 0.01 && v1 <= vMax + 0.01) intersections.Add((CenterX + dNorth1, val));
-
-                    double dNorth2 = (dEast * cos - uMax) / sin;
-                    double v2 = dNorth2 * cos + dEast * sin;
-                    if (v2 >= vMin - 0.01 && v2 <= vMax + 0.01) intersections.Add((CenterX + dNorth2, val));
+                    double dNorth = (dEast * cos - uMidLeft) / sin;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
+                // 右中間線 (u = uMidRight)
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double dNorth = (dEast * cos - uMidRight) / sin;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                }
+                // 下中間線 (v = vMidBottom)
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth3 = (vMin - dEast * sin) / cos;
-                    double u3 = dNorth3 * (-sin) + dEast * cos;
-                    if (u3 >= uMin - 0.01 && u3 <= uMax + 0.01) intersections.Add((CenterX + dNorth3, val));
-
-                    double dNorth4 = (vMax - dEast * sin) / cos;
-                    double u4 = dNorth4 * (-sin) + dEast * cos;
-                    if (u4 >= uMin - 0.01 && u4 <= uMax + 0.01) intersections.Add((CenterX + dNorth4, val));
+                    double dNorth = (vMidBottom - dEast * sin) / cos;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                }
+                // 上中間線 (v = vMidTop)
+                if (Math.Abs(cos) > 1e-6)
+                {
+                    double dNorth = (vMidTop - dEast * sin) / cos;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
             }
+
+            // 格子線と平行な文字描画角度 (可読性を保つため -90°〜+90° に正規化)
+            float rotDeg = isXAxis
+                ? NormalizeTextAngle((float)-RotationAngleDeg)
+                : NormalizeTextAngle((float)(-90.0 - RotationAngleDeg));
 
             foreach (var (surX, surY) in intersections)
             {
                 PointF pt = vc.ToCanvasPoint(surX, surY, canvasSize);
                 var sz = g.MeasureString(labelText, font);
-                float drawX = pt.X - (sz.Width / 2f);
-                float drawY = pt.Y - (sz.Height / 2f);
 
-                g.FillRectangle(bgBrush, drawX - 1f, drawY - 1f, sz.Width + 2f, sz.Height + 2f);
-                g.DrawString(labelText, font, textBrush, drawX, drawY);
+                var state = g.Save();
+                g.TranslateTransform(pt.X, pt.Y);
+                g.RotateTransform(rotDeg);
+
+                g.FillRectangle(bgBrush, -sz.Width / 2f - 2f, -sz.Height / 2f - 1f, sz.Width + 4f, sz.Height + 2f);
+                g.DrawString(labelText, font, textBrush, -sz.Width / 2f, -sz.Height / 2f);
+                g.Restore(state);
             }
         }
 
@@ -593,7 +634,7 @@ namespace Site7DbEditor.Services
             if (ScaleBarPosition == "中下")
             {
                 // 内枠下辺の中央
-                anchor = new PointF((innerScreen[0].X + innerScreen[1].X) / 2f, (innerScreen[0].Y + innerScreen[1].Y) / 2f - 20f);
+                anchor = new PointF((innerScreen[0].X + innerScreen[1].X) / 2f, (innerScreen[0].Y + innerScreen[1].Y) / 2f);
             }
             else
             {
@@ -613,18 +654,25 @@ namespace Site7DbEditor.Services
             if (barPixelWidth < 30f || barPixelWidth > 400f) barPixelWidth = 100f;
 
             float barHeight = 5f;
-            float leftX = anchor.X - (barPixelWidth / 2f);
-            float topY = anchor.Y;
-
             Color primaryColor = isDarkBackground ? Color.White : Color.Black;
             Color secondaryColor = isDarkBackground ? Color.FromArgb(80, 85, 100) : Color.White;
+
+            float rotDeg = NormalizeTextAngle((float)-RotationAngleDeg);
+
+            var state = g.Save();
+            g.TranslateTransform(anchor.X, anchor.Y);
+            g.RotateTransform(rotDeg);
+            g.TranslateTransform(0, -18f); // 枠の内側へオフセット
 
             using (var primaryBrush = new SolidBrush(primaryColor))
             using (var secondaryBrush = new SolidBrush(secondaryColor))
             using (var pen = new Pen(primaryColor, 1.2f))
             using (var font = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold))
             {
+                float leftX = -barPixelWidth / 2f;
+                float topY = 0f;
                 float midX = leftX + (barPixelWidth / 2f);
+
                 g.FillRectangle(primaryBrush, leftX, topY, barPixelWidth / 2f, barHeight);
                 g.FillRectangle(secondaryBrush, midX, topY, barPixelWidth / 2f, barHeight);
                 g.DrawRectangle(pen, leftX, topY, barPixelWidth, barHeight);
@@ -638,6 +686,7 @@ namespace Site7DbEditor.Services
                 g.DrawString(lMid, font, primaryBrush, midX - 6f, topY - 14f);
                 g.DrawString(lEnd, font, primaryBrush, leftX + barPixelWidth - 10f, topY - 14f);
             }
+            g.Restore(state);
         }
 
         private PointF GetCornerPoint(PointF[] corners, string pos, float inset)
@@ -1015,21 +1064,31 @@ namespace Site7DbEditor.Services
                 using (var coordBrush = new SolidBrush(Color.FromArgb(40, 40, 50)))
                 using (var coordBgBrush = new SolidBrush(Color.FromArgb(230, 255, 255, 255)))
                 {
-                    var (innerWM, innerHM, offsetEastM, offsetNorthM) = GetInnerFrameDimensionsMeters();
-                    double halfW = innerWM / 2.0;
-                    double halfH = innerHM / 2.0;
-                    double uMin = offsetEastM - halfW;
-                    double uMax = offsetEastM + halfW;
-                    double vMin = offsetNorthM - halfH;
-                    double vMax = offsetNorthM + halfH;
+                    var (outerWM, outerHM, offsetEastM, offsetNorthM) = GetOuterFrameDimensionsMeters();
+                    var (innerWM, innerHM, _, _) = GetInnerFrameDimensionsMeters();
+
+                    double uMinOuter = offsetEastM - outerWM / 2.0;
+                    double uMaxOuter = offsetEastM + outerWM / 2.0;
+                    double vMinOuter = offsetNorthM - outerHM / 2.0;
+                    double vMaxOuter = offsetNorthM + outerHM / 2.0;
+
+                    double uMinInner = offsetEastM - innerWM / 2.0;
+                    double uMaxInner = offsetEastM + innerWM / 2.0;
+                    double vMinInner = offsetNorthM - innerHM / 2.0;
+                    double vMaxInner = offsetNorthM + innerHM / 2.0;
+
+                    double uMidLeft = (uMinOuter + uMinInner) / 2.0;
+                    double uMidRight = (uMaxOuter + uMaxInner) / 2.0;
+                    double vMidBottom = (vMinOuter + vMinInner) / 2.0;
+                    double vMidTop = (vMaxOuter + vMaxInner) / 2.0;
 
                     for (double sx = startSurX; sx <= endSurX + 0.001; sx += pitch)
                     {
-                        DrawSingleCoordinateLabelPaper(g, sx, true, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
+                        DrawSingleCoordinateLabelPaper(g, sx, true, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
                     }
                     for (double sy = startSurY; sy <= endSurY + 0.001; sy += pitch)
                     {
-                        DrawSingleCoordinateLabelPaper(g, sy, false, uMin, uMax, vMin, vMax, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
+                        DrawSingleCoordinateLabelPaper(g, sy, false, uMidLeft, uMidRight, vMidBottom, vMidTop, uMinOuter, uMaxOuter, vMinOuter, vMaxOuter, coordFont, coordBrush, coordBgBrush, SurveyToPaperScreen);
                     }
                 }
             }
@@ -1129,7 +1188,7 @@ namespace Site7DbEditor.Services
             }
         }
 
-        private void DrawSingleCoordinateLabelPaper(Graphics g, double val, bool isXAxis, double uMin, double uMax, double vMin, double vMax, Font font, Brush textBrush, Brush bgBrush, Func<double, double, PointF> surveyToScreen)
+        private void DrawSingleCoordinateLabelPaper(Graphics g, double val, bool isXAxis, double uMidLeft, double uMidRight, double vMidBottom, double vMidTop, double uMinOuter, double uMaxOuter, double vMinOuter, double vMaxOuter, Font font, Brush textBrush, Brush bgBrush, Func<double, double, PointF> surveyToScreen)
         {
             double rad = RotationAngleDeg * Math.PI / 180.0;
             double cos = Math.Cos(rad);
@@ -1141,61 +1200,85 @@ namespace Site7DbEditor.Services
             if (isXAxis)
             {
                 double dNorth = val - CenterX;
+                // 下中間線 (v = vMidBottom)
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dEast1 = (vMin - dNorth * cos) / sin;
-                    double u1 = dNorth * (-sin) + dEast1 * cos;
-                    if (u1 >= uMin - 0.01 && u1 <= uMax + 0.01) intersections.Add((val, CenterY + dEast1));
-
-                    double dEast2 = (vMax - dNorth * cos) / sin;
-                    double u2 = dNorth * (-sin) + dEast2 * cos;
-                    if (u2 >= uMin - 0.01 && u2 <= uMax + 0.01) intersections.Add((val, CenterY + dEast2));
+                    double dEast = (vMidBottom - dNorth * cos) / sin;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
                 }
+                // 上中間線 (v = vMidTop)
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double dEast = (vMidTop - dNorth * cos) / sin;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                }
+                // 左中間線 (u = uMidLeft)
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dEast3 = (uMin + dNorth * sin) / cos;
-                    double v3 = dNorth * cos + dEast3 * sin;
-                    if (v3 >= vMin - 0.01 && v3 <= vMax + 0.01) intersections.Add((val, CenterY + dEast3));
-
-                    double dEast4 = (uMax + dNorth * sin) / cos;
-                    double v4 = dNorth * cos + dEast4 * sin;
-                    if (v4 >= vMin - 0.01 && v4 <= vMax + 0.01) intersections.Add((val, CenterY + dEast4));
+                    double dEast = (uMidLeft + dNorth * sin) / cos;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
+                }
+                // 右中間線 (u = uMidRight)
+                if (Math.Abs(cos) > 1e-6)
+                {
+                    double dEast = (uMidRight + dNorth * sin) / cos;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((val, CenterY + dEast));
                 }
             }
             else
             {
                 double dEast = val - CenterY;
+                // 左中間線 (u = uMidLeft)
                 if (Math.Abs(sin) > 1e-6)
                 {
-                    double dNorth1 = (dEast * cos - uMin) / sin;
-                    double v1 = dNorth1 * cos + dEast * sin;
-                    if (v1 >= vMin - 0.01 && v1 <= vMax + 0.01) intersections.Add((CenterX + dNorth1, val));
-
-                    double dNorth2 = (dEast * cos - uMax) / sin;
-                    double v2 = dNorth2 * cos + dEast * sin;
-                    if (v2 >= vMin - 0.01 && v2 <= vMax + 0.01) intersections.Add((CenterX + dNorth2, val));
+                    double dNorth = (dEast * cos - uMidLeft) / sin;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
+                // 右中間線 (u = uMidRight)
+                if (Math.Abs(sin) > 1e-6)
+                {
+                    double dNorth = (dEast * cos - uMidRight) / sin;
+                    double v = dNorth * cos + dEast * sin;
+                    if (v >= vMinOuter - 0.01 && v <= vMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                }
+                // 下中間線 (v = vMidBottom)
                 if (Math.Abs(cos) > 1e-6)
                 {
-                    double dNorth3 = (vMin - dEast * sin) / cos;
-                    double u3 = dNorth3 * (-sin) + dEast * cos;
-                    if (u3 >= vMin - 0.01 && u3 <= vMax + 0.01) intersections.Add((CenterX + dNorth3, val));
-
-                    double dNorth4 = (vMax - dEast * sin) / cos;
-                    double u4 = dNorth4 * (-sin) + dEast * cos;
-                    if (u4 >= vMin - 0.01 && u4 <= vMax + 0.01) intersections.Add((CenterX + dNorth4, val));
+                    double dNorth = (vMidBottom - dEast * sin) / cos;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
+                }
+                // 上中間線 (v = vMidTop)
+                if (Math.Abs(cos) > 1e-6)
+                {
+                    double dNorth = (vMidTop - dEast * sin) / cos;
+                    double u = dNorth * (-sin) + dEast * cos;
+                    if (u >= uMinOuter - 0.01 && u <= uMaxOuter + 0.01) intersections.Add((CenterX + dNorth, val));
                 }
             }
+
+            // 用紙プレビュー上での格子線の傾きに合わせて文字を回転 (-90°〜+90°に正規化)
+            float rotDeg = isXAxis
+                ? NormalizeTextAngle((float)RotationAngleDeg)
+                : NormalizeTextAngle((float)(RotationAngleDeg - 90.0));
 
             foreach (var (surX, surY) in intersections)
             {
                 PointF pt = surveyToScreen(surX, surY);
                 var sz = g.MeasureString(labelText, font);
-                float drawX = pt.X - (sz.Width / 2f);
-                float drawY = pt.Y - (sz.Height / 2f);
 
-                g.FillRectangle(bgBrush, drawX - 1f, drawY - 1f, sz.Width + 2f, sz.Height + 2f);
-                g.DrawString(labelText, font, textBrush, drawX, drawY);
+                var state = g.Save();
+                g.TranslateTransform(pt.X, pt.Y);
+                g.RotateTransform(rotDeg);
+
+                g.FillRectangle(bgBrush, -sz.Width / 2f - 2f, -sz.Height / 2f - 1f, sz.Width + 4f, sz.Height + 2f);
+                g.DrawString(labelText, font, textBrush, -sz.Width / 2f, -sz.Height / 2f);
+                g.Restore(state);
             }
         }
     }
