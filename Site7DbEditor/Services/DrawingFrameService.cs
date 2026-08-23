@@ -368,21 +368,22 @@ namespace Site7DbEditor.Services
             double pitch = GetEffectivePitchMeters();
             if (pitch <= 0.01) return;
 
-            // 内枠の測量座標範囲
+            // 外枠の測量座標範囲（余白・外枠・内枠間のすべての交点を確実にカバー）
+            var outerCorners = GetOuterCornersSurvey();
             double minSurX = double.MaxValue, maxSurX = double.MinValue;
             double minSurY = double.MaxValue, maxSurY = double.MinValue;
-            for (int i = 0; i < innerCorners.Length; i++)
+            for (int i = 0; i < outerCorners.Length; i++)
             {
-                minSurX = Math.Min(minSurX, innerCorners[i].surveyX);
-                maxSurX = Math.Max(maxSurX, innerCorners[i].surveyX);
-                minSurY = Math.Min(minSurY, innerCorners[i].surveyY);
-                maxSurY = Math.Max(maxSurY, innerCorners[i].surveyY);
+                minSurX = Math.Min(minSurX, outerCorners[i].surveyX);
+                maxSurX = Math.Max(maxSurX, outerCorners[i].surveyX);
+                minSurY = Math.Min(minSurY, outerCorners[i].surveyY);
+                maxSurY = Math.Max(maxSurY, outerCorners[i].surveyY);
             }
 
-            double startSurX = Math.Floor(minSurX / pitch) * pitch;
-            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch;
-            double startSurY = Math.Floor(minSurY / pitch) * pitch;
-            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch;
+            double startSurX = Math.Floor(minSurX / pitch) * pitch - pitch;
+            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch + pitch;
+            double startSurY = Math.Floor(minSurY / pitch) * pitch - pitch;
+            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch + pitch;
 
             // 内枠のローカル座標境界
             var (innerWM, innerHM, offsetEastM, offsetNorthM) = GetInnerFrameDimensionsMeters();
@@ -552,10 +553,26 @@ namespace Site7DbEditor.Services
                 }
             }
 
-            // 格子線と平行な文字描画角度 (可読性を保つため -90°〜+90° に正規化)
-            float rotDeg = isXAxis
-                ? NormalizeTextAngle((float)-RotationAngleDeg)
-                : NormalizeTextAngle((float)(-90.0 - RotationAngleDeg));
+            // 測量座標系での格子線の傾きベクトルから画面上の回転角度を計算 (可読性を保つため -90°〜+90° に正規化)
+            float rotDeg;
+            if (isXAxis)
+            {
+                // X一定線: 測量東(Y)方向に伸びる
+                PointF p0 = vc.ToCanvasPoint(val, CenterY, canvasSize);
+                PointF p1 = vc.ToCanvasPoint(val, CenterY + 10.0, canvasSize);
+                float dx = p1.X - p0.X;
+                float dy = p1.Y - p0.Y;
+                rotDeg = NormalizeTextAngle((float)(Math.Atan2(dy, dx) * 180.0 / Math.PI));
+            }
+            else
+            {
+                // Y一定線: 測量北(X)方向に伸びる
+                PointF p0 = vc.ToCanvasPoint(CenterX, val, canvasSize);
+                PointF p1 = vc.ToCanvasPoint(CenterX + 10.0, val, canvasSize);
+                float dx = p1.X - p0.X;
+                float dy = p1.Y - p0.Y;
+                rotDeg = NormalizeTextAngle((float)(Math.Atan2(dy, dx) * 180.0 / Math.PI));
+            }
 
             foreach (var (surX, surY) in intersections)
             {
@@ -566,7 +583,7 @@ namespace Site7DbEditor.Services
                 g.TranslateTransform(pt.X, pt.Y);
                 g.RotateTransform(rotDeg);
 
-                g.FillRectangle(bgBrush, -sz.Width / 2f - 2f, -sz.Height / 2f - 1f, sz.Width + 4f, sz.Height + 2f);
+                // 背景は透明（文字のみ描画）
                 g.DrawString(labelText, font, textBrush, -sz.Width / 2f, -sz.Height / 2f);
                 g.Restore(state);
             }
@@ -657,7 +674,10 @@ namespace Site7DbEditor.Services
             Color primaryColor = isDarkBackground ? Color.White : Color.Black;
             Color secondaryColor = isDarkBackground ? Color.FromArgb(80, 85, 100) : Color.White;
 
-            float rotDeg = NormalizeTextAngle((float)-RotationAngleDeg);
+            float dx = innerScreen[1].X - innerScreen[0].X;
+            float dy = innerScreen[1].Y - innerScreen[0].Y;
+            float edgeAngle = (float)(Math.Atan2(dy, dx) * 180.0 / Math.PI);
+            float rotDeg = NormalizeTextAngle(edgeAngle);
 
             var state = g.Save();
             g.TranslateTransform(anchor.X, anchor.Y);
@@ -832,12 +852,12 @@ namespace Site7DbEditor.Services
 
             // 4. トンボ (+) & 外枠・内枠間の座標値の計算・描画
             double pitch = GetEffectivePitchMeters();
-            var innerCorners = GetInnerCornersSurvey();
+            var outerCorners = GetOuterCornersSurvey();
 
-            // 内枠の測量座標範囲
+            // 外枠の測量座標範囲（余白・外枠・内枠間のすべての交点を確実にカバー）
             double minSurX = double.MaxValue, maxSurX = double.MinValue;
             double minSurY = double.MaxValue, maxSurY = double.MinValue;
-            foreach (var corner in innerCorners)
+            foreach (var corner in outerCorners)
             {
                 minSurX = Math.Min(minSurX, corner.surveyX);
                 maxSurX = Math.Max(maxSurX, corner.surveyX);
@@ -845,10 +865,10 @@ namespace Site7DbEditor.Services
                 maxSurY = Math.Max(maxSurY, corner.surveyY);
             }
 
-            double startSurX = Math.Floor(minSurX / pitch) * pitch;
-            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch;
-            double startSurY = Math.Floor(minSurY / pitch) * pitch;
-            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch;
+            double startSurX = Math.Floor(minSurX / pitch) * pitch - pitch;
+            double endSurX = Math.Ceiling(maxSurX / pitch) * pitch + pitch;
+            double startSurY = Math.Floor(minSurY / pitch) * pitch - pitch;
+            double endSurY = Math.Ceiling(maxSurY / pitch) * pitch + pitch;
 
             // 5. 内枠内クリッピングで図面要素を描画
             var oldClip = g.Clip;
@@ -1263,9 +1283,25 @@ namespace Site7DbEditor.Services
             }
 
             // 用紙プレビュー上での格子線の傾きに合わせて文字を回転 (-90°〜+90°に正規化)
-            float rotDeg = isXAxis
-                ? NormalizeTextAngle((float)RotationAngleDeg)
-                : NormalizeTextAngle((float)(RotationAngleDeg - 90.0));
+            float rotDeg;
+            if (isXAxis)
+            {
+                // X一定線: 測量東(Y)方向に伸びる
+                PointF p0 = surveyToScreen(val, CenterY);
+                PointF p1 = surveyToScreen(val, CenterY + 10.0);
+                float dx = p1.X - p0.X;
+                float dy = p1.Y - p0.Y;
+                rotDeg = NormalizeTextAngle((float)(Math.Atan2(dy, dx) * 180.0 / Math.PI));
+            }
+            else
+            {
+                // Y一定線: 測量北(X)方向に伸びる
+                PointF p0 = surveyToScreen(CenterX, val);
+                PointF p1 = surveyToScreen(CenterX + 10.0, val);
+                float dx = p1.X - p0.X;
+                float dy = p1.Y - p0.Y;
+                rotDeg = NormalizeTextAngle((float)(Math.Atan2(dy, dx) * 180.0 / Math.PI));
+            }
 
             foreach (var (surX, surY) in intersections)
             {
@@ -1276,7 +1312,7 @@ namespace Site7DbEditor.Services
                 g.TranslateTransform(pt.X, pt.Y);
                 g.RotateTransform(rotDeg);
 
-                g.FillRectangle(bgBrush, -sz.Width / 2f - 2f, -sz.Height / 2f - 1f, sz.Width + 4f, sz.Height + 2f);
+                // 背景は透明（文字のみ描画）
                 g.DrawString(labelText, font, textBrush, -sz.Width / 2f, -sz.Height / 2f);
                 g.Restore(state);
             }
