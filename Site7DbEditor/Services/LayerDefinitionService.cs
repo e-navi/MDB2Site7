@@ -96,13 +96,7 @@ namespace Site7DbEditor.Services
                 };
 
                 int defaultColor = ((i - 1) % 16) + 1;
-
-                int defaultMark = group switch
-                {
-                    LayerGroup.Kikai => 2,
-                    _ => 1
-                };
-
+                int defaultMark = 1;
                 double defaultSize = 1.0;
 
                 list.Add(new LayerItem
@@ -317,13 +311,38 @@ namespace Site7DbEditor.Services
 
         public LayerItem GetLayer(LayerGroup group, int index)
         {
-            if (Groups.TryGetValue(group, out var list))
+            int normIdx = index;
+            if (group == LayerGroup.Kikai && normIdx >= 17 && normIdx <= 32)
             {
-                var item = list.FirstOrDefault(x => x.Index == index);
-                if (item != null) return item;
+                normIdx -= 16;
+            }
+            else if (group == LayerGroup.Sakuzu && normIdx >= 33 && normIdx <= 48)
+            {
+                normIdx -= 32;
+            }
+            else if (group == LayerGroup.Ikou && normIdx >= 49 && normIdx <= 64)
+            {
+                normIdx -= 48;
             }
 
-            return new LayerItem { Index = index, Code = $"L{index:D2}", Name = $"L{index:D2}", Color = ((index - 1) % 16) + 1 };
+            if (normIdx < 1) normIdx = 1;
+            if (normIdx > 16) normIdx = ((normIdx - 1) % 16) + 1;
+
+            if (Groups.TryGetValue(group, out var list) && list != null)
+            {
+                var item = list.FirstOrDefault(x => x.Index == normIdx);
+                if (item != null) return item;
+                if (list.Count > 0) return list[0];
+            }
+
+            string prefix = group switch
+            {
+                LayerGroup.Kikai => "K",
+                LayerGroup.Sakuzu => "D",
+                _ => "L"
+            };
+
+            return new LayerItem { Index = normIdx, Code = $"{prefix}{normIdx:D2}", Name = $"{prefix}{normIdx:D2}", Color = ((normIdx - 1) % 16) + 1, Mark = 1, Size = 1.0 };
         }
 
         public Color GetColor(LayerGroup group, int index, bool isDarkBackground = true)

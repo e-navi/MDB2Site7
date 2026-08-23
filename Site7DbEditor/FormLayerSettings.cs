@@ -24,6 +24,7 @@ namespace Site7DbEditor
         private Button button1 = null!;
         private Button Save_Button = null!;
         private Button Cancel_Button = null!;
+        private bool _isUpdatingUi = false;
 
         public FormLayerSettings(EditorDbManager db)
         {
@@ -134,6 +135,15 @@ namespace Site7DbEditor
             };
             CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
 
+            // リアルタイム編集連動
+            textBox1.TextChanged += (s, e) => AutoApplyCurrentItem();
+            CBoxColor.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
+            CBoxMark.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
+            CBoxSize.TextChanged += (s, e) => AutoApplyCurrentItem();
+            CBoxSize.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
+            CBoxWidth.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
+            CBoxLineStyle.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
+
             // Buttons
             button1 = new Button
             {
@@ -211,60 +221,90 @@ namespace Site7DbEditor
 
         private void ComboBoxLayerG_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            listBox1.Items.Clear();
-            var group = GetSelectedGroup();
-            var items = LayerDefinitionService.Instance.Groups.TryGetValue(group, out var list) ? list : new List<LayerItem>();
-
-            foreach (var item in items)
+            _isUpdatingUi = true;
+            try
             {
-                listBox1.Items.Add(item.DisplayText);
+                listBox1.Items.Clear();
+                var group = GetSelectedGroup();
+                var items = LayerDefinitionService.Instance.Groups.TryGetValue(group, out var list) ? list : new List<LayerItem>();
+
+                foreach (var item in items)
+                {
+                    listBox1.Items.Add(item.DisplayText);
+                }
+
+                if (listBox1.Items.Count > 0)
+                {
+                    listBox1.SelectedIndex = 0;
+                }
+            }
+            finally
+            {
+                _isUpdatingUi = false;
             }
 
-            if (listBox1.Items.Count > 0)
-            {
-                listBox1.SelectedIndex = 0;
-            }
+            ListBox1_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
         private void ListBox1_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (listBox1.SelectedIndex < 0) return;
 
-            var group = GetSelectedGroup();
-            int itemIdx = listBox1.SelectedIndex;
-            var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
+            _isUpdatingUi = true;
+            try
+            {
+                var group = GetSelectedGroup();
+                int itemIdx = listBox1.SelectedIndex;
+                var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
 
-            textBox1.Text = item.Name;
-            CBoxColor.SelectedIndex = Math.Clamp(item.Color - 1, 0, CBoxColor.Items.Count - 1);
-            CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
-            CBoxSize.Text = item.Size.ToString("F1");
-            CBoxWidth.SelectedIndex = Math.Clamp(item.Width - 1, 0, CBoxWidth.Items.Count - 1);
-            CBoxLineStyle.SelectedIndex = (item.LType == 2) ? 1 : 0;
+                textBox1.Text = item.Name;
+                CBoxColor.SelectedIndex = Math.Clamp(item.Color - 1, 0, CBoxColor.Items.Count - 1);
+                CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
+                CBoxSize.Text = item.Size.ToString("F1");
+                CBoxWidth.SelectedIndex = Math.Clamp(item.Width - 1, 0, CBoxWidth.Items.Count - 1);
+                CBoxLineStyle.SelectedIndex = (item.LType == 2) ? 1 : 0;
+            }
+            finally
+            {
+                _isUpdatingUi = false;
+            }
         }
 
-        private void Button1_Click(object? sender, EventArgs e)
+        private void AutoApplyCurrentItem()
         {
-            if (listBox1.SelectedIndex < 0) return;
+            if (_isUpdatingUi || listBox1.SelectedIndex < 0) return;
 
             var group = GetSelectedGroup();
             int itemIdx = listBox1.SelectedIndex;
             var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
 
             item.Name = textBox1.Text.Trim();
-            item.Color = CBoxColor.SelectedIndex + 1;
-            item.Mark = CBoxMark.SelectedIndex + 1;
+            item.Color = Math.Clamp(CBoxColor.SelectedIndex + 1, 1, 16);
+            item.Mark = Math.Clamp(CBoxMark.SelectedIndex + 1, 1, 8);
             item.Size = double.TryParse(CBoxSize.Text, out double sizeVal) ? sizeVal : 1.0;
-            item.Width = CBoxWidth.SelectedIndex + 1;
+            item.Width = Math.Clamp(CBoxWidth.SelectedIndex + 1, 1, 10);
             item.LType = (CBoxLineStyle.SelectedIndex == 1) ? 2 : 1;
 
-            listBox1.Items[itemIdx] = item.DisplayText;
+            _isUpdatingUi = true;
+            try
+            {
+                listBox1.Items[itemIdx] = item.DisplayText;
+            }
+            finally
+            {
+                _isUpdatingUi = false;
+            }
+        }
 
+        private void Button1_Click(object? sender, EventArgs e)
+        {
+            AutoApplyCurrentItem();
             SaveLayers();
         }
 
         private void Save_Button_Click(object? sender, EventArgs e)
         {
-            Button1_Click(sender, e);
+            AutoApplyCurrentItem();
             SaveLayers();
             MessageBox.Show(this, "レイヤ設定（Layer遺構.txt, Layer遺物.txt, Layer基準点.txt, Layer作図.txt）を保存しました。", "レイヤ設定保存", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = DialogResult.OK;

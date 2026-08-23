@@ -545,6 +545,7 @@ namespace Site7DbEditor {
                         PopulateIkouLineLayerCombo();
                         PopulateIbutuLayerCombo();
                         PopulateKikaiLayerCombo();
+                        UpdateLayerCheckboxColors();
                         picMapCanvas.Invalidate();
                     }
                 }
