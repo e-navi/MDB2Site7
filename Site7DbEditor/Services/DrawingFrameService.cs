@@ -712,17 +712,31 @@ namespace Site7DbEditor.Services
         private PointF GetCornerPoint(PointF[] corners, string pos, float inset)
         {
             // 0:左下, 1:右下, 2:右上, 3:左上
+            if (corners.Length < 4) return PointF.Empty;
+
+            float duX = corners[1].X - corners[0].X;
+            float duY = corners[1].Y - corners[0].Y;
+            float lenU = (float)Math.Sqrt(duX * duX + duY * duY);
+            float uX = (lenU > 0.001f) ? (duX / lenU) : 1f;
+            float uY = (lenU > 0.001f) ? (duY / lenU) : 0f;
+
+            float dvX = corners[3].X - corners[0].X;
+            float dvY = corners[3].Y - corners[0].Y;
+            float lenV = (float)Math.Sqrt(dvX * dvX + dvY * dvY);
+            float vX = (lenV > 0.001f) ? (dvX / lenV) : 0f;
+            float vY = (lenV > 0.001f) ? (dvY / lenV) : -1f;
+
             switch (pos)
             {
                 case "左上":
-                    return new PointF(corners[3].X + inset, corners[3].Y + inset);
+                    return new PointF(corners[3].X + uX * inset - vX * inset, corners[3].Y + uY * inset - vY * inset);
                 case "左下":
-                    return new PointF(corners[0].X + inset, corners[0].Y - inset);
+                    return new PointF(corners[0].X + uX * inset + vX * inset, corners[0].Y + uY * inset + vY * inset);
                 case "右下":
-                    return new PointF(corners[1].X - inset, corners[1].Y - inset);
+                    return new PointF(corners[1].X - uX * inset + vX * inset, corners[1].Y - uY * inset + vY * inset);
                 case "右上":
                 default:
-                    return new PointF(corners[2].X - inset, corners[2].Y + inset);
+                    return new PointF(corners[2].X - uX * inset - vX * inset, corners[2].Y - uY * inset - vY * inset);
             }
         }
 
