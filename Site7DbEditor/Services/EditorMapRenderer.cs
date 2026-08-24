@@ -203,9 +203,8 @@ namespace Site7DbEditor.Services
                     // ★ Mode != 2 (通常の折線・曲線): chkShowIkou が ON の時のみ描画
                     if (!chkShowIkou) continue;
 
-                    int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                    var layer = db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                    bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                    var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                    bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                     bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
 
                     PointF[] screenPts;
@@ -235,7 +234,7 @@ namespace Site7DbEditor.Services
                         }
                         else
                         {
-                            float penWidth = (layer != null && layer.Width > 0) ? (float)layer.Width : 1.5f;
+                            float penWidth = (layerItem != null && layerItem.Width > 0) ? (float)layerItem.Width : 1.5f;
                             using (var linePen = new Pen(color, penWidth))
                             {
                                 g.DrawLines(linePen, screenPts);
@@ -504,9 +503,8 @@ namespace Site7DbEditor.Services
                     if (isLayerVisible == null || isLayerVisible(selectedLineLayerIdx))
                     {
                         var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
-                        int dbLayerId = selectedLine.Layer >= 49 ? selectedLine.Layer : (selectedLine.Layer + 48);
-                        var layer = db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, selectedLine.Layer);
+                        bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                         bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
 
                         Color grayColor = isDarkBackground

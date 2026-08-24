@@ -98,6 +98,7 @@ namespace Site7DbEditor.Services
                 int defaultColor = ((i - 1) % 16) + 1;
                 int defaultMark = 1;
                 double defaultSize = 1.0;
+                int defaultLType = (group == LayerGroup.Ikou) ? 2 : 1;
 
                 list.Add(new LayerItem
                 {
@@ -108,7 +109,7 @@ namespace Site7DbEditor.Services
                     Mark = defaultMark,
                     Size = defaultSize,
                     Width = 1,
-                    LType = 1
+                    LType = defaultLType
                 });
             }
 
@@ -221,7 +222,7 @@ namespace Site7DbEditor.Services
                     if (parts.Length > 3 && int.TryParse(parts[3].Trim(), out int wVal))
                         width = Math.Clamp(wVal, 1, 10);
 
-                    int ltype = 1;
+                    int ltype = (group == LayerGroup.Ikou) ? 2 : 1;
                     if (parts.Length > 4 && int.TryParse(parts[4].Trim(), out int ltVal))
                         ltype = Math.Clamp(ltVal, 1, 10);
 
@@ -342,7 +343,8 @@ namespace Site7DbEditor.Services
                 _ => "L"
             };
 
-            return new LayerItem { Index = normIdx, Code = $"{prefix}{normIdx:D2}", Name = $"{prefix}{normIdx:D2}", Color = ((normIdx - 1) % 16) + 1, Mark = 1, Size = 1.0 };
+            int defaultLType = (group == LayerGroup.Ikou) ? 2 : 1;
+            return new LayerItem { Index = normIdx, Code = $"{prefix}{normIdx:D2}", Name = $"{prefix}{normIdx:D2}", Color = ((normIdx - 1) % 16) + 1, Mark = 1, Size = 1.0, LType = defaultLType };
         }
 
         public Color GetColor(LayerGroup group, int index, bool isDarkBackground = true)

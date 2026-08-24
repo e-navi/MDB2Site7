@@ -3384,9 +3384,8 @@ namespace Site7DbEditor {
 
                         // 2. 線上（Segment）判定（頂点でヒットしていない場合）
                         if (!isVertexHit) {
-                            int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                            var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                            bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                            var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                            bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                             bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && pts.Count >= 3;
 
                             PointF[] screenPts;
@@ -3638,9 +3637,8 @@ namespace Site7DbEditor {
                     }
 
                     if (!isVertexHit) {
-                        int dbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                        var layer = _db.LayerList.FirstOrDefault(l => l.Id == dbLayerId);
-                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                        bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                         bool drawAsCurve = chkShowCurve.Checked && isLayerCurve && pts.Count >= 3;
 
                         PointF[] screenPts;
