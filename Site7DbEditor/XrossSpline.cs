@@ -37,6 +37,36 @@ namespace Site7DbEditor
         {
             return Math.Abs(X - p.X) < 1e-4 && Math.Abs(Y - p.Y) < 1e-4 && Math.Abs(Z - p.Z) < 1e-4;
         }
+
+        public double CalcLen(XYZ p)
+        {
+            double dx = p.X - X;
+            double dy = p.Y - Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        public double CalcAng(XYZ p)
+        {
+            double dx = p.X - X;
+            double dy = p.Y - Y;
+            double ang = Math.Atan2(dy, dx);
+            if (ang < 0) ang += 2 * Math.PI;
+            return ang;
+        }
+
+        public void min(XYZ p)
+        {
+            if (p.X < X) X = p.X;
+            if (p.Y < Y) Y = p.Y;
+            if (p.Z < Z) Z = p.Z;
+        }
+
+        public void max(XYZ p)
+        {
+            if (p.X > X) X = p.X;
+            if (p.Y > Y) Y = p.Y;
+            if (p.Z > Z) Z = p.Z;
+        }
     }
 
     /// <summary>

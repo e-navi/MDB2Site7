@@ -143,6 +143,27 @@ namespace Site7DbEditor
             return new XYZ(x, y, 0);
         }
 
+        public static XYZ Perp(XYZ p, XYZ p1, XYZ p2)
+        {
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
+            double dz = p2.Z - p1.Z;
+            double lenSq = dx * dx + dy * dy;
+            if (lenSq < 1e-9)
+            {
+                return new XYZ(p1.X, p1.Y, p1.Z);
+            }
+            double t = ((p.X - p1.X) * dx + (p.Y - p1.Y) * dy) / lenSq;
+            return new XYZ(p1.X + t * dx, p1.Y + t * dy, p1.Z + t * dz);
+        }
+
+        public static double Calc2PLen2(XYZ p1, XYZ p2)
+        {
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         public static void CenterOnMainForm(System.Windows.Forms.Form form)
         {
             if (gbl.FormMain != null && !gbl.FormMain.IsDisposed)

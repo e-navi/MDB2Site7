@@ -644,6 +644,22 @@ namespace Site7DbEditor {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
                 picMapCanvas.Invalidate();
             };
+            this.chkPointGuidance.CheckedChanged += (s, e) => {
+                grpYudo.Visible = chkPointGuidance.Checked;
+                if (!chkPointGuidance.Checked) {
+                    lblYudo1.Text = "";
+                    lblYudo2.Text = "";
+                    lblYudo3.Text = "";
+                } else {
+                    UpdatePointGuidance();
+                }
+            };
+            grpYudo.Visible = chkPointGuidance.Checked;
+            if (!chkPointGuidance.Checked) {
+                lblYudo1.Text = "";
+                lblYudo2.Text = "";
+                lblYudo3.Text = "";
+            }
             this.tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.cmbIkouKind.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();
@@ -1569,6 +1585,9 @@ namespace Site7DbEditor {
                         txtCoordX.Text = "";
                         txtCoordY.Text = "";
                         txtCoordZ.Text = "";
+                    }
+                    if (IsYudoMode()) {
+                        UpdatePointGuidance();
                     }
                     picMapCanvas.Invalidate();
                 } catch { }
@@ -4303,12 +4322,113 @@ namespace Site7DbEditor {
         }
 
         public bool IsYudoMode() {
-            return false;
+            if (isModeKijun() && chkPointGuidance != null && chkPointGuidance.Checked && _db != null && _db.KikaiList.Count > 0)
+                return true;
+            else
+                return false;
         }
 
-        public void SetTSYudo() { }
-        public void SetGPSYudo() { }
-        public void SetGPSKijunP() { }
+        public void UpdatePointGuidance() {
+            if (!IsYudoMode()) return;
+            if (Env.TSGPS == Env.TSGPS_GPS) {
+                SetGPSYudo();
+            } else {
+                SetTSYudo();
+            }
+        }
+
+        public void SetTSYudo() {
+            if (!IsYudoMode()) return;
+            XYZ p = gbl.KikaiMan.cnvP(gbl.MField.lng, gbl.MField.angH, gbl.MField.angV);
+            if (p == null) return;
+
+            double tx = St7Lib.CheckDouble(txtCoordX.Text, double.NaN);
+            double ty = St7Lib.CheckDouble(txtCoordY.Text, double.NaN);
+            double tz = St7Lib.CheckDouble(txtCoordZ.Text, double.NaN);
+            if (double.IsNaN(tx) || double.IsNaN(ty)) return;
+            if (double.IsNaN(tz)) tz = 0.0;
+
+            XYZ tp = new XYZ(tx, ty, tz);
+            if (gbl.KikaiMan.kp == null) return;
+            XYZ kp = St7Lib.Perp(p, gbl.KikaiMan.kp, tp);
+
+            if (kp != null) {
+                double dk = gbl.KikaiMan.kp.CalcLen(kp);
+                double dc = gbl.KikaiMan.kp.CalcLen(p);
+                double d1 = kp.CalcLen(p);
+                double d2 = St7Lib.Calc2PLen2(kp, tp);
+
+                double angP = gbl.KikaiMan.kp.CalcAng(p);
+                double angKP = gbl.KikaiMan.kp.CalcAng(tp);
+
+                double cos = Math.Cos(angP - angKP);
+                double sin = Math.Sin(angP - angKP);
+                double lenP = gbl.KikaiMan.kp.CalcLen(p);
+                double lenKP = gbl.KikaiMan.kp.CalcLen(tp);
+                double x = lenKP * sin;
+                double y = lenKP * cos - lenP;
+                double dz = tp.Z - p.Z;
+
+                if (dc < dk) {
+                    lblYudo1.Text = "後へ " + d1.ToString("0.000") + " M";
+                } else {
+                    lblYudo1.Text = "前へ " + d1.ToString("0.000") + " M";
+                }
+                if (x < 0) {
+                    lblYudo2.Text = "左へ " + (x * -1.0).ToString("0.000") + " M";
+                } else {
+                    lblYudo2.Text = "右へ " + x.ToString("0.000") + " M";
+                }
+                if (dz < 0) {
+                    lblYudo3.Text = "下へ " + (dz * -1.0).ToString("0.000") + " M";
+                } else {
+                    lblYudo3.Text = "上へ " + dz.ToString("0.000") + " M";
+                }
+            }
+        }
+
+        public void SetGPSYudo() {
+            if (!IsYudoMode()) return;
+            XYZ p = gbl.Gps.gpsP;
+            if (p == null) return;
+
+            double tx = St7Lib.CheckDouble(txtCoordX.Text, double.NaN);
+            double ty = St7Lib.CheckDouble(txtCoordY.Text, double.NaN);
+            double tz = St7Lib.CheckDouble(txtCoordZ.Text, double.NaN);
+            if (double.IsNaN(tx) || double.IsNaN(ty)) return;
+            if (double.IsNaN(tz)) tz = 0.0;
+
+            XYZ tp = new XYZ(tx, ty, tz);
+
+            double dx = tp.X - p.X;
+            double dy = tp.Y - p.Y;
+            double dz = tp.Z - p.Z;
+
+            if (dx < 0) {
+                lblYudo1.Text = "南へ " + (dx * -1.0).ToString("0.000") + " M";
+            } else {
+                lblYudo1.Text = "北へ " + dx.ToString("0.000") + " M";
+            }
+            if (dy < 0) {
+                lblYudo2.Text = "西へ " + (dy * -1.0).ToString("0.000") + " M";
+            } else {
+                lblYudo2.Text = "東へ " + dy.ToString("0.000") + " M";
+            }
+            if (dz < 0) {
+                lblYudo3.Text = "下へ " + (dz * -1.0).ToString("0.000") + " M";
+            } else {
+                lblYudo3.Text = "上へ " + dz.ToString("0.000") + " M";
+            }
+        }
+
+        public void SetGPSKijunP() {
+            if (gbl.Gps.isChangePos) {
+                var p = gbl.Gps.curPos;
+                txtCoordX.Text = p.X.ToString("F3");
+                txtCoordY.Text = p.Y.ToString("F3");
+                txtCoordZ.Text = p.Z.ToString("F3");
+            }
+        }
 
         public int GetTSModel() {
             return Env.getCurTSModel();
