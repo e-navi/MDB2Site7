@@ -1594,6 +1594,12 @@ namespace Site7DbEditor {
                 pnlKikaiRight.Controls.SetChildIndex(grpCoordValue, 2);
                 dgvKikai_SelectionChanged(this, EventArgs.Empty);
             }
+
+            // TS自動追尾／視準測定モードのタブ連動切り替え
+            bool isKijun = (tabControlData.SelectedTab == tabKikai);
+            _ucCtrl?.SetBtns2(isKijun);
+            gbl.UCCtrl?.SetBtns2(isKijun);
+
             UpdateLayerCheckboxColors();
             picMapCanvas.Invalidate();
         }

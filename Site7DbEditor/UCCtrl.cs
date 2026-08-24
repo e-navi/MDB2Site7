@@ -157,16 +157,22 @@ namespace Site7DbEditor {
         public void SetBtns2(bool isModeKijun = false) {
             chkAutoSet.Visible = !isModeKijun;
 
-            //if (!Env.isUseLN100() && Env.isSupportTuibi()) {
-            if (!Env.isUseLN100() && Env.getTSMode() == Env.TS_MODE_TUIBI) {
-                gbl.TStation.AS_BtnClick_11();
+            if (!Env.isUseLN100() && (Env.isSupportTuibi() || Env.getTSMode() == Env.TS_MODE_TUIBI)) {
                 if (isModeKijun) {
-                    Env.curTSMode0 = Env.TS_MODE_SHIJUNSOKUTEI;
+                    if (Env.curTSMode != Env.TS_MODE_SHIJUNSOKUTEI) {
+                        gbl.TStation?.AS_BtnClick_11();
+                        Env.curTSMode0 = Env.TS_MODE_SHIJUNSOKUTEI;
+                        Env.curTSMode = Env.curTSMode0;
+                        btnAutoTsuibi.Text = Env.getTSModeStr(Env.curTSMode);
+                    }
                 } else {
-                    Env.curTSMode0 = Env.TS_MODE_TUIBI;
+                    if (Env.curTSMode != Env.TS_MODE_TUIBI) {
+                        gbl.TStation?.AS_BtnClick_11();
+                        Env.curTSMode0 = Env.TS_MODE_TUIBI;
+                        Env.curTSMode = Env.curTSMode0;
+                        btnAutoTsuibi.Text = Env.getTSModeStr(Env.curTSMode);
+                    }
                 }
-                Env.curTSMode = Env.curTSMode0;
-                btnAutoTsuibi.Text = Env.getTSModeStr(Env.curTSMode);
             }
         }
         public void SetBtns2(int mode) {
