@@ -355,8 +355,7 @@ namespace Site7DbEditor.Services
                         {
                             double rMeters = kr.getLngH();
                             PointF centerPt = ToCanvasPoint(kr.p.X, kr.p.Y);
-                            PointF rimPt = ToCanvasPoint(kr.p.X + rMeters, kr.p.Y);
-                            float rPx = Math.Abs(rimPt.X - centerPt.X);
+                            float rPx = (float)(rMeters * vc.MapScale * vc.ZoomFactorMap);
                             if (rPx > 1.0f)
                             {
                                 // 中心基準点のハイライト表示
@@ -367,7 +366,7 @@ namespace Site7DbEditor.Services
                                 g.DrawEllipse(pens[i % pens.Length], centerPt.X - rPx, centerPt.Y - rPx, rPx * 2, rPx * 2);
 
                                 // 距離注記ラベル
-                                string distText = $"{i + 1}点目: {kr.p.Name} (水平距離 R={rMeters:F3}m)";
+                                string distText = $"{i + 1}点目: {kr.p.Name} (R={rMeters:F3}m)";
                                 g.DrawString(distText, guideFont, guideTextBrush, centerPt.X + rPx * 0.707f + 5, centerPt.Y - rPx * 0.707f - 5);
                             }
                         }
@@ -646,7 +645,8 @@ namespace Site7DbEditor.Services
                 }
             }
 
-            if (hasKp && curMeasurePos != null)
+            bool isFormKikaiActive = gbl.FormKikai != null && gbl.FormKikai.Visible;
+            if (!isFormKikaiActive && hasKp && curMeasurePos != null)
             {
                 PointF kpPt = ToCanvasPoint(kpX, kpY);
                 PointF curPt = ToCanvasPoint(curMeasurePos.X, curMeasurePos.Y);
