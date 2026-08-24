@@ -43,7 +43,7 @@ namespace Site7DbEditor
         private void InitializeComponent()
         {
             this.Text = "レイヤ設定";
-            this.ClientSize = new Size(500, 460);
+            this.ClientSize = new Size(540, 375);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -55,41 +55,41 @@ namespace Site7DbEditor
             comboBoxLayerG = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(20, 12),
-                Size = new Size(160, 26),
+                Location = new Point(16, 12),
+                Size = new Size(205, 26),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
             };
             comboBoxLayerG.Items.AddRange(new object[] {
-                "🏛 遺構レイヤ (Layer遺構.txt)",
-                "🏺 遺物レイヤ (Layer遺物.txt)",
-                "📍 基準点レイヤ (Layer基準点.txt)",
-                "📏 作図レイヤ (Layer作図.txt)"
+                "🏛 遺構 (Layer遺構.txt)",
+                "🏺 遺物 (Layer遺物.txt)",
+                "📍 基準点 (Layer基準点.txt)",
+                "📏 作図 (Layer作図.txt)"
             });
             comboBoxLayerG.SelectedIndexChanged += ComboBoxLayerG_SelectedIndexChanged;
 
-            // listBox1 (16件がスクロールバーなしで収まる高さ)
+            // listBox1 (16件がスクロールバーなしでぴったり収まる高さ)
             listBox1 = new ListBox
             {
-                Location = new Point(20, 45),
-                Size = new Size(160, 395),
-                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Regular),
+                Location = new Point(16, 45),
+                Size = new Size(205, 316),
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
                 IntegralHeight = false
             };
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
 
             // Labels
-            var lblLayerName = CreateLabel("レイヤ名", new Point(195, 45));
-            var lblColor = CreateLabel("表示色", new Point(195, 90));
-            var lblMark = CreateLabel("マーク", new Point(195, 135));
-            var lblSize = CreateLabel("サイズ", new Point(195, 180));
-            var lblWidth = CreateLabel("線幅", new Point(195, 225));
-            var lblLineStyle = CreateLabel("線種", new Point(195, 270));
+            var lblLayerName = CreateLabel("レイヤ名", new Point(236, 45));
+            var lblColor = CreateLabel("表示色", new Point(236, 88));
+            var lblMark = CreateLabel("マーク", new Point(236, 131));
+            var lblSize = CreateLabel("サイズ", new Point(236, 174));
+            var lblWidth = CreateLabel("線幅", new Point(236, 217));
+            var lblLineStyle = CreateLabel("線種", new Point(236, 260));
 
             // Edit controls
             textBox1 = new TextBox
             {
-                Location = new Point(270, 42),
-                Size = new Size(205, 29),
+                Location = new Point(312, 42),
+                Size = new Size(210, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
 
@@ -97,7 +97,7 @@ namespace Site7DbEditor
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 DrawMode = DrawMode.OwnerDrawFixed,
-                Location = new Point(270, 87),
+                Location = new Point(312, 85),
                 Size = new Size(140, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
@@ -110,7 +110,7 @@ namespace Site7DbEditor
             CBoxMark = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(270, 132),
+                Location = new Point(312, 128),
                 Size = new Size(85, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
@@ -118,7 +118,7 @@ namespace Site7DbEditor
 
             CBoxSize = new ComboBox
             {
-                Location = new Point(270, 177),
+                Location = new Point(312, 171),
                 Size = new Size(85, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
@@ -127,7 +127,7 @@ namespace Site7DbEditor
             CBoxWidth = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(270, 222),
+                Location = new Point(312, 214),
                 Size = new Size(85, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
@@ -136,7 +136,7 @@ namespace Site7DbEditor
             CBoxLineStyle = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(270, 267),
+                Location = new Point(312, 257),
                 Size = new Size(100, 29),
                 Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
             };
@@ -155,8 +155,8 @@ namespace Site7DbEditor
             button1 = new Button
             {
                 Text = "✔ このレイヤに適用",
-                Location = new Point(270, 315),
-                Size = new Size(150, 32),
+                Location = new Point(312, 295),
+                Size = new Size(150, 30),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(230, 235, 245),
                 UseVisualStyleBackColor = true
@@ -166,8 +166,8 @@ namespace Site7DbEditor
             Save_Button = new Button
             {
                 Text = "💾 設定を保存",
-                Location = new Point(235, 405),
-                Size = new Size(130, 35),
+                Location = new Point(255, 332),
+                Size = new Size(140, 32),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(56, 176, 0),
                 ForeColor = Color.Black,
@@ -178,8 +178,8 @@ namespace Site7DbEditor
             Cancel_Button = new Button
             {
                 Text = "閉じる",
-                Location = new Point(375, 405),
-                Size = new Size(100, 35),
+                Location = new Point(405, 332),
+                Size = new Size(100, 32),
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(220, 224, 230),
                 UseVisualStyleBackColor = true
