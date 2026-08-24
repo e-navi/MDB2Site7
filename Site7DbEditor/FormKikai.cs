@@ -13,7 +13,7 @@ namespace Site7DbEditor
         private TextBox txtInstrH = null!;
         private TextBox txtMirrorH = null!;
 
-        // 3 Cards
+        // 3 Cards (Vertical layout)
         private Panel[] cardPanels = new Panel[3];
         private ComboBox[] cmbPoints = new ComboBox[3];
         private Button[] btnMeasures = new Button[3];
@@ -28,7 +28,8 @@ namespace Site7DbEditor
         private Label lblResultCoords = null!;
         private Label lblResultResidual = null!;
 
-        // Register Area
+        // Register Area Panel
+        private Panel pnlRegister = null!;
         private TextBox txtNewPointName = null!;
         private ComboBox cmbNewPointLayer = null!;
         private Button btnRegister = null!;
@@ -51,40 +52,43 @@ namespace Site7DbEditor
         private void BuildUi()
         {
             this.Text = "器械点測定 (後方交会法)";
-            this.ClientSize = new Size(700, 620);
-            this.StartPosition = FormStartPosition.CenterParent;
+            this.ClientSize = new Size(336, 575);
+            this.StartPosition = FormStartPosition.Manual;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.BackColor = Color.FromArgb(242, 244, 248);
-            this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
+            this.Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Regular);
 
             timerMeasure = new System.Windows.Forms.Timer { Interval = 100 };
             timerMeasure.Tick += TimerMeasure_Tick;
 
-            // Top Panel: Mode & Instrument/Mirror Heights
+            int pad = 10;
+            int cardW = 314;
+
+            // 1. Top Panel: Mode & Instrument/Mirror Heights (Height: 70)
             var pnlTop = new Panel
             {
-                Location = new Point(16, 12),
-                Size = new Size(668, 55),
+                Location = new Point(pad, 8),
+                Size = new Size(cardW, 68),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
 
             var lblMode = new Label
             {
-                Text = "測定方式:",
-                Location = new Point(12, 16),
+                Text = "方式:",
+                Location = new Point(6, 9),
                 AutoSize = true,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
 
             cmbMode = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(85, 13),
-                Size = new Size(185, 28),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(44, 6),
+                Size = new Size(258, 24),
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
             cmbMode.Items.AddRange(new object[] {
                 "後方交会 ２点指定",
@@ -95,19 +99,19 @@ namespace Site7DbEditor
 
             var lblInstrH = new Label
             {
-                Text = "器械高(m):",
-                Location = new Point(290, 16),
+                Text = "器械高:",
+                Location = new Point(6, 38),
                 AutoSize = true,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Regular)
             };
 
             txtInstrH = new TextBox
             {
-                Location = new Point(365, 13),
-                Size = new Size(65, 26),
+                Location = new Point(54, 35),
+                Size = new Size(58, 23),
                 Text = gbl.KikaiMan.kh > 0 ? gbl.KikaiMan.kh.ToString("F3") : "1.500",
                 TextAlign = HorizontalAlignment.Right,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
             txtInstrH.TextChanged += (s, e) => {
                 if (double.TryParse(txtInstrH.Text.Trim(), out double khVal))
@@ -118,21 +122,23 @@ namespace Site7DbEditor
                 }
             };
 
+            var lblUnit1 = new Label { Text = "m", Location = new Point(114, 38), AutoSize = true };
+
             var lblMirrorH = new Label
             {
-                Text = "ミラー高(m):",
-                Location = new Point(455, 16),
+                Text = "ミラー高:",
+                Location = new Point(155, 38),
                 AutoSize = true,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Regular)
             };
 
             txtMirrorH = new TextBox
             {
-                Location = new Point(540, 13),
-                Size = new Size(65, 26),
+                Location = new Point(210, 35),
+                Size = new Size(58, 23),
                 Text = gbl.KikaiMan.mh > 0 ? gbl.KikaiMan.mh.ToString("F3") : "1.200",
                 TextAlign = HorizontalAlignment.Right,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
             txtMirrorH.TextChanged += (s, e) => {
                 if (double.TryParse(txtMirrorH.Text.Trim(), out double mhVal))
@@ -143,12 +149,13 @@ namespace Site7DbEditor
                 }
             };
 
-            pnlTop.Controls.AddRange(new Control[] { lblMode, cmbMode, lblInstrH, txtInstrH, lblMirrorH, txtMirrorH });
+            var lblUnit2 = new Label { Text = "m", Location = new Point(270, 38), AutoSize = true };
+
+            pnlTop.Controls.AddRange(new Control[] { lblMode, cmbMode, lblInstrH, txtInstrH, lblUnit1, lblMirrorH, txtMirrorH, lblUnit2 });
             this.Controls.Add(pnlTop);
 
-            // Middle: 3 Target Point Cards
-            int cardW = 216;
-            int cardH = 225;
+            // 2. Middle: 3 Target Point Cards (Vertical Stack, Card Height: 116)
+            int cardH = 116;
             string[] titles = new string[] { "📍 1点目 (左側・時計回り開始)", "📍 2点目 (右側)", "📍 3点目 (精度検定)" };
             Color[] cardColors = new Color[] { Color.FromArgb(235, 248, 255), Color.FromArgb(255, 240, 245), Color.FromArgb(255, 250, 235) };
 
@@ -157,7 +164,7 @@ namespace Site7DbEditor
                 int tag = i;
                 var pnlCard = new Panel
                 {
-                    Location = new Point(16 + i * (cardW + 10), 75),
+                    Location = new Point(pad, 82 + i * (cardH + 6)),
                     Size = new Size(cardW, cardH),
                     BackColor = cardColors[i],
                     BorderStyle = BorderStyle.FixedSingle
@@ -166,20 +173,18 @@ namespace Site7DbEditor
                 var lblTitle = new Label
                 {
                     Text = titles[i],
-                    Location = new Point(8, 8),
-                    Size = new Size(cardW - 16, 20),
-                    Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                    Location = new Point(6, 5),
+                    Size = new Size(cardW - 12, 18),
+                    Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
                     ForeColor = Color.FromArgb(20, 40, 80)
                 };
-
-                var lblSelect = new Label { Text = "基準点選択:", Location = new Point(8, 34), AutoSize = true, Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold) };
 
                 cmbPoints[i] = new ComboBox
                 {
                     DropDownStyle = ComboBoxStyle.DropDownList,
-                    Location = new Point(8, 54),
-                    Size = new Size(115, 26),
-                    Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                    Location = new Point(6, 26),
+                    Size = new Size(205, 24),
+                    Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
                     Tag = tag
                 };
                 cmbPoints[i].SelectedIndexChanged += CmbPoint_SelectedIndexChanged;
@@ -187,11 +192,11 @@ namespace Site7DbEditor
                 btnMeasures[i] = new Button
                 {
                     Text = "🔭 測定",
-                    Location = new Point(128, 53),
-                    Size = new Size(76, 28),
+                    Location = new Point(218, 24),
+                    Size = new Size(86, 27),
                     BackColor = Color.FromArgb(0, 150, 220),
                     ForeColor = Color.White,
-                    Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
+                    Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
                     UseVisualStyleBackColor = false,
                     Enabled = false,
                     Tag = tag
@@ -200,41 +205,42 @@ namespace Site7DbEditor
 
                 lblBMHeights[i] = new Label
                 {
-                    Text = "BM標高: --- m",
-                    Location = new Point(8, 88),
-                    Size = new Size(cardW - 16, 20),
-                    ForeColor = Color.FromArgb(50, 50, 60)
+                    Text = "BM: --- m",
+                    Location = new Point(6, 55),
+                    Size = new Size(145, 18),
+                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
+                    ForeColor = Color.FromArgb(60, 60, 70)
                 };
 
                 lblDistances[i] = new Label
                 {
-                    Text = "水平距離: --- m",
-                    Location = new Point(8, 112),
-                    Size = new Size(cardW - 16, 36),
-                    ForeColor = Color.FromArgb(20, 80, 160),
-                    Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold)
+                    Text = "水平距離: 未測定",
+                    Location = new Point(152, 55),
+                    Size = new Size(154, 18),
+                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(0, 100, 200)
                 };
 
                 lblAngles[i] = new Label
                 {
                     Text = "角度: ---",
-                    Location = new Point(8, 152),
-                    Size = new Size(cardW - 16, 34),
-                    ForeColor = Color.FromArgb(80, 80, 90),
-                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular)
+                    Location = new Point(6, 75),
+                    Size = new Size(300, 18),
+                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
+                    ForeColor = Color.FromArgb(80, 80, 90)
                 };
 
                 lblCalcZs[i] = new Label
                 {
                     Text = "計算器械高: --- m",
-                    Location = new Point(8, 190),
-                    Size = new Size(cardW - 16, 22),
-                    ForeColor = Color.FromArgb(0, 120, 60),
-                    Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold)
+                    Location = new Point(6, 94),
+                    Size = new Size(300, 18),
+                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(0, 130, 60)
                 };
 
                 pnlCard.Controls.AddRange(new Control[] {
-                    lblTitle, lblSelect, cmbPoints[i], btnMeasures[i],
+                    lblTitle, cmbPoints[i], btnMeasures[i],
                     lblBMHeights[i], lblDistances[i], lblAngles[i], lblCalcZs[i]
                 });
 
@@ -242,11 +248,11 @@ namespace Site7DbEditor
                 this.Controls.Add(pnlCard);
             }
 
-            // Bottom: Calculation Results Card
+            // 3. Calculation Results Card (Height: 120)
             pnlResult = new Panel
             {
-                Location = new Point(16, 310),
-                Size = new Size(668, 185),
+                Location = new Point(pad, 326),
+                Size = new Size(cardW, 120),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
@@ -254,73 +260,80 @@ namespace Site7DbEditor
             lblResultStatus = new Label
             {
                 Text = "⚡ 基準点を指定し、「🔭 測定」を実行してください。",
-                Location = new Point(12, 10),
-                Size = new Size(640, 24),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
+                Location = new Point(6, 6),
+                Size = new Size(cardW - 12, 18),
+                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(0, 102, 204)
             };
 
             lblResultCoords = new Label
             {
-                Text = "器械点座標:\n  X = --- m\n  Y = --- m\n  Z = --- m (算出標高)",
-                Location = new Point(16, 40),
-                Size = new Size(340, 95),
-                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
+                Text = "器械点座標:\n  X = --- m\n  Y = --- m\n  Z = --- m",
+                Location = new Point(6, 26),
+                Size = new Size(298, 56),
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(20, 20, 30)
             };
 
             lblResultResidual = new Label
             {
-                Text = "交点決定条件:\n  1点目を左側・2点目を右側 (時計回り)\n\n残差 (精度):\n  2D誤差: --- mm\n  標高差: --- mm",
-                Location = new Point(365, 40),
-                Size = new Size(290, 130),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(60, 60, 70)
+                Text = "残差: --- mm",
+                Location = new Point(6, 85),
+                Size = new Size(298, 30),
+                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(70, 70, 80)
             };
 
             pnlResult.Controls.AddRange(new Control[] { lblResultStatus, lblResultCoords, lblResultResidual });
             this.Controls.Add(pnlResult);
 
-            // Bottom Register Controls
+            // 4. Bottom Register Area (Height: 75)
+            pnlRegister = new Panel
+            {
+                Location = new Point(pad, 452),
+                Size = new Size(cardW, 75),
+                BackColor = Color.Transparent
+            };
+
             var lblNewName = new Label
             {
-                Text = "登録基準点名:",
-                Location = new Point(16, 515),
+                Text = "登録名:",
+                Location = new Point(0, 5),
                 AutoSize = true,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
 
             txtNewPointName = new TextBox
             {
-                Location = new Point(105, 512),
-                Size = new Size(110, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(48, 2),
+                Size = new Size(72, 23),
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
 
             var lblNewLayer = new Label
             {
                 Text = "レイヤ:",
-                Location = new Point(230, 515),
+                Location = new Point(130, 5),
                 AutoSize = true,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
 
             cmbNewPointLayer = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(280, 512),
-                Size = new Size(130, 26),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
+                Location = new Point(176, 2),
+                Size = new Size(136, 23),
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
             };
 
             btnRegister = new Button
             {
                 Text = "💾 基準点リストへ登録",
-                Location = new Point(430, 508),
-                Size = new Size(155, 34),
+                Location = new Point(0, 34),
+                Size = new Size(210, 34),
                 BackColor = Color.FromArgb(40, 167, 69),
                 ForeColor = Color.White,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 UseVisualStyleBackColor = false,
                 Enabled = false
             };
@@ -329,15 +342,16 @@ namespace Site7DbEditor
             btnClose = new Button
             {
                 Text = "閉じる",
-                Location = new Point(595, 508),
-                Size = new Size(88, 34),
+                Location = new Point(220, 34),
+                Size = new Size(92, 34),
                 BackColor = Color.FromArgb(220, 224, 230),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
                 UseVisualStyleBackColor = true
             };
             btnClose.Click += (s, e) => this.Close();
 
-            this.Controls.AddRange(new Control[] { lblNewName, txtNewPointName, lblNewLayer, cmbNewPointLayer, btnRegister, btnClose });
+            pnlRegister.Controls.AddRange(new Control[] { lblNewName, txtNewPointName, lblNewLayer, cmbNewPointLayer, btnRegister, btnClose });
+            this.Controls.Add(pnlRegister);
 
             this.Load += FormKikai_Load;
             this.FormClosed += (s, e) => {
@@ -348,7 +362,15 @@ namespace Site7DbEditor
         private void FormKikai_Load(object? sender, EventArgs e)
         {
             gbl.FormMain?.SelectKikaiTab();
-            St7Lib.CenterOnMainForm(this);
+
+            // Position dialog neatly on the left side of the main form to maximize map visibility
+            if (gbl.FormMain != null && !gbl.FormMain.IsDisposed)
+            {
+                int posX = gbl.FormMain.Location.X + 80;
+                int posY = gbl.FormMain.Location.Y + 60;
+                this.Location = new Point(posX, posY);
+            }
+
             LoadKijunPoints();
             LoadLayerCombo();
             SuggestNextKikaiName();
@@ -370,7 +392,6 @@ namespace Site7DbEditor
                     cmbPoints[i].Items.Add(label);
                 }
 
-                // If KikaiMan0 already has points
                 if (gbl.KikaiMan0.kr[i] != null && !string.IsNullOrEmpty(gbl.KikaiMan0.kr[i].p.Name))
                 {
                     int idx = cmbPoints[i].FindString(gbl.KikaiMan0.kr[i].p.Name);
@@ -378,7 +399,6 @@ namespace Site7DbEditor
                 }
             }
 
-            // Defaults: 1st point = 0, 2nd point = 1 if available
             if (cmbPoints[0].SelectedIndex < 0 && cmbPoints[0].Items.Count > 0)
                 cmbPoints[0].SelectedIndex = 0;
             if (cmbPoints[1].SelectedIndex < 0 && cmbPoints[1].Items.Count > 1)
@@ -428,23 +448,26 @@ namespace Site7DbEditor
         private void UpdateCardVisibility()
         {
             bool is3Point = (cmbMode.SelectedIndex == 1);
+            int pad = 10;
+            int cardW = 314;
+            int cardH = 116;
+
+            cardPanels[0].Location = new Point(pad, 82);
+            cardPanels[1].Location = new Point(pad, 82 + (cardH + 6));
+            cardPanels[2].Location = new Point(pad, 82 + (cardH + 6) * 2);
             cardPanels[2].Visible = is3Point;
 
             if (is3Point)
             {
-                cardPanels[0].Size = new Size(216, 225);
-                cardPanels[1].Size = new Size(216, 225);
-                cardPanels[0].Location = new Point(16, 75);
-                cardPanels[1].Location = new Point(16 + 216 + 10, 75);
-                cardPanels[2].Location = new Point(16 + (216 + 10) * 2, 75);
+                pnlResult.Location = new Point(pad, 82 + (cardH + 6) * 3);
+                pnlRegister.Location = new Point(pad, 82 + (cardH + 6) * 3 + 126);
+                this.ClientSize = new Size(336, 685);
             }
             else
             {
-                int cardW2 = 328;
-                cardPanels[0].Size = new Size(cardW2, 225);
-                cardPanels[1].Size = new Size(cardW2, 225);
-                cardPanels[0].Location = new Point(16, 75);
-                cardPanels[1].Location = new Point(16 + cardW2 + 12, 75);
+                pnlResult.Location = new Point(pad, 82 + (cardH + 6) * 2);
+                pnlRegister.Location = new Point(pad, 82 + (cardH + 6) * 2 + 126);
+                this.ClientSize = new Size(336, 565);
             }
         }
 
@@ -476,9 +499,9 @@ namespace Site7DbEditor
                 kr.p.X = kikai.X;
                 kr.p.Y = kikai.Y;
                 kr.p.Z = kikai.Z;
-                kr.isSet = false; // reset measurement until measured
+                kr.isSet = false;
 
-                lblBMHeights[tag].Text = $"BM標高: {kikai.Z:F3} m";
+                lblBMHeights[tag].Text = $"BM: {kikai.Z:F3} m";
                 lblDistances[tag].Text = "水平距離: 未測定";
                 lblAngles[tag].Text = "角度: 未測定";
                 lblCalcZs[tag].Text = "計算器械高: --- m";
@@ -522,7 +545,6 @@ namespace Site7DbEditor
             }
             else
             {
-                // TSインスタンスがない場合は即時フォールバック処理
                 ProcessMeasurementResult();
             }
         }
@@ -532,7 +554,6 @@ namespace Site7DbEditor
             TStation ts = gbl.TStation;
             _measureTimeoutCount++;
 
-            // TSが測定処理中の場合は完了を待機 (タイムアウト10秒 = 100カウント)
             if (ts != null && ts.isKikaiDefSet)
             {
                 if (_measureTimeoutCount < 100)
@@ -557,12 +578,10 @@ namespace Site7DbEditor
             var kr = gbl.KikaiMan0.kr[tag];
             if (string.IsNullOrEmpty(kr.p.Name)) return;
 
-            // TSから測定値を取得
             double lng = gbl.MField.lng;
             double angH = gbl.MField.angH;
             double angV = gbl.MField.angV;
 
-            // 未接続・0測定時のマニュアル入力/シミュレーションフォールバック
             if (lng <= 0.001)
             {
                 string prompt = $"【{kr.p.Name}】への測定距離（斜距離 m）を入力してください:";
@@ -574,8 +593,7 @@ namespace Site7DbEditor
                     return;
                 }
 
-                // 仰角 = 90度（水平）、水平角 = tagに応じた時計回り角度
-                angV = 0.25; // 90 deg zenith
+                angV = 0.25;
                 angH = (tag == 0) ? 0.0 : (tag == 1 ? 0.15 : 0.30);
             }
 
@@ -584,13 +602,12 @@ namespace Site7DbEditor
             kr.angV = angV;
             kr.isSet = true;
 
-            // Update UI card for this point
             double lngH = kr.getLngH();
             double kh = gbl.KikaiMan0.kh;
             double mh = gbl.KikaiMan0.mh;
             double calcZ = kr.p.Z + mh - kr.getLngV() - kh;
 
-            lblDistances[tag].Text = $"水平距離: {lngH:F3} m\n(斜距離: {lng:F3} m)";
+            lblDistances[tag].Text = $"水平: {lngH:F3} m ({lng:F3}m)";
             lblAngles[tag].Text = $"仰角: {(angV * 360.0):F1}°  水平角: {(angH * 360.0):F1}°";
             lblCalcZs[tag].Text = $"計算器械高: {calcZ:F3} m";
 
@@ -612,8 +629,8 @@ namespace Site7DbEditor
                     ? "⏳ 1点目・2点目・3点目を指定して測定してください。"
                     : "⏳ 1点目（左側）と2点目（右側）を指定して測定してください。";
                 lblResultStatus.ForeColor = Color.FromArgb(0, 102, 204);
-                lblResultCoords.Text = "器械点座標:\n  X = --- m\n  Y = --- m\n  Z = --- m (算出標高)";
-                lblResultResidual.Text = "交点決定条件:\n  1点目を左側・2点目を右側 (時計回り)\n\n残差 (精度):\n  2D誤差: --- mm\n  標高差: --- mm";
+                lblResultCoords.Text = "器械点座標:\n  X = --- m\n  Y = --- m\n  Z = --- m";
+                lblResultResidual.Text = "交点決定条件:\n  1点目左側・時計回り交点";
                 btnRegister.Enabled = false;
                 gbl.FormMain?.InvalidateMap();
                 return;
@@ -624,19 +641,19 @@ namespace Site7DbEditor
             {
                 var kp = gbl.KikaiMan0.kp;
                 lblResultStatus.Text = is3Point
-                    ? "✔ 後方交会 3点指定による器械点計算が完了しました。"
-                    : "✔ 後方交会 2点指定による器械点計算が完了しました（1点目左・時計回り交点）。";
+                    ? "✔ 3点後方交会 計算完了"
+                    : "✔ 2点後方交会 計算完了（時計回り）";
                 lblResultStatus.ForeColor = Color.FromArgb(0, 150, 50);
 
-                lblResultCoords.Text = $"器械点座標:\n  X = {kp.X:F3} m\n  Y = {kp.Y:F3} m\n  Z = {kp.Z:F3} m (平均器械点標高)";
+                lblResultCoords.Text = $"器械点座標:\n  X = {kp.X:F3} m\n  Y = {kp.Y:F3} m\n  Z = {kp.Z:F3} m";
 
                 if (is3Point)
                 {
-                    lblResultResidual.Text = $"交点精度 (3点重心):\n  2D交点残差: {gbl.KikaiMan0.residual2D:F1} mm\n  標高Z残差: {gbl.KikaiMan0.residualZ:F1} mm";
+                    lblResultResidual.Text = $"交点残差: 2D = {gbl.KikaiMan0.residual2D:F1} mm / Z = {gbl.KikaiMan0.residualZ:F1} mm";
                 }
                 else
                 {
-                    lblResultResidual.Text = $"交点決定条件:\n  1点目左側・時計回り交点\n  標高Z残差: {gbl.KikaiMan0.residualZ:F1} mm";
+                    lblResultResidual.Text = $"標高Z残差: {gbl.KikaiMan0.residualZ:F1} mm (1点目左側交点)";
                 }
 
                 btnRegister.Enabled = true;
@@ -698,9 +715,8 @@ namespace Site7DbEditor
             gbl.KikaiMan.kp.X = newKikai.X;
             gbl.KikaiMan.kp.Y = newKikai.Y;
             gbl.KikaiMan.kp.Z = newKikai.Z;
-            gbl.KikaiMan.bp.set(gbl.KikaiMan0.kr[0].p); // 後視点に1点目を設定
+            gbl.KikaiMan.bp.set(gbl.KikaiMan0.kr[0].p);
 
-            // TSゼロセット
             try
             {
                 gbl.TStation?.SetZero();
