@@ -126,11 +126,22 @@ namespace Site7DbEditor {
 
             if (!gbl.FormMain.isModeKijun()) {
                 if (btnUpdPos.Enabled && chkAutoSet.Checked) {
-                    gbl.FormMain.SetCXYZ(x, y, z);
+                    SendMeasurementToMain(x, y, z);
                     btnUpdPos.Enabled = false;
                 }
             }
 
+        }
+        private void SendMeasurementToMain(double x, double y, double z) {
+            double curS = gbl.MField != null ? Math.Round(gbl.MField.lng, 3) : 0.0;
+            double curV = gbl.MField != null ? Math.Round(gbl.MField.angV * 360.0, 4) : 0.0;
+            double curH = gbl.MField != null ? Math.Round(gbl.MField.angH * 360.0, 4) : 0.0;
+            string kpName = Env.KPName ?? gbl.KikaiMan?.kp?.Name ?? "";
+            string bpName = Env.BPName ?? gbl.KikaiMan?.bp?.Name ?? "";
+            double kph = St7Lib.CheckDouble(Kikaikou1.Text, gbl.KikaiMan?.kh ?? 0.0);
+            double mrh = St7Lib.CheckDouble(Mirrorkou1.Text, gbl.KikaiMan?.mh ?? 0.0);
+
+            gbl.FormMain?.SetCXYZ(x, y, z, curS, curV, curH, kpName, bpName, kph, mrh);
         }
         public void SetTextBoxPos() {
             textBoxX.Text = "********";
@@ -346,7 +357,9 @@ namespace Site7DbEditor {
             if (gbl.FormMain.isModeKijun() && Env.TSGPS == Env.TSGPS_GPS) {
                 gbl.Gps.startGpsCount();
             } else {
-                gbl.FormMain.SetCXYZ(double.Parse(textBoxX.Text), double.Parse(textBoxY.Text), double.Parse(textBoxZ.Text));
+                if (double.TryParse(textBoxX.Text, out double tx) && double.TryParse(textBoxY.Text, out double ty) && double.TryParse(textBoxZ.Text, out double tz)) {
+                    SendMeasurementToMain(tx, ty, tz);
+                }
                 SetTextBoxPos(0, 0, 0);
             }
         }
@@ -516,7 +529,7 @@ namespace Site7DbEditor {
 
                     } else {
                         if (btnUpdPos.Enabled && chkAutoSet.Checked) {
-                            gbl.FormMain.SetCXYZ(p.X, p.Y, p.Z);
+                            SendMeasurementToMain(p.X, p.Y, p.Z);
                         }
                     }
 

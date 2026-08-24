@@ -44,9 +44,9 @@ namespace Site7DbEditor.Services
                         {
                             Id = reader.GetInt64(0),
                             Name = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                            X = reader.IsDBNull(2) ? 0.0 : reader.GetDouble(2),
-                            Y = reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3),
-                            Z = reader.IsDBNull(4) ? 0.0 : reader.GetDouble(4),
+                            X = Math.Round(reader.IsDBNull(2) ? 0.0 : reader.GetDouble(2), 3),
+                            Y = Math.Round(reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3), 3),
+                            Z = Math.Round(reader.IsDBNull(4) ? 0.0 : reader.GetDouble(4), 3),
                             Date = reader.IsDBNull(5) ? "" : reader.GetString(5)
                         });
                     }
@@ -64,9 +64,9 @@ namespace Site7DbEditor.Services
                             Lid = reader.GetInt64(1),
                             Name = reader.IsDBNull(2) ? "" : reader.GetString(2),
                             Mode = reader.IsDBNull(3) ? 0 : reader.GetInt32(3),
-                            X = reader.IsDBNull(4) ? 0.0 : reader.GetDouble(4),
-                            Y = reader.IsDBNull(5) ? 0.0 : reader.GetDouble(5),
-                            Z = reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6),
+                            X = Math.Round(reader.IsDBNull(4) ? 0.0 : reader.GetDouble(4), 3),
+                            Y = Math.Round(reader.IsDBNull(5) ? 0.0 : reader.GetDouble(5), 3),
+                            Z = Math.Round(reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6), 3),
                             Layer = reader.IsDBNull(7) ? 1 : reader.GetInt32(7),
                             Date = reader.IsDBNull(8) ? "" : reader.GetString(8),
                             Precs = reader.IsDBNull(9) ? "" : reader.GetString(9)
@@ -87,18 +87,18 @@ namespace Site7DbEditor.Services
                             Soui = reader.IsDBNull(2) ? "" : reader.GetString(2),
                             Syubetu = reader.IsDBNull(3) ? "" : reader.GetString(3),
                             No = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
-                            X = reader.IsDBNull(5) ? 0.0 : reader.GetDouble(5),
-                            Y = reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6),
-                            Z = reader.IsDBNull(7) ? 0.0 : reader.GetDouble(7),
+                            X = Math.Round(reader.IsDBNull(5) ? 0.0 : reader.GetDouble(5), 3),
+                            Y = Math.Round(reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6), 3),
+                            Z = Math.Round(reader.IsDBNull(7) ? 0.0 : reader.GetDouble(7), 3),
                             Layer = reader.IsDBNull(8) ? 1 : reader.GetInt32(8),
                             Date = reader.IsDBNull(9) ? "" : reader.GetString(9),
-                            S = reader.IsDBNull(10) ? 0.0 : reader.GetDouble(10),
+                            S = Math.Round(reader.IsDBNull(10) ? 0.0 : reader.GetDouble(10), 3),
                             V = reader.IsDBNull(11) ? 0.0 : reader.GetDouble(11),
                             H = reader.IsDBNull(12) ? 0.0 : reader.GetDouble(12),
                             KPName = reader.IsDBNull(13) ? "" : reader.GetString(13),
                             BPName = reader.IsDBNull(14) ? "" : reader.GetString(14),
-                            KPH = reader.IsDBNull(15) ? 0.0 : reader.GetDouble(15),
-                            MRH = reader.IsDBNull(16) ? 0.0 : reader.GetDouble(16)
+                            KPH = Math.Round(reader.IsDBNull(15) ? 0.0 : reader.GetDouble(15), 3),
+                            MRH = Math.Round(reader.IsDBNull(16) ? 0.0 : reader.GetDouble(16), 3)
                         });
                     }
                 }
@@ -115,18 +115,18 @@ namespace Site7DbEditor.Services
                             {
                                 Id = reader.GetInt64(0),
                                 Name = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                X = reader.IsDBNull(2) ? 0.0 : reader.GetDouble(2),
-                                Y = reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3),
-                                Z = reader.IsDBNull(4) ? 0.0 : reader.GetDouble(4),
+                                X = Math.Round(reader.IsDBNull(2) ? 0.0 : reader.GetDouble(2), 3),
+                                Y = Math.Round(reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3), 3),
+                                Z = Math.Round(reader.IsDBNull(4) ? 0.0 : reader.GetDouble(4), 3),
                                 Layer = reader.IsDBNull(5) ? 1 : reader.GetInt32(5),
                                 Date = reader.IsDBNull(6) ? "" : reader.GetString(6),
-                                S = reader.IsDBNull(7) ? 0.0 : reader.GetDouble(7),
+                                S = Math.Round(reader.IsDBNull(7) ? 0.0 : reader.GetDouble(7), 3),
                                 V = reader.IsDBNull(8) ? 0.0 : reader.GetDouble(8),
                                 H = reader.IsDBNull(9) ? 0.0 : reader.GetDouble(9),
                                 KPName = reader.IsDBNull(10) ? "" : reader.GetString(10),
                                 BPName = reader.IsDBNull(11) ? "" : reader.GetString(11),
-                                KPH = reader.IsDBNull(12) ? 0.0 : reader.GetDouble(12),
-                                MRH = reader.IsDBNull(13) ? 0.0 : reader.GetDouble(13)
+                                KPH = Math.Round(reader.IsDBNull(12) ? 0.0 : reader.GetDouble(12), 3),
+                                MRH = Math.Round(reader.IsDBNull(13) ? 0.0 : reader.GetDouble(13), 3)
                             });
                         }
                     }
@@ -182,9 +182,9 @@ namespace Site7DbEditor.Services
                         {
                             cmd.Parameters.AddWithValue("@id", item.Id);
                             cmd.Parameters.AddWithValue("@name", item.Name ?? "");
-                            cmd.Parameters.AddWithValue("@x", item.X);
-                            cmd.Parameters.AddWithValue("@y", item.Y);
-                            cmd.Parameters.AddWithValue("@z", item.Z);
+                            cmd.Parameters.AddWithValue("@x", Math.Round(item.X, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@y", Math.Round(item.Y, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@z", Math.Round(item.Z, 3, MidpointRounding.AwayFromZero));
                             cmd.Parameters.AddWithValue("@date", item.Date ?? "");
                             cmd.ExecuteNonQuery();
                         }
@@ -200,9 +200,9 @@ namespace Site7DbEditor.Services
                             cmd.Parameters.AddWithValue("@lid", item.Lid);
                             cmd.Parameters.AddWithValue("@name", item.Name ?? "");
                             cmd.Parameters.AddWithValue("@mode", item.Mode);
-                            cmd.Parameters.AddWithValue("@x", item.X);
-                            cmd.Parameters.AddWithValue("@y", item.Y);
-                            cmd.Parameters.AddWithValue("@z", item.Z);
+                            cmd.Parameters.AddWithValue("@x", Math.Round(item.X, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@y", Math.Round(item.Y, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@z", Math.Round(item.Z, 3, MidpointRounding.AwayFromZero));
                             cmd.Parameters.AddWithValue("@layer", item.Layer);
                             cmd.Parameters.AddWithValue("@date", item.Date ?? "");
                             cmd.Parameters.AddWithValue("@precs", item.Precs ?? "");
@@ -221,18 +221,18 @@ namespace Site7DbEditor.Services
                             cmd.Parameters.AddWithValue("@soui", item.Soui ?? "");
                             cmd.Parameters.AddWithValue("@syubetu", item.Syubetu ?? "");
                             cmd.Parameters.AddWithValue("@no", item.No);
-                            cmd.Parameters.AddWithValue("@x", item.X);
-                            cmd.Parameters.AddWithValue("@y", item.Y);
-                            cmd.Parameters.AddWithValue("@z", item.Z);
+                            cmd.Parameters.AddWithValue("@x", Math.Round(item.X, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@y", Math.Round(item.Y, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@z", Math.Round(item.Z, 3, MidpointRounding.AwayFromZero));
                             cmd.Parameters.AddWithValue("@layer", item.Layer);
                             cmd.Parameters.AddWithValue("@date", item.Date ?? "");
-                            cmd.Parameters.AddWithValue("@s", item.S);
+                            cmd.Parameters.AddWithValue("@s", Math.Round(item.S, 3, MidpointRounding.AwayFromZero));
                             cmd.Parameters.AddWithValue("@v", item.V);
                             cmd.Parameters.AddWithValue("@h", item.H);
                             cmd.Parameters.AddWithValue("@kpname", item.KPName ?? "");
                             cmd.Parameters.AddWithValue("@bpname", item.BPName ?? "");
-                            cmd.Parameters.AddWithValue("@kph", item.KPH);
-                            cmd.Parameters.AddWithValue("@mrh", item.MRH);
+                            cmd.Parameters.AddWithValue("@kph", Math.Round(item.KPH, 3, MidpointRounding.AwayFromZero));
+                            cmd.Parameters.AddWithValue("@mrh", Math.Round(item.MRH, 3, MidpointRounding.AwayFromZero));
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -247,18 +247,18 @@ namespace Site7DbEditor.Services
                             {
                                 cmd.Parameters.AddWithValue("@id", item.Id);
                                 cmd.Parameters.AddWithValue("@name", item.Name ?? "");
-                                cmd.Parameters.AddWithValue("@x", item.X);
-                                cmd.Parameters.AddWithValue("@y", item.Y);
-                                cmd.Parameters.AddWithValue("@z", item.Z);
+                                cmd.Parameters.AddWithValue("@x", Math.Round(item.X, 3, MidpointRounding.AwayFromZero));
+                                cmd.Parameters.AddWithValue("@y", Math.Round(item.Y, 3, MidpointRounding.AwayFromZero));
+                                cmd.Parameters.AddWithValue("@z", Math.Round(item.Z, 3, MidpointRounding.AwayFromZero));
                                 cmd.Parameters.AddWithValue("@layer", item.Layer);
                                 cmd.Parameters.AddWithValue("@date", item.Date ?? "");
-                                cmd.Parameters.AddWithValue("@s", item.S);
+                                cmd.Parameters.AddWithValue("@s", Math.Round(item.S, 3, MidpointRounding.AwayFromZero));
                                 cmd.Parameters.AddWithValue("@v", item.V);
                                 cmd.Parameters.AddWithValue("@h", item.H);
                                 cmd.Parameters.AddWithValue("@kpname", item.KPName ?? "");
                                 cmd.Parameters.AddWithValue("@bpname", item.BPName ?? "");
-                                cmd.Parameters.AddWithValue("@kph", item.KPH);
-                                cmd.Parameters.AddWithValue("@mrh", item.MRH);
+                                cmd.Parameters.AddWithValue("@kph", Math.Round(item.KPH, 3, MidpointRounding.AwayFromZero));
+                                cmd.Parameters.AddWithValue("@mrh", Math.Round(item.MRH, 3, MidpointRounding.AwayFromZero));
                                 cmd.ExecuteNonQuery();
                             }
                         }

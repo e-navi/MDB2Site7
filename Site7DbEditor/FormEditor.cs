@@ -2324,9 +2324,12 @@ namespace Site7DbEditor {
 
         private void btnUpdatePointRight_Click(object? sender, EventArgs e) {
             int tabIdx = tabControlData.SelectedIndex;
-            double.TryParse(txtCoordX.Text.Trim(), out double x);
-            double.TryParse(txtCoordY.Text.Trim(), out double y);
-            double.TryParse(txtCoordZ.Text.Trim(), out double z);
+            double.TryParse(txtCoordX.Text.Trim(), out double rawX);
+            double.TryParse(txtCoordY.Text.Trim(), out double rawY);
+            double.TryParse(txtCoordZ.Text.Trim(), out double rawZ);
+            double x = Math.Round(rawX, 3, MidpointRounding.AwayFromZero);
+            double y = Math.Round(rawY, 3, MidpointRounding.AwayFromZero);
+            double z = Math.Round(rawZ, 3, MidpointRounding.AwayFromZero);
 
             if (tabIdx == 0) // 遺構
             {
@@ -2336,6 +2339,15 @@ namespace Site7DbEditor {
                         pts[_selectedPointIndex].X = x;
                         pts[_selectedPointIndex].Y = y;
                         pts[_selectedPointIndex].Z = z;
+                        if (_lastMeasureS > 0) {
+                            pts[_selectedPointIndex].S = _lastMeasureS;
+                            pts[_selectedPointIndex].V = _lastMeasureV;
+                            pts[_selectedPointIndex].H = _lastMeasureH;
+                            pts[_selectedPointIndex].KPName = _lastMeasureKp;
+                            pts[_selectedPointIndex].BPName = _lastMeasureBp;
+                            pts[_selectedPointIndex].KPH = _lastMeasureKph;
+                            pts[_selectedPointIndex].MRH = _lastMeasureMrh;
+                        }
 
                         selectedLine.Precs = SqliteManager.FormatPrecsText(pts.ToList());
                         _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
@@ -2359,6 +2371,15 @@ namespace Site7DbEditor {
                     selected.X = x;
                     selected.Y = y;
                     selected.Z = z;
+                    if (_lastMeasureS > 0) {
+                        selected.S = _lastMeasureS;
+                        selected.V = _lastMeasureV;
+                        selected.H = _lastMeasureH;
+                        selected.KPName = _lastMeasureKp;
+                        selected.BPName = _lastMeasureBp;
+                        selected.KPH = _lastMeasureKph;
+                        selected.MRH = _lastMeasureMrh;
+                    }
                     _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IBUTU, selected, original, _db.CurrentDbPath);
                     dgvIbutu.Refresh();
                     picMapCanvas.Invalidate();
@@ -2372,6 +2393,15 @@ namespace Site7DbEditor {
                     selected.X = x;
                     selected.Y = y;
                     selected.Z = z;
+                    if (_lastMeasureS > 0) {
+                        selected.S = _lastMeasureS;
+                        selected.V = _lastMeasureV;
+                        selected.H = _lastMeasureH;
+                        selected.KPName = _lastMeasureKp;
+                        selected.BPName = _lastMeasureBp;
+                        selected.KPH = _lastMeasureKph;
+                        selected.MRH = _lastMeasureMrh;
+                    }
                     _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_KIJUNP, selected, original, _db.CurrentDbPath);
                     dgvKikai.Refresh();
                     picMapCanvas.Invalidate();
@@ -2465,9 +2495,12 @@ namespace Site7DbEditor {
 
         private void btnAddPointRight_Click(object? sender, EventArgs e) {
             int tabIdx = tabControlData.SelectedIndex;
-            double.TryParse(txtCoordX.Text.Trim(), out double x);
-            double.TryParse(txtCoordY.Text.Trim(), out double y);
-            double.TryParse(txtCoordZ.Text.Trim(), out double z);
+            double.TryParse(txtCoordX.Text.Trim(), out double rawX);
+            double.TryParse(txtCoordY.Text.Trim(), out double rawY);
+            double.TryParse(txtCoordZ.Text.Trim(), out double rawZ);
+            double x = Math.Round(rawX, 3, MidpointRounding.AwayFromZero);
+            double y = Math.Round(rawY, 3, MidpointRounding.AwayFromZero);
+            double z = Math.Round(rawZ, 3, MidpointRounding.AwayFromZero);
 
             if (tabIdx == 0) // 遺構 (構成座標)
             {
@@ -2480,7 +2513,15 @@ namespace Site7DbEditor {
                         Pid = nextPid,
                         X = x,
                         Y = y,
-                        Z = z
+                        Z = z,
+                        Date = DateTime.Now.ToString("yyyy/MM/dd"),
+                        S = _lastMeasureS,
+                        V = _lastMeasureV,
+                        H = _lastMeasureH,
+                        KPName = _lastMeasureKp,
+                        BPName = _lastMeasureBp,
+                        KPH = _lastMeasureKph,
+                        MRH = _lastMeasureMrh
                     });
 
                     selectedLine.Precs = SqliteManager.FormatPrecsText(pts);
@@ -2516,7 +2557,14 @@ namespace Site7DbEditor {
                     X = x,
                     Y = y,
                     Z = z,
-                    Date = DateTime.Now.ToString("yyyy/MM/dd")
+                    Date = DateTime.Now.ToString("yyyy/MM/dd"),
+                    S = _lastMeasureS,
+                    V = _lastMeasureV,
+                    H = _lastMeasureH,
+                    KPName = _lastMeasureKp,
+                    BPName = _lastMeasureBp,
+                    KPH = _lastMeasureKph,
+                    MRH = _lastMeasureMrh
                 };
                 int addIdx = _db.IbutuList.Count;
                 _db.IbutuList.Add(newItem);
@@ -2543,7 +2591,14 @@ namespace Site7DbEditor {
                     X = x,
                     Y = y,
                     Z = z,
-                    Date = DateTime.Now.ToString("yyyy/MM/dd")
+                    Date = DateTime.Now.ToString("yyyy/MM/dd"),
+                    S = _lastMeasureS,
+                    V = _lastMeasureV,
+                    H = _lastMeasureH,
+                    KPName = _lastMeasureKp,
+                    BPName = _lastMeasureBp,
+                    KPH = _lastMeasureKph,
+                    MRH = _lastMeasureMrh
                 };
                 int addIdx = _db.KikaiList.Count;
                 _db.KikaiList.Add(newItem);
@@ -3874,20 +3929,44 @@ namespace Site7DbEditor {
             }
         }
 
-        public void SetCXYZ(double x, double y, double z) {
+        private double _lastMeasureS = 0.0;
+        private double _lastMeasureV = 0.0;
+        private double _lastMeasureH = 0.0;
+        private string _lastMeasureKp = "";
+        private string _lastMeasureBp = "";
+        private double _lastMeasureKph = 0.0;
+        private double _lastMeasureMrh = 0.0;
+
+        public void SetCXYZ(double x, double y, double z, double s = 0.0, double v = 0.0, double h = 0.0, string kpName = "", string bpName = "", double kph = 0.0, double mrh = 0.0) {
             if (this.InvokeRequired) {
-                this.BeginInvoke(new Action(() => SetCXYZ(x, y, z)));
+                this.BeginInvoke(new Action(() => SetCXYZ(x, y, z, s, v, h, kpName, bpName, kph, mrh)));
                 return;
             }
 
             if (_db == null)
                 return;
 
+            x = Math.Round(x, 3, MidpointRounding.AwayFromZero);
+            y = Math.Round(y, 3, MidpointRounding.AwayFromZero);
+            z = Math.Round(z, 3, MidpointRounding.AwayFromZero);
+
+            _lastMeasureS = Math.Round(s, 3, MidpointRounding.AwayFromZero);
+            _lastMeasureV = v;
+            _lastMeasureH = h;
+            _lastMeasureKp = kpName ?? "";
+            _lastMeasureBp = bpName ?? "";
+            _lastMeasureKph = Math.Round(kph, 3, MidpointRounding.AwayFromZero);
+            _lastMeasureMrh = Math.Round(mrh, 3, MidpointRounding.AwayFromZero);
+
             txtCoordX.Text = x.ToString("F3");
             txtCoordY.Text = y.ToString("F3");
             txtCoordZ.Text = z.ToString("F3");
 
-            lblDbStatus.Text = $"📡 測量値取り込み: X={x:F3}, Y={y:F3}, Z={z:F3}";
+            if (_lastMeasureS > 0) {
+                lblDbStatus.Text = $"📡 TS測量値: X={x:F3}, Y={y:F3}, Z={z:F3} (S={_lastMeasureS:F3}, V={_lastMeasureV:F2}°, H={_lastMeasureH:F2}°)";
+            } else {
+                lblDbStatus.Text = $"📡 測量値取り込み: X={x:F3}, Y={y:F3}, Z={z:F3}";
+            }
         }
 
         #endregion
