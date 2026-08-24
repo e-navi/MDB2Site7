@@ -44,7 +44,7 @@ namespace Site7DbEditor.Services
         public bool HasCustomNorthArrowPos { get; set; } = false;
 
         public bool ShowScaleBar { get; set; } = true;      // スケールバー表示
-        public string ScaleBarType { get; set; } = "ブロック"; // スケールバー種類 (ブロック, シンプル線, 二重枠, 目盛付き)
+        public string ScaleBarType { get; set; } = "精密線 (下縮尺)"; // スケールバー種類 (精密線 (下縮尺), ブロック, シンプル線, 二重枠, 目盛付き)
         public string ScaleBarPosition { get; set; } = "中下";   // 中下, 右下
 
         // 枠余白・間隔（用紙上のミリメートル単位）
@@ -839,19 +839,72 @@ namespace Site7DbEditor.Services
                 float midX = leftX + (barWidth / 2f);
                 float endX = leftX + barWidth;
 
-                string l0 = "0";
-                string lMid = $"{halfBarMeters:0}";
-                string lEnd = $"{barMeters:0}m (1/{Scale:0})";
+                string scaleStr = (Scale % 1 == 0) ? Scale.ToString("0") : Scale.ToString("0.#");
+                string bottomScaleText = $"(S=1:{scaleStr})";
 
-                if (style == "シンプル線")
+                if (style == "精密線 (下縮尺)" || style == "精密線")
                 {
-                    // 単線＋垂直目盛線
+                    // ユーザー指定デザイン: 基準線＋左半分5分割目盛＋右半分単一区間＋上部0/全長m＋下部中央(S=1:xxx)
                     float lineY = topY + barHeight;
-                    float tickH = barHeight * 1.5f;
+                    float tickH = Math.Max(3.0f, barHeight);
+
+                    // 基準水平線
+                    g.DrawLine(pen, leftX, lineY, endX, lineY);
+
+                    // 0位置目盛 (左端)
+                    g.DrawLine(pen, leftX, lineY, leftX, lineY - tickH);
+
+                    // 左半分の5分割目盛 (1, 2, 3, 4)
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        float subX = leftX + (midX - leftX) * (i / 5f);
+                        g.DrawLine(pen, subX, lineY, subX, lineY - tickH);
+                    }
+
+                    // 中間目盛 (Mid)
+                    g.DrawLine(pen, midX, lineY, midX, lineY - tickH);
+
+                    // 終端目盛 (End)
+                    g.DrawLine(pen, endX, lineY, endX, lineY - tickH);
+
+                    // 上部数値テキスト
+                    string l0 = "0";
+                    string lEnd = $"{barMeters:0.#}m";
+                    var sz0 = g.MeasureString(l0, font);
+                    var szEnd = g.MeasureString(lEnd, font);
+
+                    float textY = lineY - tickH - sz0.Height - 1f;
+                    g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
+                    g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
+
+                    // 下部縮尺テキスト (中央揃え)
+                    var szS = g.MeasureString(bottomScaleText, font);
+                    g.DrawString(bottomScaleText, font, primaryBrush, (leftX + endX) / 2f - (szS.Width / 2f), lineY + 2f);
+                }
+                else if (style == "シンプル線")
+                {
+                    // 単線＋3点垂直目盛線＋下部縮尺
+                    float lineY = topY + barHeight;
+                    float tickH = Math.Max(3.0f, barHeight);
                     g.DrawLine(pen, leftX, lineY, endX, lineY);
                     g.DrawLine(pen, leftX, lineY - tickH, leftX, lineY);
                     g.DrawLine(pen, midX, lineY - tickH, midX, lineY);
                     g.DrawLine(pen, endX, lineY - tickH, endX, lineY);
+
+                    string l0 = "0";
+                    string lMid = $"{halfBarMeters:0.#}";
+                    string lEnd = $"{barMeters:0.#}m";
+                    var sz0 = g.MeasureString(l0, font);
+                    var szMid = g.MeasureString(lMid, font);
+                    var szEnd = g.MeasureString(lEnd, font);
+
+                    float textY = lineY - tickH - sz0.Height - 1f;
+                    g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
+                    g.DrawString(lMid, font, primaryBrush, midX - (szMid.Width / 2f), textY);
+                    g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
+
+                    var szS = g.MeasureString(bottomScaleText, font);
+                    g.DrawString(bottomScaleText, font, primaryBrush, (leftX + endX) / 2f - (szS.Width / 2f), lineY + 2f);
                 }
                 else if (style == "二重枠")
                 {
@@ -859,6 +912,18 @@ namespace Site7DbEditor.Services
                     g.FillRectangle(secondaryBrush, leftX, topY, barWidth, barHeight);
                     g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
                     g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+
+                    string l0 = "0";
+                    string lMid = $"{halfBarMeters:0.#}";
+                    string lEnd = $"{barMeters:0.#}m (1/{scaleStr})";
+                    var sz0 = g.MeasureString(l0, font);
+                    var szMid = g.MeasureString(lMid, font);
+                    var szEnd = g.MeasureString(lEnd, font);
+
+                    float textY = topY - sz0.Height - 1f;
+                    g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
+                    g.DrawString(lMid, font, primaryBrush, midX - (szMid.Width / 2f), textY);
+                    g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
                 }
                 else if (style == "目盛付き")
                 {
@@ -870,6 +935,18 @@ namespace Site7DbEditor.Services
                     g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
                     g.DrawLine(pen, qX, topY, qX, topY + barHeight);
                     g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+
+                    string l0 = "0";
+                    string lMid = $"{halfBarMeters:0.#}";
+                    string lEnd = $"{barMeters:0.#}m (1/{scaleStr})";
+                    var sz0 = g.MeasureString(l0, font);
+                    var szMid = g.MeasureString(lMid, font);
+                    var szEnd = g.MeasureString(lEnd, font);
+
+                    float textY = topY - sz0.Height - 1f;
+                    g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
+                    g.DrawString(lMid, font, primaryBrush, midX - (szMid.Width / 2f), textY);
+                    g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
                 }
                 else // "ブロック" (デフォルト)
                 {
@@ -877,17 +954,19 @@ namespace Site7DbEditor.Services
                     g.FillRectangle(secondaryBrush, midX, topY, barWidth / 2f, barHeight);
                     g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
                     g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+
+                    string l0 = "0";
+                    string lMid = $"{halfBarMeters:0.#}";
+                    string lEnd = $"{barMeters:0.#}m (1/{scaleStr})";
+                    var sz0 = g.MeasureString(l0, font);
+                    var szMid = g.MeasureString(lMid, font);
+                    var szEnd = g.MeasureString(lEnd, font);
+
+                    float textY = topY - sz0.Height - 1f;
+                    g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
+                    g.DrawString(lMid, font, primaryBrush, midX - (szMid.Width / 2f), textY);
+                    g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
                 }
-
-                // 数字テキスト
-                var sz0 = g.MeasureString(l0, font);
-                var szMid = g.MeasureString(lMid, font);
-                var szEnd = g.MeasureString(lEnd, font);
-
-                float textY = topY - sz0.Height - 1f;
-                g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
-                g.DrawString(lMid, font, primaryBrush, midX - (szMid.Width / 2f), textY);
-                g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
             }
         }
 
@@ -1797,7 +1876,7 @@ namespace Site7DbEditor.Services
 
                 ShowScaleBar = Def.GetIniInt("DRAWING_FRAME", "ShowScaleBar", 1) == 1;
                 ScaleBarType = Def.GetIniStr("DRAWING_FRAME", "ScaleBarType");
-                if (string.IsNullOrEmpty(ScaleBarType)) ScaleBarType = "ブロック";
+                if (string.IsNullOrEmpty(ScaleBarType)) ScaleBarType = "精密線 (下縮尺)";
                 ScaleBarPosition = Def.GetIniStr("DRAWING_FRAME", "ScaleBarPosition");
                 if (string.IsNullOrEmpty(ScaleBarPosition)) ScaleBarPosition = "中下";
 

@@ -321,7 +321,7 @@ namespace Site7DbEditor
             frame.NorthArrowPosition = cmbNorthPos.SelectedItem?.ToString() ?? "右上";
 
             frame.ShowScaleBar = chkShowScaleBar.Checked;
-            frame.ScaleBarType = cmbScaleBarType.SelectedItem?.ToString() ?? "ブロック";
+            frame.ScaleBarType = cmbScaleBarType.SelectedItem?.ToString() ?? "精密線 (下縮尺)";
             frame.ScaleBarPosition = cmbScaleBarPos.SelectedItem?.ToString() ?? "中下";
 
             UpdateEffectivePitchLabel();

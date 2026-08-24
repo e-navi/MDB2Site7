@@ -814,6 +814,7 @@ namespace Site7DbEditor
             this.cmbScaleBarType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbScaleBarType.FormattingEnabled = true;
             this.cmbScaleBarType.Items.AddRange(new object[] {
+            "精密線 (下縮尺)",
             "ブロック",
             "シンプル線",
             "二重枠",
