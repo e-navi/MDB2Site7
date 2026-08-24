@@ -1093,7 +1093,7 @@ namespace Site7DbEditor
             // 
             // btnLayerAllOn
             // 
-            btnLayerAllOn.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLayerAllOn.Font = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold);
             btnLayerAllOn.Location = new Point(6, 268);
             btnLayerAllOn.Name = "btnLayerAllOn";
             btnLayerAllOn.Size = new Size(57, 23);
@@ -1103,12 +1103,12 @@ namespace Site7DbEditor
             // 
             // btnLayerAllOff
             // 
-            btnLayerAllOff.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnLayerAllOff.Font = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold);
             btnLayerAllOff.Location = new Point(67, 268);
             btnLayerAllOff.Name = "btnLayerAllOff";
             btnLayerAllOff.Size = new Size(57, 23);
             btnLayerAllOff.TabIndex = 22;
-            btnLayerAllOff.Text = "全";
+            btnLayerAllOff.Text = "全OFF";
             btnLayerAllOff.UseVisualStyleBackColor = true;
             // 
             // btnLayerSettings

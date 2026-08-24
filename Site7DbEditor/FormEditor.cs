@@ -510,6 +510,7 @@ namespace Site7DbEditor {
                         if (!string.IsNullOrEmpty(_db.CurrentDbPath)) {
                             BackgroundImageService.Instance.SaveConfig(_db.CurrentDbPath);
                         }
+                        UpdateBgAndPointCloudCheckboxesState();
                         picMapCanvas.Invalidate();
                     }
                 }
@@ -528,6 +529,7 @@ namespace Site7DbEditor {
                     using (var form = new FormBackgroundSettings(_db)) {
                         if (form.ShowDialog(this) == DialogResult.OK) {
                             if (!string.IsNullOrEmpty(_db.CurrentDbPath)) BackgroundImageService.Instance.SaveConfig(_db.CurrentDbPath);
+                            UpdateBgAndPointCloudCheckboxesState();
                             picMapCanvas.Invalidate();
                         }
                     }
@@ -630,24 +632,62 @@ namespace Site7DbEditor {
 
             btnDrawingFrame.Click += (s, e) => OpenDrawingFrameDialog();
 
-            this.chkShowIkou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkShowIkouName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkShowIbutu.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkShowIbutuName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkShowKikai.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkShowKikaiName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkShowCurve.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
-            this.chkColorByIkou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowIkou.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIkou", chkShowIkou.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkShowIkouName.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIkouName", chkShowIkouName.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkShowIbutu.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIbutu", chkShowIbutu.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkShowIbutuName.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIbutuName", chkShowIbutuName.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkShowKikai.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowKikai", chkShowKikai.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkShowKikaiName.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowKikaiName", chkShowKikaiName.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkShowCurve.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowCurve", chkShowCurve.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
+            this.chkColorByIkou.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ColorByIkou", chkColorByIkou.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
             this.chkWhiteBg.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "WhiteBg", chkWhiteBg.Checked ? 1 : 0);
                 _isDarkMapBackground = !chkWhiteBg.Checked;
                 picMapCanvas.Invalidate();
             };
-            this.chkShowBgImage.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowBgPointCloud.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowGrid.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
-            this.chkShowScale.CheckedChanged += (s, e) => picMapCanvas.Invalidate();
+            this.chkShowBgImage.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowBgImage", chkShowBgImage.Checked ? 1 : 0);
+                picMapCanvas.Invalidate();
+            };
+            this.chkShowBgPointCloud.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowBgPointCloud", chkShowBgPointCloud.Checked ? 1 : 0);
+                picMapCanvas.Invalidate();
+            };
+            this.chkShowGrid.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowGrid", chkShowGrid.Checked ? 1 : 0);
+                picMapCanvas.Invalidate();
+            };
+            this.chkShowScale.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowScale", chkShowScale.Checked ? 1 : 0);
+                picMapCanvas.Invalidate();
+            };
             this.chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
             this.chkShowDrawingFrame.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowDrawingFrame", chkShowDrawingFrame.Checked ? 1 : 0);
                 DrawingFrameService.Instance.IsVisible = this.chkShowDrawingFrame.Checked;
                 DrawingFrameService.Instance.SaveToIni();
                 picMapCanvas.Invalidate();
@@ -655,7 +695,10 @@ namespace Site7DbEditor {
                     _formDrawingFrame.SyncFromService();
                 }
             };
-            this.chkShowHyoukou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
+            this.chkShowHyoukou.CheckedChanged += (s, e) => {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowHyoukou", chkShowHyoukou.Checked ? 1 : 0);
+                picMapCanvas.Invalidate(); picDrawingPreview.Invalidate();
+            };
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
                 picMapCanvas.Invalidate();
@@ -1083,6 +1126,9 @@ namespace Site7DbEditor {
         }
 
         private void FormEditor_Load(object? sender, EventArgs e) {
+            LoadViewSettingsFromIni();
+            UpdateBgAndPointCloudCheckboxesState();
+
             string targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
             if (!string.IsNullOrEmpty(targetDb) && File.Exists(targetDb)) {
                 LoadDatabase(targetDb);
@@ -1154,6 +1200,7 @@ namespace Site7DbEditor {
 
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
                 BackgroundImageService.Instance.LoadConfig(dbPath);
+                UpdateBgAndPointCloudCheckboxesState();
                 LoadMasterDefinitions();
 
                 lblDbStatus.Text = $"✔ {_db.IkouList.Count}遺構 | {_db.IkouLList.Count}線 | {_db.IbutuList.Count}遺物 | {_db.KikaiList.Count}基準点";
@@ -4009,6 +4056,10 @@ namespace Site7DbEditor {
                     e.Cancel = true;
                 }
             }
+
+            if (!e.Cancel) {
+                SaveViewSettingsToIni();
+            }
         }
 
         private void UpdateUndoRedoButtonsState() {
@@ -4548,6 +4599,7 @@ namespace Site7DbEditor {
                 txtCoordZ.Text = p.Z.ToString("F3");
             }
         }
+        #endregion
 
         #region Header Button Helpers (CSV & Backup)
 
@@ -4659,8 +4711,61 @@ namespace Site7DbEditor {
                 MessageBox.Show($"✔ 遺構データ ({_db.IkouLList.Count} 件) をエクスポートしました。", "CSV出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
         #endregion
+
+        #region View Settings & Background State Helpers
+
+        private void LoadViewSettingsFromIni() {
+            try {
+                chkShowKikai.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowKikai", 1) == 1;
+                chkShowKikaiName.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowKikaiName", 1) == 1;
+                chkShowIbutu.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowIbutu", 1) == 1;
+                chkShowIbutuName.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowIbutuName", 0) == 1;
+                chkShowIkou.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowIkou", 1) == 1;
+                chkShowIkouName.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowIkouName", 0) == 1;
+                chkShowHyoukou.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowHyoukou", 0) == 1;
+                chkShowBgImage.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowBgImage", 1) == 1;
+                chkShowBgPointCloud.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowBgPointCloud", 1) == 1;
+                chkShowGrid.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowGrid", 1) == 1;
+                chkShowScale.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowScale", 1) == 1;
+                chkShowDrawingFrame.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowDrawingFrame", 1) == 1;
+
+                chkShowCurve.Checked = Def.GetIniInt("VIEW_SETTINGS", "ShowCurve", 1) == 1;
+                chkColorByIkou.Checked = Def.GetIniInt("VIEW_SETTINGS", "ColorByIkou", 0) == 1;
+                chkWhiteBg.Checked = Def.GetIniInt("VIEW_SETTINGS", "WhiteBg", 0) == 1;
+                _isDarkMapBackground = !chkWhiteBg.Checked;
+            } catch { }
+        }
+
+        private void SaveViewSettingsToIni() {
+            try {
+                Def.SetIniInt("VIEW_SETTINGS", "ShowKikai", chkShowKikai.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowKikaiName", chkShowKikaiName.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIbutu", chkShowIbutu.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIbutuName", chkShowIbutuName.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIkou", chkShowIkou.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowIkouName", chkShowIkouName.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowHyoukou", chkShowHyoukou.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowBgImage", chkShowBgImage.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowBgPointCloud", chkShowBgPointCloud.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowGrid", chkShowGrid.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowScale", chkShowScale.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ShowDrawingFrame", chkShowDrawingFrame.Checked ? 1 : 0);
+
+                Def.SetIniInt("VIEW_SETTINGS", "ShowCurve", chkShowCurve.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "ColorByIkou", chkColorByIkou.Checked ? 1 : 0);
+                Def.SetIniInt("VIEW_SETTINGS", "WhiteBg", chkWhiteBg.Checked ? 1 : 0);
+            } catch { }
+        }
+
+        public void UpdateBgAndPointCloudCheckboxesState() {
+            bool hasBgImage = BackgroundImageService.Instance.LoadedImage != null;
+            bool hasPointCloud = PointCloudService.Instance.HasPoints;
+
+            chkShowBgImage.Enabled = hasBgImage;
+            chkShowBgPointCloud.Enabled = hasPointCloud;
+        }
+
         #endregion
     }
 }
