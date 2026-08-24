@@ -790,7 +790,7 @@ namespace Site7DbEditor.Services
             else
             {
                 // 右下 (内枠に近づける)
-                anchor = GetCornerPoint(innerScreen, "右下", 10f);
+                anchor = GetCornerPoint(innerScreen, "右下", 14f);
             }
 
             double barMeters = (Scale >= 500) ? 50.0 : (Scale >= 200) ? 20.0 : 10.0;
@@ -816,7 +816,7 @@ namespace Site7DbEditor.Services
             var state = g.Save();
             g.TranslateTransform(anchor.X, anchor.Y);
             g.RotateTransform(rotDeg);
-            g.TranslateTransform(0, -9f); // 枠の内側へオフセット (従来の半分に近づける)
+            g.TranslateTransform(0, -14f); // 枠の内側へオフセット (下部縮尺文字が入る適度な余白)
 
             using (var font = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold))
             {
@@ -844,27 +844,27 @@ namespace Site7DbEditor.Services
 
                 if (style == "精密線 (下縮尺)" || style == "精密線")
                 {
-                    // ユーザー指定デザイン: 基準線＋左半分5分割目盛＋右半分単一区間＋上部0/全長m＋下部中央(S=1:xxx)
+                    // ユーザー指定デザイン: 基準線＋左半分5分割目盛（中間4本は半分の長さ）＋右半分単一区間＋上部0/全長m＋下部中央(S=1:xxx)
                     float lineY = topY + barHeight;
                     float tickH = Math.Max(3.0f, barHeight);
 
                     // 基準水平線
                     g.DrawLine(pen, leftX, lineY, endX, lineY);
 
-                    // 0位置目盛 (左端)
+                    // 0位置目盛 (左端) - フル長
                     g.DrawLine(pen, leftX, lineY, leftX, lineY - tickH);
 
-                    // 左半分の5分割目盛 (1, 2, 3, 4)
+                    // 左半分の5分割中間目盛 (1, 2, 3, 4) - 半分の長さ
                     for (int i = 1; i <= 4; i++)
                     {
                         float subX = leftX + (midX - leftX) * (i / 5f);
-                        g.DrawLine(pen, subX, lineY, subX, lineY - tickH);
+                        g.DrawLine(pen, subX, lineY, subX, lineY - (tickH * 0.5f));
                     }
 
-                    // 中間目盛 (Mid)
+                    // 中間目盛 (Mid) - フル長
                     g.DrawLine(pen, midX, lineY, midX, lineY - tickH);
 
-                    // 終端目盛 (End)
+                    // 終端目盛 (End) - フル長
                     g.DrawLine(pen, endX, lineY, endX, lineY - tickH);
 
                     // 上部数値テキスト
@@ -1552,14 +1552,15 @@ namespace Site7DbEditor.Services
                 float barWidth = (float)(barMm * zoom);
                 float barHeight = Math.Max(2.0f, (float)(2.5 * zoom)); // 2.5mm高さ
 
+                float scaleBarOffset = (float)(9.5 * zoom);
                 PointF anchor;
                 if (ScaleBarPosition == "中下")
                 {
-                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - (float)(6.0 * zoom));
+                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - scaleBarOffset);
                 }
                 else
                 {
-                    anchor = new PointF(innerRect.Right - (barWidth / 2f) - (float)(6.0 * zoom), innerRect.Bottom - (float)(6.0 * zoom));
+                    anchor = new PointF(innerRect.Right - (barWidth / 2f) - scaleBarOffset, innerRect.Bottom - scaleBarOffset);
                 }
 
                 float leftX = anchor.X - (barWidth / 2f);
