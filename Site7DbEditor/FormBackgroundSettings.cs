@@ -448,9 +448,9 @@ namespace Site7DbEditor
                 cmbKikai2.Items.Add(new KikaiComboItem { Item = k, DisplayText = text });
             }
 
-            if (cmbKikai1.Items.Count > 0) cmbKikai1.SelectedIndex = 0;
-            if (cmbKikai2.Items.Count > 1) cmbKikai2.SelectedIndex = 1;
-            else if (cmbKikai2.Items.Count > 0) cmbKikai2.SelectedIndex = 0;
+            // 初期状態は未選択
+            cmbKikai1.SelectedIndex = -1;
+            cmbKikai2.SelectedIndex = -1;
         }
 
         private class KikaiComboItem
@@ -467,6 +467,22 @@ namespace Site7DbEditor
                 txtX.Text = kci.Item.X.ToString("F3");
                 txtY.Text = kci.Item.Y.ToString("F3");
             }
+        }
+
+        private void SelectMatchingKikai(ComboBox cmb, double x, double y)
+        {
+            for (int i = 0; i < cmb.Items.Count; i++)
+            {
+                if (cmb.Items[i] is KikaiComboItem kci && kci.Item != null)
+                {
+                    if (Math.Abs(kci.Item.X - x) < 0.001 && Math.Abs(kci.Item.Y - y) < 0.001)
+                    {
+                        cmb.SelectedIndex = i;
+                        return;
+                    }
+                }
+            }
+            cmb.SelectedIndex = -1;
         }
 
         private void LoadCurrentSettings()
@@ -492,6 +508,17 @@ namespace Site7DbEditor
 
                 lblPoint1Pix.Text = $"({_pt1Pix.X:F0}, {_pt1Pix.Y:F0}) px";
                 lblPoint2Pix.Text = $"({_pt2Pix.X:F0}, {_pt2Pix.Y:F0}) px";
+
+                // 設定中座標と一致する基準点名を自動選択
+                SelectMatchingKikai(cmbKikai1, cfg.Pt1_SurveyX, cfg.Pt1_SurveyY);
+                SelectMatchingKikai(cmbKikai2, cfg.Pt2_SurveyX, cfg.Pt2_SurveyY);
+            }
+            else
+            {
+                // 未位置合わせ時は1番目と2番目をデフォルト選択
+                if (cmbKikai1.Items.Count > 0) cmbKikai1.SelectedIndex = 0;
+                if (cmbKikai2.Items.Count > 1) cmbKikai2.SelectedIndex = 1;
+                else if (cmbKikai2.Items.Count > 0) cmbKikai2.SelectedIndex = 0;
             }
 
             trkOpacity.Value = Math.Clamp((int)(cfg.Opacity * 100), 10, 100);
