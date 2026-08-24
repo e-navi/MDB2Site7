@@ -191,6 +191,7 @@ namespace Site7DbEditor
 
             // 方位記号
             this.chkShowNorthArrow.CheckedChanged += (s, e) => OnValueChanged();
+            this.cmbNorthType.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.numNorthSize.ValueChanged += (s, e) => OnValueChanged();
             this.cmbNorthPos.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.btnPickNorthPos.Click += (s, e) => {
@@ -255,6 +256,9 @@ namespace Site7DbEditor
 
                 // 方位記号 & スケールバー
                 chkShowNorthArrow.Checked = frame.ShowNorthArrow;
+                int tIdx = cmbNorthType.FindStringExact(frame.NorthArrowType);
+                cmbNorthType.SelectedIndex = tIdx >= 0 ? tIdx : 0; // Default "標準矢印"
+
                 numNorthSize.Value = (decimal)Math.Max(5.0, frame.NorthArrowSizeMm);
                 int nIdx = cmbNorthPos.FindStringExact(frame.NorthArrowPosition);
                 cmbNorthPos.SelectedIndex = nIdx >= 0 ? nIdx : 0; // Default "右上"
@@ -308,6 +312,7 @@ namespace Site7DbEditor
 
             // 付加
             frame.ShowNorthArrow = chkShowNorthArrow.Checked;
+            frame.NorthArrowType = cmbNorthType.SelectedItem?.ToString() ?? "標準矢印";
             frame.NorthArrowSizeMm = (double)numNorthSize.Value;
             frame.NorthArrowPosition = cmbNorthPos.SelectedItem?.ToString() ?? "右上";
 

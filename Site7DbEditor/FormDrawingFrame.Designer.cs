@@ -61,6 +61,8 @@ namespace Site7DbEditor
             this.numSpacing = new System.Windows.Forms.NumericUpDown();
             this.grpNorthArrow = new System.Windows.Forms.GroupBox();
             this.chkShowNorthArrow = new System.Windows.Forms.CheckBox();
+            this.lblNorthType = new System.Windows.Forms.Label();
+            this.cmbNorthType = new System.Windows.Forms.ComboBox();
             this.lblNorthSize = new System.Windows.Forms.Label();
             this.numNorthSize = new System.Windows.Forms.NumericUpDown();
             this.lblNorthSizeUnit = new System.Windows.Forms.Label();
@@ -638,6 +640,8 @@ namespace Site7DbEditor
             // 
             // grpNorthArrow
             // 
+            this.grpNorthArrow.Controls.Add(this.cmbNorthType);
+            this.grpNorthArrow.Controls.Add(this.lblNorthType);
             this.grpNorthArrow.Controls.Add(this.btnPickNorthPos);
             this.grpNorthArrow.Controls.Add(this.cmbNorthPos);
             this.grpNorthArrow.Controls.Add(this.lblNorthPos);
@@ -659,25 +663,48 @@ namespace Site7DbEditor
             this.chkShowNorthArrow.AutoSize = true;
             this.chkShowNorthArrow.Checked = true;
             this.chkShowNorthArrow.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowNorthArrow.Location = new System.Drawing.Point(8, 20);
+            this.chkShowNorthArrow.Location = new System.Drawing.Point(8, 18);
             this.chkShowNorthArrow.Name = "chkShowNorthArrow";
             this.chkShowNorthArrow.Size = new System.Drawing.Size(122, 19);
             this.chkShowNorthArrow.TabIndex = 0;
             this.chkShowNorthArrow.Text = "方位記号を表示";
             this.chkShowNorthArrow.UseVisualStyleBackColor = true;
             // 
+            // lblNorthType
+            // 
+            this.lblNorthType.AutoSize = true;
+            this.lblNorthType.Location = new System.Drawing.Point(6, 42);
+            this.lblNorthType.Name = "lblNorthType";
+            this.lblNorthType.Size = new System.Drawing.Size(34, 15);
+            this.lblNorthType.TabIndex = 7;
+            this.lblNorthType.Text = "種類:";
+            // 
+            // cmbNorthType
+            // 
+            this.cmbNorthType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbNorthType.FormattingEnabled = true;
+            this.cmbNorthType.Items.AddRange(new object[] {
+            "標準矢印",
+            "シンプル",
+            "円形コンパス",
+            "モダン"});
+            this.cmbNorthType.Location = new System.Drawing.Point(42, 39);
+            this.cmbNorthType.Name = "cmbNorthType";
+            this.cmbNorthType.Size = new System.Drawing.Size(84, 21);
+            this.cmbNorthType.TabIndex = 8;
+            // 
             // lblNorthSize
             // 
             this.lblNorthSize.AutoSize = true;
-            this.lblNorthSize.Location = new System.Drawing.Point(6, 44);
+            this.lblNorthSize.Location = new System.Drawing.Point(128, 42);
             this.lblNorthSize.Name = "lblNorthSize";
-            this.lblNorthSize.Size = new System.Drawing.Size(34, 15);
+            this.lblNorthSize.Size = new System.Drawing.Size(22, 15);
             this.lblNorthSize.TabIndex = 1;
-            this.lblNorthSize.Text = "大きさ:";
+            this.lblNorthSize.Text = "寸:";
             // 
             // numNorthSize
             // 
-            this.numNorthSize.Location = new System.Drawing.Point(48, 41);
+            this.numNorthSize.Location = new System.Drawing.Point(150, 39);
             this.numNorthSize.Maximum = new decimal(new int[] {
             100,
             0,
@@ -689,7 +716,7 @@ namespace Site7DbEditor
             0,
             0});
             this.numNorthSize.Name = "numNorthSize";
-            this.numNorthSize.Size = new System.Drawing.Size(48, 23);
+            this.numNorthSize.Size = new System.Drawing.Size(40, 23);
             this.numNorthSize.TabIndex = 2;
             this.numNorthSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numNorthSize.Value = new decimal(new int[] {
@@ -701,16 +728,16 @@ namespace Site7DbEditor
             // lblNorthSizeUnit
             // 
             this.lblNorthSizeUnit.AutoSize = true;
-            this.lblNorthSizeUnit.Location = new System.Drawing.Point(98, 44);
+            this.lblNorthSizeUnit.Location = new System.Drawing.Point(192, 42);
             this.lblNorthSizeUnit.Name = "lblNorthSizeUnit";
-            this.lblNorthSizeUnit.Size = new System.Drawing.Size(26, 15);
+            this.lblNorthSizeUnit.Size = new System.Drawing.Size(24, 15);
             this.lblNorthSizeUnit.TabIndex = 3;
             this.lblNorthSizeUnit.Text = "mm";
             // 
             // lblNorthPos
             // 
             this.lblNorthPos.AutoSize = true;
-            this.lblNorthPos.Location = new System.Drawing.Point(6, 72);
+            this.lblNorthPos.Location = new System.Drawing.Point(6, 70);
             this.lblNorthPos.Name = "lblNorthPos";
             this.lblNorthPos.Size = new System.Drawing.Size(34, 15);
             this.lblNorthPos.TabIndex = 4;
@@ -726,9 +753,9 @@ namespace Site7DbEditor
             "右下",
             "左下",
             "カスタム"});
-            this.cmbNorthPos.Location = new System.Drawing.Point(48, 69);
+            this.cmbNorthPos.Location = new System.Drawing.Point(42, 67);
             this.cmbNorthPos.Name = "cmbNorthPos";
-            this.cmbNorthPos.Size = new System.Drawing.Size(64, 21);
+            this.cmbNorthPos.Size = new System.Drawing.Size(68, 21);
             this.cmbNorthPos.TabIndex = 5;
             // 
             // btnPickNorthPos
@@ -736,9 +763,9 @@ namespace Site7DbEditor
             this.btnPickNorthPos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.btnPickNorthPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPickNorthPos.Font = new System.Drawing.Font("Yu Gothic UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnPickNorthPos.Location = new System.Drawing.Point(118, 68);
+            this.btnPickNorthPos.Location = new System.Drawing.Point(114, 66);
             this.btnPickNorthPos.Name = "btnPickNorthPos";
-            this.btnPickNorthPos.Size = new System.Drawing.Size(94, 23);
+            this.btnPickNorthPos.Size = new System.Drawing.Size(98, 23);
             this.btnPickNorthPos.TabIndex = 6;
             this.btnPickNorthPos.Text = "📍 マウス指示";
             this.btnPickNorthPos.UseVisualStyleBackColor = false;
@@ -919,6 +946,8 @@ namespace Site7DbEditor
 
         private System.Windows.Forms.GroupBox grpNorthArrow;
         private System.Windows.Forms.CheckBox chkShowNorthArrow;
+        private System.Windows.Forms.Label lblNorthType;
+        private System.Windows.Forms.ComboBox cmbNorthType;
         private System.Windows.Forms.Label lblNorthSize;
         private System.Windows.Forms.NumericUpDown numNorthSize;
         private System.Windows.Forms.Label lblNorthSizeUnit;

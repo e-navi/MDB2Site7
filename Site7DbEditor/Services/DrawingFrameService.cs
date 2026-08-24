@@ -36,6 +36,7 @@ namespace Site7DbEditor.Services
 
         // 付加要素設定
         public bool ShowNorthArrow { get; set; } = true;    // 方位記号表示
+        public string NorthArrowType { get; set; } = "標準矢印"; // 方位記号の種類 (標準矢印, シンプル, 円形コンパス, モダン)
         public double NorthArrowSizeMm { get; set; } = 15.0; // 方位記号サイズ（mm）
         public string NorthArrowPosition { get; set; } = "右上"; // 右上, 左上, 右下, 左下, カスタム
         public double NorthArrowCustomSurveyX { get; set; } = 0.0; // カスタム指定時の測量X
@@ -656,7 +657,7 @@ namespace Site7DbEditor.Services
         }
 
         /// <summary>
-        /// 方位記号（北矢印マーク）の描画
+        /// 方位記号（北矢印）の描画
         /// </summary>
         private void DrawNorthArrow(Graphics g, EditorMapViewController vc, Size canvasSize, PointF[] innerScreen, bool isDarkBackground)
         {
@@ -680,31 +681,97 @@ namespace Site7DbEditor.Services
             float width = length * 0.28f;
 
             // CADマップ上では常に北が画面上向き（真上）
-            float needleRad = 0f;
+            DrawNorthArrowCore(g, anchor, 0f, length, width, NorthArrowType, isDarkBackground, 1.2f, 8.5f);
+        }
+
+        /// <summary>
+        /// 多様なデザインの方位記号（北矢印）を描画する共通メソッド
+        /// </summary>
+        private void DrawNorthArrowCore(Graphics g, PointF anchor, float needleRad, float length, float width, string style, bool isDarkBackground, float penWidth, float fontPt)
+        {
             float cos = (float)Math.Cos(needleRad);
             float sin = (float)Math.Sin(needleRad);
 
-            // 北の先端
-            PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
-            // 尾部中心
-            PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
-            // 左右の翼
-            PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
-            PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
+            Color fg = isDarkBackground ? Color.White : Color.Black;
+            Color bg = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.White;
 
-            using (var blackBrush = new SolidBrush(isDarkBackground ? Color.White : Color.Black))
-            using (var whiteBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.White))
-            using (var outlinePen = new Pen(isDarkBackground ? Color.White : Color.Black, 1.2f))
-            using (var font = new Font("Arial", 8.5F, FontStyle.Bold))
+            using (var blackBrush = new SolidBrush(fg))
+            using (var whiteBrush = new SolidBrush(bg))
+            using (var outlinePen = new Pen(fg, penWidth))
+            using (var font = new Font("Arial", fontPt, FontStyle.Bold, GraphicsUnit.Pixel))
             {
-                g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
-                g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
-                g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
-
                 string nStr = "N";
                 var nSz = g.MeasureString(nStr, font);
-                PointF nPos = new PointF(tip.X - sin * 10f - (nSz.Width / 2f), tip.Y - cos * 10f - (nSz.Height / 2f));
-                g.DrawString(nStr, font, blackBrush, nPos);
+
+                if (style == "シンプル")
+                {
+                    // 細身の直線針＋鋭角矢じり
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
+                    PointF headLeft = new PointF(tip.X + sin * (length * 0.45f) - cos * (width * 0.7f), tip.Y + cos * (length * 0.45f) + sin * (width * 0.7f));
+                    PointF headRight = new PointF(tip.X + sin * (length * 0.45f) + cos * (width * 0.7f), tip.Y + cos * (length * 0.45f) - sin * (width * 0.7f));
+                    PointF headCenter = new PointF(tip.X + sin * (length * 0.35f), tip.Y + cos * (length * 0.35f));
+
+                    g.DrawLine(outlinePen, tip, tail);
+                    g.FillPolygon(blackBrush, new PointF[] { tip, headLeft, headCenter });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, headRight, headCenter });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, headLeft, headCenter, headRight });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+                else if (style == "円形コンパス")
+                {
+                    // 円形枠＋十字＋北針
+                    float radius = length * 0.45f;
+                    g.DrawEllipse(outlinePen, anchor.X - radius, anchor.Y - radius, radius * 2f, radius * 2f);
+
+                    PointF east = new PointF(anchor.X + cos * radius, anchor.Y - sin * radius);
+                    PointF west = new PointF(anchor.X - cos * radius, anchor.Y + sin * radius);
+                    PointF south = new PointF(anchor.X + sin * radius, anchor.Y + cos * radius);
+                    g.DrawLine(outlinePen, east, west);
+                    g.DrawLine(outlinePen, anchor, south);
+
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF leftWing = new PointF(anchor.X - cos * (width * 0.6f), anchor.Y + sin * (width * 0.6f));
+                    PointF rightWing = new PointF(anchor.X + cos * (width * 0.6f), anchor.Y - sin * (width * 0.6f));
+
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, anchor });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, anchor });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, anchor, rightWing });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+                else if (style == "モダン")
+                {
+                    // シャープなモダン矢印（抜きのあるスマートデザイン）
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF tail = new PointF(anchor.X + sin * (length * 0.15f), anchor.Y + cos * (length * 0.15f));
+                    PointF leftWing = new PointF(anchor.X - cos * (width * 0.9f) + sin * (length * 0.35f), anchor.Y + sin * (width * 0.9f) + cos * (length * 0.35f));
+                    PointF rightWing = new PointF(anchor.X + cos * (width * 0.9f) + sin * (length * 0.35f), anchor.Y - sin * (width * 0.9f) + cos * (length * 0.35f));
+
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+                else // "標準矢印" (デフォルト)
+                {
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
+                    PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
+                    PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
+
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
             }
         }
 
@@ -721,8 +788,8 @@ namespace Site7DbEditor.Services
             }
             else
             {
-                // 右下
-                anchor = GetCornerPoint(innerScreen, "右下", 20f);
+                // 右下 (内枠に近づける)
+                anchor = GetCornerPoint(innerScreen, "右下", 10f);
             }
 
             double barMeters = (Scale >= 500) ? 50.0 : (Scale >= 200) ? 20.0 : 10.0;
@@ -748,7 +815,7 @@ namespace Site7DbEditor.Services
             var state = g.Save();
             g.TranslateTransform(anchor.X, anchor.Y);
             g.RotateTransform(rotDeg);
-            g.TranslateTransform(0, -18f); // 枠の内側へオフセット
+            g.TranslateTransform(0, -9f); // 枠の内側へオフセット (従来の半分に近づける)
 
             using (var primaryBrush = new SolidBrush(primaryColor))
             using (var secondaryBrush = new SolidBrush(secondaryColor))
@@ -1330,30 +1397,10 @@ namespace Site7DbEditor.Services
                 float width = length * 0.28f;
                 // 印刷用紙上での北方向（図枠の回転角 RotationAngleDeg に連動）
                 float needleRad = (float)(RotationAngleDeg * Math.PI / 180.0);
-                float cos = (float)Math.Cos(needleRad);
-                float sin = (float)Math.Sin(needleRad);
-
-                PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
-                PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
-                PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
-                PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
-
                 float nArrowPenWidth = Math.Max(0.35f, (float)(0.35 * zoom));
-                float nFontPx = Math.Max(3.5f, (float)(3.5 * zoom));
-                using (var blackBrush = new SolidBrush(Color.Black))
-                using (var whiteBrush = new SolidBrush(Color.White))
-                using (var outlinePen = new Pen(Color.Black, nArrowPenWidth))
-                using (var font = new Font("Arial", nFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
-                {
-                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
-                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
-                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
+                float nFontPx = Math.Max(7.0f, (float)(7.0 * zoom));
 
-                    string nStr = "N";
-                    var nSz = g.MeasureString(nStr, font);
-                    PointF nPos = new PointF(tip.X - sin * (float)(4.0 * zoom) - (nSz.Width / 2f), tip.Y - cos * (float)(4.0 * zoom) - (nSz.Height / 2f));
-                    g.DrawString(nStr, font, blackBrush, nPos);
-                }
+                DrawNorthArrowCore(g, anchor, needleRad, length, width, NorthArrowType, false, nArrowPenWidth, nFontPx);
             }
 
             // 8. スケールバー (Scale Bar) の描画（用紙上で実寸約50mmの長さ）
@@ -1380,11 +1427,11 @@ namespace Site7DbEditor.Services
                 PointF anchor;
                 if (ScaleBarPosition == "中下")
                 {
-                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - (float)(14.0 * zoom));
+                    anchor = new PointF((innerRect.Left + innerRect.Right) / 2f, innerRect.Bottom - (float)(6.0 * zoom));
                 }
                 else
                 {
-                    anchor = new PointF(innerRect.Right - (barWidth / 2f) - (float)(15.0 * zoom), innerRect.Bottom - (float)(14.0 * zoom));
+                    anchor = new PointF(innerRect.Right - (barWidth / 2f) - (float)(6.0 * zoom), innerRect.Bottom - (float)(6.0 * zoom));
                 }
 
                 float leftX = anchor.X - (barWidth / 2f);
@@ -1706,6 +1753,8 @@ namespace Site7DbEditor.Services
                 ShowBorderCoords = Def.GetIniInt("DRAWING_FRAME", "ShowBorderCoords", 1) == 1;
 
                 ShowNorthArrow = Def.GetIniInt("DRAWING_FRAME", "ShowNorthArrow", 1) == 1;
+                NorthArrowType = Def.GetIniStr("DRAWING_FRAME", "NorthArrowType");
+                if (string.IsNullOrEmpty(NorthArrowType)) NorthArrowType = "標準矢印";
                 NorthArrowSizeMm = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowSizeMm", 15.0);
                 NorthArrowPosition = Def.GetIniStr("DRAWING_FRAME", "NorthArrowPosition");
                 if (string.IsNullOrEmpty(NorthArrowPosition)) NorthArrowPosition = "右上";
@@ -1747,6 +1796,7 @@ namespace Site7DbEditor.Services
                 Def.SetIniInt("DRAWING_FRAME", "ShowBorderCoords", ShowBorderCoords ? 1 : 0);
 
                 Def.SetIniInt("DRAWING_FRAME", "ShowNorthArrow", ShowNorthArrow ? 1 : 0);
+                Def.SetIniStr("DRAWING_FRAME", "NorthArrowType", NorthArrowType);
                 Def.SetIniDouble("DRAWING_FRAME", "NorthArrowSizeMm", NorthArrowSizeMm);
                 Def.SetIniStr("DRAWING_FRAME", "NorthArrowPosition", NorthArrowPosition);
                 Def.SetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyX", NorthArrowCustomSurveyX);
