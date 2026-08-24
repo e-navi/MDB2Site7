@@ -331,17 +331,21 @@ namespace Site7DbEditor.Services
             }
 
             // 3.5 Draw Resection Measurement Circles & Candidate Point (後方交会測定距離円＆器械点プレビュー)
-            if (gbl.FormKikai != null && gbl.FormKikai.Visible && gbl.KikaiMan0 != null)
+            if (gbl.KikaiMan0 != null)
             {
-                using (var circlePen1 = new Pen(Color.FromArgb(220, 0, 225, 255), 1.8f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
-                using (var circlePen2 = new Pen(Color.FromArgb(220, 255, 105, 180), 1.8f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
-                using (var circlePen3 = new Pen(Color.FromArgb(220, 255, 215, 0), 1.8f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var circlePen1 = new Pen(Color.FromArgb(230, 0, 220, 255), 2.0f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var circlePen2 = new Pen(Color.FromArgb(230, 255, 105, 180), 2.0f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var circlePen3 = new Pen(Color.FromArgb(230, 255, 215, 0), 2.0f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var centerBrush1 = new SolidBrush(Color.FromArgb(0, 220, 255)))
+                using (var centerBrush2 = new SolidBrush(Color.FromArgb(255, 105, 180)))
+                using (var centerBrush3 = new SolidBrush(Color.FromArgb(255, 215, 0)))
                 using (var guideFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
-                using (var guideTextBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(255, 255, 200) : Color.FromArgb(30, 30, 30)))
+                using (var guideTextBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(255, 255, 200) : Color.FromArgb(20, 20, 20)))
                 using (var candBrush = new SolidBrush(Color.FromArgb(255, 230, 0)))
-                using (var candPen = new Pen(Color.FromArgb(255, 50, 50), 2.0f))
+                using (var candPen = new Pen(Color.FromArgb(255, 50, 50), 2.2f))
                 {
                     Pen[] pens = new Pen[] { circlePen1, circlePen2, circlePen3 };
+                    Brush[] centerBrushes = new Brush[] { centerBrush1, centerBrush2, centerBrush3 };
                     int maxPts = (gbl.KikaiMan0.kmode == gbl.KikaiMan0.KMODE_BI3) ? 3 : 2;
 
                     for (int i = 0; i < maxPts; i++)
@@ -355,9 +359,16 @@ namespace Site7DbEditor.Services
                             float rPx = Math.Abs(rimPt.X - centerPt.X);
                             if (rPx > 1.0f)
                             {
+                                // 中心基準点のハイライト表示
+                                g.FillEllipse(centerBrushes[i % centerBrushes.Length], centerPt.X - 5f, centerPt.Y - 5f, 10f, 10f);
+                                g.DrawEllipse(pens[i % pens.Length], centerPt.X - 7f, centerPt.Y - 7f, 14f, 14f);
+
+                                // 測定水平距離の円
                                 g.DrawEllipse(pens[i % pens.Length], centerPt.X - rPx, centerPt.Y - rPx, rPx * 2, rPx * 2);
-                                string distText = $"{i + 1}点目: {kr.p.Name} (R={rMeters:F3}m)";
-                                g.DrawString(distText, guideFont, guideTextBrush, centerPt.X + rPx * 0.707f + 4, centerPt.Y - rPx * 0.707f - 4);
+
+                                // 距離注記ラベル
+                                string distText = $"{i + 1}点目: {kr.p.Name} (水平距離 R={rMeters:F3}m)";
+                                g.DrawString(distText, guideFont, guideTextBrush, centerPt.X + rPx * 0.707f + 5, centerPt.Y - rPx * 0.707f - 5);
                             }
                         }
                     }

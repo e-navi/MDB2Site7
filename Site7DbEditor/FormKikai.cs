@@ -43,6 +43,7 @@ namespace Site7DbEditor
 
         public FormKikai()
         {
+            gbl.FormKikai = this;
             InitializeComponent();
             BuildUi();
         }
@@ -346,6 +347,7 @@ namespace Site7DbEditor
 
         private void FormKikai_Load(object? sender, EventArgs e)
         {
+            gbl.FormMain?.SelectKikaiTab();
             St7Lib.CenterOnMainForm(this);
             LoadKijunPoints();
             LoadLayerCombo();

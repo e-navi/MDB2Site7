@@ -291,7 +291,7 @@ namespace Site7DbEditor {
             gbl.FormKikaiDef.BringToFront();
         }
         private void SelKikaiTenBackTenBtn1_Click(object sender, EventArgs e) {
-            //gbl.KikaiMan.formMain = this;
+            gbl.FormMain?.SelectKikaiTab();
             gbl.KikaiMan.showForm();
         }
 

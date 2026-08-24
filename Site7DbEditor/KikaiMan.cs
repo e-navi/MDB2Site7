@@ -28,12 +28,15 @@ namespace Site7DbEditor
 
         public double getLngH()
         {
+            if (lng <= 0.0) return 0.0;
+            if (angV <= 0.0001) return lng;
             double lh = lng * Math.Sin(St7Lib.ToRadian(angV * 360.0));
-            return Math.Abs(lh);
+            return Math.Abs(lh) > 0.0001 ? Math.Abs(lh) : lng;
         }
 
         public double getLngV()
         {
+            if (lng <= 0.0 || angV <= 0.0001) return 0.0;
             return lng * Math.Cos(St7Lib.ToRadian(angV * 360.0));
         }
     }

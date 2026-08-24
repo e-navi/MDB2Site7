@@ -47,6 +47,7 @@ namespace Site7DbEditor {
         public EditorDbManager Db => _db;
         public EditorLogService LogService => _logService;
         public void InvalidateMap() { if (picMapCanvas != null && !picMapCanvas.IsDisposed) picMapCanvas.Invalidate(); }
+        public void SelectKikaiTab() { if (tabControlData != null && !tabControlData.IsDisposed) tabControlData.SelectedIndex = 2; }
 
         private UCCtrl _ucCtrl = new UCCtrl();
         private FormBluetoothCtrl? _dlgBth = null;
