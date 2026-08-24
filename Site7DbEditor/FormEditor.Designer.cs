@@ -17,6 +17,9 @@ namespace Site7DbEditor
 
         private void InitializeComponent() {
             panelHeader = new Panel();
+            btnHeaderSettings = new Button();
+            btnHeaderCsv = new Button();
+            btnHeaderSync = new Button();
             lblDbStatus = new Label();
             btnSaveDb = new Button();
             lblSubHeader = new Label();
@@ -28,9 +31,9 @@ namespace Site7DbEditor
             splitMapArea = new SplitContainer();
             picMapCanvas = new PictureBox();
             panelDrawingPreview = new Panel();
+            picDrawingPreview = new PictureBox();
             panelDrawingPreviewHeader = new Panel();
             lblDrawingPreviewTitle = new Label();
-            picDrawingPreview = new PictureBox();
             panelMapRight = new Panel();
             panelRightContent = new Panel();
             panelRightHeader = new Panel();
@@ -198,9 +201,20 @@ namespace Site7DbEditor
             lblStatusCoords = new Label();
             lblStatusMessage = new Label();
             panelMain1 = new Panel();
+            grpYudo = new GroupBox();
+            lblYudo1 = new Label();
+            lblYudo2 = new Label();
+            lblYudo3 = new Label();
             panelHeader.SuspendLayout();
             panelMapArea.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitMapArea).BeginInit();
+            splitMapArea.Panel1.SuspendLayout();
+            splitMapArea.Panel2.SuspendLayout();
+            splitMapArea.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picMapCanvas).BeginInit();
+            panelDrawingPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picDrawingPreview).BeginInit();
+            panelDrawingPreviewHeader.SuspendLayout();
             panelMapRight.SuspendLayout();
             panelRightHeader.SuspendLayout();
             panelMapHeader.SuspendLayout();
@@ -241,11 +255,15 @@ namespace Site7DbEditor
             panelMainRight.SuspendLayout();
             panelStatus.SuspendLayout();
             panelMain1.SuspendLayout();
+            grpYudo.SuspendLayout();
             SuspendLayout();
             // 
             // panelHeader
             // 
             panelHeader.BackColor = Color.FromArgb(27, 28, 46);
+            panelHeader.Controls.Add(btnHeaderSettings);
+            panelHeader.Controls.Add(btnHeaderCsv);
+            panelHeader.Controls.Add(btnHeaderSync);
             panelHeader.Controls.Add(lblDbStatus);
             panelHeader.Controls.Add(btnSaveDb);
             panelHeader.Controls.Add(lblSubHeader);
@@ -255,6 +273,48 @@ namespace Site7DbEditor
             panelHeader.Name = "panelHeader";
             panelHeader.Size = new Size(1520, 45);
             panelHeader.TabIndex = 0;
+            // 
+            // btnHeaderSettings
+            // 
+            btnHeaderSettings.BackColor = Color.FromArgb(45, 52, 80);
+            btnHeaderSettings.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
+            btnHeaderSettings.FlatStyle = FlatStyle.Flat;
+            btnHeaderSettings.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderSettings.ForeColor = Color.White;
+            btnHeaderSettings.Location = new Point(240, 7);
+            btnHeaderSettings.Name = "btnHeaderSettings";
+            btnHeaderSettings.Size = new Size(95, 32);
+            btnHeaderSettings.TabIndex = 7;
+            btnHeaderSettings.Text = "⚙ 各種設定";
+            btnHeaderSettings.UseVisualStyleBackColor = false;
+            // 
+            // btnHeaderCsv
+            // 
+            btnHeaderCsv.BackColor = Color.FromArgb(45, 52, 80);
+            btnHeaderCsv.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
+            btnHeaderCsv.FlatStyle = FlatStyle.Flat;
+            btnHeaderCsv.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderCsv.ForeColor = Color.White;
+            btnHeaderCsv.Location = new Point(342, 7);
+            btnHeaderCsv.Name = "btnHeaderCsv";
+            btnHeaderCsv.Size = new Size(105, 32);
+            btnHeaderCsv.TabIndex = 8;
+            btnHeaderCsv.Text = "📄 CSV入出力";
+            btnHeaderCsv.UseVisualStyleBackColor = false;
+            // 
+            // btnHeaderSync
+            // 
+            btnHeaderSync.BackColor = Color.FromArgb(45, 52, 80);
+            btnHeaderSync.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
+            btnHeaderSync.FlatStyle = FlatStyle.Flat;
+            btnHeaderSync.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderSync.ForeColor = Color.White;
+            btnHeaderSync.Location = new Point(454, 7);
+            btnHeaderSync.Name = "btnHeaderSync";
+            btnHeaderSync.Size = new Size(95, 32);
+            btnHeaderSync.TabIndex = 9;
+            btnHeaderSync.Text = "🔄 同期処理";
+            btnHeaderSync.UseVisualStyleBackColor = false;
             // 
             // lblDbStatus
             // 
@@ -341,8 +401,13 @@ namespace Site7DbEditor
             splitMapArea.Dock = DockStyle.Fill;
             splitMapArea.Location = new Point(0, 35);
             splitMapArea.Name = "splitMapArea";
-            splitMapArea.Orientation = Orientation.Vertical;
+            // 
+            // splitMapArea.Panel1
+            // 
             splitMapArea.Panel1.Controls.Add(picMapCanvas);
+            // 
+            // splitMapArea.Panel2
+            // 
             splitMapArea.Panel2.Controls.Add(panelDrawingPreview);
             splitMapArea.Panel2Collapsed = true;
             splitMapArea.Size = new Size(1126, 490);
@@ -366,8 +431,18 @@ namespace Site7DbEditor
             panelDrawingPreview.Dock = DockStyle.Fill;
             panelDrawingPreview.Location = new Point(0, 0);
             panelDrawingPreview.Name = "panelDrawingPreview";
-            panelDrawingPreview.Size = new Size(560, 490);
+            panelDrawingPreview.Size = new Size(96, 100);
             panelDrawingPreview.TabIndex = 0;
+            // 
+            // picDrawingPreview
+            // 
+            picDrawingPreview.BackColor = Color.FromArgb(32, 34, 44);
+            picDrawingPreview.Dock = DockStyle.Fill;
+            picDrawingPreview.Location = new Point(0, 26);
+            picDrawingPreview.Name = "picDrawingPreview";
+            picDrawingPreview.Size = new Size(96, 74);
+            picDrawingPreview.TabIndex = 1;
+            picDrawingPreview.TabStop = false;
             // 
             // panelDrawingPreviewHeader
             // 
@@ -376,31 +451,21 @@ namespace Site7DbEditor
             panelDrawingPreviewHeader.Dock = DockStyle.Top;
             panelDrawingPreviewHeader.Location = new Point(0, 0);
             panelDrawingPreviewHeader.Name = "panelDrawingPreviewHeader";
-            panelDrawingPreviewHeader.Size = new Size(560, 26);
+            panelDrawingPreviewHeader.Size = new Size(96, 26);
             panelDrawingPreviewHeader.TabIndex = 0;
             // 
             // lblDrawingPreviewTitle
             // 
             lblDrawingPreviewTitle.Dock = DockStyle.Fill;
-            lblDrawingPreviewTitle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDrawingPreviewTitle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblDrawingPreviewTitle.ForeColor = Color.FromArgb(255, 200, 0);
             lblDrawingPreviewTitle.Location = new Point(0, 0);
             lblDrawingPreviewTitle.Name = "lblDrawingPreviewTitle";
             lblDrawingPreviewTitle.Padding = new Padding(8, 0, 0, 0);
-            lblDrawingPreviewTitle.Size = new Size(560, 26);
+            lblDrawingPreviewTitle.Size = new Size(96, 26);
             lblDrawingPreviewTitle.TabIndex = 0;
             lblDrawingPreviewTitle.Text = "📄 図面出力イメージ (プレビュー)";
             lblDrawingPreviewTitle.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // picDrawingPreview
-            // 
-            picDrawingPreview.BackColor = Color.FromArgb(32, 34, 44);
-            picDrawingPreview.Dock = DockStyle.Fill;
-            picDrawingPreview.Location = new Point(0, 26);
-            picDrawingPreview.Name = "picDrawingPreview";
-            picDrawingPreview.Size = new Size(560, 464);
-            picDrawingPreview.TabIndex = 1;
-            picDrawingPreview.TabStop = false;
             // 
             // panelMapRight
             // 
@@ -2112,6 +2177,7 @@ namespace Site7DbEditor
             // 
             // grpPointGuidance
             // 
+            grpPointGuidance.Controls.Add(grpYudo);
             grpPointGuidance.Controls.Add(chkPointGuidance);
             grpPointGuidance.Dock = DockStyle.Right;
             grpPointGuidance.ForeColor = Color.FromArgb(0, 180, 216);
@@ -2448,6 +2514,53 @@ namespace Site7DbEditor
             panelMain1.Size = new Size(1520, 887);
             panelMain1.TabIndex = 5;
             // 
+            // grpYudo
+            // 
+            grpYudo.Controls.Add(lblYudo3);
+            grpYudo.Controls.Add(lblYudo2);
+            grpYudo.Controls.Add(lblYudo1);
+            grpYudo.Location = new Point(12, 62);
+            grpYudo.Name = "grpYudo";
+            grpYudo.Size = new Size(182, 156);
+            grpYudo.TabIndex = 1;
+            grpYudo.TabStop = false;
+            // 
+            // lblYudo1
+            // 
+            lblYudo1.AutoSize = true;
+            lblYudo1.BackColor = Color.Black;
+            lblYudo1.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblYudo1.ForeColor = Color.Red;
+            lblYudo1.Location = new Point(15, 36);
+            lblYudo1.Name = "lblYudo1";
+            lblYudo1.Size = new Size(52, 15);
+            lblYudo1.TabIndex = 1;
+            lblYudo1.Text = "lblYudo1";
+            // 
+            // lblYudo2
+            // 
+            lblYudo2.AutoSize = true;
+            lblYudo2.BackColor = Color.Black;
+            lblYudo2.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblYudo2.ForeColor = Color.Red;
+            lblYudo2.Location = new Point(15, 64);
+            lblYudo2.Name = "lblYudo2";
+            lblYudo2.Size = new Size(54, 15);
+            lblYudo2.TabIndex = 1;
+            lblYudo2.Text = "lblYudo2";
+            // 
+            // lblYudo3
+            // 
+            lblYudo3.AutoSize = true;
+            lblYudo3.BackColor = Color.Black;
+            lblYudo3.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblYudo3.ForeColor = Color.Red;
+            lblYudo3.Location = new Point(15, 93);
+            lblYudo3.Name = "lblYudo3";
+            lblYudo3.Size = new Size(54, 15);
+            lblYudo3.TabIndex = 1;
+            lblYudo3.Text = "lblYudo3";
+            // 
             // FormEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -2464,7 +2577,14 @@ namespace Site7DbEditor
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelMapArea.ResumeLayout(false);
+            splitMapArea.Panel1.ResumeLayout(false);
+            splitMapArea.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitMapArea).EndInit();
+            splitMapArea.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picMapCanvas).EndInit();
+            panelDrawingPreview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picDrawingPreview).EndInit();
+            panelDrawingPreviewHeader.ResumeLayout(false);
             panelMapRight.ResumeLayout(false);
             panelRightHeader.ResumeLayout(false);
             panelRightHeader.PerformLayout();
@@ -2518,12 +2638,17 @@ namespace Site7DbEditor
             panelMainRight.ResumeLayout(false);
             panelStatus.ResumeLayout(false);
             panelMain1.ResumeLayout(false);
+            grpYudo.ResumeLayout(false);
+            grpYudo.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.Panel panelHeader;
+        private System.Windows.Forms.Button btnHeaderSettings;
+        private System.Windows.Forms.Button btnHeaderCsv;
+        private System.Windows.Forms.Button btnHeaderSync;
         private System.Windows.Forms.Label lblHeaderTitle;
         private System.Windows.Forms.Label lblSubHeader;
         private System.Windows.Forms.Button btnOpenDb;
@@ -2716,5 +2841,9 @@ namespace Site7DbEditor
         private CheckBox chkShowDrawingFrame;
         private Label label1;
         private GroupBox grpDspTarget;
+        private GroupBox grpYudo;
+        private Label lblYudo3;
+        private Label lblYudo2;
+        private Label lblYudo1;
     }
 }

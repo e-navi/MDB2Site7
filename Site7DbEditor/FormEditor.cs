@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using Site7DbEditor.Services;
 
@@ -524,6 +525,50 @@ namespace Site7DbEditor {
                 }
             };
 
+            // ヘッダー3大ボタンのイベント
+            btnHeaderSettings.Click += (s, e) => {
+                var menu = new ContextMenuStrip();
+                menu.Items.Add(new ToolStripMenuItem("⚙ マスター定義設定 (Def設定)...", null, (s1, e1) => OpenMasterSettings()));
+                menu.Items.Add(new ToolStripMenuItem("🛰 TS・GPS環境設定...", null, (s1, e1) => {
+                    using (var form = new FormDefEnv()) {
+                        if (form.ShowDialog(this) == DialogResult.OK) picMapCanvas.Invalidate();
+                    }
+                }));
+                menu.Items.Add(new ToolStripMenuItem("🗺 背景画像・CAD設定...", null, (s1, e1) => {
+                    using (var form = new FormBackgroundSettings(_db)) {
+                        if (form.ShowDialog(this) == DialogResult.OK) {
+                            if (!string.IsNullOrEmpty(_db.CurrentDbPath)) BackgroundImageService.Instance.SaveConfig(_db.CurrentDbPath);
+                            picMapCanvas.Invalidate();
+                        }
+                    }
+                }));
+                menu.Items.Add(new ToolStripMenuItem("🎨 レイヤ詳細設定...", null, (s1, e1) => {
+                    using (var form = new FormLayerSettings(_db, LayerGroup.Ikou)) {
+                        if (form.ShowDialog(this) == DialogResult.OK) {
+                            picMapCanvas.Invalidate();
+                            picDrawingPreview.Invalidate();
+                        }
+                    }
+                }));
+                menu.Show(btnHeaderSettings, new Point(0, btnHeaderSettings.Height));
+            };
+
+            btnHeaderCsv.Click += (s, e) => {
+                var menu = new ContextMenuStrip();
+                menu.Items.Add(new ToolStripMenuItem("📤 遺物データ CSVエクスポート...", null, (s1, e1) => ExportIbutuCsv()));
+                menu.Items.Add(new ToolStripMenuItem("📤 基準点データ CSVエクスポート...", null, (s1, e1) => ExportKikaiCsv()));
+                menu.Items.Add(new ToolStripMenuItem("📤 遺構データ CSVエクスポート...", null, (s1, e1) => ExportIkouCsv()));
+                menu.Show(btnHeaderCsv, new Point(0, btnHeaderCsv.Height));
+            };
+
+            btnHeaderSync.Click += (s, e) => {
+                var menu = new ContextMenuStrip();
+                menu.Items.Add(new ToolStripMenuItem("🔄 Wi-Fi データ同期（外業 ↔ 内業）...", null, (s1, e1) => {
+                    MessageBox.Show("Wi-Fiデータ同期機能（差分プレビュー＆マージ）を準備中です。\n次期アップデートで同期ダイアログが実装されます。", "同期処理", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }));
+                menu.Items.Add(new ToolStripMenuItem("📦 現場DBのバックアップを作成...", null, (s1, e1) => CreateDbBackup()));
+                menu.Show(btnHeaderSync, new Point(0, btnHeaderSync.Height));
+            };
 
             btnDetachWindow.Click += (s, e) => {
                 SetBluetoothDisplayMode(true);
@@ -4532,6 +4577,84 @@ namespace Site7DbEditor {
                 txtCoordZ.Text = p.Z.ToString("F3");
             }
         }
+
+        #region Header Button Helpers (CSV & Backup)
+
+        private void CreateDbBackup() {
+            if (string.IsNullOrEmpty(_db.CurrentDbPath) || !File.Exists(_db.CurrentDbPath)) {
+                MessageBox.Show("バックアップ対象のデータベースが開かれていません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try {
+                string dir = Path.GetDirectoryName(_db.CurrentDbPath) ?? "";
+                string backupDir = Path.Combine(dir, "backup");
+                if (!Directory.Exists(backupDir)) Directory.CreateDirectory(backupDir);
+
+                string timeStamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string backupFileName = $"SITE7_backup_{timeStamp}.db";
+                string backupPath = Path.Combine(backupDir, backupFileName);
+
+                File.Copy(_db.CurrentDbPath, backupPath, true);
+                MessageBox.Show($"✔ データベースのバックアップを作成しました:\n\n{backupPath}", "バックアップ完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } catch (Exception ex) {
+                MessageBox.Show($"バックアップ作成中にエラーが発生しました: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ExportIbutuCsv() {
+            if (_db == null || _db.IbutuList.Count == 0) {
+                MessageBox.Show("エクスポート対象の遺物データがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            using var sfd = new SaveFileDialog { Filter = "CSVファイル (*.csv)|*.csv", FileName = "IBUTU.csv" };
+            if (sfd.ShowDialog(this) == DialogResult.OK) {
+                var sb = new StringBuilder();
+                sb.AppendLine("ID,地区,層位,種別,No,X,Y,Z,レイヤ,日付,S,V,H,器械点,後視点,器械高,ミラー高");
+                foreach (var item in _db.IbutuList) {
+                    sb.AppendLine($"{item.Id},{item.Chiku},{item.Soui},{item.Syubetu},{item.No},{item.X:F3},{item.Y:F3},{item.Z:F3},{item.Layer},{item.Date},{item.S:F3},{item.V:F4},{item.H:F4},{item.KPName},{item.BPName},{item.KPH:F3},{item.MRH:F3}");
+                }
+                File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
+                MessageBox.Show($"✔ 遺物データ ({_db.IbutuList.Count} 件) をエクスポートしました。", "CSV出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void ExportKikaiCsv() {
+            if (_db == null || _db.KikaiList.Count == 0) {
+                MessageBox.Show("エクスポート対象の基準点データがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            using var sfd = new SaveFileDialog { Filter = "CSVファイル (*.csv)|*.csv", FileName = "KIKAI.csv" };
+            if (sfd.ShowDialog(this) == DialogResult.OK) {
+                var sb = new StringBuilder();
+                sb.AppendLine("ID,点名,X,Y,Z,レイヤ,日付,S,V,H,器械点,後視点,器械高,ミラー高");
+                foreach (var item in _db.KikaiList) {
+                    sb.AppendLine($"{item.Id},{item.Name},{item.X:F3},{item.Y:F3},{item.Z:F3},{item.Layer},{item.Date},{item.S:F3},{item.V:F4},{item.H:F4},{item.KPName},{item.BPName},{item.KPH:F3},{item.MRH:F3}");
+                }
+                File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
+                MessageBox.Show($"✔ 基準点データ ({_db.KikaiList.Count} 件) をエクスポートしました。", "CSV出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void ExportIkouCsv() {
+            if (_db == null || _db.IkouLList.Count == 0) {
+                MessageBox.Show("エクスポート対象の遺構データがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            using var sfd = new SaveFileDialog { Filter = "CSVファイル (*.csv)|*.csv", FileName = "IKOU.csv" };
+            if (sfd.ShowDialog(this) == DialogResult.OK) {
+                var sb = new StringBuilder();
+                sb.AppendLine("ID,LID,遺構名,開閉,代表X,代表Y,代表Z,レイヤ,日付,構成点数");
+                foreach (var item in _db.IkouLList) {
+                    var pts = SqliteManager.ParsePrecsText(item.Precs);
+                    sb.AppendLine($"{item.Id},{item.Lid},{item.Name},{item.Mode},{item.X:F3},{item.Y:F3},{item.Z:F3},{item.Layer},{item.Date},{pts.Count}");
+                }
+                File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
+                MessageBox.Show($"✔ 遺構データ ({_db.IkouLList.Count} 件) をエクスポートしました。", "CSV出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #endregion
         #endregion
     }
 }
