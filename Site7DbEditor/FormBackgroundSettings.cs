@@ -69,7 +69,7 @@ namespace Site7DbEditor
 
         private void InitializeComponent()
         {
-            this.Text = "背景画像・位置合わせ設定 (2点アライメント)";
+            this.Text = "背景画像・点群設定";
             this.ClientSize = new Size(1060, 640);
             this.MinimumSize = new Size(980, 580);
             this.StartPosition = FormStartPosition.CenterParent;
