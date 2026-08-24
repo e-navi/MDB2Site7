@@ -28,13 +28,44 @@ namespace Site7DbEditor
 
         private void ApplyThemeStyles()
         {
-            this.BackColor = Color.FromArgb(28, 30, 38);
-            
+            this.Text = "図枠設定・印刷";
+            this.BackColor = Color.FromArgb(242, 244, 248);
+            this.ForeColor = Color.FromArgb(30, 30, 30);
+
+            chkPreviewDrawing.ForeColor = Color.FromArgb(25, 45, 80);
+            chkPreviewDrawing.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+
             foreach (TabPage tab in tabSettings.TabPages)
             {
-                tab.BackColor = Color.FromArgb(30, 32, 42);
+                tab.BackColor = Color.White;
                 ApplyGroupStyles(tab);
             }
+
+            // Buttons styling
+            btnResetRotation.BackColor = Color.FromArgb(240, 243, 248);
+            btnResetRotation.ForeColor = Color.FromArgb(40, 40, 40);
+
+            btnMoveCenter.BackColor = Color.FromArgb(219, 234, 254);
+            btnMoveCenter.ForeColor = Color.FromArgb(29, 78, 216);
+            btnMoveCenter.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+
+            btnSetRotation.BackColor = Color.FromArgb(254, 243, 199);
+            btnSetRotation.ForeColor = Color.FromArgb(180, 83, 9);
+            btnSetRotation.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+
+            btnFitAll.BackColor = Color.FromArgb(220, 252, 231);
+            btnFitAll.ForeColor = Color.FromArgb(21, 128, 61);
+            btnFitAll.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+
+            btnPickNorthPos.BackColor = Color.FromArgb(219, 234, 254);
+            btnPickNorthPos.ForeColor = Color.FromArgb(29, 78, 216);
+
+            btnPrint.BackColor = Color.FromArgb(43, 114, 186);
+            btnPrint.ForeColor = Color.White;
+            btnPrint.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+
+            btnClose.BackColor = Color.FromArgb(220, 224, 230);
+            btnClose.ForeColor = Color.Black;
         }
 
         private void ApplyGroupStyles(Control parent)
@@ -43,33 +74,55 @@ namespace Site7DbEditor
             {
                 if (c is GroupBox grp)
                 {
-                    grp.ForeColor = Color.FromArgb(220, 225, 235);
+                    grp.ForeColor = Color.FromArgb(25, 45, 80);
+                    grp.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
                     foreach (Control sub in grp.Controls)
                     {
-                        if (sub is Label lbl && sub != lblEffectivePitch)
+                        if (sub is Label lbl)
                         {
-                            lbl.ForeColor = Color.FromArgb(190, 195, 205);
+                            if (sub == lblEffectivePitch)
+                            {
+                                lbl.ForeColor = Color.FromArgb(20, 120, 40);
+                                lbl.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+                            }
+                            else
+                            {
+                                lbl.ForeColor = Color.FromArgb(60, 60, 60);
+                                lbl.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
+                            }
                         }
                         else if (sub is NumericUpDown num)
                         {
-                            num.BackColor = Color.FromArgb(42, 45, 56);
-                            num.ForeColor = Color.White;
+                            num.BackColor = Color.White;
+                            num.ForeColor = Color.Black;
+                            num.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
                         }
                         else if (sub is ComboBox cmb)
                         {
-                            cmb.BackColor = Color.FromArgb(42, 45, 56);
-                            cmb.ForeColor = Color.White;
+                            cmb.BackColor = Color.White;
+                            cmb.ForeColor = Color.Black;
+                            cmb.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
                         }
                         else if (sub is RadioButton rdo)
                         {
-                            rdo.ForeColor = Color.FromArgb(220, 225, 235);
+                            rdo.ForeColor = Color.FromArgb(40, 40, 40);
+                            rdo.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
                         }
                         else if (sub is CheckBox chk)
                         {
-                            chk.ForeColor = Color.FromArgb(220, 225, 235);
+                            chk.ForeColor = Color.FromArgb(40, 40, 40);
+                            chk.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
                         }
                     }
                 }
+            }
+        }
+
+        private void OnDialogClosing()
+        {
+            if (chkPreviewDrawing.Checked)
+            {
+                chkPreviewDrawing.Checked = false;
             }
         }
 
@@ -80,11 +133,15 @@ namespace Site7DbEditor
                 if (e.CloseReason == CloseReason.UserClosing)
                 {
                     e.Cancel = true;
+                    OnDialogClosing();
                     this.Hide();
                 }
             };
 
-            this.btnClose.Click += (s, e) => this.Hide();
+            this.btnClose.Click += (s, e) => {
+                OnDialogClosing();
+                this.Hide();
+            };
             this.btnPrint.Click += (s, e) => PrintRequested?.Invoke(this, EventArgs.Empty);
 
             // 基本・配置
