@@ -1376,7 +1376,7 @@ namespace Site7DbEditor {
                 int layerIdx = i + 1;
                 var chk = _chkMapLayers[i];
                 var layer = layerSvc.GetLayer(group, layerIdx);
-                Color layerColor = layerSvc.GetColor(group, layerIdx, true);
+                Color layerColor = layerSvc.GetColor(group, layerIdx, false);
 
                 chk.ForeColor = layerColor;
                 chk.Text = layer.Code;
