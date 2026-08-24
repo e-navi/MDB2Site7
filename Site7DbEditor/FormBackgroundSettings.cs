@@ -104,7 +104,7 @@ namespace Site7DbEditor
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(25, 45, 80),
                 Location = new Point(8, 6),
-                Size = new Size(344, 305),
+                Size = new Size(344, 330),
                 BackColor = Color.White
             };
 
@@ -126,31 +126,31 @@ namespace Site7DbEditor
             btnBrowseImage.UseVisualStyleBackColor = false;
             btnBrowseImage.Click += BtnBrowseImage_Click;
 
-            // 基準点 1
-            var lblK1 = new Label { Text = "基準点 1:", Location = new Point(10, 68), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(190, 30, 30) };
-            cmbKikai1.Location = new Point(70, 65);
+            // 基準点 1 (隙間をあけて配置)
+            var lblK1 = new Label { Text = "基準点 1:", Location = new Point(10, 76), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(190, 30, 30) };
+            cmbKikai1.Location = new Point(70, 73);
             cmbKikai1.Size = new Size(264, 23);
             cmbKikai1.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbKikai1.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
             cmbKikai1.SelectedIndexChanged += (s, e) => OnKikaiSelected(cmbKikai1, txtKikai1X, txtKikai1Y);
 
-            var lblX1 = new Label { Text = "X:", Location = new Point(10, 93), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai1X.Location = new Point(26, 90);
+            var lblX1 = new Label { Text = "X:", Location = new Point(10, 102), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
+            txtKikai1X.Location = new Point(26, 99);
             txtKikai1X.Size = new Size(110, 23);
             txtKikai1X.BackColor = Color.White;
             txtKikai1X.ForeColor = Color.Black;
             txtKikai1X.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
 
-            var lblY1 = new Label { Text = "Y:", Location = new Point(142, 93), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai1Y.Location = new Point(158, 90);
+            var lblY1 = new Label { Text = "Y:", Location = new Point(142, 102), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
+            txtKikai1Y.Location = new Point(158, 99);
             txtKikai1Y.Size = new Size(110, 23);
             txtKikai1Y.BackColor = Color.White;
             txtKikai1Y.ForeColor = Color.Black;
             txtKikai1Y.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
 
             btnSetPoint1.Text = "🎯 点1を指示";
-            btnSetPoint1.Location = new Point(10, 116);
-            btnSetPoint1.Size = new Size(126, 25);
+            btnSetPoint1.Location = new Point(10, 126);
+            btnSetPoint1.Size = new Size(126, 26);
             btnSetPoint1.BackColor = Color.FromArgb(254, 226, 226);
             btnSetPoint1.ForeColor = Color.FromArgb(185, 28, 28);
             btnSetPoint1.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
@@ -158,36 +158,36 @@ namespace Site7DbEditor
             btnSetPoint1.Click += (s, e) => SetPickMode(1);
 
             lblPoint1Pix.Text = "未指示";
-            lblPoint1Pix.Location = new Point(142, 120);
+            lblPoint1Pix.Location = new Point(142, 131);
             lblPoint1Pix.AutoSize = true;
             lblPoint1Pix.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             lblPoint1Pix.ForeColor = Color.FromArgb(185, 28, 28);
 
-            // 基準点 2
-            var lblK2 = new Label { Text = "基準点 2:", Location = new Point(10, 147), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(25, 80, 190) };
-            cmbKikai2.Location = new Point(70, 144);
+            // 基準点 2 (隙間をあけて配置)
+            var lblK2 = new Label { Text = "基準点 2:", Location = new Point(10, 163), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(25, 80, 190) };
+            cmbKikai2.Location = new Point(70, 160);
             cmbKikai2.Size = new Size(264, 23);
             cmbKikai2.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbKikai2.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
             cmbKikai2.SelectedIndexChanged += (s, e) => OnKikaiSelected(cmbKikai2, txtKikai2X, txtKikai2Y);
 
-            var lblX2 = new Label { Text = "X:", Location = new Point(10, 172), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai2X.Location = new Point(26, 169);
+            var lblX2 = new Label { Text = "X:", Location = new Point(10, 189), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
+            txtKikai2X.Location = new Point(26, 186);
             txtKikai2X.Size = new Size(110, 23);
             txtKikai2X.BackColor = Color.White;
             txtKikai2X.ForeColor = Color.Black;
             txtKikai2X.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
 
-            var lblY2 = new Label { Text = "Y:", Location = new Point(142, 172), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai2Y.Location = new Point(158, 169);
+            var lblY2 = new Label { Text = "Y:", Location = new Point(142, 189), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
+            txtKikai2Y.Location = new Point(158, 186);
             txtKikai2Y.Size = new Size(110, 23);
             txtKikai2Y.BackColor = Color.White;
             txtKikai2Y.ForeColor = Color.Black;
             txtKikai2Y.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
 
             btnSetPoint2.Text = "🎯 点2を指示";
-            btnSetPoint2.Location = new Point(10, 195);
-            btnSetPoint2.Size = new Size(126, 25);
+            btnSetPoint2.Location = new Point(10, 213);
+            btnSetPoint2.Size = new Size(126, 26);
             btnSetPoint2.BackColor = Color.FromArgb(219, 234, 254);
             btnSetPoint2.ForeColor = Color.FromArgb(29, 78, 216);
             btnSetPoint2.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
@@ -195,17 +195,17 @@ namespace Site7DbEditor
             btnSetPoint2.Click += (s, e) => SetPickMode(2);
 
             lblPoint2Pix.Text = "未指示";
-            lblPoint2Pix.Location = new Point(142, 199);
+            lblPoint2Pix.Location = new Point(142, 218);
             lblPoint2Pix.AutoSize = true;
             lblPoint2Pix.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             lblPoint2Pix.ForeColor = Color.FromArgb(29, 78, 216);
 
-            // 180°反転
+            // 180°反転 (隙間をあけて配置)
             var btnSwap = new Button
             {
                 Text = "🔄 2点を入れ替えて180°反転",
-                Location = new Point(10, 226),
-                Size = new Size(324, 26),
+                Location = new Point(10, 250),
+                Size = new Size(324, 28),
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(40, 40, 40),
                 Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular),
@@ -213,9 +213,9 @@ namespace Site7DbEditor
             };
             btnSwap.Click += (s, e) => SwapPoints();
 
-            // 不透明度
-            var lblOpacity = new Label { Text = "不透明度:", Location = new Point(10, 264), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            trkOpacity.Location = new Point(70, 257);
+            // 不透明度 (隙間をあけて配置)
+            var lblOpacity = new Label { Text = "不透明度:", Location = new Point(10, 292), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
+            trkOpacity.Location = new Point(70, 285);
             trkOpacity.Size = new Size(215, 30);
             trkOpacity.Minimum = 10;
             trkOpacity.Maximum = 100;
@@ -226,7 +226,7 @@ namespace Site7DbEditor
             };
 
             lblOpacityVal.Text = "80%";
-            lblOpacityVal.Location = new Point(288, 264);
+            lblOpacityVal.Location = new Point(288, 292);
             lblOpacityVal.AutoSize = true;
             lblOpacityVal.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             lblOpacityVal.ForeColor = Color.FromArgb(20, 20, 20);
@@ -246,7 +246,7 @@ namespace Site7DbEditor
                 Text = "🌐 点群データ設定",
                 Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(25, 45, 80),
-                Location = new Point(8, 318),
+                Location = new Point(8, 344),
                 Size = new Size(344, 180),
                 BackColor = Color.White
             };
