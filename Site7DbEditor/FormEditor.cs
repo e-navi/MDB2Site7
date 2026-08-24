@@ -515,16 +515,6 @@ namespace Site7DbEditor {
                 }
             };
 
-            btnMasterSettings.Click += (s, e) => OpenMasterSettings();
-
-            btnEnvSettings.Click += (s, e) => {
-                using (var form = new FormDefEnv()) {
-                    if (form.ShowDialog(this) == DialogResult.OK) {
-                        picMapCanvas.Invalidate();
-                    }
-                }
-            };
-
             // ヘッダーボタンのイベント
             btnHeaderSettings.Click += (s, e) => {
                 var menu = new ContextMenuStrip();
@@ -557,7 +547,19 @@ namespace Site7DbEditor {
                 var menu = new ContextMenuStrip();
                 menu.Items.Add(new ToolStripMenuItem("📐 図枠設定・印刷...", null, (s1, e1) => OpenDrawingFrameDialog()));
                 menu.Items.Add(new ToolStripMenuItem("⚡ 一括更新...", null, (s1, e1) => {
-                    tabControlData.SelectedTab = tabBatchUpdate;
+                    using (var form = new FormBatchUpdate(_db)) {
+                        form.ShowDialog(this);
+                        PopulateIkouLineLayerCombo();
+                        PopulateIbutuCombos();
+                        PopulateIkouMasterCombo();
+                        if (dgvIkou.DataSource is BindingList<IkouModel> blIkou)
+                            blIkou.ResetBindings();
+                        if (dgvIbutu.DataSource is BindingList<IbutuModel> blIbutu)
+                            blIbutu.ResetBindings();
+                        if (dgvKikai.DataSource is BindingList<KikaiModel> blKikai)
+                            blKikai.ResetBindings();
+                        picMapCanvas.Invalidate();
+                    }
                 }));
                 menu.Show(btnHeaderTools, new Point(0, btnHeaderTools.Height));
             };
@@ -623,22 +625,6 @@ namespace Site7DbEditor {
                         UpdateLayerCheckboxColors();
                         picMapCanvas.Invalidate();
                     }
-                }
-            };
-
-            btnBatchUpdateModal.Click += (s, e) => {
-                using (var form = new FormBatchUpdate(_db)) {
-                    form.ShowDialog(this);
-                    PopulateIkouLineLayerCombo();
-                    PopulateIbutuCombos();
-                    PopulateIkouMasterCombo();
-                    if (dgvIkou.DataSource is BindingList<IkouModel> blIkou)
-                        blIkou.ResetBindings();
-                    if (dgvIbutu.DataSource is BindingList<IbutuModel> blIbutu)
-                        blIbutu.ResetBindings();
-                    if (dgvKikai.DataSource is BindingList<KikaiModel> blKikai)
-                        blKikai.ResetBindings();
-                    picMapCanvas.Invalidate();
                 }
             };
 
