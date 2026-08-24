@@ -44,6 +44,7 @@ namespace Site7DbEditor.Services
         public bool HasCustomNorthArrowPos { get; set; } = false;
 
         public bool ShowScaleBar { get; set; } = true;      // スケールバー表示
+        public string ScaleBarType { get; set; } = "ブロック"; // スケールバー種類 (ブロック, シンプル線, 二重枠, 目盛付き)
         public string ScaleBarPosition { get; set; } = "中下";   // 中下, 右下
 
         // 枠余白・間隔（用紙上のミリメートル単位）
@@ -817,29 +818,77 @@ namespace Site7DbEditor.Services
             g.RotateTransform(rotDeg);
             g.TranslateTransform(0, -9f); // 枠の内側へオフセット (従来の半分に近づける)
 
-            using (var primaryBrush = new SolidBrush(primaryColor))
-            using (var secondaryBrush = new SolidBrush(secondaryColor))
-            using (var pen = new Pen(primaryColor, 1.2f))
             using (var font = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold))
             {
                 float leftX = -barPixelWidth / 2f;
                 float topY = 0f;
-                float midX = leftX + (barPixelWidth / 2f);
+                DrawScaleBarCore(g, leftX, topY, barPixelWidth, barHeight, barMeters, halfBarMeters, ScaleBarType, primaryColor, secondaryColor, 1.2f, font);
+            }
+            g.Restore(state);
+        }
 
-                g.FillRectangle(primaryBrush, leftX, topY, barPixelWidth / 2f, barHeight);
-                g.FillRectangle(secondaryBrush, midX, topY, barPixelWidth / 2f, barHeight);
-                g.DrawRectangle(pen, leftX, topY, barPixelWidth, barHeight);
-                g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+        /// <summary>
+        /// 多様なデザインのスケールバーを描画する共通メソッド
+        /// </summary>
+        private void DrawScaleBarCore(Graphics g, float leftX, float topY, float barWidth, float barHeight, double barMeters, double halfBarMeters, string style, Color primaryColor, Color secondaryColor, float penWidth, Font font)
+        {
+            using (var primaryBrush = new SolidBrush(primaryColor))
+            using (var secondaryBrush = new SolidBrush(secondaryColor))
+            using (var pen = new Pen(primaryColor, penWidth))
+            {
+                float midX = leftX + (barWidth / 2f);
+                float endX = leftX + barWidth;
 
                 string l0 = "0";
                 string lMid = $"{halfBarMeters:0}";
                 string lEnd = $"{barMeters:0}m (1/{Scale:0})";
 
-                g.DrawString(l0, font, primaryBrush, leftX - 4f, topY - 14f);
-                g.DrawString(lMid, font, primaryBrush, midX - 6f, topY - 14f);
-                g.DrawString(lEnd, font, primaryBrush, leftX + barPixelWidth - 10f, topY - 14f);
+                if (style == "シンプル線")
+                {
+                    // 単線＋垂直目盛線
+                    float lineY = topY + barHeight;
+                    float tickH = barHeight * 1.5f;
+                    g.DrawLine(pen, leftX, lineY, endX, lineY);
+                    g.DrawLine(pen, leftX, lineY - tickH, leftX, lineY);
+                    g.DrawLine(pen, midX, lineY - tickH, midX, lineY);
+                    g.DrawLine(pen, endX, lineY - tickH, endX, lineY);
+                }
+                else if (style == "二重枠")
+                {
+                    // 白抜き枠＋中央分割線
+                    g.FillRectangle(secondaryBrush, leftX, topY, barWidth, barHeight);
+                    g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
+                    g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+                }
+                else if (style == "目盛付き")
+                {
+                    // 左半分をさらに細分化した測量精密スタイル
+                    float qX = leftX + (barWidth / 4f);
+                    g.FillRectangle(primaryBrush, leftX, topY, barWidth / 4f, barHeight);
+                    g.FillRectangle(secondaryBrush, qX, topY, barWidth / 4f, barHeight);
+                    g.FillRectangle(primaryBrush, midX, topY, barWidth / 2f, barHeight);
+                    g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
+                    g.DrawLine(pen, qX, topY, qX, topY + barHeight);
+                    g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+                }
+                else // "ブロック" (デフォルト)
+                {
+                    g.FillRectangle(primaryBrush, leftX, topY, barWidth / 2f, barHeight);
+                    g.FillRectangle(secondaryBrush, midX, topY, barWidth / 2f, barHeight);
+                    g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
+                    g.DrawLine(pen, midX, topY, midX, topY + barHeight);
+                }
+
+                // 数字テキスト
+                var sz0 = g.MeasureString(l0, font);
+                var szMid = g.MeasureString(lMid, font);
+                var szEnd = g.MeasureString(lEnd, font);
+
+                float textY = topY - sz0.Height - 1f;
+                g.DrawString(l0, font, primaryBrush, leftX - (sz0.Width / 2f), textY);
+                g.DrawString(lMid, font, primaryBrush, midX - (szMid.Width / 2f), textY);
+                g.DrawString(lEnd, font, primaryBrush, endX - (szEnd.Width / 2f), textY);
             }
-            g.Restore(state);
         }
 
         private PointF GetCornerPoint(PointF[] corners, string pos, float inset)
@@ -1439,25 +1488,9 @@ namespace Site7DbEditor.Services
 
                 float scaleBarPenWidth = Math.Max(0.35f, (float)(0.35 * zoom));
                 float scaleFontPx = Math.Max(2.8f, (float)(2.6 * zoom));
-                using (var primaryBrush = new SolidBrush(Color.Black))
-                using (var secondaryBrush = new SolidBrush(Color.White))
-                using (var pen = new Pen(Color.Black, scaleBarPenWidth))
                 using (var font = new Font("Yu Gothic UI", scaleFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
                 {
-                    float midX = leftX + (barWidth / 2f);
-                    g.FillRectangle(primaryBrush, leftX, topY, barWidth / 2f, barHeight);
-                    g.FillRectangle(secondaryBrush, midX, topY, barWidth / 2f, barHeight);
-                    g.DrawRectangle(pen, leftX, topY, barWidth, barHeight);
-                    g.DrawLine(pen, midX, topY, midX, topY + barHeight);
-
-                    var sz0 = g.MeasureString("0", font);
-                    var szMid = g.MeasureString($"{halfBarMeters:0.#}", font);
-                    var szEnd = g.MeasureString($"{barMeters:0.#}m (1/{Scale:0})", font);
-
-                    float textY = topY - sz0.Height - (float)(0.8 * zoom);
-                    g.DrawString("0", font, primaryBrush, leftX - (sz0.Width / 2f), textY);
-                    g.DrawString($"{halfBarMeters:0.#}", font, primaryBrush, midX - (szMid.Width / 2f), textY);
-                    g.DrawString($"{barMeters:0.#}m (1/{Scale:0})", font, primaryBrush, leftX + barWidth - (szEnd.Width / 2f), textY);
+                    DrawScaleBarCore(g, leftX, topY, barWidth, barHeight, barMeters, halfBarMeters, ScaleBarType, Color.Black, Color.White, scaleBarPenWidth, font);
                 }
             }
         }
@@ -1763,6 +1796,8 @@ namespace Site7DbEditor.Services
                 HasCustomNorthArrowPos = Def.GetIniInt("DRAWING_FRAME", "HasCustomNorthArrowPos", 0) == 1;
 
                 ShowScaleBar = Def.GetIniInt("DRAWING_FRAME", "ShowScaleBar", 1) == 1;
+                ScaleBarType = Def.GetIniStr("DRAWING_FRAME", "ScaleBarType");
+                if (string.IsNullOrEmpty(ScaleBarType)) ScaleBarType = "ブロック";
                 ScaleBarPosition = Def.GetIniStr("DRAWING_FRAME", "ScaleBarPosition");
                 if (string.IsNullOrEmpty(ScaleBarPosition)) ScaleBarPosition = "中下";
 
@@ -1804,6 +1839,7 @@ namespace Site7DbEditor.Services
                 Def.SetIniInt("DRAWING_FRAME", "HasCustomNorthArrowPos", HasCustomNorthArrowPos ? 1 : 0);
 
                 Def.SetIniInt("DRAWING_FRAME", "ShowScaleBar", ShowScaleBar ? 1 : 0);
+                Def.SetIniStr("DRAWING_FRAME", "ScaleBarType", ScaleBarType);
                 Def.SetIniStr("DRAWING_FRAME", "ScaleBarPosition", ScaleBarPosition);
 
                 Def.SetIniDouble("DRAWING_FRAME", "MarginLeftMm", MarginLeftMm);

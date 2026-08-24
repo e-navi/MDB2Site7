@@ -200,6 +200,7 @@ namespace Site7DbEditor
 
             // スケールバー
             this.chkShowScaleBar.CheckedChanged += (s, e) => OnValueChanged();
+            this.cmbScaleBarType.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.cmbScaleBarPos.SelectedIndexChanged += (s, e) => OnValueChanged();
         }
 
@@ -264,6 +265,9 @@ namespace Site7DbEditor
                 cmbNorthPos.SelectedIndex = nIdx >= 0 ? nIdx : 0; // Default "右上"
 
                 chkShowScaleBar.Checked = frame.ShowScaleBar;
+                int stIdx = cmbScaleBarType.FindStringExact(frame.ScaleBarType);
+                cmbScaleBarType.SelectedIndex = stIdx >= 0 ? stIdx : 0; // Default "ブロック"
+
                 int sIdx = cmbScaleBarPos.FindStringExact(frame.ScaleBarPosition);
                 cmbScaleBarPos.SelectedIndex = sIdx >= 0 ? sIdx : 0; // Default "中下"
             }
@@ -317,6 +321,7 @@ namespace Site7DbEditor
             frame.NorthArrowPosition = cmbNorthPos.SelectedItem?.ToString() ?? "右上";
 
             frame.ShowScaleBar = chkShowScaleBar.Checked;
+            frame.ScaleBarType = cmbScaleBarType.SelectedItem?.ToString() ?? "ブロック";
             frame.ScaleBarPosition = cmbScaleBarPos.SelectedItem?.ToString() ?? "中下";
 
             UpdateEffectivePitchLabel();

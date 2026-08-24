@@ -71,6 +71,8 @@ namespace Site7DbEditor
             this.btnPickNorthPos = new System.Windows.Forms.Button();
             this.grpScaleBar = new System.Windows.Forms.GroupBox();
             this.chkShowScaleBar = new System.Windows.Forms.CheckBox();
+            this.lblScaleBarType = new System.Windows.Forms.Label();
+            this.cmbScaleBarType = new System.Windows.Forms.ComboBox();
             this.lblScaleBarPos = new System.Windows.Forms.Label();
             this.cmbScaleBarPos = new System.Windows.Forms.ComboBox();
             this.btnClose = new System.Windows.Forms.Button();
@@ -772,6 +774,8 @@ namespace Site7DbEditor
             // 
             // grpScaleBar
             // 
+            this.grpScaleBar.Controls.Add(this.cmbScaleBarType);
+            this.grpScaleBar.Controls.Add(this.lblScaleBarType);
             this.grpScaleBar.Controls.Add(this.cmbScaleBarPos);
             this.grpScaleBar.Controls.Add(this.lblScaleBarPos);
             this.grpScaleBar.Controls.Add(this.chkShowScaleBar);
@@ -789,21 +793,44 @@ namespace Site7DbEditor
             this.chkShowScaleBar.AutoSize = true;
             this.chkShowScaleBar.Checked = true;
             this.chkShowScaleBar.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowScaleBar.Location = new System.Drawing.Point(8, 20);
+            this.chkShowScaleBar.Location = new System.Drawing.Point(8, 18);
             this.chkShowScaleBar.Name = "chkShowScaleBar";
             this.chkShowScaleBar.Size = new System.Drawing.Size(122, 19);
             this.chkShowScaleBar.TabIndex = 0;
             this.chkShowScaleBar.Text = "スケールバーを表示";
             this.chkShowScaleBar.UseVisualStyleBackColor = true;
             // 
+            // lblScaleBarType
+            // 
+            this.lblScaleBarType.AutoSize = true;
+            this.lblScaleBarType.Location = new System.Drawing.Point(6, 42);
+            this.lblScaleBarType.Name = "lblScaleBarType";
+            this.lblScaleBarType.Size = new System.Drawing.Size(34, 15);
+            this.lblScaleBarType.TabIndex = 3;
+            this.lblScaleBarType.Text = "種類:";
+            // 
+            // cmbScaleBarType
+            // 
+            this.cmbScaleBarType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbScaleBarType.FormattingEnabled = true;
+            this.cmbScaleBarType.Items.AddRange(new object[] {
+            "ブロック",
+            "シンプル線",
+            "二重枠",
+            "目盛付き"});
+            this.cmbScaleBarType.Location = new System.Drawing.Point(42, 39);
+            this.cmbScaleBarType.Name = "cmbScaleBarType";
+            this.cmbScaleBarType.Size = new System.Drawing.Size(76, 21);
+            this.cmbScaleBarType.TabIndex = 4;
+            // 
             // lblScaleBarPos
             // 
             this.lblScaleBarPos.AutoSize = true;
-            this.lblScaleBarPos.Location = new System.Drawing.Point(6, 46);
+            this.lblScaleBarPos.Location = new System.Drawing.Point(122, 42);
             this.lblScaleBarPos.Name = "lblScaleBarPos";
-            this.lblScaleBarPos.Size = new System.Drawing.Size(56, 15);
+            this.lblScaleBarPos.Size = new System.Drawing.Size(34, 15);
             this.lblScaleBarPos.TabIndex = 1;
-            this.lblScaleBarPos.Text = "配置位置:";
+            this.lblScaleBarPos.Text = "位置:";
             // 
             // cmbScaleBarPos
             // 
@@ -812,9 +839,9 @@ namespace Site7DbEditor
             this.cmbScaleBarPos.Items.AddRange(new object[] {
             "中下",
             "右下"});
-            this.cmbScaleBarPos.Location = new System.Drawing.Point(68, 43);
+            this.cmbScaleBarPos.Location = new System.Drawing.Point(158, 39);
             this.cmbScaleBarPos.Name = "cmbScaleBarPos";
-            this.cmbScaleBarPos.Size = new System.Drawing.Size(80, 21);
+            this.cmbScaleBarPos.Size = new System.Drawing.Size(54, 21);
             this.cmbScaleBarPos.TabIndex = 2;
             // 
             // btnClose
@@ -957,6 +984,8 @@ namespace Site7DbEditor
 
         private System.Windows.Forms.GroupBox grpScaleBar;
         private System.Windows.Forms.CheckBox chkShowScaleBar;
+        private System.Windows.Forms.Label lblScaleBarType;
+        private System.Windows.Forms.ComboBox cmbScaleBarType;
         private System.Windows.Forms.Label lblScaleBarPos;
         private System.Windows.Forms.ComboBox cmbScaleBarPos;
 
