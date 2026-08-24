@@ -1365,17 +1365,6 @@ namespace Site7DbEditor.Services
                             }
                         }
 
-                        // 頂点マーク
-                        float vMarkSize = Math.Max(1.0f, (float)(0.6 * zoom));
-                        using (var vBrush = new SolidBrush(color))
-                        {
-                            foreach (var p in pts)
-                            {
-                                PointF sp = SurveyToPaperScreen(p.X, p.Y);
-                                g.FillRectangle(vBrush, sp.X - vMarkSize / 2f, sp.Y - vMarkSize / 2f, vMarkSize, vMarkSize);
-                            }
-                        }
-
                         // 遺構線名ラベル (実寸 3.0mm 高さ)
                         if (showIkouName && !string.IsNullOrEmpty(line.Name))
                         {
