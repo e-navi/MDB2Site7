@@ -18,6 +18,7 @@ namespace Site7DbEditor
         private void InitializeComponent() {
             panelHeader = new Panel();
             btnHeaderSettings = new Button();
+            btnHeaderTools = new Button();
             btnHeaderCsv = new Button();
             btnHeaderSync = new Button();
             lblDbStatus = new Label();
@@ -262,6 +263,7 @@ namespace Site7DbEditor
             // 
             panelHeader.BackColor = Color.FromArgb(27, 28, 46);
             panelHeader.Controls.Add(btnHeaderSettings);
+            panelHeader.Controls.Add(btnHeaderTools);
             panelHeader.Controls.Add(btnHeaderCsv);
             panelHeader.Controls.Add(btnHeaderSync);
             panelHeader.Controls.Add(lblDbStatus);
@@ -281,12 +283,26 @@ namespace Site7DbEditor
             btnHeaderSettings.FlatStyle = FlatStyle.Flat;
             btnHeaderSettings.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnHeaderSettings.ForeColor = Color.White;
-            btnHeaderSettings.Location = new Point(240, 7);
+            btnHeaderSettings.Location = new Point(235, 7);
             btnHeaderSettings.Name = "btnHeaderSettings";
             btnHeaderSettings.Size = new Size(95, 32);
             btnHeaderSettings.TabIndex = 7;
             btnHeaderSettings.Text = "⚙ 各種設定";
             btnHeaderSettings.UseVisualStyleBackColor = false;
+            // 
+            // btnHeaderTools
+            // 
+            btnHeaderTools.BackColor = Color.FromArgb(45, 52, 80);
+            btnHeaderTools.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
+            btnHeaderTools.FlatStyle = FlatStyle.Flat;
+            btnHeaderTools.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderTools.ForeColor = Color.White;
+            btnHeaderTools.Location = new Point(336, 7);
+            btnHeaderTools.Name = "btnHeaderTools";
+            btnHeaderTools.Size = new Size(95, 32);
+            btnHeaderTools.TabIndex = 8;
+            btnHeaderTools.Text = "🛠 各種ツール";
+            btnHeaderTools.UseVisualStyleBackColor = false;
             // 
             // btnHeaderCsv
             // 
@@ -295,10 +311,10 @@ namespace Site7DbEditor
             btnHeaderCsv.FlatStyle = FlatStyle.Flat;
             btnHeaderCsv.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnHeaderCsv.ForeColor = Color.White;
-            btnHeaderCsv.Location = new Point(342, 7);
+            btnHeaderCsv.Location = new Point(437, 7);
             btnHeaderCsv.Name = "btnHeaderCsv";
-            btnHeaderCsv.Size = new Size(105, 32);
-            btnHeaderCsv.TabIndex = 8;
+            btnHeaderCsv.Size = new Size(100, 32);
+            btnHeaderCsv.TabIndex = 9;
             btnHeaderCsv.Text = "📄 CSV入出力";
             btnHeaderCsv.UseVisualStyleBackColor = false;
             // 
@@ -309,10 +325,10 @@ namespace Site7DbEditor
             btnHeaderSync.FlatStyle = FlatStyle.Flat;
             btnHeaderSync.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnHeaderSync.ForeColor = Color.White;
-            btnHeaderSync.Location = new Point(454, 7);
+            btnHeaderSync.Location = new Point(543, 7);
             btnHeaderSync.Name = "btnHeaderSync";
             btnHeaderSync.Size = new Size(95, 32);
-            btnHeaderSync.TabIndex = 9;
+            btnHeaderSync.TabIndex = 10;
             btnHeaderSync.Text = "🔄 同期処理";
             btnHeaderSync.UseVisualStyleBackColor = false;
             // 
@@ -2647,6 +2663,7 @@ namespace Site7DbEditor
 
         private System.Windows.Forms.Panel panelHeader;
         private System.Windows.Forms.Button btnHeaderSettings;
+        private System.Windows.Forms.Button btnHeaderTools;
         private System.Windows.Forms.Button btnHeaderCsv;
         private System.Windows.Forms.Button btnHeaderSync;
         private System.Windows.Forms.Label lblHeaderTitle;

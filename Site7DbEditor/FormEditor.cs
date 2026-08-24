@@ -525,7 +525,7 @@ namespace Site7DbEditor {
                 }
             };
 
-            // ヘッダー3大ボタンのイベント
+            // ヘッダーボタンのイベント
             btnHeaderSettings.Click += (s, e) => {
                 var menu = new ContextMenuStrip();
                 menu.Items.Add(new ToolStripMenuItem("⚙ マスター定義設定 (Def設定)...", null, (s1, e1) => OpenMasterSettings()));
@@ -553,11 +553,30 @@ namespace Site7DbEditor {
                 menu.Show(btnHeaderSettings, new Point(0, btnHeaderSettings.Height));
             };
 
+            btnHeaderTools.Click += (s, e) => {
+                var menu = new ContextMenuStrip();
+                menu.Items.Add(new ToolStripMenuItem("📐 図枠設定・印刷...", null, (s1, e1) => OpenDrawingFrameDialog()));
+                menu.Items.Add(new ToolStripMenuItem("⚡ 一括更新...", null, (s1, e1) => {
+                    tabControlData.SelectedTab = tabBatchUpdate;
+                }));
+                menu.Show(btnHeaderTools, new Point(0, btnHeaderTools.Height));
+            };
+
             btnHeaderCsv.Click += (s, e) => {
                 var menu = new ContextMenuStrip();
                 menu.Items.Add(new ToolStripMenuItem("📤 遺物データ CSVエクスポート...", null, (s1, e1) => ExportIbutuCsv()));
                 menu.Items.Add(new ToolStripMenuItem("📤 基準点データ CSVエクスポート...", null, (s1, e1) => ExportKikaiCsv()));
                 menu.Items.Add(new ToolStripMenuItem("📤 遺構データ CSVエクスポート...", null, (s1, e1) => ExportIkouCsv()));
+                menu.Items.Add(new ToolStripSeparator());
+                menu.Items.Add(new ToolStripMenuItem("📥 遺物データ CSVインポート...", null, (s1, e1) => {
+                    MessageBox.Show("遺物データのCSVインポート機能は準備中です。", "CSVインポート", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }));
+                menu.Items.Add(new ToolStripMenuItem("📥 基準点データ CSVインポート...", null, (s1, e1) => {
+                    MessageBox.Show("基準点データのCSVインポート機能は準備中です。", "CSVインポート", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }));
+                menu.Items.Add(new ToolStripMenuItem("📥 遺構データ CSVインポート...", null, (s1, e1) => {
+                    MessageBox.Show("遺構データのCSVインポート機能は準備中です。", "CSVインポート", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }));
                 menu.Show(btnHeaderCsv, new Point(0, btnHeaderCsv.Height));
             };
 
@@ -623,41 +642,7 @@ namespace Site7DbEditor {
                 }
             };
 
-            btnDrawingFrame.Click += (s, e) => {
-                if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
-                    _formDrawingFrame = new FormDrawingFrame(_db);
-                    _formDrawingFrame.FrameChanged += (sender, ev) => {
-                        chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
-                        picMapCanvas.Invalidate();
-                        UpdateDrawingPreviewState();
-                    };
-                    _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
-                    _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
-                    _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
-                    _formDrawingFrame.PrintRequested += (sender, ev) => ExecutePrintDrawing();
-                }
-                _formDrawingFrame.SyncFromService();
-                UpdateDrawingPreviewState();
-                if (!_formDrawingFrame.Visible) {
-                    // ヘッダー直下の左上端（添付画像の位置）に配置
-                    Point targetPos = this.PointToScreen(new Point(0, panelHeader.Height));
-                    var screen = Screen.FromControl(this);
-                    if (targetPos.X + _formDrawingFrame.Width > screen.WorkingArea.Right)
-                        targetPos.X = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;
-                    if (targetPos.X < screen.WorkingArea.Left)
-                        targetPos.X = screen.WorkingArea.Left;
-                    if (targetPos.Y + _formDrawingFrame.Height > screen.WorkingArea.Bottom)
-                        targetPos.Y = screen.WorkingArea.Bottom - _formDrawingFrame.Height - 10;
-                    if (targetPos.Y < screen.WorkingArea.Top)
-                        targetPos.Y = screen.WorkingArea.Top;
-
-                    _formDrawingFrame.StartPosition = FormStartPosition.Manual;
-                    _formDrawingFrame.Location = targetPos;
-                    _formDrawingFrame.Show(this);
-                } else {
-                    _formDrawingFrame.BringToFront();
-                }
-            };
+            btnDrawingFrame.Click += (s, e) => OpenDrawingFrameDialog();
 
             this.chkShowIkou.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
             this.chkShowIkouName.CheckedChanged += (s, e) => { picMapCanvas.Invalidate(); picDrawingPreview.Invalidate(); };
@@ -4579,6 +4564,41 @@ namespace Site7DbEditor {
         }
 
         #region Header Button Helpers (CSV & Backup)
+
+        private void OpenDrawingFrameDialog() {
+            if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed) {
+                _formDrawingFrame = new FormDrawingFrame(_db);
+                _formDrawingFrame.FrameChanged += (sender, ev) => {
+                    chkShowDrawingFrame.Checked = DrawingFrameService.Instance.IsVisible;
+                    picMapCanvas.Invalidate();
+                    UpdateDrawingPreviewState();
+                };
+                _formDrawingFrame.MoveCenterRequested += (sender, ev) => StartMoveFrameCenterMode();
+                _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
+                _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
+                _formDrawingFrame.PrintRequested += (sender, ev) => ExecutePrintDrawing();
+            }
+            _formDrawingFrame.SyncFromService();
+            UpdateDrawingPreviewState();
+            if (!_formDrawingFrame.Visible) {
+                Point targetPos = this.PointToScreen(new Point(0, panelHeader.Height));
+                var screen = Screen.FromControl(this);
+                if (targetPos.X + _formDrawingFrame.Width > screen.WorkingArea.Right)
+                    targetPos.X = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;
+                if (targetPos.X < screen.WorkingArea.Left)
+                    targetPos.X = screen.WorkingArea.Left;
+                if (targetPos.Y + _formDrawingFrame.Height > screen.WorkingArea.Bottom)
+                    targetPos.Y = screen.WorkingArea.Bottom - _formDrawingFrame.Height - 10;
+                if (targetPos.Y < screen.WorkingArea.Top)
+                    targetPos.Y = screen.WorkingArea.Top;
+
+                _formDrawingFrame.StartPosition = FormStartPosition.Manual;
+                _formDrawingFrame.Location = targetPos;
+                _formDrawingFrame.Show(this);
+            } else {
+                _formDrawingFrame.BringToFront();
+            }
+        }
 
         private void CreateDbBackup() {
             if (string.IsNullOrEmpty(_db.CurrentDbPath) || !File.Exists(_db.CurrentDbPath)) {
