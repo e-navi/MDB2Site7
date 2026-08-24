@@ -653,6 +653,13 @@ namespace Site7DbEditor {
                 } else {
                     UpdatePointGuidance();
                 }
+
+                // 基準点タブで点誘導チェック時は自動追尾モード、解除時は視準測定モードに切替
+                if (isModeKijun()) {
+                    bool isTuibi = chkPointGuidance.Checked;
+                    _ucCtrl?.SetBtns2(!isTuibi);
+                    gbl.UCCtrl?.SetBtns2(!isTuibi);
+                }
             };
             grpYudo.Visible = chkPointGuidance.Checked;
             if (!chkPointGuidance.Checked) {
@@ -1080,6 +1087,9 @@ namespace Site7DbEditor {
 
             UpdateWindowTitle();
             UpdatePanelWidthsDisplay();
+
+            // 起動時に基準点タブをデフォルト選択
+            SelectKikaiTab();
         }
 
         private void LoadDatabase(string dbPath) {
@@ -1614,10 +1624,11 @@ namespace Site7DbEditor {
                 dgvKikai_SelectionChanged(this, EventArgs.Empty);
             }
 
-            // TS自動追尾／視準測定モードのタブ連動切り替え
+            // TS自動追尾／視準測定モードのタブ連動切り替え（点誘導ON時は自動追尾）
             bool isKijun = (tabControlData.SelectedTab == tabKikai);
-            _ucCtrl?.SetBtns2(isKijun);
-            gbl.UCCtrl?.SetBtns2(isKijun);
+            bool isModeKijunSetting = isKijun && !(chkPointGuidance != null && chkPointGuidance.Checked);
+            _ucCtrl?.SetBtns2(isModeKijunSetting);
+            gbl.UCCtrl?.SetBtns2(isModeKijunSetting);
 
             UpdateLayerCheckboxColors();
             picMapCanvas.Invalidate();
