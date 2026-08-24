@@ -34,6 +34,11 @@ namespace Site7DbEditor
         private Button btnRegister = null!;
         private Button btnClose = null!;
 
+        // TS Measurement Timer
+        private System.Windows.Forms.Timer timerMeasure = null!;
+        private int _measuringTag = -1;
+        private int _measureTimeoutCount = 0;
+
         private bool _isInitializing = true;
 
         public FormKikai()
@@ -52,6 +57,9 @@ namespace Site7DbEditor
             this.MinimizeBox = false;
             this.BackColor = Color.FromArgb(242, 244, 248);
             this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
+
+            timerMeasure = new System.Windows.Forms.Timer { Interval = 100 };
+            timerMeasure.Tick += TimerMeasure_Tick;
 
             // Top Panel: Mode & Instrument/Mirror Heights
             var pnlTop = new Panel
@@ -490,7 +498,64 @@ namespace Site7DbEditor
             var kr = gbl.KikaiMan0.kr[tag];
             if (string.IsNullOrEmpty(kr.p.Name)) return;
 
-            // TSから値を取得
+            _measuringTag = tag;
+            _measureTimeoutCount = 0;
+
+            TStation ts = gbl.TStation;
+            if (ts != null)
+            {
+                ts.isKikaiDefSet = true;
+                timerMeasure.Enabled = true;
+                btnMeasures[tag].Enabled = false;
+                btnMeasures[tag].Text = "測定中...";
+
+                try
+                {
+                    ts.AS_BtnClick_3();
+                }
+                catch
+                {
+                    ts.isKikaiDefSet = false;
+                }
+            }
+            else
+            {
+                // TSインスタンスがない場合は即時フォールバック処理
+                ProcessMeasurementResult();
+            }
+        }
+
+        private void TimerMeasure_Tick(object? sender, EventArgs e)
+        {
+            TStation ts = gbl.TStation;
+            _measureTimeoutCount++;
+
+            // TSが測定処理中の場合は完了を待機 (タイムアウト10秒 = 100カウント)
+            if (ts != null && ts.isKikaiDefSet)
+            {
+                if (_measureTimeoutCount < 100)
+                {
+                    return;
+                }
+                ts.isKikaiDefSet = false;
+            }
+
+            timerMeasure.Enabled = false;
+            ProcessMeasurementResult();
+        }
+
+        private void ProcessMeasurementResult()
+        {
+            if (_measuringTag < 0 || _measuringTag >= 3) return;
+            int tag = _measuringTag;
+
+            btnMeasures[tag].Enabled = true;
+            btnMeasures[tag].Text = "🔭 測定";
+
+            var kr = gbl.KikaiMan0.kr[tag];
+            if (string.IsNullOrEmpty(kr.p.Name)) return;
+
+            // TSから測定値を取得
             double lng = gbl.MField.lng;
             double angH = gbl.MField.angH;
             double angV = gbl.MField.angV;
