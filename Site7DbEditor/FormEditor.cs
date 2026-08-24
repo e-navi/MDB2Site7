@@ -44,6 +44,10 @@ namespace Site7DbEditor {
         private readonly EditorMapViewController _vc = new EditorMapViewController();
         private readonly EditorLogService _logService = new EditorLogService();
 
+        public EditorDbManager Db => _db;
+        public EditorLogService LogService => _logService;
+        public void InvalidateMap() { if (picMapCanvas != null && !picMapCanvas.IsDisposed) picMapCanvas.Invalidate(); }
+
         private UCCtrl _ucCtrl = new UCCtrl();
         private FormBluetoothCtrl? _dlgBth = null;
         private FormLeftPanelCtrl? _dlgLeft = null;

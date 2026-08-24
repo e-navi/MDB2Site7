@@ -44,7 +44,7 @@ namespace Site7DbEditor
         public int KMODE_BI3 = 1;  // 後方交会３点
         public int KMODE_KB = 2;   // 後視点（既知２点（器械点、後視点)）
 
-        public int kmode = 2;
+        public int kmode = 0;
 
         public TINP3 kp = new TINP3();
         public TINP3 bp = new TINP3();
@@ -62,10 +62,13 @@ namespace Site7DbEditor
 
         public double bmh;      // BM点の高さ
         public KikaiRec[] kr = new KikaiRec[3]; // 視準点(器械高を求める時に使用)
+        public double residual2D = 0.0; // 3点交点残差 (mm)
+        public double residualZ = 0.0;  // Z残差 (mm)
+        public double[] calcZ = new double[3]; // 各点からの計算器械点高
 
         public KikaiMan()
         {
-            kmode = KMODE_KB;
+            kmode = KMODE_BI2;
             kp = new TINP3();
             bp = new TINP3();
             kp.Name = Def.GetIniStr("TS", "器械点");
@@ -124,10 +127,14 @@ namespace Site7DbEditor
             for (int i = 0; i < 3; i++)
             {
                 kr[i].set(km.kr[i]);
+                calcZ[i] = km.calcZ[i];
             }
             ang0 = km.ang0;
             angK = km.angK;
             kh = km.kh;
+            mh = km.mh;
+            residual2D = km.residual2D;
+            residualZ = km.residualZ;
             isCalced = km.isCalced;
         }
 
@@ -137,7 +144,10 @@ namespace Site7DbEditor
             {
                 kr[i].p.Name = "";
                 kr[i].isSet = false;
+                calcZ[i] = 0.0;
             }
+            residual2D = 0.0;
+            residualZ = 0.0;
             isCalced = false;
         }
 
@@ -185,6 +195,8 @@ namespace Site7DbEditor
         public bool calc()
         {
             isCalced = false;
+            errMsg = "";
+
             if (kmode == KMODE_KB)
             {
                 kp.set(kr[0].p);
@@ -203,9 +215,16 @@ namespace Site7DbEditor
 
                 if (calcBI2(kr[0], kr[1], kp, kpA) == false)
                 {
-                    errMsg = "後方交会が求まりません。";
+                    errMsg = "後方交会が求まりません（2円が交差していないか同一線上にあります）。";
                     return false;
                 }
+
+                // 標高 Z の算出
+                calcZ[0] = kr[0].p.Z + mh - kr[0].getLngV() - kh;
+                calcZ[1] = kr[1].p.Z + mh - kr[1].getLngV() - kh;
+                kp.Z = Math.Round((calcZ[0] + calcZ[1]) / 2.0, 3);
+                residualZ = Math.Abs(calcZ[0] - calcZ[1]) * 1000.0; // mm
+
                 ang0 = kr[0].angH;
                 angK = calc2PAng(kp, kr[0].p);
                 bp.set(kr[0].p);
@@ -221,21 +240,36 @@ namespace Site7DbEditor
 
                 if (calcBI2(kr[0], kr[1], tkp[0], tkpA[0]) == false)
                 {
-                    errMsg = "後方交会が求まりません。(1)";
+                    errMsg = "後方交会が求まりません（1点目と2点目）。";
                     return false;
                 }
                 if (calcBI2(kr[1], kr[2], tkp[1], tkpA[1]) == false)
                 {
-                    errMsg = "後方交会が求まりません。(2)";
+                    errMsg = "後方交会が求まりません（2点目と3点目）。";
                     return false;
                 }
                 if (calcBI2(kr[2], kr[0], tkp[2], tkpA[2]) == false)
                 {
-                    errMsg = "後方交会が求まりません。(3)";
+                    errMsg = "後方交会が求まりません（3点目と1点目）。";
                     return false;
                 }
                 calcJushin(tkp[0], tkp[1], tkp[2], kp);
                 calcJushin(tkpA[0], tkpA[1], tkpA[2], kpA);
+
+                // 3点交点の重心残差
+                double d1 = Math.Sqrt(Math.Pow(tkp[0].X - kp.X, 2) + Math.Pow(tkp[0].Y - kp.Y, 2));
+                double d2 = Math.Sqrt(Math.Pow(tkp[1].X - kp.X, 2) + Math.Pow(tkp[1].Y - kp.Y, 2));
+                double d3 = Math.Sqrt(Math.Pow(tkp[2].X - kp.X, 2) + Math.Pow(tkp[2].Y - kp.Y, 2));
+                residual2D = ((d1 + d2 + d3) / 3.0) * 1000.0; // mm
+
+                calcZ[0] = kr[0].p.Z + mh - kr[0].getLngV() - kh;
+                calcZ[1] = kr[1].p.Z + mh - kr[1].getLngV() - kh;
+                calcZ[2] = kr[2].p.Z + mh - kr[2].getLngV() - kh;
+                kp.Z = Math.Round((calcZ[0] + calcZ[1] + calcZ[2]) / 3.0, 3);
+                double zMax = Math.Max(calcZ[0], Math.Max(calcZ[1], calcZ[2]));
+                double zMin = Math.Min(calcZ[0], Math.Min(calcZ[1], calcZ[2]));
+                residualZ = (zMax - zMin) * 1000.0; // mm
+
                 ang0 = kr[0].angH;
                 angK = calc2PAng(kp, kr[0].p);
                 bp.set(kr[0].p);

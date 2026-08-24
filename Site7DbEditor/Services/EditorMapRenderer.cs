@@ -330,6 +330,53 @@ namespace Site7DbEditor.Services
                 }
             }
 
+            // 3.5 Draw Resection Measurement Circles & Candidate Point (後方交会測定距離円＆器械点プレビュー)
+            if (gbl.FormKikai != null && gbl.FormKikai.Visible && gbl.KikaiMan0 != null)
+            {
+                using (var circlePen1 = new Pen(Color.FromArgb(220, 0, 225, 255), 1.8f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var circlePen2 = new Pen(Color.FromArgb(220, 255, 105, 180), 1.8f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var circlePen3 = new Pen(Color.FromArgb(220, 255, 215, 0), 1.8f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                using (var guideFont = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold))
+                using (var guideTextBrush = new SolidBrush(isDarkBackground ? Color.FromArgb(255, 255, 200) : Color.FromArgb(30, 30, 30)))
+                using (var candBrush = new SolidBrush(Color.FromArgb(255, 230, 0)))
+                using (var candPen = new Pen(Color.FromArgb(255, 50, 50), 2.0f))
+                {
+                    Pen[] pens = new Pen[] { circlePen1, circlePen2, circlePen3 };
+                    int maxPts = (gbl.KikaiMan0.kmode == gbl.KikaiMan0.KMODE_BI3) ? 3 : 2;
+
+                    for (int i = 0; i < maxPts; i++)
+                    {
+                        var kr = gbl.KikaiMan0.kr[i];
+                        if (kr != null && kr.isSet && kr.getLngH() > 0.001)
+                        {
+                            double rMeters = kr.getLngH();
+                            PointF centerPt = ToCanvasPoint(kr.p.X, kr.p.Y);
+                            PointF rimPt = ToCanvasPoint(kr.p.X + rMeters, kr.p.Y);
+                            float rPx = Math.Abs(rimPt.X - centerPt.X);
+                            if (rPx > 1.0f)
+                            {
+                                g.DrawEllipse(pens[i % pens.Length], centerPt.X - rPx, centerPt.Y - rPx, rPx * 2, rPx * 2);
+                                string distText = $"{i + 1}点目: {kr.p.Name} (R={rMeters:F3}m)";
+                                g.DrawString(distText, guideFont, guideTextBrush, centerPt.X + rPx * 0.707f + 4, centerPt.Y - rPx * 0.707f - 4);
+                            }
+                        }
+                    }
+
+                    if (gbl.KikaiMan0.isCalced && gbl.KikaiMan0.kp != null && (gbl.KikaiMan0.kp.X != 0 || gbl.KikaiMan0.kp.Y != 0))
+                    {
+                        PointF instPt = ToCanvasPoint(gbl.KikaiMan0.kp.X, gbl.KikaiMan0.kp.Y);
+                        float targetR = 10f;
+                        g.DrawEllipse(candPen, instPt.X - targetR, instPt.Y - targetR, targetR * 2, targetR * 2);
+                        g.FillEllipse(candBrush, instPt.X - 3.5f, instPt.Y - 3.5f, 7f, 7f);
+                        g.DrawLine(candPen, instPt.X - targetR - 5, instPt.Y, instPt.X + targetR + 5, instPt.Y);
+                        g.DrawLine(candPen, instPt.X, instPt.Y - targetR - 5, instPt.X, instPt.Y + targetR + 5);
+
+                        string label = $"【新器械点】\nX: {gbl.KikaiMan0.kp.X:F3}\nY: {gbl.KikaiMan0.kp.Y:F3}\nZ: {gbl.KikaiMan0.kp.Z:F3}";
+                        g.DrawString(label, guideFont, guideTextBrush, instPt.X + 14, instPt.Y - 18);
+                    }
+                }
+            }
+
             // 4. Draw Map Labels
             using (var ikouMasterFont = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
             using (var lineLabelFont = new Font("Yu Gothic UI", 8.0F, FontStyle.Bold))
