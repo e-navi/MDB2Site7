@@ -14,6 +14,17 @@ namespace Site7DbEditor
 
         public static string genbaPath0 = @"C:\SITE7\GENBA\DATA\";
 
+        public static string GetSystemIniFileName()
+        {
+            string p1 = @"C:\SITE7\GENBA\NEW\SITE7.ini";
+            if (File.Exists(p1)) return p1;
+            string p2 = @"C:\SITE7\SITE7.ini";
+            if (File.Exists(p2)) return p2;
+            string p3 = @"C:\SITE7\GENBA\DATA\SITE7.ini";
+            if (File.Exists(p3)) return p3;
+            return p1;
+        }
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern uint GetPrivateProfileString(
             string lpAppName,
@@ -50,20 +61,30 @@ namespace Site7DbEditor
             return GetIniStr(iniFileName, app, key);
         }
 
-        public static int GetIniInt(string app, string key, int defval)
+        public static int GetIniInt(string fname, string app, string key, int defval)
         {
-            string str = GetIniStr(app, key);
+            string str = GetIniStr(fname, app, key);
             if (string.IsNullOrEmpty(str)) return defval;
             if (int.TryParse(str, out int val)) return val;
             return defval;
         }
 
-        public static double GetIniDouble(string app, string key, double defval)
+        public static int GetIniInt(string app, string key, int defval)
         {
-            string str = GetIniStr(app, key);
+            return GetIniInt(iniFileName, app, key, defval);
+        }
+
+        public static double GetIniDouble(string fname, string app, string key, double defval)
+        {
+            string str = GetIniStr(fname, app, key);
             if (string.IsNullOrEmpty(str)) return defval;
             if (double.TryParse(str, out double val)) return val;
             return defval;
+        }
+
+        public static double GetIniDouble(string app, string key, double defval)
+        {
+            return GetIniDouble(iniFileName, app, key, defval);
         }
 
         public static void SetIniStr(string fname, string app, string key, string str)
@@ -86,9 +107,19 @@ namespace Site7DbEditor
             SetIniStr(iniFileName, app, key, str);
         }
 
+        public static void SetIniInt(string fname, string app, string key, int val)
+        {
+            SetIniStr(fname, app, key, val.ToString());
+        }
+
         public static void SetIniInt(string app, string key, int val)
         {
             SetIniStr(iniFileName, app, key, val.ToString());
+        }
+
+        public static void SetIniDouble(string fname, string app, string key, double val)
+        {
+            SetIniStr(fname, app, key, val.ToString());
         }
 
         public static void SetIniDouble(string app, string key, double val)

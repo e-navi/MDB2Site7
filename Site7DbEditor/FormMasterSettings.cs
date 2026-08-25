@@ -27,22 +27,27 @@ namespace Site7DbEditor
         {
             this.Icon = SystemIcons.Application;
 
-            bool hasGenba = !string.IsNullOrEmpty(_dbPath) && File.Exists(_dbPath);
-            rdoSaveGenba.Enabled = hasGenba;
-            if (!hasGenba)
+            bool isMasterMode = string.IsNullOrEmpty(_dbPath);
+            if (isMasterMode)
             {
-                rdoSaveSystem.Checked = true;
-                rdoSaveGenba.Text = "現在の現場専用として保存 (現場未選択)";
+                this.Text = "マスターDef設定 (システム共通テンプレート)";
+                lblHeader.Text = "⚙ マスターDef設定 (システム共通テンプレート)";
+                string sysDir = MasterDefinitionService.Instance.GetSystemDefDirectory();
+                lblPathInfo.Text = $"保存先フォルダ: {sysDir}";
+                btnExportToMaster.Visible = false;
+                btnImportFromMaster.Visible = false;
             }
             else
             {
-                string genbaDir = Path.GetDirectoryName(_dbPath) ?? "";
-                string genbaDef = Path.Combine(genbaDir, "Def");
-                rdoSaveGenba.Text = $"現在の現場専用として保存 ({genbaDef})";
+                this.Text = "現場Def設定 (現場定義データ)";
+                lblHeader.Text = "⚙ 現場Def設定 (現場定義データ)";
+                string genbaDef = MasterDefinitionService.Instance.GetGenbaDefDirectory(_dbPath!);
+                lblPathInfo.Text = $"保存先フォルダ: {genbaDef}";
+                btnExportToMaster.Visible = true;
+                btnImportFromMaster.Visible = true;
+                btnExportToMaster.Click += btnExportToMaster_Click;
+                btnImportFromMaster.Click += btnImportFromMaster_Click;
             }
-
-            string effDir = MasterDefinitionService.Instance.GetEffectiveDefDirectory(_dbPath);
-            lblPathInfo.Text = $"現在の読み込み元フォルダ: {effDir}";
 
             btnSave.Click += btnSave_Click;
             btnCancel.Click += (s, e) => this.Close();
@@ -270,20 +275,9 @@ namespace Site7DbEditor
                     try { dgv.EndEdit(); } catch { }
                 }
 
-                string targetDir;
-                if (rdoSaveGenba.Checked)
-                {
-                    if (string.IsNullOrEmpty(_dbPath))
-                    {
-                        MessageBox.Show("現場データベースが開かれていません。", "保存先エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    targetDir = MasterDefinitionService.Instance.GetGenbaDefDirectory(_dbPath);
-                }
-                else
-                {
-                    targetDir = MasterDefinitionService.DefaultSystemDefDir;
-                }
+                string targetDir = string.IsNullOrEmpty(_dbPath)
+                    ? MasterDefinitionService.Instance.GetSystemDefDirectory()
+                    : MasterDefinitionService.Instance.GetGenbaDefDirectory(_dbPath);
 
                 var service = MasterDefinitionService.Instance;
                 foreach (var kvp in _bindingLists)
@@ -293,13 +287,92 @@ namespace Site7DbEditor
                     service.SaveMasterFile(targetDir, type, items);
                 }
 
-                MessageBox.Show($"マスター設定を保存しました。\n保存先: {targetDir}", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string targetLabel = string.IsNullOrEmpty(_dbPath) ? "マスターDef設定" : "現場Def設定";
+                MessageBox.Show($"{targetLabel}を保存しました。\n保存先: {targetDir}", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"マスター設定保存エラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Def設定保存エラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnExportToMaster_Click(object? sender, EventArgs e)
+        {
+            var res = MessageBox.Show(
+                "現在の現場のDef定義データで、システム共通マスターを上書き更新しますか？\n\n※ 次回の新規現場作成時などに標準テンプレートとして使用されます。",
+                "マスターへ反映確認",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (res != DialogResult.Yes) return;
+
+            try
+            {
+                foreach (var dgv in _gridViews.Values)
+                {
+                    try { dgv.EndEdit(); } catch { }
+                }
+
+                string sysDir = MasterDefinitionService.Instance.GetSystemDefDirectory();
+                var service = MasterDefinitionService.Instance;
+                foreach (var kvp in _bindingLists)
+                {
+                    var type = kvp.Key;
+                    var items = kvp.Value.Where(x => !string.IsNullOrWhiteSpace(x.Code)).ToList();
+                    service.SaveMasterFile(sysDir, type, items);
+                }
+
+                MessageBox.Show($"✔ 現場のDef定義をシステム共通マスターへ反映しました。\n保存先: {sysDir}", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"マスター反映エラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnImportFromMaster_Click(object? sender, EventArgs e)
+        {
+            var res = MessageBox.Show(
+                "システム共通マスターのDef定義データを読み込み、現在の現場設定に反映しますか？\n\n※ 現在の編集内容はマスターデータで上書きされます。",
+                "マスターから反映確認",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (res != DialogResult.Yes) return;
+
+            try
+            {
+                string sysDir = MasterDefinitionService.Instance.GetSystemDefDirectory();
+                var service = MasterDefinitionService.Instance;
+
+                foreach (var type in _bindingLists.Keys.ToList())
+                {
+                    string fileName = MasterDefinitionService.FileNames[type];
+                    string filePath = Path.Combine(sysDir, fileName);
+                    List<MasterItem> items;
+                    if (File.Exists(filePath))
+                    {
+                        items = service.ReadMasterFile(filePath);
+                    }
+                    else
+                    {
+                        items = MasterDefinitionService.GetDefaultMasterItems(type);
+                    }
+
+                    _bindingLists[type].Clear();
+                    foreach (var item in items)
+                    {
+                        _bindingLists[type].Add(item);
+                    }
+                }
+
+                MessageBox.Show("✔ システム共通マスターからDef定義を反映しました。\n「💾 設定を保存」を押すと現場に保存されます。", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"マスター読み込みエラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

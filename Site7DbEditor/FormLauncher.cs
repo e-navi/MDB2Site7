@@ -248,7 +248,39 @@ namespace Site7DbEditor
                 FlatStyle = FlatStyle.Flat
             };
             btnTool.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnTool.Click += (s, e) => LaunchMdbFdbExporter();
+
+            var menuTool = new ContextMenuStrip
+            {
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
+                ShowImageMargin = false
+            };
+            var itemMasterDef = new ToolStripMenuItem("⚙ マスターDef設定 (入力定義)...", null, (s, e) => {
+                using var form = new FormMasterSettings(null);
+                form.ShowDialog(this);
+            });
+            var itemMasterLayer = new ToolStripMenuItem("📐 マスターレイヤ設定...", null, (s, e) => {
+                using var form = new FormLayerSettings(dbPath: (string?)null);
+                form.ShowDialog(this);
+            });
+            var itemMasterEnv = new ToolStripMenuItem("📡 マスターTS・GPS環境設定...", null, (s, e) => {
+                using var form = new FormDefEnv(isMasterMode: true);
+                form.ShowDialog(this);
+            });
+            var itemSep = new ToolStripSeparator();
+            var itemExporter = new ToolStripMenuItem("💾 旧DB移行 (MDB/FDB Exporter)", null, (s, e) => LaunchMdbFdbExporter());
+
+            menuTool.Items.AddRange(new ToolStripItem[] {
+                itemMasterDef,
+                itemMasterLayer,
+                itemMasterEnv,
+                itemSep,
+                itemExporter
+            });
+
+            btnTool.Click += (s, e) =>
+            {
+                menuTool.Show(btnTool, new Point(0, -menuTool.PreferredSize.Height));
+            };
 
             btnExit = new Button
             {

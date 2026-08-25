@@ -619,9 +619,17 @@ namespace Site7DbEditor {
             // ヘッダーボタンのイベント
             btnHeaderSettings.Click += (s, e) => {
                 var menu = new ContextMenuStrip();
-                menu.Items.Add(new ToolStripMenuItem("⚙ マスター定義設定 (Def設定)...", null, (s1, e1) => OpenMasterSettings()));
-                menu.Items.Add(new ToolStripMenuItem("🛰 TS・GPS環境設定...", null, (s1, e1) => {
-                    using (var form = new FormDefEnv()) {
+                menu.Items.Add(new ToolStripMenuItem("⚙ 現場Def設定 (入力定義)...", null, (s1, e1) => OpenMasterSettings()));
+                menu.Items.Add(new ToolStripMenuItem("🎨 現場レイヤ詳細設定...", null, (s1, e1) => {
+                    using (var form = new FormLayerSettings(_db, LayerGroup.Ikou)) {
+                        if (form.ShowDialog(this) == DialogResult.OK) {
+                            picMapCanvas.Invalidate();
+                            picDrawingPreview.Invalidate();
+                        }
+                    }
+                }));
+                menu.Items.Add(new ToolStripMenuItem("🛰 現場TS・GPS環境設定...", null, (s1, e1) => {
+                    using (var form = new FormDefEnv(isMasterMode: false)) {
                         if (form.ShowDialog(this) == DialogResult.OK) picMapCanvas.Invalidate();
                     }
                 }));
@@ -631,14 +639,6 @@ namespace Site7DbEditor {
                             if (!string.IsNullOrEmpty(_db.CurrentDbPath)) BackgroundImageService.Instance.SaveConfig(_db.CurrentDbPath);
                             UpdateBgAndPointCloudCheckboxesState();
                             picMapCanvas.Invalidate();
-                        }
-                    }
-                }));
-                menu.Items.Add(new ToolStripMenuItem("🎨 レイヤ詳細設定...", null, (s1, e1) => {
-                    using (var form = new FormLayerSettings(_db, LayerGroup.Ikou)) {
-                        if (form.ShowDialog(this) == DialogResult.OK) {
-                            picMapCanvas.Invalidate();
-                            picDrawingPreview.Invalidate();
                         }
                     }
                 }));

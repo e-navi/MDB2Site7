@@ -22,14 +22,21 @@ namespace Site7DbEditor
         private ComboBox CBoxWidth = null!;
         private ComboBox CBoxLineStyle = null!;
         private Button button1 = null!;
+        private Button btnExportToMaster = null!;
+        private Button btnImportFromMaster = null!;
         private Button Save_Button = null!;
         private Button Cancel_Button = null!;
         private bool _isUpdatingUi = false;
 
-        public FormLayerSettings(EditorDbManager db, LayerGroup initialGroup = LayerGroup.Ikou)
+        public FormLayerSettings(EditorDbManager? db, LayerGroup initialGroup = LayerGroup.Ikou)
+            : this(db?.CurrentDbPath, initialGroup)
         {
             _db = db;
-            _dbPath = db.CurrentDbPath;
+        }
+
+        public FormLayerSettings(string? dbPath = null, LayerGroup initialGroup = LayerGroup.Ikou)
+        {
+            _dbPath = dbPath;
             LayerDefinitionService.Instance.LoadAll(_dbPath);
             InitializeComponent();
 
@@ -42,8 +49,9 @@ namespace Site7DbEditor
 
         private void InitializeComponent()
         {
-            this.Text = "レイヤ設定";
-            this.ClientSize = new Size(520, 360);
+            bool isMasterMode = string.IsNullOrEmpty(_dbPath);
+            this.Text = isMasterMode ? "マスターレイヤ設定 (システム共通テンプレート)" : "現場レイヤ設定 (現場定義データ)";
+            this.ClientSize = new Size(540, 400);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -163,27 +171,60 @@ namespace Site7DbEditor
             };
             button1.Click += Button1_Click;
 
+            btnExportToMaster = new Button
+            {
+                Text = "📤 マスターへ反映",
+                Location = new Point(245, 308),
+                Size = new Size(135, 30),
+                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(233, 236, 243),
+                ForeColor = Color.FromArgb(25, 45, 80),
+                FlatStyle = FlatStyle.Flat,
+                Visible = !isMasterMode
+            };
+            btnExportToMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            btnExportToMaster.Click += BtnExportToMaster_Click;
+
+            btnImportFromMaster = new Button
+            {
+                Text = "📥 マスターから反映",
+                Location = new Point(388, 308),
+                Size = new Size(135, 30),
+                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(233, 236, 243),
+                ForeColor = Color.FromArgb(25, 45, 80),
+                FlatStyle = FlatStyle.Flat,
+                Visible = !isMasterMode
+            };
+            btnImportFromMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            btnImportFromMaster.Click += BtnImportFromMaster_Click;
+
             Save_Button = new Button
             {
                 Text = "💾 設定を保存",
-                Location = new Point(255, 312),
-                Size = new Size(130, 32),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-                BackColor = Color.FromArgb(56, 176, 0),
-                ForeColor = Color.Black,
+                Location = new Point(245, 350),
+                Size = new Size(155, 34),
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(40, 167, 69),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
                 UseVisualStyleBackColor = false
             };
+            Save_Button.FlatAppearance.BorderSize = 0;
             Save_Button.Click += Save_Button_Click;
 
             Cancel_Button = new Button
             {
                 Text = "閉じる",
-                Location = new Point(395, 312),
-                Size = new Size(95, 32),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-                BackColor = Color.FromArgb(220, 224, 230),
-                UseVisualStyleBackColor = true
+                Location = new Point(410, 350),
+                Size = new Size(113, 34),
+                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(220, 225, 235),
+                ForeColor = Color.FromArgb(30, 40, 60),
+                FlatStyle = FlatStyle.Flat,
+                UseVisualStyleBackColor = false
             };
+            Cancel_Button.FlatAppearance.BorderSize = 0;
             Cancel_Button.Click += (s, e) => { this.DialogResult = DialogResult.OK; this.Close(); };
 
             this.Controls.Add(comboBoxLayerG);
@@ -201,6 +242,8 @@ namespace Site7DbEditor
             this.Controls.Add(CBoxWidth);
             this.Controls.Add(CBoxLineStyle);
             this.Controls.Add(button1);
+            this.Controls.Add(btnExportToMaster);
+            this.Controls.Add(btnImportFromMaster);
             this.Controls.Add(Save_Button);
             this.Controls.Add(Cancel_Button);
         }
@@ -221,19 +264,25 @@ namespace Site7DbEditor
 
         private LayerGroup GetSelectedGroup()
         {
-            return (LayerGroup)Math.Clamp(comboBoxLayerG.SelectedIndex, 0, 3);
+            return comboBoxLayerG.SelectedIndex switch
+            {
+                1 => LayerGroup.Ibutu,
+                2 => LayerGroup.Kikai,
+                3 => LayerGroup.Sakuzu,
+                _ => LayerGroup.Ikou
+            };
         }
 
         private void ComboBoxLayerG_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            var group = GetSelectedGroup();
+            var list = LayerDefinitionService.Instance.GetGroup(group);
+
             _isUpdatingUi = true;
             try
             {
                 listBox1.Items.Clear();
-                var group = GetSelectedGroup();
-                var items = LayerDefinitionService.Instance.Groups.TryGetValue(group, out var list) ? list : new List<LayerItem>();
-
-                foreach (var item in items)
+                foreach (var item in list)
                 {
                     listBox1.Items.Add(item.DisplayText);
                 }
@@ -247,21 +296,19 @@ namespace Site7DbEditor
             {
                 _isUpdatingUi = false;
             }
-
-            ListBox1_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
         private void ListBox1_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex < 0) return;
+            if (_isUpdatingUi || listBox1.SelectedIndex < 0) return;
+
+            var group = GetSelectedGroup();
+            int itemIdx = listBox1.SelectedIndex;
+            var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
 
             _isUpdatingUi = true;
             try
             {
-                var group = GetSelectedGroup();
-                int itemIdx = listBox1.SelectedIndex;
-                var item = LayerDefinitionService.Instance.GetLayer(group, itemIdx + 1);
-
                 textBox1.Text = item.Name;
                 CBoxColor.SelectedIndex = Math.Clamp(item.Color - 1, 0, CBoxColor.Items.Count - 1);
                 CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
@@ -311,19 +358,64 @@ namespace Site7DbEditor
         {
             AutoApplyCurrentItem();
             SaveLayers();
-            MessageBox.Show(this, "レイヤ設定（Layer遺構.txt, Layer遺物.txt, Layer基準点.txt, Layer作図.txt）を保存しました。", "レイヤ設定保存", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string targetLabel = string.IsNullOrEmpty(_dbPath) ? "マスターレイヤ設定" : "現場レイヤ設定";
+            MessageBox.Show(this, $"{targetLabel}（Layer遺構.txt, Layer遺物.txt, Layer基準点.txt, Layer作図.txt）を保存しました。", "レイヤ設定保存", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         private void SaveLayers()
         {
-            string? genbaDir = !string.IsNullOrEmpty(_dbPath) ? Path.GetDirectoryName(_dbPath) : null;
-            string targetDir = !string.IsNullOrEmpty(genbaDir) 
-                ? Path.Combine(genbaDir, "Def") 
-                : LayerDefinitionService.DefaultSystemDefDir;
+            string targetDir = string.IsNullOrEmpty(_dbPath)
+                ? LayerDefinitionService.Instance.GetSystemDefDirectory()
+                : LayerDefinitionService.Instance.GetEffectiveDefDirectory(_dbPath);
 
             LayerDefinitionService.Instance.SaveAll(targetDir);
+        }
+
+        private void BtnExportToMaster_Click(object? sender, EventArgs e)
+        {
+            var res = MessageBox.Show(
+                "現在の現場のレイヤ定義データで、システム共通マスターを上書き更新しますか？\n\n※ 次回の新規現場作成時などに標準テンプレートとして使用されます。",
+                "マスターへ反映確認",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (res != DialogResult.Yes) return;
+
+            try
+            {
+                AutoApplyCurrentItem();
+                string sysDir = LayerDefinitionService.Instance.GetSystemDefDirectory();
+                LayerDefinitionService.Instance.SaveAll(sysDir);
+                MessageBox.Show($"✔ 現場のレイヤ定義をシステム共通マスターへ反映しました。\n保存先: {sysDir}", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"マスター反映エラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnImportFromMaster_Click(object? sender, EventArgs e)
+        {
+            var res = MessageBox.Show(
+                "システム共通マスターのレイヤ定義データを読み込み、現在の現場設定に反映しますか？\n\n※ 現在の編集内容はマスターデータで上書きされます。",
+                "マスターから反映確認",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (res != DialogResult.Yes) return;
+
+            try
+            {
+                LayerDefinitionService.Instance.LoadAll(null);
+                ComboBoxLayerG_SelectedIndexChanged(null, EventArgs.Empty);
+                MessageBox.Show("✔ システム共通マスターからレイヤ定義を反映しました。\n「💾 設定を保存」を押すと現場に保存されます。", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"マスター読み込みエラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CBoxColor_DrawItem(object? sender, DrawItemEventArgs e)

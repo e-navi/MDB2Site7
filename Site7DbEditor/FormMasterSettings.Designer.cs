@@ -23,8 +23,8 @@ namespace Site7DbEditor
             this.panelCenter = new System.Windows.Forms.Panel();
             this.tabControlMasters = new System.Windows.Forms.TabControl();
             this.panelBottom = new System.Windows.Forms.Panel();
-            this.rdoSaveGenba = new System.Windows.Forms.RadioButton();
-            this.rdoSaveSystem = new System.Windows.Forms.RadioButton();
+            this.btnExportToMaster = new System.Windows.Forms.Button();
+            this.btnImportFromMaster = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panelTop.SuspendLayout();
@@ -88,10 +88,11 @@ namespace Site7DbEditor
             this.tabControlMasters.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControlMasters.TabIndex = 0;
             // 
+            // 
             // panelBottom
             // 
-            this.panelBottom.Controls.Add(this.rdoSaveGenba);
-            this.panelBottom.Controls.Add(this.rdoSaveSystem);
+            this.panelBottom.Controls.Add(this.btnExportToMaster);
+            this.panelBottom.Controls.Add(this.btnImportFromMaster);
             this.panelBottom.Controls.Add(this.btnSave);
             this.panelBottom.Controls.Add(this.btnCancel);
             this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -101,31 +102,33 @@ namespace Site7DbEditor
             this.panelBottom.Size = new System.Drawing.Size(920, 56);
             this.panelBottom.TabIndex = 2;
             // 
-            // rdoSaveGenba
+            // btnExportToMaster
             // 
-            this.rdoSaveGenba.AutoSize = true;
-            this.rdoSaveGenba.Checked = true;
-            this.rdoSaveGenba.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.rdoSaveGenba.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.rdoSaveGenba.Location = new System.Drawing.Point(16, 8);
-            this.rdoSaveGenba.Name = "rdoSaveGenba";
-            this.rdoSaveGenba.Size = new System.Drawing.Size(201, 19);
-            this.rdoSaveGenba.TabIndex = 0;
-            this.rdoSaveGenba.TabStop = true;
-            this.rdoSaveGenba.Text = "現在の現場専用として保存 ([現場]\\Def)";
-            this.rdoSaveGenba.UseVisualStyleBackColor = true;
+            this.btnExportToMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
+            this.btnExportToMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
+            this.btnExportToMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnExportToMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnExportToMaster.Location = new System.Drawing.Point(12, 11);
+            this.btnExportToMaster.Name = "btnExportToMaster";
+            this.btnExportToMaster.Size = new System.Drawing.Size(160, 34);
+            this.btnExportToMaster.TabIndex = 0;
+            this.btnExportToMaster.Text = "📤 マスターへ反映";
+            this.btnExportToMaster.UseVisualStyleBackColor = false;
             // 
-            // rdoSaveSystem
+            // btnImportFromMaster
             // 
-            this.rdoSaveSystem.AutoSize = true;
-            this.rdoSaveSystem.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F);
-            this.rdoSaveSystem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(85)))), ((int)(((byte)(95)))));
-            this.rdoSaveSystem.Location = new System.Drawing.Point(16, 28);
-            this.rdoSaveSystem.Name = "rdoSaveSystem";
-            this.rdoSaveSystem.Size = new System.Drawing.Size(287, 19);
-            this.rdoSaveSystem.TabIndex = 1;
-            this.rdoSaveSystem.Text = "システム共通テンプレートとして保存 (C:\\SITE7\\...\\Def)";
-            this.rdoSaveSystem.UseVisualStyleBackColor = true;
+            this.btnImportFromMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
+            this.btnImportFromMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
+            this.btnImportFromMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnImportFromMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnImportFromMaster.Location = new System.Drawing.Point(180, 11);
+            this.btnImportFromMaster.Name = "btnImportFromMaster";
+            this.btnImportFromMaster.Size = new System.Drawing.Size(160, 34);
+            this.btnImportFromMaster.TabIndex = 1;
+            this.btnImportFromMaster.Text = "📥 マスターから反映";
+            this.btnImportFromMaster.UseVisualStyleBackColor = false;
             // 
             // btnSave
             // 
@@ -135,11 +138,11 @@ namespace Site7DbEditor
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(680, 12);
+            this.btnSave.Location = new System.Drawing.Point(660, 11);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(120, 34);
+            this.btnSave.Size = new System.Drawing.Size(140, 34);
             this.btnSave.TabIndex = 2;
-            this.btnSave.Text = "💾 保存して反映";
+            this.btnSave.Text = "💾 設定を保存";
             this.btnSave.UseVisualStyleBackColor = false;
             // 
             // btnCancel
@@ -150,7 +153,7 @@ namespace Site7DbEditor
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnCancel.Location = new System.Drawing.Point(812, 12);
+            this.btnCancel.Location = new System.Drawing.Point(812, 11);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(96, 34);
             this.btnCancel.TabIndex = 3;
@@ -169,7 +172,7 @@ namespace Site7DbEditor
             this.MinimumSize = new System.Drawing.Size(820, 460);
             this.Name = "FormMasterSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "マスター設定・入力定義 (Def)";
+            this.Text = "Def設定 (マスター / 現場)";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelCenter.ResumeLayout(false);
@@ -187,8 +190,8 @@ namespace Site7DbEditor
         private System.Windows.Forms.Panel panelCenter;
         private System.Windows.Forms.TabControl tabControlMasters;
         private System.Windows.Forms.Panel panelBottom;
-        private System.Windows.Forms.RadioButton rdoSaveGenba;
-        private System.Windows.Forms.RadioButton rdoSaveSystem;
+        private System.Windows.Forms.Button btnExportToMaster;
+        private System.Windows.Forms.Button btnImportFromMaster;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
     }

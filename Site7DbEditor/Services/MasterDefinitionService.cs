@@ -98,13 +98,21 @@ namespace Site7DbEditor.Services
                     }
                 }
             }
+            return GetSystemDefDirectory();
+        }
 
+        public string GetSystemDefDirectory()
+        {
             if (Directory.Exists(DefaultSystemDefDir))
                 return DefaultSystemDefDir;
-
             if (Directory.Exists(FallbackSystemDefDir))
                 return FallbackSystemDefDir;
 
+            try
+            {
+                Directory.CreateDirectory(DefaultSystemDefDir);
+            }
+            catch { }
             return DefaultSystemDefDir;
         }
 

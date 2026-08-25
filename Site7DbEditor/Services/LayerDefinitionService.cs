@@ -116,6 +116,38 @@ namespace Site7DbEditor.Services
             return list;
         }
 
+        public string GetSystemDefDirectory()
+        {
+            if (Directory.Exists(DefaultSystemDefDir))
+                return DefaultSystemDefDir;
+            if (Directory.Exists(FallbackSystemDefDir))
+                return FallbackSystemDefDir;
+
+            try
+            {
+                Directory.CreateDirectory(DefaultSystemDefDir);
+            }
+            catch { }
+            return DefaultSystemDefDir;
+        }
+
+        public string GetEffectiveDefDirectory(string? genbaDbPath)
+        {
+            if (!string.IsNullOrEmpty(genbaDbPath))
+            {
+                string? genbaDir = Path.GetDirectoryName(genbaDbPath);
+                if (!string.IsNullOrEmpty(genbaDir))
+                {
+                    string genbaDefDir = Path.Combine(genbaDir, "Def");
+                    if (Directory.Exists(genbaDefDir))
+                    {
+                        return genbaDefDir;
+                    }
+                }
+            }
+            return GetSystemDefDirectory();
+        }
+
         public void LoadAll(string? genbaDbPath)
         {
             foreach (LayerGroup group in Enum.GetValues(typeof(LayerGroup)))
@@ -308,6 +340,16 @@ namespace Site7DbEditor.Services
             {
                 File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
             }
+        }
+
+        public List<LayerItem> GetGroup(LayerGroup group)
+        {
+            if (!Groups.TryGetValue(group, out var list) || list == null)
+            {
+                list = CreateDefaultLayers(group);
+                Groups[group] = list;
+            }
+            return list;
         }
 
         public LayerItem GetLayer(LayerGroup group, int index)
