@@ -47,7 +47,7 @@ namespace Site7DbEditor
             // 
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.lblHeader.Location = new System.Drawing.Point(12, 6);
             this.lblHeader.Name = "lblHeader";
             this.lblHeader.Size = new System.Drawing.Size(235, 20);
@@ -59,7 +59,7 @@ namespace Site7DbEditor
             this.lblPathInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPathInfo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F);
-            this.lblPathInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(205)))));
+            this.lblPathInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(110)))), ((int)(((byte)(125)))));
             this.lblPathInfo.Location = new System.Drawing.Point(12, 30);
             this.lblPathInfo.Name = "lblPathInfo";
             this.lblPathInfo.Size = new System.Drawing.Size(896, 20);
@@ -106,7 +106,7 @@ namespace Site7DbEditor
             this.rdoSaveGenba.AutoSize = true;
             this.rdoSaveGenba.Checked = true;
             this.rdoSaveGenba.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.rdoSaveGenba.ForeColor = System.Drawing.Color.White;
+            this.rdoSaveGenba.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.rdoSaveGenba.Location = new System.Drawing.Point(16, 8);
             this.rdoSaveGenba.Name = "rdoSaveGenba";
             this.rdoSaveGenba.Size = new System.Drawing.Size(201, 19);
@@ -119,7 +119,7 @@ namespace Site7DbEditor
             // 
             this.rdoSaveSystem.AutoSize = true;
             this.rdoSaveSystem.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F);
-            this.rdoSaveSystem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(205)))), ((int)(((byte)(220)))));
+            this.rdoSaveSystem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(85)))), ((int)(((byte)(95)))));
             this.rdoSaveSystem.Location = new System.Drawing.Point(16, 28);
             this.rdoSaveSystem.Name = "rdoSaveSystem";
             this.rdoSaveSystem.Size = new System.Drawing.Size(287, 19);
@@ -130,11 +130,11 @@ namespace Site7DbEditor
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(176)))), ((int)(((byte)(0)))));
+            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnSave.ForeColor = System.Drawing.Color.Black;
+            this.btnSave.ForeColor = System.Drawing.Color.White;
             this.btnSave.Location = new System.Drawing.Point(680, 12);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(120, 34);
@@ -145,11 +145,11 @@ namespace Site7DbEditor
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
+            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(235)))));
             this.btnCancel.FlatAppearance.BorderSize = 0;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F);
-            this.btnCancel.ForeColor = System.Drawing.Color.White;
+            this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
             this.btnCancel.Location = new System.Drawing.Point(812, 12);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(96, 34);
@@ -161,7 +161,7 @@ namespace Site7DbEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.ClientSize = new System.Drawing.Size(920, 540);
             this.Controls.Add(this.panelCenter);
             this.Controls.Add(this.panelTop);
