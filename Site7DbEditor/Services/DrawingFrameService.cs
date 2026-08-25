@@ -287,13 +287,19 @@ namespace Site7DbEditor.Services
             PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
             PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
 
-            // 配色ペン・ブラシ
+            // 作図レイヤ設定から配色・線幅を取得
             Color paperColor = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.FromArgb(160, 160, 170);
-            Color outerColor = isDarkBackground ? Color.FromArgb(240, 240, 245) : Color.FromArgb(20, 20, 25);
-            Color innerColor = isDarkBackground ? Color.FromArgb(0, 210, 255) : Color.FromArgb(0, 130, 210);
+            Color outerColor = EditorLayerService.GetSakuzuColor(1, isDarkBackground);
+            Color innerColor = EditorLayerService.GetSakuzuColor(2, isDarkBackground);
+            Color tomboColor = EditorLayerService.GetSakuzuColor(3, isDarkBackground);
+            Color coordColor = EditorLayerService.GetSakuzuColor(4, isDarkBackground);
             Color centerColor = isDarkBackground ? Color.FromArgb(255, 180, 0) : Color.FromArgb(220, 100, 0);
-            Color tomboColor = isDarkBackground ? Color.FromArgb(200, 255, 100, 100) : Color.FromArgb(220, 180, 20, 20);
-            Color coordColor = isDarkBackground ? Color.FromArgb(220, 220, 230) : Color.FromArgb(40, 40, 50);
+
+            var layerD01 = LayerDefinitionService.Instance.GetLayer(LayerGroup.Sakuzu, 1);
+            var layerD02 = LayerDefinitionService.Instance.GetLayer(LayerGroup.Sakuzu, 2);
+            float outerPenW = (float)Math.Max(1.0, layerD01.Width * 1.5f);
+            float thickPenW = outerPenW * 2.2f;
+            float innerPenW = (float)Math.Max(1.0, layerD02.Width * 1.2f);
 
             // 1. 図枠（用紙外形）の描画（細線）
             using (var paperPen = new Pen(paperColor, 1.0f) { DashStyle = DashStyle.Dash })
@@ -302,8 +308,8 @@ namespace Site7DbEditor.Services
             }
 
             // 2. 外枠の描画（通常実線、下辺と右辺は太線で用紙の向きを明示）
-            using (var outerPen = new Pen(outerColor, 1.5f))
-            using (var thickPen = new Pen(outerColor, 3.8f))
+            using (var outerPen = new Pen(outerColor, outerPenW))
+            using (var thickPen = new Pen(outerColor, thickPenW))
             {
                 g.DrawPolygon(outerPen, outerScreen);
                 // 下辺 (0:左下 -> 1:右下) と 右辺 (1:右下 -> 2:右上) を太線で強調
@@ -311,8 +317,8 @@ namespace Site7DbEditor.Services
                 g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
             }
 
-            // 3. 内枠の描画 (作図範囲: シアン実線)
-            using (var innerPen = new Pen(innerColor, 1.4f))
+            // 3. 内枠の描画 (作図範囲)
+            using (var innerPen = new Pen(innerColor, innerPenW))
             {
                 g.DrawPolygon(innerPen, innerScreen);
             }

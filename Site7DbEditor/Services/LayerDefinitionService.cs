@@ -99,54 +99,60 @@ namespace Site7DbEditor.Services
                     switch (i)
                     {
                         case 1:
-                            name = "外枠・内枠";
+                            name = "外枠";
                             defaultColor = 1; // 黒
                             defaultWidth = 2;
                             defaultSize = 1.0;
                             break;
                         case 2:
+                            name = "内枠";
+                            defaultColor = 4; // 青
+                            defaultWidth = 1;
+                            defaultSize = 1.0;
+                            break;
+                        case 3:
                             name = "座標グリッド";
                             defaultColor = 16; // 暗灰
                             defaultWidth = 1;
                             defaultSize = 1.0;
                             break;
-                        case 3:
+                        case 4:
                             name = "座標値";
                             defaultColor = 1; // 黒
                             defaultWidth = 1;
                             defaultSize = 2.5;
                             break;
-                        case 4:
+                        case 5:
                             name = "方位記号";
                             defaultColor = 1; // 黒
                             defaultWidth = 1;
                             defaultSize = 15.0;
                             break;
-                        case 5:
+                        case 6:
                             name = "スケールバー";
                             defaultColor = 1; // 黒
                             defaultWidth = 1;
                             defaultSize = 2.5;
                             break;
-                        case 6:
+                        case 7:
                             name = "表題欄";
                             defaultColor = 1; // 黒
                             defaultWidth = 1;
                             defaultSize = 3.0;
                             break;
-                        case 7:
+                        case 8:
                             name = "凡例";
                             defaultColor = 1; // 黒
                             defaultWidth = 1;
                             defaultSize = 2.5;
                             break;
-                        case 8:
+                        case 9:
                             name = "断面線";
                             defaultColor = 2; // 赤
                             defaultWidth = 1;
                             defaultSize = 1.0;
                             break;
-                        case 9:
+                        case 10:
                             name = "断面名・標高";
                             defaultColor = 2; // 赤
                             defaultWidth = 1;
