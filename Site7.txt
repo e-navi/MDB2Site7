@@ -776,6 +776,104 @@ CREATE TABLE '図面遺構' ( 'ZID' INTEGER, 'IID' INTEGER, 'NAME' TEXT, 'X1' RE
         }
     }
 
+        public void SetTSYudo() {
+            XYZ p = gbl.KikaiMan.cnvP(gbl.MField.lng, gbl.MField.angH, gbl.MField.angV);
+            XYZ tp = new XYZ(DoubleParse(Cx1.Text), DoubleParse(Cy1.Text), DoubleParse(Cz1.Text));
+            XYZ kp = St7Lib.Perp(p, gbl.KikaiMan.kp, tp);
+
+            if (kp != null) {
+                XYZ minP = new XYZ(p);
+                minP.min(tp);
+                minP.min(kp);
+                minP.X -= 0.1;
+                minP.Y -= 0.1;
+                XYZ maxP = new XYZ(p);
+                maxP.max(tp);
+                maxP.max(kp);
+                maxP.X += 0.1;
+                maxP.Y += 0.1;
+
+                if (gbl.st7Draw.SetArea(minP, maxP)) {
+                    ShowZumen();
+                } else {
+                    //pictureBox1.Refresh();
+                }
+                double dk = gbl.KikaiMan.kp.CalcLen(kp);
+                double dc = gbl.KikaiMan.kp.CalcLen(p);
+                double d1 = kp.CalcLen(p);
+                double d2 = St7Lib.Calc2PLen2(kp, tp);
+
+                double angP = gbl.KikaiMan.kp.CalcAng(p);
+                double angKP = gbl.KikaiMan.kp.CalcAng(tp);
+
+                double cos = Math.Cos(angP - angKP);
+                double sin = Math.Sin(angP - angKP);
+                double lenP = gbl.KikaiMan.kp.CalcLen(p);
+                double lenKP = gbl.KikaiMan.kp.CalcLen(tp);
+                double x = lenKP * sin;
+                double y = lenKP * cos - lenP;
+                double dz = tp.Z - p.Z;
+
+                if (dc < dk) {
+                    LYudo1.Text = "後へ " + d1.ToString("0.000") + " M";
+                } else {
+                    LYudo1.Text = "前へ " + d1.ToString("0.000") + " M";
+                }
+                if (x < 0) {
+                    LYudo2.Text = "左へ " + (x * -1.0).ToString("0.000") + " M";
+                } else {
+                    LYudo2.Text = "右へ " + x.ToString("0.000") + " M";
+                }
+                if (dz < 0) {
+                    LYudo3.Text = "下へ " + (dz * -1.0).ToString("0.000") + " M";
+                } else {
+                    LYudo3.Text = "上へ " + dz.ToString("0.000") + " M";
+                }
+            }
+
+        }
+        public void SetGPSYudo() {
+            XYZ p = gbl.Gps.gpsP;
+            XYZ tp = new XYZ(DoubleParse(Cx1.Text), DoubleParse(Cy1.Text), DoubleParse(Cz1.Text));
+            XYZ minP = new XYZ(p);
+            minP.min(tp);
+            minP.X -= 0.1;
+            minP.Y -= 0.1;
+            XYZ maxP = new XYZ(p);
+            maxP.max(tp);
+            maxP.X += 0.1;
+            maxP.Y += 0.1;
+            if (gbl.st7Draw.SetArea(minP, maxP)) {
+                ShowZumen();
+            } else {
+                //pictureBox1.Refresh();
+            }
+            double dx = tp.X - p.X;
+            double dy = tp.Y - p.Y;
+            double dz = tp.Z - p.Z;
+
+            if (dx < 0) {
+                LYudo1.Text = "南へ " + (dx * -1.0).ToString("0.000") + " M";
+            } else {
+                LYudo1.Text = "北へ " + dx.ToString("0.000") + " M";
+            }
+            if (dy < 0) {
+                LYudo2.Text = "西へ " + (dy * -1.0).ToString("0.000") + " M";
+            } else {
+                LYudo2.Text = "東へ " + dy.ToString("0.000") + " M";
+            }
+            if (dz < 0) {
+                LYudo3.Text = "下へ " + (dz * -1.0).ToString("0.000") + " M";
+            } else {
+                LYudo3.Text = "上へ " + dz.ToString("0.000") + " M";
+            }
+        }
+        public bool IsYudoMode() {
+            if (isModeKijun() && chkYudo.Checked && (0 < gbl.st7Data.KijunP.KPList.Count))
+                return true;
+            else
+                return false;
+        }
 
         
 
