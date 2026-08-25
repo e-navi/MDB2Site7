@@ -151,7 +151,10 @@ namespace Site7DbEditor {
                     lblStatusMessage.Text = info;
                 }
                 if (lblBottomTitle != null) {
-                    lblBottomTitle.Text = "📋 データ・編集テーブル";
+                    string tabName = tabControlData?.SelectedTab?.Text ?? "";
+                    lblBottomTitle.Text = string.IsNullOrEmpty(tabName)
+                        ? "📋 データ・編集テーブル"
+                        : $"📋 データ・編集テーブル({tabName})";
                 }
                 if (_dlgBottom != null && !_dlgBottom.IsDisposed && _dlgBottom.lblTitle != null) {
                     _dlgBottom.lblTitle.Text = info;
@@ -730,7 +733,6 @@ namespace Site7DbEditor {
                 lblYudo2.Text = "";
                 lblYudo3.Text = "";
             }
-            this.tabControlData.SelectedIndexChanged += tabControlData_SelectedIndexChanged;
             this.cmbIkouKind.SelectedIndexChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.cmbIkouKind.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();
             this.txtIkouNum.TextChanged += (s, e) => UpdateCombinedIkouNameLabel();
@@ -1697,6 +1699,24 @@ namespace Site7DbEditor {
             bool isModeKijunSetting = isKijun && !(chkPointGuidance != null && chkPointGuidance.Checked);
             _ucCtrl?.SetBtns2(isModeKijunSetting);
             gbl.UCCtrl?.SetBtns2(isModeKijunSetting);
+
+            // タイトルのタブ名連動更新
+            string tabName = tabControlData.SelectedTab?.Text ?? "";
+            if (lblBottomTitle != null) {
+                lblBottomTitle.Text = string.IsNullOrEmpty(tabName)
+                    ? "📋 データ・編集テーブル"
+                    : $"📋 データ・編集テーブル({tabName})";
+            }
+            if (_dlgBottom != null && !_dlgBottom.IsDisposed) {
+                if (_dlgBottom.lblTitle != null) {
+                    _dlgBottom.lblTitle.Text = string.IsNullOrEmpty(tabName)
+                        ? "📋 データ・編集テーブル (分離ウィンドウ)"
+                        : $"📋 データ・編集テーブル({tabName}) (分離ウィンドウ)";
+                }
+                _dlgBottom.Text = string.IsNullOrEmpty(tabName)
+                    ? "データ・編集テーブル (分離ウィンドウ)"
+                    : $"データ・編集テーブル({tabName}) (分離ウィンドウ)";
+            }
 
             UpdateLayerCheckboxColors();
             picMapCanvas.Invalidate();
