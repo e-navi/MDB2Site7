@@ -702,7 +702,7 @@ namespace Site7DbEditor {
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
                 if (chkScreenInput.Checked) {
-                    _clickNotifyToolTip.Show("【画面入力モード】\n・左クリック: 頂点追加\n・右クリック: 1点取消\n・左ダブルクリック: 終了", picMapCanvas, 10, 10, 3000);
+                    _clickNotifyToolTip.Show("【画面入力モード】\n・左クリック: 頂点追加\n・右クリック: 1点取消\n・同一点クリック / 左ダブルクリック: 終了\n・矢印キー(↑↓←→): 画面移動(パン)", picMapCanvas, 10, 10, 3500);
                 }
                 picMapCanvas.Invalidate();
             };
@@ -741,6 +741,7 @@ namespace Site7DbEditor {
             this.txtLineNum.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.btnLineMaxPlusOne.Click += btnLineMaxPlusOne_Click;
             this.btnResetMapZoom.Click += (s, e) => { _vc.InvalidateBoundsCache(); _vc.ResetZoom(); picMapCanvas.Invalidate(); };
+            this.btnZoomAll.Click += (s, e) => { _vc.InvalidateBoundsCache(); _vc.ResetZoom(); picMapCanvas.Invalidate(); };
 
             this.picMapCanvas.Paint += picMapCanvas_Paint;
             this.picMapCanvas.MouseDown += picMapCanvas_MouseDown;
@@ -3172,9 +3173,24 @@ namespace Site7DbEditor {
                     // 遺構データタブの場合: クリックで頂点を直接追加
                     if (tabControlData.SelectedIndex == 0) {
                         if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
-                            var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
                             var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
 
+                            // ★ 同一点クリック（直前に入力した頂点と同一／至近位置）の場合は画面入力を終了
+                            if (pts.Count > 0) {
+                                var lastPt = pts[pts.Count - 1];
+                                PointF lastScreenPt = _vc.ToCanvasPoint(lastPt.X, lastPt.Y, picMapCanvas.Size);
+                                double screenDist = Math.Sqrt((e.X - lastScreenPt.X) * (e.X - lastScreenPt.X) + (e.Y - lastScreenPt.Y) * (e.Y - lastScreenPt.Y));
+                                double surveyDist = Math.Sqrt((clickX - lastPt.X) * (clickX - lastPt.X) + (clickY - lastPt.Y) * (clickY - lastPt.Y));
+
+                                if (screenDist <= 10.0 || surveyDist < 0.03) {
+                                    chkScreenInput.Checked = false;
+                                    _clickNotifyToolTip.Show("✔ 同一点クリックにより画面入力を終了しました", picMapCanvas, e.X + 10, e.Y - 25, 1500);
+                                    picMapCanvas.Invalidate();
+                                    return;
+                                }
+                            }
+
+                            var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
                             int nextPid = pts.Count > 0 ? pts.Max(p => p.Pid) + 1 : 1;
                             pts.Add(new IkouPointRecord {
                                 Pid = nextPid,
@@ -3904,6 +3920,38 @@ namespace Site7DbEditor {
             _vc.InvalidateBoundsCache();
             _vc.ResetZoom();
             picMapCanvas.Invalidate();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            // テキスト入力中・セル編集中の場合は通常のカーソル操作を優先
+            if (this.ActiveControl is TextBox || this.ActiveControl is ComboBox || (this.ActiveControl is DataGridView dgv && dgv.IsCurrentCellInEditMode)) {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+
+            Keys key = keyData & Keys.KeyCode;
+            bool isShift = (keyData & Keys.Shift) == Keys.Shift;
+            float step = isShift ? 120f : 40f;
+
+            if (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down) {
+                switch (key) {
+                    case Keys.Left:
+                        _vc.PanOffsetMap = new PointF(_vc.PanOffsetMap.X + step, _vc.PanOffsetMap.Y);
+                        break;
+                    case Keys.Right:
+                        _vc.PanOffsetMap = new PointF(_vc.PanOffsetMap.X - step, _vc.PanOffsetMap.Y);
+                        break;
+                    case Keys.Up:
+                        _vc.PanOffsetMap = new PointF(_vc.PanOffsetMap.X, _vc.PanOffsetMap.Y + step);
+                        break;
+                    case Keys.Down:
+                        _vc.PanOffsetMap = new PointF(_vc.PanOffsetMap.X, _vc.PanOffsetMap.Y - step);
+                        break;
+                }
+                picMapCanvas.Invalidate();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         #endregion
