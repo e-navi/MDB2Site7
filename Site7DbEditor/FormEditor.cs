@@ -701,6 +701,9 @@ namespace Site7DbEditor {
             };
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
+                if (chkScreenInput.Checked) {
+                    _clickNotifyToolTip.Show("【画面入力モード】\n・左クリック: 頂点追加\n・右クリック: 1点取消\n・左ダブルクリック: 終了", picMapCanvas, 10, 10, 3000);
+                }
                 picMapCanvas.Invalidate();
             };
             this.chkPointGuidance.CheckedChanged += (s, e) => {
@@ -3143,8 +3146,7 @@ namespace Site7DbEditor {
             }
 
             if (chkScreenInput.Checked && e.Button == MouseButtons.Right) {
-                chkScreenInput.Checked = false;
-                _clickNotifyToolTip.Show("⏹ 画面入力を終了しました", picMapCanvas, e.X + 10, e.Y - 25, 1200);
+                UndoLastInputPoint(e.Location);
                 return;
             }
 
@@ -3835,7 +3837,70 @@ namespace Site7DbEditor {
             }
         }
 
+        private bool UndoLastInputPoint(Point clickLocation) {
+            if (tabControlData.SelectedIndex == 0) {
+                if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                    var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+                    if (pts.Count > 0) {
+                        var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
+                        var removedPt = pts[pts.Count - 1];
+                        pts.RemoveAt(pts.Count - 1);
+
+                        selectedLine.Precs = SqliteManager.FormatPrecsText(pts);
+                        _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
+
+                        dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
+                        dgvIkouL.Refresh();
+
+                        int newIndex = pts.Count - 1;
+                        _selectedPointIndex = newIndex;
+                        if (newIndex >= 0 && newIndex < dgvPrecs.Rows.Count) {
+                            SetCurrentRowSafe(dgvPrecs, newIndex);
+                        }
+
+                        _clickNotifyToolTip.Show($"↩ 頂点{removedPt.Pid}を取り消しました (残り {pts.Count} 点)", picMapCanvas, clickLocation.X + 10, clickLocation.Y - 25, 1500);
+                        picMapCanvas.Invalidate();
+                        return true;
+                    } else {
+                        _clickNotifyToolTip.Show("取り消す頂点がありません", picMapCanvas, clickLocation.X + 10, clickLocation.Y - 25, 1200);
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
         private void picMapCanvas_MouseDoubleClick(object? sender, MouseEventArgs e) {
+            if (chkScreenInput.Checked && e.Button == MouseButtons.Left) {
+                // ダブルクリックの2回目のMouseDownで追加された重複点を取り消す
+                if (tabControlData.SelectedIndex == 0) {
+                    if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                        var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+                        if (pts.Count > 1) {
+                            var pLast = pts[pts.Count - 1];
+                            var pPrev = pts[pts.Count - 2];
+                            if (Math.Abs(pLast.X - pPrev.X) < 0.05 && Math.Abs(pLast.Y - pPrev.Y) < 0.05) {
+                                var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
+                                pts.RemoveAt(pts.Count - 1);
+                                selectedLine.Precs = SqliteManager.FormatPrecsText(pts);
+                                _logService.Push(EditorLogService.LOG_TYPE_UPD, EditorLogService.REC_TYPE_IKOUL, selectedLine, original, _db.CurrentDbPath);
+                                dgvPrecs.DataSource = new BindingList<IkouPointRecord>(pts);
+                                dgvIkouL.Refresh();
+                                _selectedPointIndex = pts.Count - 1;
+                                if (_selectedPointIndex >= 0 && _selectedPointIndex < dgvPrecs.Rows.Count) {
+                                    SetCurrentRowSafe(dgvPrecs, _selectedPointIndex);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                chkScreenInput.Checked = false;
+                _clickNotifyToolTip.Show("✔ 画面入力を終了しました", picMapCanvas, e.X + 10, e.Y - 25, 1500);
+                picMapCanvas.Invalidate();
+                return;
+            }
+
             _vc.InvalidateBoundsCache();
             _vc.ResetZoom();
             picMapCanvas.Invalidate();
