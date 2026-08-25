@@ -1288,7 +1288,7 @@ namespace Site7DbEditor
             // 
             // tabIkou
             // 
-            tabIkou.BackColor = Color.FromArgb(20, 20, 25);
+            tabIkou.BackColor = Color.FromArgb(245, 246, 248);
             tabIkou.Controls.Add(grpPrecs);
             tabIkou.Controls.Add(grpIkouL);
             tabIkou.Controls.Add(grpIkouMaster);
@@ -1905,7 +1905,7 @@ namespace Site7DbEditor
             // 
             // tabIbutu
             // 
-            tabIbutu.BackColor = Color.FromArgb(20, 20, 25);
+            tabIbutu.BackColor = Color.FromArgb(245, 246, 248);
             tabIbutu.Controls.Add(dgvIbutu);
             tabIbutu.Controls.Add(pnlIbutuRight);
             tabIbutu.Location = new Point(30, 4);
@@ -2113,7 +2113,7 @@ namespace Site7DbEditor
             // 
             // tabKikai
             // 
-            tabKikai.BackColor = Color.FromArgb(20, 20, 25);
+            tabKikai.BackColor = Color.FromArgb(245, 246, 248);
             tabKikai.Controls.Add(dgvKikai);
             tabKikai.Controls.Add(pnlKikaiRight);
             tabKikai.Location = new Point(30, 4);
@@ -2225,7 +2225,7 @@ namespace Site7DbEditor
             // 
             // panelBottomHeader
             // 
-            panelBottomHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelBottomHeader.BackColor = Color.FromArgb(233, 236, 243);
             panelBottomHeader.Controls.Add(lblBottomTitle);
             panelBottomHeader.Controls.Add(btnDetachBottomPanel);
             panelBottomHeader.Dock = DockStyle.Top;
@@ -2238,7 +2238,7 @@ namespace Site7DbEditor
             // 
             lblBottomTitle.AutoSize = true;
             lblBottomTitle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            lblBottomTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblBottomTitle.ForeColor = Color.FromArgb(25, 45, 80);
             lblBottomTitle.Location = new Point(10, 7);
             lblBottomTitle.Name = "lblBottomTitle";
             lblBottomTitle.Size = new Size(115, 15);
@@ -2247,11 +2247,11 @@ namespace Site7DbEditor
             // 
             // btnDetachBottomPanel
             // 
-            btnDetachBottomPanel.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachBottomPanel.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachBottomPanel.Dock = DockStyle.Right;
             btnDetachBottomPanel.FlatStyle = FlatStyle.Flat;
             btnDetachBottomPanel.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnDetachBottomPanel.ForeColor = Color.White;
+            btnDetachBottomPanel.ForeColor = Color.FromArgb(30, 40, 60);
             btnDetachBottomPanel.Location = new Point(1326, 0);
             btnDetachBottomPanel.Name = "btnDetachBottomPanel";
             btnDetachBottomPanel.Size = new Size(64, 30);
@@ -2261,7 +2261,7 @@ namespace Site7DbEditor
             // 
             // tabLayer
             // 
-            tabLayer.BackColor = Color.FromArgb(20, 20, 25);
+            tabLayer.BackColor = Color.FromArgb(245, 246, 248);
             tabLayer.Controls.Add(btnDeleteLayer);
             tabLayer.Controls.Add(btnAddLayer);
             tabLayer.Controls.Add(dgvLayer);
@@ -2309,7 +2309,7 @@ namespace Site7DbEditor
             // 
             // tabBatchUpdate
             // 
-            tabBatchUpdate.BackColor = Color.FromArgb(20, 20, 25);
+            tabBatchUpdate.BackColor = Color.FromArgb(245, 246, 248);
             tabBatchUpdate.Controls.Add(dgvBatchPreview);
             tabBatchUpdate.Controls.Add(grpBatchOptions);
             tabBatchUpdate.Location = new Point(4, 26);

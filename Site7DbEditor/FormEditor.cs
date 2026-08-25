@@ -187,6 +187,8 @@ namespace Site7DbEditor {
             dgvPrecs.DataBindingComplete += (s, e) => ApplyDgvPrecsColumns();
             dgvIbutu.DataBindingComplete += (s, e) => ApplyDgvIbutuColumns();
             dgvKikai.DataBindingComplete += (s, e) => ApplyDgvKikaiColumns();
+
+            ApplyBottomPanelTheme();
         }
 
         private void ApplyDgvIkouColumns() {
@@ -294,9 +296,9 @@ namespace Site7DbEditor {
         private void ApplyDgvStyle(DataGridView dgv) {
             dgv.EnableHeadersVisualStyles = false;
             dgv.DataError += (s, e) => { e.ThrowException = false; };
-            dgv.BackgroundColor = Color.FromArgb(30, 30, 38);
-            dgv.ForeColor = Color.White;
-            dgv.GridColor = Color.FromArgb(55, 55, 65);
+            dgv.BackgroundColor = Color.FromArgb(248, 249, 250);
+            dgv.ForeColor = Color.FromArgb(33, 37, 41);
+            dgv.GridColor = Color.FromArgb(215, 220, 228);
             dgv.RowHeadersVisible = false;
             dgv.ReadOnly = true;
             dgv.AllowUserToAddRows = false;
@@ -308,15 +310,109 @@ namespace Site7DbEditor {
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.MultiSelect = false;
 
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 45, 66);
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(0, 180, 216);
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 235, 245);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(25, 45, 80);
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
 
-            dgv.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 38);
-            dgv.DefaultCellStyle.ForeColor = Color.White;
-            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 180, 216);
-            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgv.DefaultCellStyle.BackColor = Color.White;
+            dgv.DefaultCellStyle.ForeColor = Color.FromArgb(20, 20, 20);
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(179, 229, 252);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(0, 30, 80);
+        }
+
+        private void ApplyBottomPanelTheme() {
+            // ヘッダーバー
+            panelBottomHeader.BackColor = Color.FromArgb(233, 236, 243);
+            lblBottomTitle.ForeColor = Color.FromArgb(25, 45, 80);
+            btnDetachBottomPanel.BackColor = Color.FromArgb(215, 222, 235);
+            btnDetachBottomPanel.ForeColor = Color.FromArgb(30, 40, 60);
+
+            // 各タブページ背景色
+            Color tabBgColor = Color.FromArgb(245, 246, 248);
+            tabIkou.BackColor = tabBgColor;
+            tabIbutu.BackColor = tabBgColor;
+            tabKikai.BackColor = tabBgColor;
+            if (tabLayer != null) tabLayer.BackColor = tabBgColor;
+            if (tabBatchUpdate != null) tabBatchUpdate.BackColor = tabBgColor;
+
+            // 右側コンテナパネル
+            pnlPrecsRight.BackColor = tabBgColor;
+            pnlIbutuRight.BackColor = tabBgColor;
+            pnlKikaiRight.BackColor = tabBgColor;
+
+            // グループボックス
+            GroupBox[] grps = {
+                grpIkouMaster, grpIkouL, grpPrecs, grpCoordValue,
+                grpIbutuRecord, grpKikaiRecord, grpPointGuidance, grpYudo
+            };
+            Color grpHeaderColor = Color.FromArgb(25, 55, 105);
+            foreach (var grp in grps) {
+                if (grp != null) {
+                    grp.BackColor = tabBgColor;
+                    grp.ForeColor = grpHeaderColor;
+                }
+            }
+
+            // コントロール配色の適用
+            Color darkTextColor = Color.FromArgb(33, 37, 41);
+            Color editBoxBg = Color.White;
+            Color btnSubBg = Color.FromArgb(225, 232, 242);
+            Color btnSubFg = Color.FromArgb(25, 45, 80);
+
+            void StyleContainer(Control parent) {
+                foreach (Control c in parent.Controls) {
+                    if (c is Label lbl) {
+                        if (lbl != lblBottomTitle && lbl != lblIkouLayerGrpHeader && lbl != lblDrawingPreviewTitle && lbl != lblRightTitle) {
+                            if (lbl == lblIkouNameVal || lbl == lblLineNameVal) {
+                                lbl.ForeColor = Color.FromArgb(0, 102, 204);
+                            } else {
+                                lbl.ForeColor = darkTextColor;
+                            }
+                        }
+                    } else if (c is CheckBox chk) {
+                        if (chk == chkScreenInput) {
+                            chk.ForeColor = Color.FromArgb(200, 30, 30);
+                        } else {
+                            chk.ForeColor = darkTextColor;
+                        }
+                    } else if (c is RadioButton rdo) {
+                        rdo.ForeColor = darkTextColor;
+                    } else if (c is TextBox txt) {
+                        if (txt == txtCoordX || txt == txtCoordY || txt == txtCoordZ) {
+                            txt.BackColor = Color.FromArgb(255, 255, 220);
+                            txt.ForeColor = Color.Black;
+                        } else {
+                            txt.BackColor = editBoxBg;
+                            txt.ForeColor = darkTextColor;
+                        }
+                    } else if (c is ComboBox cmb) {
+                        cmb.BackColor = editBoxBg;
+                        cmb.ForeColor = darkTextColor;
+                    } else if (c is Button btn) {
+                        string t = btn.Text;
+                        if (t.Contains("削除")) {
+                            btn.BackColor = Color.FromArgb(220, 53, 69);
+                            btn.ForeColor = Color.White;
+                        } else if (t.Contains("更新")) {
+                            btn.BackColor = Color.FromArgb(255, 193, 7);
+                            btn.ForeColor = Color.Black;
+                        } else if (t.Contains("追加")) {
+                            btn.BackColor = Color.FromArgb(40, 167, 69);
+                            btn.ForeColor = Color.White;
+                        } else if (t.Contains("+1") || t.Contains("位置指定") || t.Contains("全図") || t.Contains("全ON") || t.Contains("全OFF")) {
+                            btn.BackColor = btnSubBg;
+                            btn.ForeColor = btnSubFg;
+                            btn.UseVisualStyleBackColor = false;
+                        }
+                    }
+                    if (c.HasChildren && !(c is DataGridView)) {
+                        StyleContainer(c);
+                    }
+                }
+            }
+
+            StyleContainer(tabControlData);
         }
 
         private void InitRightEditControls() {
