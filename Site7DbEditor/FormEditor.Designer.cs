@@ -23,6 +23,7 @@ namespace Site7DbEditor
             btnHeaderSync = new Button();
             lblDbStatus = new Label();
             btnSaveDb = new Button();
+            btnExit = new Button();
             lblSubHeader = new Label();
             lblHeaderTitle = new Label();
             lblQuickDb = new Label();
@@ -266,8 +267,9 @@ namespace Site7DbEditor
             panelHeader.Controls.Add(btnHeaderTools);
             panelHeader.Controls.Add(btnHeaderCsv);
             panelHeader.Controls.Add(btnHeaderSync);
-            panelHeader.Controls.Add(lblDbStatus);
             panelHeader.Controls.Add(btnSaveDb);
+            panelHeader.Controls.Add(lblDbStatus);
+            panelHeader.Controls.Add(btnExit);
             panelHeader.Controls.Add(lblSubHeader);
             panelHeader.Controls.Add(lblHeaderTitle);
             panelHeader.Dock = DockStyle.Top;
@@ -332,31 +334,47 @@ namespace Site7DbEditor
             btnHeaderSync.Text = "🔄 同期処理";
             btnHeaderSync.UseVisualStyleBackColor = false;
             // 
+            // 
+            // btnSaveDb
+            // 
+            btnSaveDb.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            btnSaveDb.BackColor = Color.FromArgb(56, 176, 0);
+            btnSaveDb.FlatStyle = FlatStyle.Flat;
+            btnSaveDb.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnSaveDb.ForeColor = Color.Black;
+            btnSaveDb.Location = new Point(644, 7);
+            btnSaveDb.Name = "btnSaveDb";
+            btnSaveDb.Size = new Size(100, 32);
+            btnSaveDb.TabIndex = 11;
+            btnSaveDb.Text = "💾 DB保存";
+            btnSaveDb.UseVisualStyleBackColor = false;
+            // 
             // lblDbStatus
             // 
             lblDbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblDbStatus.Font = new Font("Yu Gothic UI", 8.5F);
             lblDbStatus.ForeColor = Color.FromArgb(255, 183, 3);
-            lblDbStatus.Location = new Point(1125, 7);
+            lblDbStatus.Location = new Point(1165, 7);
             lblDbStatus.Name = "lblDbStatus";
-            lblDbStatus.Size = new Size(215, 35);
+            lblDbStatus.Size = new Size(220, 32);
             lblDbStatus.TabIndex = 6;
             lblDbStatus.Text = "DB未読み込み";
             lblDbStatus.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // btnSaveDb
+            // btnExit
             // 
-            btnSaveDb.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnSaveDb.BackColor = Color.FromArgb(56, 176, 0);
-            btnSaveDb.FlatStyle = FlatStyle.Flat;
-            btnSaveDb.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold);
-            btnSaveDb.ForeColor = Color.Black;
-            btnSaveDb.Location = new Point(1350, 7);
-            btnSaveDb.Name = "btnSaveDb";
-            btnSaveDb.Size = new Size(155, 35);
-            btnSaveDb.TabIndex = 5;
-            btnSaveDb.Text = "💾 SQLite DB保存";
-            btnSaveDb.UseVisualStyleBackColor = false;
+            btnExit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExit.BackColor = Color.FromArgb(70, 75, 95);
+            btnExit.FlatAppearance.BorderColor = Color.FromArgb(100, 105, 130);
+            btnExit.FlatStyle = FlatStyle.Flat;
+            btnExit.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnExit.ForeColor = Color.White;
+            btnExit.Location = new Point(1395, 7);
+            btnExit.Name = "btnExit";
+            btnExit.Size = new Size(110, 32);
+            btnExit.TabIndex = 12;
+            btnExit.Text = "✖ 終了";
+            btnExit.UseVisualStyleBackColor = false;
             // 
             // lblSubHeader
             // 
@@ -2657,12 +2675,13 @@ namespace Site7DbEditor
         private System.Windows.Forms.Button btnHeaderTools;
         private System.Windows.Forms.Button btnHeaderCsv;
         private System.Windows.Forms.Button btnHeaderSync;
+        private System.Windows.Forms.Button btnSaveDb;
+        private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label lblHeaderTitle;
         private System.Windows.Forms.Label lblSubHeader;
         private System.Windows.Forms.Button btnOpenDb;
         private System.Windows.Forms.Label lblQuickDb;
         private System.Windows.Forms.ComboBox cmbQuickDbSelect;
-        private System.Windows.Forms.Button btnSaveDb;
         private System.Windows.Forms.Label lblDbStatus;
 
         private System.Windows.Forms.Panel panelMapHeader;

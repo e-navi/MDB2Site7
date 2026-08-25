@@ -375,6 +375,7 @@ namespace Site7DbEditor {
             this.panelMapRight.Resize += (s, e) => UpdatePanelWidthsDisplay();
             this.picMapCanvas.SizeChanged += (s, e) => { _vc.InvalidateBoundsCache(); UpdatePanelWidthsDisplay(); picMapCanvas.Invalidate(); };
             this.btnSaveDb.Click += btnSaveDb_Click;
+            this.btnExit.Click += (s, e) => this.Close();
 
             this.dgvIkou.SelectionChanged += dgvIkou_SelectionChanged;
             this.dgvIkouL.SelectionChanged += dgvIkouL_SelectionChanged;
@@ -2688,7 +2689,7 @@ namespace Site7DbEditor {
 
             var confirm = MessageBox.Show(
                 $"現在の編集内容を DBファイル [{Path.GetFileName(_db.CurrentDbPath)}] に上書き保存しますか？",
-                "SQLite DB保存確認",
+                "DB保存確認",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -2698,7 +2699,7 @@ namespace Site7DbEditor {
             try {
                 _db.SaveDatabase(_db.CurrentDbPath, chkShowIkou.Checked, chkShowIbutu.Checked, chkShowKikai.Checked, chkShowCurve.Checked);
                 _logService.Clear(_db.CurrentDbPath);
-                MessageBox.Show("✔ SQLite DB に正常に上書き保存しました！", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("✔ DB に正常に上書き保存しました！", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } catch (Exception ex) {
                 MessageBox.Show($"DB保存時にエラーが発生しました: {ex.Message}", "保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
