@@ -400,8 +400,12 @@ namespace Site7DbEditor
 
         private void BtnExportToMaster_Click(object? sender, EventArgs e)
         {
+            var group = GetSelectedGroup();
+            string groupName = LayerDefinitionService.DisplayNames.TryGetValue(group, out var gn) ? gn : "選択レイヤ群";
+            string fileName = LayerDefinitionService.FileNames.TryGetValue(group, out var fn) ? fn : "";
+
             var res = MessageBox.Show(
-                "現在の現場のレイヤ定義データで、システム共通マスターを上書き更新しますか？\n\n※ 次回の新規現場作成時などに標準テンプレートとして使用されます。",
+                $"現在の現場の【{groupName}】（{fileName}）で、システム共通マスターを上書き更新しますか？\n\n※ 他のレイヤ群（遺構・遺物・基準点など）は影響を受けません。\n※ 次回の新規現場作成時などにこのレイヤ群の標準テンプレートとして使用されます。",
                 "マスターへ反映確認",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -412,8 +416,8 @@ namespace Site7DbEditor
             {
                 AutoApplyCurrentItem();
                 string sysDir = LayerDefinitionService.Instance.GetSystemDefDirectory();
-                LayerDefinitionService.Instance.SaveAll(sysDir);
-                MessageBox.Show($"✔ 現場のレイヤ定義をシステム共通マスターへ反映しました。\n保存先: {sysDir}", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LayerDefinitionService.Instance.SaveGroup(sysDir, group);
+                MessageBox.Show($"✔ 現場の【{groupName}】をシステム共通マスターへ反映しました。\n保存先: {Path.Combine(sysDir, fileName)}", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -423,8 +427,12 @@ namespace Site7DbEditor
 
         private void BtnImportFromMaster_Click(object? sender, EventArgs e)
         {
+            var group = GetSelectedGroup();
+            string groupName = LayerDefinitionService.DisplayNames.TryGetValue(group, out var gn) ? gn : "選択レイヤ群";
+            string fileName = LayerDefinitionService.FileNames.TryGetValue(group, out var fn) ? fn : "";
+
             var res = MessageBox.Show(
-                "システム共通マスターのレイヤ定義データを読み込み、現在の現場設定に反映しますか？\n\n※ 現在の編集内容はマスターデータで上書きされます。",
+                $"システム共通マスターの【{groupName}】（{fileName}）を読み込み、現在の現場設定に反映しますか？\n\n※ 他のレイヤ群（遺構・遺物・基準点など）は維持されます。\n※ 現在編集中の【{groupName}】はマスターデータで上書きされます。",
                 "マスターから反映確認",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -433,9 +441,9 @@ namespace Site7DbEditor
 
             try
             {
-                LayerDefinitionService.Instance.LoadAll(null);
+                LayerDefinitionService.Instance.LoadGroup(group, null);
                 ComboBoxLayerG_SelectedIndexChanged(null, EventArgs.Empty);
-                MessageBox.Show("✔ システム共通マスターからレイヤ定義を反映しました。\n「💾 設定を保存」を押すと現場に保存されます。", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"✔ システム共通マスターから【{groupName}】を反映しました。\n「💾 設定を保存」を押すと現場に保存されます。", "反映完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
