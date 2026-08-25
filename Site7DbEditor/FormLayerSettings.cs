@@ -322,6 +322,19 @@ namespace Site7DbEditor
             try
             {
                 textBox1.Text = item.Name;
+                if (group == LayerGroup.Sakuzu)
+                {
+                    textBox1.ReadOnly = true;
+                    textBox1.BackColor = Color.FromArgb(235, 238, 245);
+                    textBox1.ForeColor = Color.FromArgb(70, 70, 80);
+                }
+                else
+                {
+                    textBox1.ReadOnly = false;
+                    textBox1.BackColor = Color.White;
+                    textBox1.ForeColor = Color.Black;
+                }
+
                 CBoxColor.SelectedIndex = Math.Clamp(item.Color - 1, 0, CBoxColor.Items.Count - 1);
                 CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
                 CBoxSize.Text = item.Size.ToString("F1");

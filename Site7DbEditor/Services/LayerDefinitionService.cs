@@ -87,18 +87,88 @@ namespace Site7DbEditor.Services
             for (int i = 1; i <= 16; i++)
             {
                 string code = $"{prefix}{i:D2}";
-                string name = group switch
-                {
-                    LayerGroup.Ibutu => (i == 1) ? "遺物L01" : $"遺物L{i:D2}",
-                    LayerGroup.Kikai => (i == 1) ? "基準点" : $"基準点L{i:D2}",
-                    LayerGroup.Sakuzu => code,
-                    _ => code
-                };
-
+                string name;
                 int defaultColor = ((i - 1) % 16) + 1;
+                int defaultWidth = 1;
                 int defaultMark = 1;
                 double defaultSize = 1.0;
                 int defaultLType = (group == LayerGroup.Ikou) ? 2 : 1;
+
+                if (group == LayerGroup.Sakuzu)
+                {
+                    switch (i)
+                    {
+                        case 1:
+                            name = "外枠・内枠";
+                            defaultColor = 1; // 黒
+                            defaultWidth = 2;
+                            defaultSize = 1.0;
+                            break;
+                        case 2:
+                            name = "座標グリッド";
+                            defaultColor = 16; // 暗灰
+                            defaultWidth = 1;
+                            defaultSize = 1.0;
+                            break;
+                        case 3:
+                            name = "座標値";
+                            defaultColor = 1; // 黒
+                            defaultWidth = 1;
+                            defaultSize = 2.5;
+                            break;
+                        case 4:
+                            name = "方位記号";
+                            defaultColor = 1; // 黒
+                            defaultWidth = 1;
+                            defaultSize = 15.0;
+                            break;
+                        case 5:
+                            name = "スケールバー";
+                            defaultColor = 1; // 黒
+                            defaultWidth = 1;
+                            defaultSize = 2.5;
+                            break;
+                        case 6:
+                            name = "表題欄";
+                            defaultColor = 1; // 黒
+                            defaultWidth = 1;
+                            defaultSize = 3.0;
+                            break;
+                        case 7:
+                            name = "凡例";
+                            defaultColor = 1; // 黒
+                            defaultWidth = 1;
+                            defaultSize = 2.5;
+                            break;
+                        case 8:
+                            name = "断面線";
+                            defaultColor = 2; // 赤
+                            defaultWidth = 1;
+                            defaultSize = 1.0;
+                            break;
+                        case 9:
+                            name = "断面名・標高";
+                            defaultColor = 2; // 赤
+                            defaultWidth = 1;
+                            defaultSize = 3.0;
+                            break;
+                        default:
+                            name = $"リザーブ{i:D2}";
+                            defaultColor = i;
+                            defaultWidth = 1;
+                            defaultSize = 1.0;
+                            break;
+                    }
+                }
+                else
+                {
+                    name = group switch
+                    {
+                        LayerGroup.Ibutu => (i == 1) ? "遺物L01" : $"遺物L{i:D2}",
+                        LayerGroup.Kikai => (i == 1) ? "基準点" : $"基準点L{i:D2}",
+                        _ => code
+                    };
+                }
 
                 list.Add(new LayerItem
                 {
@@ -108,7 +178,7 @@ namespace Site7DbEditor.Services
                     Color = defaultColor,
                     Mark = defaultMark,
                     Size = defaultSize,
-                    Width = 1,
+                    Width = defaultWidth,
                     LType = defaultLType
                 });
             }
