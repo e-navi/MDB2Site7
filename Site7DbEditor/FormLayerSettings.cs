@@ -45,6 +45,11 @@ namespace Site7DbEditor
             {
                 comboBoxLayerG.SelectedIndex = groupIdx;
             }
+            if (listBox1.Items.Count > 0 && listBox1.SelectedIndex < 0)
+            {
+                listBox1.SelectedIndex = 0;
+            }
+            UpdateRightEditControls();
         }
 
         private void InitializeComponent()
@@ -286,21 +291,28 @@ namespace Site7DbEditor
                 {
                     listBox1.Items.Add(item.DisplayText);
                 }
-
-                if (listBox1.Items.Count > 0)
-                {
-                    listBox1.SelectedIndex = 0;
-                }
             }
             finally
             {
                 _isUpdatingUi = false;
             }
+
+            if (listBox1.Items.Count > 0)
+            {
+                listBox1.SelectedIndex = 0;
+            }
+            UpdateRightEditControls();
         }
 
         private void ListBox1_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (_isUpdatingUi || listBox1.SelectedIndex < 0) return;
+            UpdateRightEditControls();
+        }
+
+        private void UpdateRightEditControls()
+        {
+            if (listBox1.SelectedIndex < 0) return;
 
             var group = GetSelectedGroup();
             int itemIdx = listBox1.SelectedIndex;
