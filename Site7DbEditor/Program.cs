@@ -1,13 +1,38 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
+
 namespace Site7DbEditor
 {
     static class Program
     {
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        private const int SW_RESTORE = 9;
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
+            const string mutexName = @"Global\Site7_Archaeological_System_Mutex_2026";
+            using var mutex = new Mutex(true, mutexName, out bool createdNew);
+
+            if (!createdNew)
+            {
+                // 既に起動しているプロセスを最前面にアクティブ化
+                ActivateExistingProcessWindow();
+                MessageBox.Show("Site7 は既に起動しています。", "二重起動防止", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             ApplicationConfiguration.Initialize();
 
@@ -23,7 +48,7 @@ namespace Site7DbEditor
             {
                 using var launcher = new FormLauncher();
                 var result = launcher.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath))
+                if (result == DialogResult.OK && !string.IsNullOrEmpty(launcher.SelectedDbPath))
                 {
                     var editor = new FormEditor(launcher.SelectedDbPath, launcher.IsGaigyoMode);
                     Application.Run(editor);
@@ -35,6 +60,25 @@ namespace Site7DbEditor
                     break;
                 }
             }
-        }    
+        }
+
+        private static void ActivateExistingProcessWindow()
+        {
+            try
+            {
+                var current = Process.GetCurrentProcess();
+                var processes = Process.GetProcessesByName(current.ProcessName);
+                foreach (var p in processes)
+                {
+                    if (p.Id != current.Id && p.MainWindowHandle != IntPtr.Zero)
+                    {
+                        ShowWindow(p.MainWindowHandle, SW_RESTORE);
+                        SetForegroundWindow(p.MainWindowHandle);
+                        break;
+                    }
+                }
+            }
+            catch { }
+        }
     }
 }
