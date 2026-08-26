@@ -2596,7 +2596,7 @@ namespace Site7DbEditor
             MinimumSize = new Size(1280, 780);
             Name = "FormEditor";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "SITE7 SQLite Database Editor (2D CAD & Data Editor)";
+            Text = "SITE7 - 遺跡調査システム (2D CAD & Data Editor)";
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelMapArea.ResumeLayout(false);

@@ -7,6 +7,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Version>0.9.3</Version>
+    <AssemblyName>Site7</AssemblyName>
+    <Product>Site7</Product>
+    <AssemblyTitle>Site7 遺跡調査システム</AssemblyTitle>
+    <Description>遺跡調査システム Site7</Description>
   </PropertyGroup>
 
   <ItemGroup>
