@@ -17,6 +17,7 @@ namespace Site7DbEditor.Services
         public string SiteFolderPath { get; set; } = "";
         public string DbFilePath { get; set; } = "";
         public string SiteName { get; set; } = "";
+        public string SourceCategory { get; set; } = "外業"; // "外業" or "内業" or "一般"
         public DateTime UpdatedAt { get; set; }
 
         public string DisplayText
@@ -26,7 +27,8 @@ namespace Site7DbEditor.Services
                 string driveInfo = !string.IsNullOrEmpty(DriveLetter)
                     ? $"[{DriveLetter}] {DriveLabel}"
                     : "[外部フォルダ]";
-                return $"{driveInfo} - 現場: {SiteName} ({UpdatedAt:yyyy/MM/dd HH:mm})";
+                string catTag = !string.IsNullOrEmpty(SourceCategory) ? $"【{SourceCategory}】" : "";
+                return $"{driveInfo} - 現場: {SiteName} {catTag} ({UpdatedAt:yyyy/MM/dd HH:mm})";
             }
         }
     }
@@ -98,6 +100,7 @@ namespace Site7DbEditor.Services
         public int IkouLMergedCount { get; set; }
         public int IbutuMergedCount { get; set; }
         public int KikaiMergedCount { get; set; }
+        public int DefFilesUpdatedCount { get; set; }
 
         public int TotalMergedCount => IkouMergedCount + IkouLMergedCount + IbutuMergedCount + KikaiMergedCount;
 
@@ -106,17 +109,35 @@ namespace Site7DbEditor.Services
               $"・遺構: {IkouMergedCount}件\n" +
               $"・遺構線(測点): {IkouLMergedCount}件\n" +
               $"・遺物: {IbutuMergedCount}件\n" +
-              $"・基準点: {KikaiMergedCount}件" +
+              $"・基準点: {KikaiMergedCount}件\n" +
+              $"・定義ファイル(Def): {DefFilesUpdatedCount}件同期" +
               (!string.IsNullOrEmpty(BackupFilePath) ? $"\n\n※ 自動バックアップ作成: {Path.GetFileName(BackupFilePath)}" : "")
             : $"❌ 同期エラー: {ErrorMessage}";
     }
 
+    public class SyncHistoryRecord
+    {
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+        public string ActionType { get; set; } = ""; // "【取込】外業→内業", "【出力】内業→SSD", etc.
+        public string MachineName { get; set; } = Environment.MachineName;
+        public string SiteName { get; set; } = "";
+        public string SourcePath { get; set; } = "";
+        public string DestinationPath { get; set; } = "";
+        public int TotalCount { get; set; }
+        public string CountsDetail { get; set; } = "";
+        public string DefFiles { get; set; } = "";
+        public string BackupFile { get; set; } = "";
+        public string Status { get; set; } = "成功";
+    }
+
     public static class SyncService
     {
+        public const string SyncBaseFolderName = "Site7同期データ";
+
         /// <summary>
-        /// USBドライブ等の外部メディアから指定現場または利用可能な外業現場候補を検索します。
+        /// USBドライブ等の外部メディアから指定現場または利用可能な外業/内業現場候補を検索します。
         /// </summary>
-        public static List<OutdoorDeviceCandidate> FindOutdoorCandidates(string? targetSiteName = null)
+        public static List<OutdoorDeviceCandidate> FindOutdoorCandidates(string? targetSiteName = null, bool preferOutdoorFolder = true)
         {
             var results = new List<OutdoorDeviceCandidate>();
 
@@ -136,50 +157,57 @@ namespace Site7DbEditor.Services
                 {
                     double totalGb = Math.Round((double)drive.TotalSize / (1024 * 1024 * 1024), 1);
                     double freeGb = Math.Round((double)drive.AvailableFreeSpace / (1024 * 1024 * 1024), 1);
-                    string driveLabel = !string.IsNullOrEmpty(drive.VolumeLabel) ? drive.VolumeLabel : "リムーバブル ディスク";
+                    string driveLabel = !string.IsNullOrEmpty(drive.VolumeLabel) ? drive.VolumeLabel : (drive.DriveType == DriveType.Removable ? "リムーバブル SSD/USB" : "ローカルドライブ");
 
-                    // 探索候補フォルダ
-                    var searchRoots = new List<string>
+                    // 探索ルート 1: [Drive]:\Site7同期データ\<現場名>\<外業 or 内業>\
+                    string syncRoot = Path.Combine(drive.RootDirectory.FullName, SyncBaseFolderName);
+                    if (Directory.Exists(syncRoot))
                     {
-                        Path.Combine(drive.RootDirectory.FullName, "SITE7", "GENBA", "DATA"),
-                        Path.Combine(drive.RootDirectory.FullName, "SITE7"),
-                        drive.RootDirectory.FullName
-                    };
+                        var siteDirs = Directory.GetDirectories(syncRoot);
+                        foreach (var sDir in siteDirs)
+                        {
+                            string sName = Path.GetFileName(sDir);
 
-                    foreach (var root in searchRoots)
+                            // 外業サブフォルダ
+                            string outDir = Path.Combine(sDir, "外業");
+                            if (Directory.Exists(outDir))
+                            {
+                                AddCandidateIfValid(results, drive, outDir, sName, totalGb, freeGb, driveLabel, "外業");
+                            }
+
+                            // 内業サブフォルダ
+                            string inDir = Path.Combine(sDir, "内業");
+                            if (Directory.Exists(inDir))
+                            {
+                                AddCandidateIfValid(results, drive, inDir, sName, totalGb, freeGb, driveLabel, "内業");
+                            }
+
+                            // サブフォルダなし直下
+                            AddCandidateIfValid(results, drive, sDir, sName, totalGb, freeGb, driveLabel, "一般");
+                        }
+                    }
+
+                    // 探索ルート 2: [Drive]:\SITE7\GENBA\DATA\<現場名>\
+                    string genbaRoot = Path.Combine(drive.RootDirectory.FullName, "SITE7", "GENBA", "DATA");
+                    if (Directory.Exists(genbaRoot))
                     {
-                        if (!Directory.Exists(root)) continue;
-
-                        // 1. targetSiteName が一致するフォルダを優先探索
-                        if (!string.IsNullOrEmpty(targetSiteName))
+                        var gDirs = Directory.GetDirectories(genbaRoot);
+                        foreach (var gDir in gDirs)
                         {
-                            string directPath = Path.Combine(root, targetSiteName);
-                            if (Directory.Exists(directPath))
-                            {
-                                AddCandidateIfValid(results, drive, directPath, targetSiteName, totalGb, freeGb, driveLabel);
-                            }
+                            string sName = Path.GetFileName(gDir);
+                            AddCandidateIfValid(results, drive, gDir, sName, totalGb, freeGb, driveLabel, "GENBA");
                         }
-
-                        // 2. 直下のサブディレクトリを探索
-                        try
-                        {
-                            var dirs = Directory.GetDirectories(root);
-                            foreach (var dir in dirs)
-                            {
-                                string siteName = Path.GetFileName(dir);
-                                AddCandidateIfValid(results, drive, dir, siteName, totalGb, freeGb, driveLabel);
-                            }
-                        }
-                        catch { }
                     }
                 }
                 catch { }
             }
 
-            // 優先度ソート: 目的の現場名一致 > リムーバブルドライブ > 更新日時降順
+            // 優先度ソート: 目的の現場名一致 > 優先対象カテゴリ(外業 or 内業) > リムーバブル > 更新日時降順
+            string preferCategory = preferOutdoorFolder ? "外業" : "内業";
             return results
                 .DistinctBy(c => c.DbFilePath)
                 .OrderByDescending(c => !string.IsNullOrEmpty(targetSiteName) && c.SiteName.Equals(targetSiteName, StringComparison.OrdinalIgnoreCase))
+                .ThenByDescending(c => c.SourceCategory == preferCategory)
                 .ThenByDescending(c => c.DriveType == DriveType.Removable)
                 .ThenByDescending(c => c.UpdatedAt)
                 .ToList();
@@ -192,7 +220,8 @@ namespace Site7DbEditor.Services
             string siteName,
             double totalGb,
             double freeGb,
-            string driveLabel)
+            string driveLabel,
+            string category)
         {
             if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath)) return;
 
@@ -210,7 +239,6 @@ namespace Site7DbEditor.Services
 
             if (foundDb == null)
             {
-                // *.db または *.sqlite を探索
                 try
                 {
                     var dbs = Directory.GetFiles(folderPath, "*.db")
@@ -234,9 +262,100 @@ namespace Site7DbEditor.Services
                     SiteFolderPath = folderPath,
                     DbFilePath = foundDb,
                     SiteName = siteName,
+                    SourceCategory = category,
                     UpdatedAt = fi.LastWriteTime
                 });
             }
+        }
+
+        /// <summary>
+        /// 現在の現場データをポータブルSSDへ出力（エクスポート）します。
+        /// </summary>
+        public static SyncResult ExportSiteToSsd(
+            string currentDbPath,
+            string siteName,
+            string targetDriveLetter,
+            bool isGaigyoMode,
+            Action<string, int>? progressCallback = null)
+        {
+            var result = new SyncResult();
+
+            if (!File.Exists(currentDbPath))
+            {
+                result.Success = false;
+                result.ErrorMessage = "現場データベースファイルが見つかりません。";
+                return result;
+            }
+
+            try
+            {
+                string category = isGaigyoMode ? "外業" : "内業";
+                string actionType = isGaigyoMode ? "【出力】外業 → SSD" : "【出力】内業 → SSD";
+
+                progressCallback?.Invoke("出力先フォルダを準備中...", 10);
+                string siteDir = Path.GetDirectoryName(currentDbPath) ?? "";
+
+                // 出力先: [Drive]:\Site7同期データ\<現場名>\<外業 or 内業>\
+                string destDir = Path.Combine(targetDriveLetter, SyncBaseFolderName, siteName, category);
+                if (!Directory.Exists(destDir))
+                {
+                    Directory.CreateDirectory(destDir);
+                }
+
+                // 1. Site7.db のコピー
+                progressCallback?.Invoke("Site7.db を出力中...", 30);
+                string destDb = Path.Combine(destDir, "Site7.db");
+                File.Copy(currentDbPath, destDb, overwrite: true);
+
+                // 2. Def フォルダの全ファイルコピー
+                progressCallback?.Invoke("現場定義ファイル(Def)を出力中...", 50);
+                string srcDef = Path.Combine(siteDir, "Def");
+                string destDef = Path.Combine(destDir, "Def");
+                int defCount = CopyDirectoryAllFiles(srcDef, destDef);
+                result.DefFilesUpdatedCount = defCount;
+
+                // 3. SITE7.ini, SITE7.png 等の関連ファイルコピー
+                progressCallback?.Invoke("現場設定・サムネイルを出力中...", 75);
+                string[] extraFiles = new[] { "SITE7.ini", "SITE7.png", "Site7.ini", "Site7.png" };
+                foreach (var name in extraFiles)
+                {
+                    string sf = Path.Combine(siteDir, name);
+                    if (File.Exists(sf))
+                    {
+                        File.Copy(sf, Path.Combine(destDir, name), overwrite: true);
+                    }
+                }
+
+                // 4. 同期履歴の記録
+                progressCallback?.Invoke("同期履歴を記録中...", 90);
+                var historyRecord = new SyncHistoryRecord
+                {
+                    Timestamp = DateTime.Now,
+                    ActionType = actionType,
+                    MachineName = Environment.MachineName,
+                    SiteName = siteName,
+                    SourcePath = siteDir,
+                    DestinationPath = destDir,
+                    TotalCount = 0,
+                    CountsDetail = "一式出力",
+                    DefFiles = $"{defCount}ファイル",
+                    BackupFile = "",
+                    Status = "正常完了"
+                };
+
+                AppendSyncHistoryLog(siteDir, historyRecord);
+                AppendSyncHistoryLog(Path.Combine(targetDriveLetter, SyncBaseFolderName, siteName), historyRecord);
+
+                progressCallback?.Invoke("出力完了", 100);
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -476,13 +595,18 @@ namespace Site7DbEditor.Services
 
             try
             {
+                string siteDir = Path.GetDirectoryName(indoorDbPath) ?? "";
+                string outdoorDir = Path.GetDirectoryName(outdoorDbPath) ?? "";
+                string siteName = Path.GetFileName(siteDir);
+
                 // 1. 自動バックアップ
                 if (createBackup)
                 {
                     progressCallback?.Invoke("内業DBのバックアップを作成中...", 10);
-                    string? dir = Path.GetDirectoryName(indoorDbPath);
-                    string baseName = Path.GetFileNameWithoutExtension(indoorDbPath);
-                    string backupFile = Path.Combine(dir ?? "", $"{baseName}_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db");
+                    string backupDir = Path.Combine(siteDir, "backup");
+                    if (!Directory.Exists(backupDir)) Directory.CreateDirectory(backupDir);
+
+                    string backupFile = Path.Combine(backupDir, $"SITE7_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db");
                     File.Copy(indoorDbPath, backupFile, overwrite: true);
                     result.BackupFilePath = backupFile;
                 }
@@ -705,14 +829,15 @@ namespace Site7DbEditor.Services
                     }
                 }
 
-                // 4. 定義ファイル（Def, INI）の同期（外業側に存在する場合）
-                progressCallback?.Invoke("現場定義ファイルを同期中...", 85);
-                SyncDirectoryFiles(
-                    Path.Combine(Path.GetDirectoryName(outdoorDbPath) ?? "", "Def"),
-                    Path.Combine(Path.GetDirectoryName(indoorDbPath) ?? "", "Def"));
+                // 4. 定義ファイル（Def/）の同期
+                progressCallback?.Invoke("現場定義ファイル(Def)を同期中...", 80);
+                string srcDef = Path.Combine(outdoorDir, "Def");
+                string destDef = Path.Combine(siteDir, "Def");
+                int defCount = SyncDirectoryFiles(srcDef, destDef);
+                result.DefFilesUpdatedCount = defCount;
 
                 // 5. サムネイルの再生成
-                progressCallback?.Invoke("現場サムネイルを更新中...", 95);
+                progressCallback?.Invoke("現場サムネイルを更新中...", 90);
                 try
                 {
                     var updatedIndoorDb = new EditorDbManager();
@@ -720,6 +845,30 @@ namespace Site7DbEditor.Services
                     EditorMapRenderer.SaveThumbnail(indoorDbPath, updatedIndoorDb);
                 }
                 catch { }
+
+                // 6. 同期履歴の記録
+                progressCallback?.Invoke("同期履歴を記録中...", 95);
+                var historyRecord = new SyncHistoryRecord
+                {
+                    Timestamp = DateTime.Now,
+                    ActionType = "【取込】外業 → 内業マージ",
+                    MachineName = Environment.MachineName,
+                    SiteName = siteName,
+                    SourcePath = outdoorDbPath,
+                    DestinationPath = indoorDbPath,
+                    TotalCount = result.TotalMergedCount,
+                    CountsDetail = $"遺構:{result.IkouMergedCount}, 線:{result.IkouLMergedCount}, 遺物:{result.IbutuMergedCount}, 基準点:{result.KikaiMergedCount}",
+                    DefFiles = $"{defCount}ファイル同期",
+                    BackupFile = result.BackupFilePath ?? "",
+                    Status = "正常完了"
+                };
+
+                AppendSyncHistoryLog(siteDir, historyRecord);
+                string? outdoorSiteRoot = Directory.GetParent(outdoorDir)?.FullName;
+                if (!string.IsNullOrEmpty(outdoorSiteRoot))
+                {
+                    AppendSyncHistoryLog(outdoorSiteRoot, historyRecord);
+                }
 
                 progressCallback?.Invoke("同期完了", 100);
                 result.Success = true;
@@ -733,25 +882,108 @@ namespace Site7DbEditor.Services
             return result;
         }
 
-        private static void SyncDirectoryFiles(string sourceDir, string targetDir)
+        private static int CopyDirectoryAllFiles(string sourceDir, string targetDir)
         {
-            if (!Directory.Exists(sourceDir)) return;
+            if (!Directory.Exists(sourceDir)) return 0;
+            if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+
+            int count = 0;
+            foreach (var srcFile in Directory.GetFiles(sourceDir))
+            {
+                string fileName = Path.GetFileName(srcFile);
+                string destFile = Path.Combine(targetDir, fileName);
+                File.Copy(srcFile, destFile, overwrite: true);
+                count++;
+            }
+            return count;
+        }
+
+        private static int SyncDirectoryFiles(string sourceDir, string targetDir)
+        {
+            if (!Directory.Exists(sourceDir)) return 0;
+            if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+
+            int updatedCount = 0;
+            foreach (var srcFile in Directory.GetFiles(sourceDir))
+            {
+                string fileName = Path.GetFileName(srcFile);
+                string destFile = Path.Combine(targetDir, fileName);
+
+                if (!File.Exists(destFile) || File.GetLastWriteTime(srcFile) > File.GetLastWriteTime(destFile))
+                {
+                    File.Copy(srcFile, destFile, overwrite: true);
+                    updatedCount++;
+                }
+            }
+            return updatedCount;
+        }
+
+        /// <summary>
+        /// 同期履歴ログファイル（SyncHistory.tsv）へ追記します。
+        /// </summary>
+        public static void AppendSyncHistoryLog(string targetFolder, SyncHistoryRecord rec)
+        {
+            if (string.IsNullOrEmpty(targetFolder) || !Directory.Exists(targetFolder)) return;
+
             try
             {
-                if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+                string logPath = Path.Combine(targetFolder, "SyncHistory.tsv");
+                bool isNew = !File.Exists(logPath);
 
-                foreach (var srcFile in Directory.GetFiles(sourceDir))
+                using var sw = new StreamWriter(logPath, append: true, System.Text.Encoding.UTF8);
+                if (isNew)
                 {
-                    string fileName = Path.GetFileName(srcFile);
-                    string destFile = Path.Combine(targetDir, fileName);
+                    sw.WriteLine("日時\t操作区分\t端末名\t現場名\tマージ件数\t詳細\tDef同期\tバックアップ\t同期元\t同期先\t状態");
+                }
 
-                    if (!File.Exists(destFile) || File.GetLastWriteTime(srcFile) > File.GetLastWriteTime(destFile))
+                string line = $"{rec.Timestamp:yyyy/MM/dd HH:mm:ss}\t{rec.ActionType}\t{rec.MachineName}\t{rec.SiteName}\t{rec.TotalCount}\t{rec.CountsDetail}\t{rec.DefFiles}\t{Path.GetFileName(rec.BackupFile)}\t{rec.SourcePath}\t{rec.DestinationPath}\t{rec.Status}";
+                sw.WriteLine(line);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 現場フォルダまたはSSDフォルダから同期履歴一覧を読み込みます。
+        /// </summary>
+        public static List<SyncHistoryRecord> GetSyncHistory(string siteFolder)
+        {
+            var list = new List<SyncHistoryRecord>();
+            if (string.IsNullOrEmpty(siteFolder) || !Directory.Exists(siteFolder)) return list;
+
+            string logPath = Path.Combine(siteFolder, "SyncHistory.tsv");
+            if (!File.Exists(logPath)) return list;
+
+            try
+            {
+                var lines = File.ReadAllLines(logPath, System.Text.Encoding.UTF8);
+                foreach (var line in lines.Skip(1)) // ヘッダー行をスキップ
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+                    var parts = line.Split('\t');
+                    if (parts.Length < 6) continue;
+
+                    DateTime.TryParse(parts[0], out var ts);
+                    int.TryParse(parts[4], out var total);
+
+                    list.Add(new SyncHistoryRecord
                     {
-                        File.Copy(srcFile, destFile, overwrite: true);
-                    }
+                        Timestamp = ts,
+                        ActionType = parts.Length > 1 ? parts[1] : "",
+                        MachineName = parts.Length > 2 ? parts[2] : "",
+                        SiteName = parts.Length > 3 ? parts[3] : "",
+                        TotalCount = total,
+                        CountsDetail = parts.Length > 5 ? parts[5] : "",
+                        DefFiles = parts.Length > 6 ? parts[6] : "",
+                        BackupFile = parts.Length > 7 ? parts[7] : "",
+                        SourcePath = parts.Length > 8 ? parts[8] : "",
+                        DestinationPath = parts.Length > 9 ? parts[9] : "",
+                        Status = parts.Length > 10 ? parts[10] : "正常完了"
+                    });
                 }
             }
             catch { }
+
+            return list.OrderByDescending(x => x.Timestamp).ToList();
         }
     }
 }

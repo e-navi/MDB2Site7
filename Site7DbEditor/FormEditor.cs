@@ -686,7 +686,9 @@ namespace Site7DbEditor {
 
             btnHeaderSync.Click += (s, e) => {
                 var menu = new ContextMenuStrip();
-                menu.Items.Add(new ToolStripMenuItem("🔌 外業データ同期（USB / ドライブ連携）...", null, (s1, e1) => OpenSyncDialog()));
+                string syncTitle = IsGaigyoMode ? "🔌 データ同期・SSD連携（内業データ取込 / SSD出力）..." : "🔌 データ同期・SSD連携（外業データ取込 / SSD出力）...";
+                menu.Items.Add(new ToolStripMenuItem(syncTitle, null, (s1, e1) => OpenSyncDialog()));
+                menu.Items.Add(new ToolStripMenuItem("📤 この現場データをポータブルSSDへ出力...", null, (s1, e1) => QuickExportToSsd()));
                 menu.Items.Add(new ToolStripMenuItem("📦 現場DBのバックアップを作成...", null, (s1, e1) => CreateDbBackup()));
                 menu.Show(btnHeaderSync, new Point(0, btnHeaderSync.Height));
             };
@@ -1325,11 +1327,52 @@ namespace Site7DbEditor {
                 return;
             }
 
-            using var dlg = new FormSyncDialog(_db.CurrentDbPath, _currentGenbaName);
+            using var dlg = new FormSyncDialog(_db.CurrentDbPath, _currentGenbaName, IsGaigyoMode);
             if (dlg.ShowDialog(this) == DialogResult.OK) {
                 LoadDatabase(_db.CurrentDbPath);
                 picMapCanvas.Invalidate();
                 picDrawingPreview.Invalidate();
+            }
+        }
+
+        private void QuickExportToSsd() {
+            if (string.IsNullOrEmpty(_db.CurrentDbPath) || !File.Exists(_db.CurrentDbPath)) {
+                MessageBox.Show("現場データベースが開かれていません。", "出力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var readyDrives = DriveInfo.GetDrives().Where(d => d.IsReady).ToList();
+            string? targetDrive = readyDrives.FirstOrDefault(d => d.DriveType == DriveType.Removable)?.Name;
+            if (string.IsNullOrEmpty(targetDrive)) {
+                using var fbd = new FolderBrowserDialog {
+                    Description = "ポータブルSSDまたは保存先のドライブ・フォルダを選択してください"
+                };
+                if (fbd.ShowDialog(this) != DialogResult.OK) return;
+                targetDrive = fbd.SelectedPath;
+            }
+
+            string category = IsGaigyoMode ? "外業" : "内業";
+            string targetPath = Path.Combine(targetDrive, SyncService.SyncBaseFolderName, _currentGenbaName, category);
+
+            var confirm = MessageBox.Show(
+                $"現在の現場データをポータブルSSDへ出力します。\n\n" +
+                $"【出力先】\n{targetPath}\n\n" +
+                $"・Site7.db (DB本体)\n" +
+                $"・Def/ フォルダ一式 (レイヤ・入力定義.txt)\n" +
+                $"・SITE7.ini (現場設定)\n" +
+                $"・SITE7.png (最新サムネイル)\n\n" +
+                $"出力してよろしいですか？",
+                "SSD出力の確認",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirm != DialogResult.Yes) return;
+
+            var res = SyncService.ExportSiteToSsd(_db.CurrentDbPath, _currentGenbaName, targetDrive, IsGaigyoMode);
+            if (res.Success) {
+                MessageBox.Show($"✔ ポータブルSSDへの出力が完了しました！\n\n【保存先】\n{targetPath}", "出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } else {
+                MessageBox.Show(res.ErrorMessage ?? "出力に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
