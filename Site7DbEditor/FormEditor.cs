@@ -4009,7 +4009,7 @@ namespace Site7DbEditor {
         private void picMapCanvas_MouseWheel(object? sender, MouseEventArgs e) {
             float oldZoom = _vc.ZoomFactorMap;
             float scaleFactor = e.Delta > 0 ? 1.15f : (1.0f / 1.15f);
-            float newZoom = Math.Clamp(oldZoom * scaleFactor, 0.1f, 30.0f);
+            float newZoom = Math.Clamp(oldZoom * scaleFactor, 0.05f, 2000.0f);
 
             if (Math.Abs(newZoom - oldZoom) > 0.0001f) {
                 float ratio = newZoom / oldZoom;
