@@ -637,9 +637,17 @@ namespace Site7DbEditor.Services
             }
             else
             {
-                if (gbl.TStation.curPos != null && (gbl.TStation.curPos.X != 0.0 || gbl.TStation.curPos.Y != 0.0))
+                XYZ? p = gbl.TStation.curPos;
+
+                if (!gbl.MField.isLngOK())
                 {
-                    curMeasurePos = gbl.TStation.curPos;
+                    // 連続測定OFF時などのバッテリ節約時、とりあえず器械点から200m先に線を描く
+                    p = gbl.KikaiMan.cnvP(200, gbl.MField.angH, gbl.MField.angV);
+                }
+
+                if (p != null && (p.X != 0.0 || p.Y != 0.0))
+                {
+                    curMeasurePos = p;
                 }
             }
 
