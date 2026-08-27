@@ -1028,6 +1028,12 @@ namespace Site7DbEditor {
                 Point targetLoc = panelMapRight.PointToScreen(Point.Empty);
                 Size targetSize = panelMapRight.Size;
 
+                float dpiScale = this.DeviceDpi / 96.0f;
+                int minW = (int)(274 * dpiScale);
+                int minH = (int)(530 * dpiScale);
+                int finalW = Math.Max(targetSize.Width, minW);
+                int finalH = Math.Max(targetSize.Height, minH);
+
                 if (panelRightContent.Controls.Contains(_ucCtrl)) {
                     panelRightContent.Controls.Remove(_ucCtrl);
                 }
@@ -1055,9 +1061,7 @@ namespace Site7DbEditor {
 
                 _dlgBth.StartPosition = FormStartPosition.Manual;
                 _dlgBth.Location = targetLoc;
-                if (targetSize.Width > 0 && targetSize.Height > 0) {
-                    _dlgBth.Size = targetSize;
-                }
+                _dlgBth.ClientSize = new Size(finalW, finalH);
 
                 _ucCtrl.Dock = DockStyle.Fill;
                 if (!_dlgBth.panelBthContent.Controls.Contains(_ucCtrl)) {
@@ -1096,11 +1100,13 @@ namespace Site7DbEditor {
             if (isFloatingForm) {
                 Point targetLoc = panelMapLeft.PointToScreen(Point.Empty);
 
+                float dpiScale = this.DeviceDpi / 96.0f;
+                int targetWidth = panelMapLeft.Width > 0 ? panelMapLeft.Width : (int)(136 * dpiScale);
                 // コントロール最下部(chkWhiteBg: 670px) + ヘッダー(32px) + 下部マージン
-                int requiredHeight = 728;
+                int requiredHeight = (int)(728 * dpiScale);
 
                 var screen = Screen.FromPoint(targetLoc);
-                int maxHeight = screen.WorkingArea.Height - 30;
+                int maxHeight = screen.WorkingArea.Height - (int)(30 * dpiScale);
                 int finalHeight = Math.Min(requiredHeight, maxHeight);
 
                 int finalY = targetLoc.Y;
@@ -1133,7 +1139,7 @@ namespace Site7DbEditor {
 
                 _dlgLeft.StartPosition = FormStartPosition.Manual;
                 _dlgLeft.Location = targetLoc;
-                _dlgLeft.ClientSize = new Size(136, finalHeight);
+                _dlgLeft.ClientSize = new Size(targetWidth, finalHeight);
                 _dlgLeft.Show(this);
             } else {
                 if (_dlgLeft != null && !_dlgLeft.IsDisposed) {

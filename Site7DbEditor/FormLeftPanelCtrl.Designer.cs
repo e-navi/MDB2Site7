@@ -71,7 +71,7 @@ namespace Site7DbEditor
             // 
             // FormLeftPanelCtrl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(136, 730);
             this.Controls.Add(this.panelLeftContent);
             this.Controls.Add(this.panelDockHeader);
