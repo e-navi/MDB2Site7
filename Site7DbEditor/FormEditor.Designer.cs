@@ -1767,7 +1767,7 @@ namespace Site7DbEditor
             // 
             // grpCoordValue
             // 
-            grpCoordValue.Anchor = AnchorStyles.None;
+            grpCoordValue.Dock = DockStyle.Fill;
             grpCoordValue.Controls.Add(lblCoordX);
             grpCoordValue.Controls.Add(txtCoordX);
             grpCoordValue.Controls.Add(lblCoordY);

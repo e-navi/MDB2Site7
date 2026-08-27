@@ -80,8 +80,8 @@ namespace Site7DbEditor
             // panelCtrl
             // 
             panelCtrl.BorderStyle = BorderStyle.FixedSingle;
-            panelCtrl.Controls.Add(tabControl4);
             panelCtrl.Controls.Add(panelBottomCoords);
+            panelCtrl.Controls.Add(tabControl4);
             panelCtrl.Dock = DockStyle.Fill;
             panelCtrl.Location = new Point(0, 0);
             panelCtrl.Margin = new Padding(4);
@@ -93,9 +93,9 @@ namespace Site7DbEditor
             // 
             tabControl4.Controls.Add(tabTS);
             tabControl4.Controls.Add(tabGPS);
-            tabControl4.Dock = DockStyle.Bottom;
+            tabControl4.Dock = DockStyle.Top;
             tabControl4.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            tabControl4.Location = new Point(0, 64);
+            tabControl4.Location = new Point(0, 0);
             tabControl4.Margin = new Padding(4);
             tabControl4.Multiline = true;
             tabControl4.Name = "tabControl4";
@@ -637,8 +637,8 @@ namespace Site7DbEditor
             panelBottomCoords.Controls.Add(label10);
             panelBottomCoords.Controls.Add(chbContMeasure);
             panelBottomCoords.Controls.Add(chkAutoSet);
-            panelBottomCoords.Dock = DockStyle.Bottom;
-            panelBottomCoords.Location = new Point(0, 386);
+            panelBottomCoords.Dock = DockStyle.Top;
+            panelBottomCoords.Location = new Point(0, 322);
             panelBottomCoords.Margin = new Padding(4);
             panelBottomCoords.Name = "panelBottomCoords";
             panelBottomCoords.Size = new Size(290, 120);

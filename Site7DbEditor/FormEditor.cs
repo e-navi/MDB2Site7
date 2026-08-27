@@ -1030,7 +1030,7 @@ namespace Site7DbEditor {
 
                 float dpiScale = this.DeviceDpi / 96.0f;
                 int targetWidth = panelMapRight.Width > 0 ? panelMapRight.Width : (int)(270 * dpiScale);
-                int targetHeight = (int)(530 * dpiScale);
+                int targetHeight = (int)(472 * dpiScale);
 
                 var screen = Screen.FromPoint(targetLoc);
                 int maxHeight = screen.WorkingArea.Height - (int)(30 * dpiScale);
