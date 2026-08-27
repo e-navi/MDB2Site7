@@ -686,9 +686,7 @@ namespace Site7DbEditor {
 
             btnHeaderSync.Click += (s, e) => {
                 var menu = new ContextMenuStrip();
-                menu.Items.Add(new ToolStripMenuItem("🔄 Wi-Fi データ同期（外業 ↔ 内業）...", null, (s1, e1) => {
-                    MessageBox.Show("Wi-Fiデータ同期機能（差分プレビュー＆マージ）を準備中です。\n次期アップデートで同期ダイアログが実装されます。", "同期処理", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }));
+                menu.Items.Add(new ToolStripMenuItem("🔌 外業データ同期（USB / ドライブ連携）...", null, (s1, e1) => OpenSyncDialog()));
                 menu.Items.Add(new ToolStripMenuItem("📦 現場DBのバックアップを作成...", null, (s1, e1) => CreateDbBackup()));
                 menu.Show(btnHeaderSync, new Point(0, btnHeaderSync.Height));
             };
@@ -1318,6 +1316,20 @@ namespace Site7DbEditor {
                 lblDbStatus.ForeColor = Color.FromArgb(239, 35, 60);
             } finally {
                 _isLoadingDatabase = false;
+            }
+        }
+
+        private void OpenSyncDialog() {
+            if (string.IsNullOrEmpty(_db.CurrentDbPath) || !File.Exists(_db.CurrentDbPath)) {
+                MessageBox.Show("現場データベースが開かれていません。", "同期エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using var dlg = new FormSyncDialog(_db.CurrentDbPath, _currentGenbaName);
+            if (dlg.ShowDialog(this) == DialogResult.OK) {
+                LoadDatabase(_db.CurrentDbPath);
+                picMapCanvas.Invalidate();
+                picDrawingPreview.Invalidate();
             }
         }
 
