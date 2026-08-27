@@ -228,17 +228,16 @@ namespace Site7DbEditor {
         }
 
         private void ApplyDgvPrecsColumns() {
-            dgvPrecs.RowHeadersWidth = 24;
             foreach (DataGridViewColumn col in dgvPrecs.Columns) {
                 col.Visible = (col.Name == "Pid" || col.Name == "X" || col.Name == "Y" || col.Name == "Z");
             }
             var colPid = dgvPrecs.Columns["Pid"];
-            if (colPid != null) { colPid.DisplayIndex = 0; colPid.HeaderText = "PID"; colPid.Width = 35; colPid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; }
+            if (colPid != null) { colPid.DisplayIndex = 0; colPid.HeaderText = "PID"; colPid.Width = 40; colPid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; }
             var colX = dgvPrecs.Columns["X"];
             if (colX != null) {
                 colX.DisplayIndex = 1;
                 colX.HeaderText = "X";
-                colX.Width = 84;
+                colX.Width = 92;
                 colX.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colX.DefaultCellStyle.Format = "0.000";
             }
@@ -246,7 +245,7 @@ namespace Site7DbEditor {
             if (colY != null) {
                 colY.DisplayIndex = 2;
                 colY.HeaderText = "Y";
-                colY.Width = 84;
+                colY.Width = 92;
                 colY.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colY.DefaultCellStyle.Format = "0.000";
             }
@@ -254,7 +253,7 @@ namespace Site7DbEditor {
             if (colZ != null) {
                 colZ.DisplayIndex = 3;
                 colZ.HeaderText = "Z";
-                colZ.Width = 65;
+                colZ.Width = 70;
                 colZ.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colZ.DefaultCellStyle.Format = "0.000";
             }
@@ -1841,21 +1840,19 @@ namespace Site7DbEditor {
         }
 
         private void tabControlData_SelectedIndexChanged(object? sender, EventArgs e) {
+            grpCoordValue.Dock = DockStyle.Right;
+            grpCoordValue.Width = 175;
+
             if (tabControlData.SelectedTab == tabIkou) {
                 pnlPrecsRight.Controls.Add(grpCoordValue);
-                grpCoordValue.Dock = DockStyle.Fill;
                 pnlPrecsRight.Controls.SetChildIndex(grpCoordValue, 0);
             } else if (tabControlData.SelectedTab == tabIbutu) {
                 pnlIbutuRight.Controls.Add(grpCoordValue);
-                grpCoordValue.Dock = DockStyle.Right;
-                grpCoordValue.Width = 215;
                 pnlIbutuRight.Controls.SetChildIndex(grpIbutuRecord, 0);
                 pnlIbutuRight.Controls.SetChildIndex(grpCoordValue, 1);
                 dgvIbutu_SelectionChanged(this, EventArgs.Empty);
             } else if (tabControlData.SelectedTab == tabKikai) {
                 pnlKikaiRight.Controls.Add(grpCoordValue);
-                grpCoordValue.Dock = DockStyle.Right;
-                grpCoordValue.Width = 215;
                 pnlKikaiRight.Controls.SetChildIndex(grpKikaiRecord, 0);
                 pnlKikaiRight.Controls.SetChildIndex(grpPointGuidance, 1);
                 pnlKikaiRight.Controls.SetChildIndex(grpCoordValue, 2);
