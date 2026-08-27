@@ -127,7 +127,7 @@ namespace Site7DbEditor.Services
 
                         g.DrawLine(gridPen, p.X, 0, p.X, height);
 
-                        string label = (gridStep < 1) ? gy.ToString("0.0") : gy.ToString("0");
+                        string label = (gridStep < 1) ? gy.ToString("0.00") : gy.ToString("0");
                         var sz = g.MeasureString(label, coordFont);
                         g.DrawString(label, coordFont, coordBrush, p.X - sz.Width / 2f, 4f);
                     }
@@ -140,7 +140,7 @@ namespace Site7DbEditor.Services
 
                         g.DrawLine(gridPen, 0, p.Y, width, p.Y);
 
-                        string label = (gridStep < 1) ? gx.ToString("0.0") : gx.ToString("0");
+                        string label = (gridStep < 1) ? gx.ToString("0.00") : gx.ToString("0");
                         var sz = g.MeasureString(label, coordFont);
                         g.DrawString(label, coordFont, coordBrush, 4f, p.Y - sz.Height / 2f);
                     }
@@ -707,8 +707,8 @@ namespace Site7DbEditor.Services
                             g.DrawLine(scalePen, tx, barY - tickH, tx, barY + tickH);
                         }
 
-                        // テキスト（例: "10M"）
-                        string label = (scaleDist < 1) ? $"{scaleDist:0.0}M" : $"{scaleDist:0}M";
+                        // テキスト（例: "10M" / "0.20M"）
+                        string label = (scaleDist < 1) ? $"{scaleDist:0.00}M" : $"{scaleDist:0}M";
                         var sz = g.MeasureString(label, scaleFont);
                         g.DrawString(label, scaleFont, scaleBrush, cx - sz.Width / 2f, barY - sz.Height - 2f);
                     }
