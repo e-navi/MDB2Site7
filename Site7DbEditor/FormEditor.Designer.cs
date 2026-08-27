@@ -1760,9 +1760,9 @@ namespace Site7DbEditor
             // 
             pnlPrecsRight.Controls.Add(grpCoordValue);
             pnlPrecsRight.Dock = DockStyle.Right;
-            pnlPrecsRight.Location = new Point(1175, 3);
+            pnlPrecsRight.Location = new Point(1148, 3);
             pnlPrecsRight.Name = "pnlPrecsRight";
-            pnlPrecsRight.Size = new Size(178, 318);
+            pnlPrecsRight.Size = new Size(205, 318);
             pnlPrecsRight.TabIndex = 3;
             // 
             // grpCoordValue
@@ -1781,7 +1781,7 @@ namespace Site7DbEditor
             grpCoordValue.ForeColor = Color.FromArgb(0, 180, 216);
             grpCoordValue.Location = new Point(0, 0);
             grpCoordValue.Name = "grpCoordValue";
-            grpCoordValue.Size = new Size(178, 318);
+            grpCoordValue.Size = new Size(205, 318);
             grpCoordValue.TabIndex = 0;
             grpCoordValue.TabStop = false;
             grpCoordValue.Text = "座標値";
@@ -1803,7 +1803,7 @@ namespace Site7DbEditor
             txtCoordX.ForeColor = Color.Black;
             txtCoordX.Location = new Point(32, 25);
             txtCoordX.Name = "txtCoordX";
-            txtCoordX.Size = new Size(130, 27);
+            txtCoordX.Size = new Size(158, 27);
             txtCoordX.TabIndex = 2;
             txtCoordX.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1824,7 +1824,7 @@ namespace Site7DbEditor
             txtCoordY.ForeColor = Color.Black;
             txtCoordY.Location = new Point(32, 65);
             txtCoordY.Name = "txtCoordY";
-            txtCoordY.Size = new Size(130, 27);
+            txtCoordY.Size = new Size(158, 27);
             txtCoordY.TabIndex = 4;
             txtCoordY.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1845,7 +1845,7 @@ namespace Site7DbEditor
             txtCoordZ.ForeColor = Color.Black;
             txtCoordZ.Location = new Point(32, 105);
             txtCoordZ.Name = "txtCoordZ";
-            txtCoordZ.Size = new Size(130, 27);
+            txtCoordZ.Size = new Size(158, 27);
             txtCoordZ.TabIndex = 6;
             txtCoordZ.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1868,9 +1868,9 @@ namespace Site7DbEditor
             btnDeletePointRight.FlatStyle = FlatStyle.Flat;
             btnDeletePointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnDeletePointRight.ForeColor = Color.White;
-            btnDeletePointRight.Location = new Point(17, 282);
+            btnDeletePointRight.Location = new Point(10, 282);
             btnDeletePointRight.Name = "btnDeletePointRight";
-            btnDeletePointRight.Size = new Size(48, 28);
+            btnDeletePointRight.Size = new Size(56, 28);
             btnDeletePointRight.TabIndex = 8;
             btnDeletePointRight.Text = "削除";
             btnDeletePointRight.UseVisualStyleBackColor = false;
@@ -1882,9 +1882,9 @@ namespace Site7DbEditor
             btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
             btnUpdatePointRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnUpdatePointRight.ForeColor = Color.Black;
-            btnUpdatePointRight.Location = new Point(71, 282);
+            btnUpdatePointRight.Location = new Point(73, 282);
             btnUpdatePointRight.Name = "btnUpdatePointRight";
-            btnUpdatePointRight.Size = new Size(48, 28);
+            btnUpdatePointRight.Size = new Size(56, 28);
             btnUpdatePointRight.TabIndex = 9;
             btnUpdatePointRight.Text = "更新";
             btnUpdatePointRight.UseVisualStyleBackColor = false;
@@ -1896,9 +1896,9 @@ namespace Site7DbEditor
             btnAddPointRight.FlatStyle = FlatStyle.Flat;
             btnAddPointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnAddPointRight.ForeColor = Color.White;
-            btnAddPointRight.Location = new Point(125, 282);
+            btnAddPointRight.Location = new Point(136, 282);
             btnAddPointRight.Name = "btnAddPointRight";
-            btnAddPointRight.Size = new Size(48, 28);
+            btnAddPointRight.Size = new Size(56, 28);
             btnAddPointRight.TabIndex = 10;
             btnAddPointRight.Text = "追加";
             btnAddPointRight.UseVisualStyleBackColor = false;

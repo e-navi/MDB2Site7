@@ -660,64 +660,67 @@ namespace Site7DbEditor
             // 
             textBoxX.Enabled = false;
             textBoxX.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            textBoxX.Location = new Point(48, 5);
+            textBoxX.Location = new Point(32, 5);
             textBoxX.Margin = new Padding(4);
             textBoxX.Name = "textBoxX";
-            textBoxX.Size = new Size(119, 29);
+            textBoxX.Size = new Size(135, 29);
             textBoxX.TabIndex = 3;
             textBoxX.TextAlign = HorizontalAlignment.Right;
             // 
             // label18
             // 
+            label18.AutoSize = true;
             label18.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label18.Location = new Point(2, 12);
+            label18.Location = new Point(8, 12);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
-            label18.Size = new Size(46, 20);
+            label18.Size = new Size(20, 14);
             label18.TabIndex = 163;
-            label18.Text = "X座標";
+            label18.Text = "X:";
             // 
             // textBoxY
             // 
             textBoxY.Enabled = false;
             textBoxY.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            textBoxY.Location = new Point(48, 40);
+            textBoxY.Location = new Point(32, 40);
             textBoxY.Margin = new Padding(4);
             textBoxY.Name = "textBoxY";
-            textBoxY.Size = new Size(119, 29);
+            textBoxY.Size = new Size(135, 29);
             textBoxY.TabIndex = 4;
             textBoxY.TextAlign = HorizontalAlignment.Right;
             // 
             // label11
             // 
+            label11.AutoSize = true;
             label11.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label11.Location = new Point(2, 48);
+            label11.Location = new Point(8, 48);
             label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new Size(46, 20);
+            label11.Size = new Size(20, 14);
             label11.TabIndex = 162;
-            label11.Text = "Y座標";
+            label11.Text = "Y:";
             // 
             // textBoxZ
             // 
             textBoxZ.Enabled = false;
             textBoxZ.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            textBoxZ.Location = new Point(48, 75);
+            textBoxZ.Location = new Point(32, 75);
             textBoxZ.Margin = new Padding(4);
             textBoxZ.Name = "textBoxZ";
-            textBoxZ.Size = new Size(119, 29);
+            textBoxZ.Size = new Size(135, 29);
             textBoxZ.TabIndex = 5;
             textBoxZ.TextAlign = HorizontalAlignment.Right;
             // 
             // label10
             // 
+            label10.AutoSize = true;
             label10.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label10.Location = new Point(2, 82);
+            label10.Location = new Point(8, 82);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(46, 20);
+            label10.Size = new Size(20, 14);
             label10.TabIndex = 161;
-            label10.Text = "Z座標";
+            label10.Text = "Z:";
             // 
             // chbContMeasure
             // 

@@ -35,6 +35,7 @@ namespace Site7DbEditor
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             ApplicationConfiguration.Initialize();
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
 
             // コマンドライン引数で直接DBが渡された場合は直接エディタを起動
             if (args.Length > 0 && !string.IsNullOrEmpty(args[0]))

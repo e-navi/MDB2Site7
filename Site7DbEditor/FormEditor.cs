@@ -1029,10 +1029,18 @@ namespace Site7DbEditor {
                 Size targetSize = panelMapRight.Size;
 
                 float dpiScale = this.DeviceDpi / 96.0f;
-                int minW = (int)(274 * dpiScale);
-                int minH = (int)(530 * dpiScale);
-                int finalW = Math.Max(targetSize.Width, minW);
-                int finalH = Math.Max(targetSize.Height, minH);
+                int targetWidth = panelMapRight.Width > 0 ? panelMapRight.Width : (int)(270 * dpiScale);
+                int targetHeight = (int)(530 * dpiScale);
+
+                var screen = Screen.FromPoint(targetLoc);
+                int maxHeight = screen.WorkingArea.Height - (int)(30 * dpiScale);
+                int finalHeight = Math.Min(targetHeight, maxHeight);
+
+                int finalY = targetLoc.Y;
+                if (finalY + finalHeight > screen.WorkingArea.Bottom) {
+                    finalY = Math.Max(screen.WorkingArea.Top + 10, screen.WorkingArea.Bottom - finalHeight);
+                }
+                targetLoc = new Point(targetLoc.X, finalY);
 
                 if (panelRightContent.Controls.Contains(_ucCtrl)) {
                     panelRightContent.Controls.Remove(_ucCtrl);
@@ -1061,7 +1069,7 @@ namespace Site7DbEditor {
 
                 _dlgBth.StartPosition = FormStartPosition.Manual;
                 _dlgBth.Location = targetLoc;
-                _dlgBth.ClientSize = new Size(finalW, finalH);
+                _dlgBth.ClientSize = new Size(targetWidth, finalHeight);
 
                 _ucCtrl.Dock = DockStyle.Fill;
                 if (!_dlgBth.panelBthContent.Controls.Contains(_ucCtrl)) {
