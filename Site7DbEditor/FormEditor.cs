@@ -1176,6 +1176,16 @@ namespace Site7DbEditor {
         public void SetBottomPanelDisplayMode(bool isFloatingForm) {
             _isBottomPanelFloating = isFloatingForm;
 
+            // 分離・復帰前の選択行およびアクティブタブを保持
+            int selIkou = dgvIkou.CurrentRow?.Index ?? -1;
+            int selIkouL = dgvIkouL.CurrentRow?.Index ?? -1;
+            int selPrecs = dgvPrecs.CurrentRow?.Index ?? -1;
+            int selIbutu = dgvIbutu.CurrentRow?.Index ?? -1;
+            int selKikai = dgvKikai.CurrentRow?.Index ?? -1;
+            int selLayer = dgvLayer.CurrentRow?.Index ?? -1;
+            int selBatch = dgvBatchPreview.CurrentRow?.Index ?? -1;
+            int selTab = tabControlData.SelectedIndex;
+
             if (isFloatingForm) {
                 Point targetLoc = panelMapBottom.PointToScreen(Point.Empty);
                 Size targetSize = panelMapBottom.Size;
@@ -1232,6 +1242,18 @@ namespace Site7DbEditor {
                 panelBottomHeader.Visible = true;
                 panelMapBottom.Visible = true;
             }
+
+            // 保持していたタブおよび選択行を復元
+            if (selTab >= 0 && selTab < tabControlData.TabCount) {
+                tabControlData.SelectedIndex = selTab;
+            }
+            if (selIkou >= 0 && selIkou < dgvIkou.Rows.Count) SetCurrentRowSafe(dgvIkou, selIkou);
+            if (selIkouL >= 0 && selIkouL < dgvIkouL.Rows.Count) SetCurrentRowSafe(dgvIkouL, selIkouL);
+            if (selPrecs >= 0 && selPrecs < dgvPrecs.Rows.Count) SetCurrentRowSafe(dgvPrecs, selPrecs);
+            if (selIbutu >= 0 && selIbutu < dgvIbutu.Rows.Count) SetCurrentRowSafe(dgvIbutu, selIbutu);
+            if (selKikai >= 0 && selKikai < dgvKikai.Rows.Count) SetCurrentRowSafe(dgvKikai, selKikai);
+            if (selLayer >= 0 && selLayer < dgvLayer.Rows.Count) SetCurrentRowSafe(dgvLayer, selLayer);
+            if (selBatch >= 0 && selBatch < dgvBatchPreview.Rows.Count) SetCurrentRowSafe(dgvBatchPreview, selBatch);
 
             _vc.InvalidateBoundsCache();
             UpdatePanelWidthsDisplay();
