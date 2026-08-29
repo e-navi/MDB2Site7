@@ -1205,10 +1205,15 @@ namespace Site7DbEditor {
                 }
 
                 _dlgBottom.StartPosition = FormStartPosition.Manual;
-                _dlgBottom.Location = targetLoc;
                 if (targetSize.Width > 0 && targetSize.Height > 0) {
-                    _dlgBottom.Size = targetSize;
+                    _dlgBottom.ClientSize = targetSize;
                 }
+
+                var screen = Screen.FromPoint(targetLoc);
+                int finalX = Math.Max(screen.WorkingArea.Left, Math.Min(targetLoc.X, screen.WorkingArea.Right - _dlgBottom.Width));
+                int finalY = Math.Max(screen.WorkingArea.Top, Math.Min(targetLoc.Y, screen.WorkingArea.Bottom - _dlgBottom.Height));
+                _dlgBottom.Location = new Point(finalX, finalY);
+
                 _dlgBottom.Show(this);
             } else {
                 if (_dlgBottom != null && !_dlgBottom.IsDisposed) {
@@ -1841,7 +1846,7 @@ namespace Site7DbEditor {
 
         private void tabControlData_SelectedIndexChanged(object? sender, EventArgs e) {
             grpCoordValue.Dock = DockStyle.Right;
-            grpCoordValue.Width = 175;
+            grpCoordValue.Width = 156;
 
             if (tabControlData.SelectedTab == tabIkou) {
                 pnlPrecsRight.Controls.Add(grpCoordValue);
