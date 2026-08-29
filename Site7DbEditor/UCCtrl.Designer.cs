@@ -86,7 +86,7 @@ namespace Site7DbEditor
             panelCtrl.Location = new Point(0, 0);
             panelCtrl.Margin = new Padding(4);
             panelCtrl.Name = "panelCtrl";
-            panelCtrl.Size = new Size(292, 508);
+            panelCtrl.Size = new Size(267, 508);
             panelCtrl.TabIndex = 172;
             // 
             // tabControl4
@@ -95,12 +95,12 @@ namespace Site7DbEditor
             tabControl4.Controls.Add(tabGPS);
             tabControl4.Dock = DockStyle.Bottom;
             tabControl4.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            tabControl4.Location = new Point(0, 66);
+            tabControl4.Location = new Point(0, 77);
             tabControl4.Margin = new Padding(4);
             tabControl4.Multiline = true;
             tabControl4.Name = "tabControl4";
             tabControl4.SelectedIndex = 0;
-            tabControl4.Size = new Size(290, 322);
+            tabControl4.Size = new Size(265, 317);
             tabControl4.TabIndex = 170;
             tabControl4.Tag = "3";
             tabControl4.SelectedIndexChanged += tabControl4_SelectedIndexChanged;
@@ -135,7 +135,7 @@ namespace Site7DbEditor
             tabTS.Margin = new Padding(4);
             tabTS.Name = "tabTS";
             tabTS.Padding = new Padding(4);
-            tabTS.Size = new Size(282, 295);
+            tabTS.Size = new Size(257, 290);
             tabTS.TabIndex = 2;
             tabTS.Text = "TS";
             tabTS.UseVisualStyleBackColor = true;
@@ -638,10 +638,10 @@ namespace Site7DbEditor
             panelBottomCoords.Controls.Add(chbContMeasure);
             panelBottomCoords.Controls.Add(chkAutoSet);
             panelBottomCoords.Dock = DockStyle.Bottom;
-            panelBottomCoords.Location = new Point(0, 388);
+            panelBottomCoords.Location = new Point(0, 394);
             panelBottomCoords.Margin = new Padding(4);
             panelBottomCoords.Name = "panelBottomCoords";
-            panelBottomCoords.Size = new Size(290, 120);
+            panelBottomCoords.Size = new Size(265, 112);
             panelBottomCoords.TabIndex = 175;
             // 
             // btnUpdPos
@@ -762,7 +762,7 @@ namespace Site7DbEditor
             Controls.Add(panelCtrl);
             Margin = new Padding(4);
             Name = "UCCtrl";
-            Size = new Size(292, 508);
+            Size = new Size(267, 508);
             panelCtrl.ResumeLayout(false);
             tabControl4.ResumeLayout(false);
             tabTS.ResumeLayout(false);

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.9.4</Version>
+    <Version>0.9.5</Version>
     <AssemblyName>Site7</AssemblyName>
     <Product>Site7</Product>
     <AssemblyTitle>Site7 遺跡調査システム</AssemblyTitle>

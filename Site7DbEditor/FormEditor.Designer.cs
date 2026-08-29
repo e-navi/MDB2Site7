@@ -21,8 +21,8 @@ namespace Site7DbEditor
             btnHeaderTools = new Button();
             btnHeaderCsv = new Button();
             btnHeaderSync = new Button();
-            lblDbStatus = new Label();
             btnSaveDb = new Button();
+            lblDbStatus = new Label();
             btnExit = new Button();
             lblSubHeader = new Label();
             lblHeaderTitle = new Label();
@@ -46,21 +46,6 @@ namespace Site7DbEditor
             btnResetMapZoom = new Button();
             panelMapLeft = new Panel();
             panelLeftContent = new Panel();
-            grpDspTarget = new GroupBox();
-            chkShowKikai = new CheckBox();
-            chkShowKikaiName = new CheckBox();
-            chkShowIkouName = new CheckBox();
-            chkShowHyoukou = new CheckBox();
-            chkShowIkou = new CheckBox();
-            chkShowIbutuName = new CheckBox();
-            chkShowIbutu = new CheckBox();
-            lblEntityNameHeader = new Label();
-            label1 = new Label();
-            chkShowBgImage = new CheckBox();
-            chkShowBgPointCloud = new CheckBox();
-            chkShowGrid = new CheckBox();
-            chkShowScale = new CheckBox();
-            chkShowDrawingFrame = new CheckBox();
             btnZoomAll = new Button();
             btnBgSettings = new Button();
             btnDrawingFrame = new Button();
@@ -86,6 +71,21 @@ namespace Site7DbEditor
             btnLayerAllOn = new Button();
             btnLayerAllOff = new Button();
             btnLayerSettings = new Button();
+            grpDspTarget = new GroupBox();
+            chkShowKikai = new CheckBox();
+            chkShowKikaiName = new CheckBox();
+            chkShowIkouName = new CheckBox();
+            chkShowHyoukou = new CheckBox();
+            chkShowIkou = new CheckBox();
+            chkShowIbutuName = new CheckBox();
+            chkShowIbutu = new CheckBox();
+            lblEntityNameHeader = new Label();
+            label1 = new Label();
+            chkShowBgImage = new CheckBox();
+            chkShowBgPointCloud = new CheckBox();
+            chkShowGrid = new CheckBox();
+            chkShowScale = new CheckBox();
+            chkShowDrawingFrame = new CheckBox();
             grpDisplayOptions = new GroupBox();
             chkShowCurve = new CheckBox();
             chkColorByIkou = new CheckBox();
@@ -173,6 +173,10 @@ namespace Site7DbEditor
             lblKikaiLayer = new Label();
             cmbKikaiLayer = new ComboBox();
             grpPointGuidance = new GroupBox();
+            grpYudo = new GroupBox();
+            lblYudo3 = new Label();
+            lblYudo2 = new Label();
+            lblYudo1 = new Label();
             chkPointGuidance = new CheckBox();
             panelBottomHeader = new Panel();
             lblBottomTitle = new Label();
@@ -202,10 +206,6 @@ namespace Site7DbEditor
             lblStatusCoords = new Label();
             lblStatusMessage = new Label();
             panelMain1 = new Panel();
-            grpYudo = new GroupBox();
-            lblYudo1 = new Label();
-            lblYudo2 = new Label();
-            lblYudo3 = new Label();
             panelHeader.SuspendLayout();
             panelMapArea.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMapArea).BeginInit();
@@ -248,6 +248,7 @@ namespace Site7DbEditor
             pnlKikaiRight.SuspendLayout();
             grpKikaiRecord.SuspendLayout();
             grpPointGuidance.SuspendLayout();
+            grpYudo.SuspendLayout();
             panelBottomHeader.SuspendLayout();
             tabLayer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLayer).BeginInit();
@@ -257,7 +258,6 @@ namespace Site7DbEditor
             panelMainRight.SuspendLayout();
             panelStatus.SuspendLayout();
             panelMain1.SuspendLayout();
-            grpYudo.SuspendLayout();
             SuspendLayout();
             // 
             // panelHeader
@@ -334,10 +334,8 @@ namespace Site7DbEditor
             btnHeaderSync.Text = "🔄 同期処理";
             btnHeaderSync.UseVisualStyleBackColor = false;
             // 
-            // 
             // btnSaveDb
             // 
-            btnSaveDb.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             btnSaveDb.BackColor = Color.FromArgb(56, 176, 0);
             btnSaveDb.FlatStyle = FlatStyle.Flat;
             btnSaveDb.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
@@ -392,7 +390,7 @@ namespace Site7DbEditor
             lblHeaderTitle.AutoSize = true;
             lblHeaderTitle.Font = new Font("Yu Gothic UI", 14F, FontStyle.Bold);
             lblHeaderTitle.ForeColor = Color.FromArgb(0, 180, 216);
-            lblHeaderTitle.Location = new Point(13, 8);
+            lblHeaderTitle.Location = new Point(13, 4);
             lblHeaderTitle.Name = "lblHeaderTitle";
             lblHeaderTitle.Size = new Size(200, 25);
             lblHeaderTitle.TabIndex = 0;
@@ -427,7 +425,7 @@ namespace Site7DbEditor
             panelMapArea.Dock = DockStyle.Fill;
             panelMapArea.Location = new Point(0, 0);
             panelMapArea.Name = "panelMapArea";
-            panelMapArea.Size = new Size(1390, 525);
+            panelMapArea.Size = new Size(1390, 551);
             panelMapArea.TabIndex = 1;
             // 
             // splitMapArea
@@ -444,7 +442,7 @@ namespace Site7DbEditor
             // 
             splitMapArea.Panel2.Controls.Add(panelDrawingPreview);
             splitMapArea.Panel2Collapsed = true;
-            splitMapArea.Size = new Size(1126, 490);
+            splitMapArea.Size = new Size(1126, 516);
             splitMapArea.SplitterDistance = 560;
             splitMapArea.TabIndex = 2;
             // 
@@ -454,7 +452,7 @@ namespace Site7DbEditor
             picMapCanvas.Dock = DockStyle.Fill;
             picMapCanvas.Location = new Point(0, 0);
             picMapCanvas.Name = "picMapCanvas";
-            picMapCanvas.Size = new Size(1126, 490);
+            picMapCanvas.Size = new Size(1126, 516);
             picMapCanvas.TabIndex = 0;
             picMapCanvas.TabStop = false;
             // 
@@ -509,7 +507,7 @@ namespace Site7DbEditor
             panelMapRight.Dock = DockStyle.Right;
             panelMapRight.Location = new Point(1126, 35);
             panelMapRight.Name = "panelMapRight";
-            panelMapRight.Size = new Size(264, 490);
+            panelMapRight.Size = new Size(264, 516);
             panelMapRight.TabIndex = 2;
             // 
             // panelRightContent
@@ -518,12 +516,12 @@ namespace Site7DbEditor
             panelRightContent.Dock = DockStyle.Fill;
             panelRightContent.Location = new Point(0, 30);
             panelRightContent.Name = "panelRightContent";
-            panelRightContent.Size = new Size(264, 460);
+            panelRightContent.Size = new Size(264, 486);
             panelRightContent.TabIndex = 0;
             // 
             // panelRightHeader
             // 
-            panelRightHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelRightHeader.BackColor = Color.FromArgb(233, 236, 243);
             panelRightHeader.Controls.Add(lblRightTitle);
             panelRightHeader.Controls.Add(btnDetachWindow);
             panelRightHeader.Dock = DockStyle.Top;
@@ -536,7 +534,7 @@ namespace Site7DbEditor
             // 
             lblRightTitle.AutoSize = true;
             lblRightTitle.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            lblRightTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblRightTitle.ForeColor = Color.FromArgb(25, 45, 80);
             lblRightTitle.Location = new Point(6, 8);
             lblRightTitle.Name = "lblRightTitle";
             lblRightTitle.Size = new Size(109, 13);
@@ -545,11 +543,11 @@ namespace Site7DbEditor
             // 
             // btnDetachWindow
             // 
-            btnDetachWindow.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachWindow.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachWindow.Dock = DockStyle.Right;
             btnDetachWindow.FlatStyle = FlatStyle.Flat;
             btnDetachWindow.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnDetachWindow.ForeColor = Color.White;
+            btnDetachWindow.ForeColor = Color.FromArgb(30, 40, 60);
             btnDetachWindow.Location = new Point(200, 0);
             btnDetachWindow.Name = "btnDetachWindow";
             btnDetachWindow.Size = new Size(64, 30);
@@ -640,202 +638,6 @@ namespace Site7DbEditor
             panelLeftContent.Name = "panelLeftContent";
             panelLeftContent.Size = new Size(130, 857);
             panelLeftContent.TabIndex = 1;
-            // 
-            // grpDspTarget
-            // 
-            grpDspTarget.Controls.Add(chkShowKikai);
-            grpDspTarget.Controls.Add(chkShowKikaiName);
-            grpDspTarget.Controls.Add(chkShowIkouName);
-            grpDspTarget.Controls.Add(chkShowHyoukou);
-            grpDspTarget.Controls.Add(chkShowIkou);
-            grpDspTarget.Controls.Add(chkShowIbutuName);
-            grpDspTarget.Controls.Add(chkShowIbutu);
-            grpDspTarget.Controls.Add(lblEntityNameHeader);
-            grpDspTarget.Controls.Add(label1);
-            grpDspTarget.Controls.Add(chkShowBgImage);
-            grpDspTarget.Controls.Add(chkShowBgPointCloud);
-            grpDspTarget.Controls.Add(chkShowGrid);
-            grpDspTarget.Controls.Add(chkShowScale);
-            grpDspTarget.Controls.Add(chkShowDrawingFrame);
-            grpDspTarget.Location = new Point(4, 351);
-            grpDspTarget.Name = "grpDspTarget";
-            grpDspTarget.Size = new Size(124, 248);
-            grpDspTarget.TabIndex = 37;
-            grpDspTarget.TabStop = false;
-            grpDspTarget.Text = "表示対象";
-            // 
-            // chkShowKikai
-            // 
-            chkShowKikai.AutoSize = true;
-            chkShowKikai.Checked = true;
-            chkShowKikai.CheckState = CheckState.Checked;
-            chkShowKikai.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowKikai.ForeColor = Color.Blue;
-            chkShowKikai.Location = new Point(6, 36);
-            chkShowKikai.Name = "chkShowKikai";
-            chkShowKikai.Size = new Size(62, 19);
-            chkShowKikai.TabIndex = 30;
-            chkShowKikai.Text = "基準点";
-            chkShowKikai.UseVisualStyleBackColor = true;
-            // 
-            // chkShowKikaiName
-            // 
-            chkShowKikaiName.AutoSize = true;
-            chkShowKikaiName.Checked = true;
-            chkShowKikaiName.CheckState = CheckState.Checked;
-            chkShowKikaiName.Location = new Point(90, 39);
-            chkShowKikaiName.Name = "chkShowKikaiName";
-            chkShowKikaiName.Size = new Size(15, 14);
-            chkShowKikaiName.TabIndex = 31;
-            chkShowKikaiName.UseVisualStyleBackColor = true;
-            // 
-            // chkShowIkouName
-            // 
-            chkShowIkouName.AutoSize = true;
-            chkShowIkouName.Location = new Point(90, 83);
-            chkShowIkouName.Name = "chkShowIkouName";
-            chkShowIkouName.Size = new Size(15, 14);
-            chkShowIkouName.TabIndex = 29;
-            chkShowIkouName.UseVisualStyleBackColor = true;
-            // 
-            // chkShowHyoukou
-            // 
-            chkShowHyoukou.AutoSize = true;
-            chkShowHyoukou.Location = new Point(90, 105);
-            chkShowHyoukou.Name = "chkShowHyoukou";
-            chkShowHyoukou.Size = new Size(15, 14);
-            chkShowHyoukou.TabIndex = 29;
-            chkShowHyoukou.UseVisualStyleBackColor = true;
-            // 
-            // chkShowIkou
-            // 
-            chkShowIkou.AutoSize = true;
-            chkShowIkou.Checked = true;
-            chkShowIkou.CheckState = CheckState.Checked;
-            chkShowIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowIkou.ForeColor = Color.Blue;
-            chkShowIkou.Location = new Point(6, 80);
-            chkShowIkou.Name = "chkShowIkou";
-            chkShowIkou.Size = new Size(50, 19);
-            chkShowIkou.TabIndex = 28;
-            chkShowIkou.Text = "遺構";
-            chkShowIkou.UseVisualStyleBackColor = true;
-            // 
-            // chkShowIbutuName
-            // 
-            chkShowIbutuName.AutoSize = true;
-            chkShowIbutuName.Location = new Point(90, 61);
-            chkShowIbutuName.Name = "chkShowIbutuName";
-            chkShowIbutuName.Size = new Size(15, 14);
-            chkShowIbutuName.TabIndex = 27;
-            chkShowIbutuName.UseVisualStyleBackColor = true;
-            // 
-            // chkShowIbutu
-            // 
-            chkShowIbutu.AutoSize = true;
-            chkShowIbutu.Checked = true;
-            chkShowIbutu.CheckState = CheckState.Checked;
-            chkShowIbutu.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowIbutu.ForeColor = Color.Red;
-            chkShowIbutu.Location = new Point(6, 58);
-            chkShowIbutu.Name = "chkShowIbutu";
-            chkShowIbutu.Size = new Size(50, 19);
-            chkShowIbutu.TabIndex = 26;
-            chkShowIbutu.Text = "遺物";
-            chkShowIbutu.UseVisualStyleBackColor = true;
-            // 
-            // lblEntityNameHeader
-            // 
-            lblEntityNameHeader.AutoSize = true;
-            lblEntityNameHeader.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblEntityNameHeader.ForeColor = Color.Red;
-            lblEntityNameHeader.Location = new Point(82, 17);
-            lblEntityNameHeader.Name = "lblEntityNameHeader";
-            lblEntityNameHeader.Size = new Size(31, 15);
-            lblEntityNameHeader.TabIndex = 25;
-            lblEntityNameHeader.Text = "名称";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            label1.ForeColor = Color.Blue;
-            label1.Location = new Point(37, 105);
-            label1.Name = "label1";
-            label1.Size = new Size(31, 15);
-            label1.TabIndex = 25;
-            label1.Text = "標高";
-            // 
-            // chkShowBgImage
-            // 
-            chkShowBgImage.AutoSize = true;
-            chkShowBgImage.Checked = true;
-            chkShowBgImage.CheckState = CheckState.Checked;
-            chkShowBgImage.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowBgImage.ForeColor = Color.FromArgb(0, 100, 200);
-            chkShowBgImage.Location = new Point(6, 126);
-            chkShowBgImage.Name = "chkShowBgImage";
-            chkShowBgImage.Size = new Size(74, 19);
-            chkShowBgImage.TabIndex = 35;
-            chkShowBgImage.Text = "背景画像";
-            chkShowBgImage.UseVisualStyleBackColor = true;
-            // 
-            // chkShowBgPointCloud
-            // 
-            chkShowBgPointCloud.AutoSize = true;
-            chkShowBgPointCloud.Checked = true;
-            chkShowBgPointCloud.CheckState = CheckState.Checked;
-            chkShowBgPointCloud.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowBgPointCloud.ForeColor = Color.FromArgb(0, 150, 100);
-            chkShowBgPointCloud.Location = new Point(6, 148);
-            chkShowBgPointCloud.Name = "chkShowBgPointCloud";
-            chkShowBgPointCloud.Size = new Size(74, 19);
-            chkShowBgPointCloud.TabIndex = 36;
-            chkShowBgPointCloud.Text = "背景点群";
-            chkShowBgPointCloud.UseVisualStyleBackColor = true;
-            // 
-            // chkShowGrid
-            // 
-            chkShowGrid.AutoSize = true;
-            chkShowGrid.Checked = true;
-            chkShowGrid.CheckState = CheckState.Checked;
-            chkShowGrid.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowGrid.ForeColor = Color.FromArgb(180, 80, 0);
-            chkShowGrid.Location = new Point(6, 170);
-            chkShowGrid.Name = "chkShowGrid";
-            chkShowGrid.Size = new Size(61, 19);
-            chkShowGrid.TabIndex = 37;
-            chkShowGrid.Text = "メッシュ";
-            chkShowGrid.UseVisualStyleBackColor = true;
-            // 
-            // chkShowScale
-            // 
-            chkShowScale.AutoSize = true;
-            chkShowScale.Checked = true;
-            chkShowScale.CheckState = CheckState.Checked;
-            chkShowScale.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowScale.ForeColor = Color.FromArgb(200, 0, 0);
-            chkShowScale.Location = new Point(6, 192);
-            chkShowScale.Name = "chkShowScale";
-            chkShowScale.Size = new Size(62, 19);
-            chkShowScale.TabIndex = 38;
-            chkShowScale.Text = "スケール";
-            chkShowScale.UseVisualStyleBackColor = true;
-            // 
-            // chkShowDrawingFrame
-            // 
-            chkShowDrawingFrame.AutoSize = true;
-            chkShowDrawingFrame.Checked = true;
-            chkShowDrawingFrame.CheckState = CheckState.Checked;
-            chkShowDrawingFrame.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowDrawingFrame.ForeColor = Color.FromArgb(0, 100, 180);
-            chkShowDrawingFrame.Location = new Point(6, 214);
-            chkShowDrawingFrame.Name = "chkShowDrawingFrame";
-            chkShowDrawingFrame.Size = new Size(50, 19);
-            chkShowDrawingFrame.TabIndex = 39;
-            chkShowDrawingFrame.Text = "図枠";
-            chkShowDrawingFrame.UseVisualStyleBackColor = true;
-            // 
             // 
             // btnZoomAll
             // 
@@ -1152,6 +954,201 @@ namespace Site7DbEditor
             btnLayerSettings.Text = "レイヤ設定";
             btnLayerSettings.UseVisualStyleBackColor = true;
             // 
+            // grpDspTarget
+            // 
+            grpDspTarget.Controls.Add(chkShowKikai);
+            grpDspTarget.Controls.Add(chkShowKikaiName);
+            grpDspTarget.Controls.Add(chkShowIkouName);
+            grpDspTarget.Controls.Add(chkShowHyoukou);
+            grpDspTarget.Controls.Add(chkShowIkou);
+            grpDspTarget.Controls.Add(chkShowIbutuName);
+            grpDspTarget.Controls.Add(chkShowIbutu);
+            grpDspTarget.Controls.Add(lblEntityNameHeader);
+            grpDspTarget.Controls.Add(label1);
+            grpDspTarget.Controls.Add(chkShowBgImage);
+            grpDspTarget.Controls.Add(chkShowBgPointCloud);
+            grpDspTarget.Controls.Add(chkShowGrid);
+            grpDspTarget.Controls.Add(chkShowScale);
+            grpDspTarget.Controls.Add(chkShowDrawingFrame);
+            grpDspTarget.Location = new Point(4, 351);
+            grpDspTarget.Name = "grpDspTarget";
+            grpDspTarget.Size = new Size(124, 248);
+            grpDspTarget.TabIndex = 37;
+            grpDspTarget.TabStop = false;
+            grpDspTarget.Text = "表示対象";
+            // 
+            // chkShowKikai
+            // 
+            chkShowKikai.AutoSize = true;
+            chkShowKikai.Checked = true;
+            chkShowKikai.CheckState = CheckState.Checked;
+            chkShowKikai.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowKikai.ForeColor = Color.Blue;
+            chkShowKikai.Location = new Point(6, 36);
+            chkShowKikai.Name = "chkShowKikai";
+            chkShowKikai.Size = new Size(62, 19);
+            chkShowKikai.TabIndex = 30;
+            chkShowKikai.Text = "基準点";
+            chkShowKikai.UseVisualStyleBackColor = true;
+            // 
+            // chkShowKikaiName
+            // 
+            chkShowKikaiName.AutoSize = true;
+            chkShowKikaiName.Checked = true;
+            chkShowKikaiName.CheckState = CheckState.Checked;
+            chkShowKikaiName.Location = new Point(90, 39);
+            chkShowKikaiName.Name = "chkShowKikaiName";
+            chkShowKikaiName.Size = new Size(15, 14);
+            chkShowKikaiName.TabIndex = 31;
+            chkShowKikaiName.UseVisualStyleBackColor = true;
+            // 
+            // chkShowIkouName
+            // 
+            chkShowIkouName.AutoSize = true;
+            chkShowIkouName.Location = new Point(90, 83);
+            chkShowIkouName.Name = "chkShowIkouName";
+            chkShowIkouName.Size = new Size(15, 14);
+            chkShowIkouName.TabIndex = 29;
+            chkShowIkouName.UseVisualStyleBackColor = true;
+            // 
+            // chkShowHyoukou
+            // 
+            chkShowHyoukou.AutoSize = true;
+            chkShowHyoukou.Location = new Point(90, 105);
+            chkShowHyoukou.Name = "chkShowHyoukou";
+            chkShowHyoukou.Size = new Size(15, 14);
+            chkShowHyoukou.TabIndex = 29;
+            chkShowHyoukou.UseVisualStyleBackColor = true;
+            // 
+            // chkShowIkou
+            // 
+            chkShowIkou.AutoSize = true;
+            chkShowIkou.Checked = true;
+            chkShowIkou.CheckState = CheckState.Checked;
+            chkShowIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowIkou.ForeColor = Color.Blue;
+            chkShowIkou.Location = new Point(6, 80);
+            chkShowIkou.Name = "chkShowIkou";
+            chkShowIkou.Size = new Size(50, 19);
+            chkShowIkou.TabIndex = 28;
+            chkShowIkou.Text = "遺構";
+            chkShowIkou.UseVisualStyleBackColor = true;
+            // 
+            // chkShowIbutuName
+            // 
+            chkShowIbutuName.AutoSize = true;
+            chkShowIbutuName.Location = new Point(90, 61);
+            chkShowIbutuName.Name = "chkShowIbutuName";
+            chkShowIbutuName.Size = new Size(15, 14);
+            chkShowIbutuName.TabIndex = 27;
+            chkShowIbutuName.UseVisualStyleBackColor = true;
+            // 
+            // chkShowIbutu
+            // 
+            chkShowIbutu.AutoSize = true;
+            chkShowIbutu.Checked = true;
+            chkShowIbutu.CheckState = CheckState.Checked;
+            chkShowIbutu.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowIbutu.ForeColor = Color.Red;
+            chkShowIbutu.Location = new Point(6, 58);
+            chkShowIbutu.Name = "chkShowIbutu";
+            chkShowIbutu.Size = new Size(50, 19);
+            chkShowIbutu.TabIndex = 26;
+            chkShowIbutu.Text = "遺物";
+            chkShowIbutu.UseVisualStyleBackColor = true;
+            // 
+            // lblEntityNameHeader
+            // 
+            lblEntityNameHeader.AutoSize = true;
+            lblEntityNameHeader.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblEntityNameHeader.ForeColor = Color.Red;
+            lblEntityNameHeader.Location = new Point(82, 17);
+            lblEntityNameHeader.Name = "lblEntityNameHeader";
+            lblEntityNameHeader.Size = new Size(31, 15);
+            lblEntityNameHeader.TabIndex = 25;
+            lblEntityNameHeader.Text = "名称";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            label1.ForeColor = Color.Blue;
+            label1.Location = new Point(37, 105);
+            label1.Name = "label1";
+            label1.Size = new Size(31, 15);
+            label1.TabIndex = 25;
+            label1.Text = "標高";
+            // 
+            // chkShowBgImage
+            // 
+            chkShowBgImage.AutoSize = true;
+            chkShowBgImage.Checked = true;
+            chkShowBgImage.CheckState = CheckState.Checked;
+            chkShowBgImage.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowBgImage.ForeColor = Color.FromArgb(0, 100, 200);
+            chkShowBgImage.Location = new Point(6, 126);
+            chkShowBgImage.Name = "chkShowBgImage";
+            chkShowBgImage.Size = new Size(74, 19);
+            chkShowBgImage.TabIndex = 35;
+            chkShowBgImage.Text = "背景画像";
+            chkShowBgImage.UseVisualStyleBackColor = true;
+            // 
+            // chkShowBgPointCloud
+            // 
+            chkShowBgPointCloud.AutoSize = true;
+            chkShowBgPointCloud.Checked = true;
+            chkShowBgPointCloud.CheckState = CheckState.Checked;
+            chkShowBgPointCloud.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowBgPointCloud.ForeColor = Color.FromArgb(0, 150, 100);
+            chkShowBgPointCloud.Location = new Point(6, 148);
+            chkShowBgPointCloud.Name = "chkShowBgPointCloud";
+            chkShowBgPointCloud.Size = new Size(74, 19);
+            chkShowBgPointCloud.TabIndex = 36;
+            chkShowBgPointCloud.Text = "背景点群";
+            chkShowBgPointCloud.UseVisualStyleBackColor = true;
+            // 
+            // chkShowGrid
+            // 
+            chkShowGrid.AutoSize = true;
+            chkShowGrid.Checked = true;
+            chkShowGrid.CheckState = CheckState.Checked;
+            chkShowGrid.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowGrid.ForeColor = Color.FromArgb(180, 80, 0);
+            chkShowGrid.Location = new Point(6, 170);
+            chkShowGrid.Name = "chkShowGrid";
+            chkShowGrid.Size = new Size(61, 19);
+            chkShowGrid.TabIndex = 37;
+            chkShowGrid.Text = "メッシュ";
+            chkShowGrid.UseVisualStyleBackColor = true;
+            // 
+            // chkShowScale
+            // 
+            chkShowScale.AutoSize = true;
+            chkShowScale.Checked = true;
+            chkShowScale.CheckState = CheckState.Checked;
+            chkShowScale.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowScale.ForeColor = Color.FromArgb(200, 0, 0);
+            chkShowScale.Location = new Point(6, 192);
+            chkShowScale.Name = "chkShowScale";
+            chkShowScale.Size = new Size(62, 19);
+            chkShowScale.TabIndex = 38;
+            chkShowScale.Text = "スケール";
+            chkShowScale.UseVisualStyleBackColor = true;
+            // 
+            // chkShowDrawingFrame
+            // 
+            chkShowDrawingFrame.AutoSize = true;
+            chkShowDrawingFrame.Checked = true;
+            chkShowDrawingFrame.CheckState = CheckState.Checked;
+            chkShowDrawingFrame.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowDrawingFrame.ForeColor = Color.FromArgb(0, 100, 180);
+            chkShowDrawingFrame.Location = new Point(6, 214);
+            chkShowDrawingFrame.Name = "chkShowDrawingFrame";
+            chkShowDrawingFrame.Size = new Size(50, 19);
+            chkShowDrawingFrame.TabIndex = 39;
+            chkShowDrawingFrame.Text = "図枠";
+            chkShowDrawingFrame.UseVisualStyleBackColor = true;
+            // 
             // grpDisplayOptions
             // 
             grpDisplayOptions.Controls.Add(chkShowCurve);
@@ -1204,7 +1201,7 @@ namespace Site7DbEditor
             // 
             // panelLeftHeader
             // 
-            panelLeftHeader.BackColor = Color.FromArgb(40, 42, 54);
+            panelLeftHeader.BackColor = Color.FromArgb(233, 236, 243);
             panelLeftHeader.Controls.Add(lblLeftTitle);
             panelLeftHeader.Controls.Add(btnDetachLeftPanel);
             panelLeftHeader.Dock = DockStyle.Top;
@@ -1217,7 +1214,7 @@ namespace Site7DbEditor
             // 
             lblLeftTitle.AutoSize = true;
             lblLeftTitle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblLeftTitle.ForeColor = Color.FromArgb(0, 225, 255);
+            lblLeftTitle.ForeColor = Color.FromArgb(25, 45, 80);
             lblLeftTitle.Location = new Point(4, 7);
             lblLeftTitle.Name = "lblLeftTitle";
             lblLeftTitle.Size = new Size(51, 15);
@@ -1226,11 +1223,11 @@ namespace Site7DbEditor
             // 
             // btnDetachLeftPanel
             // 
-            btnDetachLeftPanel.BackColor = Color.FromArgb(60, 64, 80);
+            btnDetachLeftPanel.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachLeftPanel.Dock = DockStyle.Right;
             btnDetachLeftPanel.FlatStyle = FlatStyle.Flat;
             btnDetachLeftPanel.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            btnDetachLeftPanel.ForeColor = Color.White;
+            btnDetachLeftPanel.ForeColor = Color.FromArgb(30, 40, 60);
             btnDetachLeftPanel.Location = new Point(66, 0);
             btnDetachLeftPanel.Name = "btnDetachLeftPanel";
             btnDetachLeftPanel.Size = new Size(64, 30);
@@ -1243,9 +1240,9 @@ namespace Site7DbEditor
             panelMapBottom.Controls.Add(panelBottomContent);
             panelMapBottom.Controls.Add(panelBottomHeader);
             panelMapBottom.Dock = DockStyle.Bottom;
-            panelMapBottom.Location = new Point(0, 525);
+            panelMapBottom.Location = new Point(0, 551);
             panelMapBottom.Name = "panelMapBottom";
-            panelMapBottom.Size = new Size(1390, 362);
+            panelMapBottom.Size = new Size(1390, 336);
             panelMapBottom.TabIndex = 2;
             // 
             // panelBottomContent
@@ -1254,7 +1251,7 @@ namespace Site7DbEditor
             panelBottomContent.Dock = DockStyle.Fill;
             panelBottomContent.Location = new Point(0, 30);
             panelBottomContent.Name = "panelBottomContent";
-            panelBottomContent.Size = new Size(1390, 332);
+            panelBottomContent.Size = new Size(1390, 306);
             panelBottomContent.TabIndex = 1;
             // 
             // splitContainerBottom
@@ -1267,7 +1264,7 @@ namespace Site7DbEditor
             // 
             splitContainerBottom.Panel1.Controls.Add(tabControlData);
             splitContainerBottom.Panel2Collapsed = true;
-            splitContainerBottom.Size = new Size(1390, 332);
+            splitContainerBottom.Size = new Size(1390, 306);
             splitContainerBottom.SplitterDistance = 1365;
             splitContainerBottom.TabIndex = 0;
             // 
@@ -1283,7 +1280,7 @@ namespace Site7DbEditor
             tabControlData.Multiline = true;
             tabControlData.Name = "tabControlData";
             tabControlData.SelectedIndex = 0;
-            tabControlData.Size = new Size(1390, 332);
+            tabControlData.Size = new Size(1390, 306);
             tabControlData.TabIndex = 0;
             // 
             // tabIkou
@@ -1296,7 +1293,7 @@ namespace Site7DbEditor
             tabIkou.Location = new Point(30, 4);
             tabIkou.Name = "tabIkou";
             tabIkou.Padding = new Padding(3);
-            tabIkou.Size = new Size(1356, 324);
+            tabIkou.Size = new Size(1356, 298);
             tabIkou.TabIndex = 0;
             tabIkou.Text = "遺構";
             // 
@@ -1307,7 +1304,7 @@ namespace Site7DbEditor
             grpPrecs.ForeColor = Color.FromArgb(0, 180, 216);
             grpPrecs.Location = new Point(865, 3);
             grpPrecs.Name = "grpPrecs";
-            grpPrecs.Size = new Size(310, 318);
+            grpPrecs.Size = new Size(326, 292);
             grpPrecs.TabIndex = 2;
             grpPrecs.TabStop = false;
             grpPrecs.Text = "構成座標";
@@ -1318,7 +1315,7 @@ namespace Site7DbEditor
             dgvPrecs.Dock = DockStyle.Fill;
             dgvPrecs.Location = new Point(3, 23);
             dgvPrecs.Name = "dgvPrecs";
-            dgvPrecs.Size = new Size(304, 292);
+            dgvPrecs.Size = new Size(320, 266);
             dgvPrecs.TabIndex = 0;
             // 
             // grpIkouL
@@ -1346,10 +1343,10 @@ namespace Site7DbEditor
             grpIkouL.ForeColor = Color.FromArgb(0, 180, 216);
             grpIkouL.Location = new Point(393, 3);
             grpIkouL.Name = "grpIkouL";
-            grpIkouL.Size = new Size(472, 318);
+            grpIkouL.Size = new Size(472, 292);
             grpIkouL.TabIndex = 1;
             grpIkouL.TabStop = false;
-            grpIkouL.Text = "遺構L";
+            grpIkouL.Text = "遺構線";
             // 
             // btnAddIkouL
             // 
@@ -1358,7 +1355,7 @@ namespace Site7DbEditor
             btnAddIkouL.FlatStyle = FlatStyle.Flat;
             btnAddIkouL.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnAddIkouL.ForeColor = Color.White;
-            btnAddIkouL.Location = new Point(405, 282);
+            btnAddIkouL.Location = new Point(405, 256);
             btnAddIkouL.Name = "btnAddIkouL";
             btnAddIkouL.Size = new Size(59, 28);
             btnAddIkouL.TabIndex = 15;
@@ -1372,7 +1369,7 @@ namespace Site7DbEditor
             btnUpdateLineRight.FlatStyle = FlatStyle.Flat;
             btnUpdateLineRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnUpdateLineRight.ForeColor = Color.Black;
-            btnUpdateLineRight.Location = new Point(351, 282);
+            btnUpdateLineRight.Location = new Point(351, 256);
             btnUpdateLineRight.Name = "btnUpdateLineRight";
             btnUpdateLineRight.Size = new Size(50, 28);
             btnUpdateLineRight.TabIndex = 14;
@@ -1386,7 +1383,7 @@ namespace Site7DbEditor
             btnDeleteLineRight.FlatStyle = FlatStyle.Flat;
             btnDeleteLineRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnDeleteLineRight.ForeColor = Color.White;
-            btnDeleteLineRight.Location = new Point(297, 282);
+            btnDeleteLineRight.Location = new Point(297, 256);
             btnDeleteLineRight.Name = "btnDeleteLineRight";
             btnDeleteLineRight.Size = new Size(50, 28);
             btnDeleteLineRight.TabIndex = 13;
@@ -1399,7 +1396,7 @@ namespace Site7DbEditor
             btnLineSetPos.FlatStyle = FlatStyle.Flat;
             btnLineSetPos.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnLineSetPos.ForeColor = Color.White;
-            btnLineSetPos.Location = new Point(297, 218);
+            btnLineSetPos.Location = new Point(297, 208);
             btnLineSetPos.Name = "btnLineSetPos";
             btnLineSetPos.Size = new Size(167, 28);
             btnLineSetPos.TabIndex = 15;
@@ -1573,7 +1570,7 @@ namespace Site7DbEditor
             dgvIkouL.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvIkouL.Location = new Point(6, 22);
             dgvIkouL.Name = "dgvIkouL";
-            dgvIkouL.Size = new Size(285, 288);
+            dgvIkouL.Size = new Size(285, 262);
             dgvIkouL.TabIndex = 0;
             // 
             // grpIkouMaster
@@ -1595,7 +1592,7 @@ namespace Site7DbEditor
             grpIkouMaster.ForeColor = Color.FromArgb(0, 180, 216);
             grpIkouMaster.Location = new Point(3, 3);
             grpIkouMaster.Name = "grpIkouMaster";
-            grpIkouMaster.Size = new Size(390, 318);
+            grpIkouMaster.Size = new Size(390, 292);
             grpIkouMaster.TabIndex = 0;
             grpIkouMaster.TabStop = false;
             grpIkouMaster.Text = "遺構";
@@ -1607,7 +1604,7 @@ namespace Site7DbEditor
             btnDeleteIkouRight.FlatStyle = FlatStyle.Flat;
             btnDeleteIkouRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnDeleteIkouRight.ForeColor = Color.White;
-            btnDeleteIkouRight.Location = new Point(208, 282);
+            btnDeleteIkouRight.Location = new Point(208, 256);
             btnDeleteIkouRight.Name = "btnDeleteIkouRight";
             btnDeleteIkouRight.Size = new Size(54, 28);
             btnDeleteIkouRight.TabIndex = 10;
@@ -1621,7 +1618,7 @@ namespace Site7DbEditor
             btnUpdateIkouRight.FlatStyle = FlatStyle.Flat;
             btnUpdateIkouRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnUpdateIkouRight.ForeColor = Color.Black;
-            btnUpdateIkouRight.Location = new Point(268, 282);
+            btnUpdateIkouRight.Location = new Point(268, 256);
             btnUpdateIkouRight.Name = "btnUpdateIkouRight";
             btnUpdateIkouRight.Size = new Size(54, 28);
             btnUpdateIkouRight.TabIndex = 11;
@@ -1635,7 +1632,7 @@ namespace Site7DbEditor
             btnAddIkou.FlatStyle = FlatStyle.Flat;
             btnAddIkou.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnAddIkou.ForeColor = Color.White;
-            btnAddIkou.Location = new Point(328, 282);
+            btnAddIkou.Location = new Point(328, 256);
             btnAddIkou.Name = "btnAddIkou";
             btnAddIkou.Size = new Size(56, 28);
             btnAddIkou.TabIndex = 12;
@@ -1753,16 +1750,16 @@ namespace Site7DbEditor
             dgvIkou.Dock = DockStyle.Left;
             dgvIkou.Location = new Point(3, 23);
             dgvIkou.Name = "dgvIkou";
-            dgvIkou.Size = new Size(196, 292);
+            dgvIkou.Size = new Size(196, 266);
             dgvIkou.TabIndex = 0;
             // 
             // pnlPrecsRight
             // 
             pnlPrecsRight.Controls.Add(grpCoordValue);
             pnlPrecsRight.Dock = DockStyle.Right;
-            pnlPrecsRight.Location = new Point(1175, 3);
+            pnlPrecsRight.Location = new Point(1191, 3);
             pnlPrecsRight.Name = "pnlPrecsRight";
-            pnlPrecsRight.Size = new Size(178, 318);
+            pnlPrecsRight.Size = new Size(162, 292);
             pnlPrecsRight.TabIndex = 3;
             // 
             // grpCoordValue
@@ -1781,7 +1778,7 @@ namespace Site7DbEditor
             grpCoordValue.ForeColor = Color.FromArgb(0, 180, 216);
             grpCoordValue.Location = new Point(0, 0);
             grpCoordValue.Name = "grpCoordValue";
-            grpCoordValue.Size = new Size(178, 318);
+            grpCoordValue.Size = new Size(156, 289);
             grpCoordValue.TabIndex = 0;
             grpCoordValue.TabStop = false;
             grpCoordValue.Text = "座標値";
@@ -1803,7 +1800,7 @@ namespace Site7DbEditor
             txtCoordX.ForeColor = Color.Black;
             txtCoordX.Location = new Point(32, 25);
             txtCoordX.Name = "txtCoordX";
-            txtCoordX.Size = new Size(130, 27);
+            txtCoordX.Size = new Size(120, 27);
             txtCoordX.TabIndex = 2;
             txtCoordX.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1824,7 +1821,7 @@ namespace Site7DbEditor
             txtCoordY.ForeColor = Color.Black;
             txtCoordY.Location = new Point(32, 65);
             txtCoordY.Name = "txtCoordY";
-            txtCoordY.Size = new Size(130, 27);
+            txtCoordY.Size = new Size(120, 27);
             txtCoordY.TabIndex = 4;
             txtCoordY.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1845,7 +1842,7 @@ namespace Site7DbEditor
             txtCoordZ.ForeColor = Color.Black;
             txtCoordZ.Location = new Point(32, 105);
             txtCoordZ.Name = "txtCoordZ";
-            txtCoordZ.Size = new Size(130, 27);
+            txtCoordZ.Size = new Size(120, 27);
             txtCoordZ.TabIndex = 6;
             txtCoordZ.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1868,7 +1865,7 @@ namespace Site7DbEditor
             btnDeletePointRight.FlatStyle = FlatStyle.Flat;
             btnDeletePointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnDeletePointRight.ForeColor = Color.White;
-            btnDeletePointRight.Location = new Point(17, 282);
+            btnDeletePointRight.Location = new Point(5, 253);
             btnDeletePointRight.Name = "btnDeletePointRight";
             btnDeletePointRight.Size = new Size(48, 28);
             btnDeletePointRight.TabIndex = 8;
@@ -1882,7 +1879,7 @@ namespace Site7DbEditor
             btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
             btnUpdatePointRight.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             btnUpdatePointRight.ForeColor = Color.Black;
-            btnUpdatePointRight.Location = new Point(71, 282);
+            btnUpdatePointRight.Location = new Point(55, 253);
             btnUpdatePointRight.Name = "btnUpdatePointRight";
             btnUpdatePointRight.Size = new Size(48, 28);
             btnUpdatePointRight.TabIndex = 9;
@@ -1896,7 +1893,7 @@ namespace Site7DbEditor
             btnAddPointRight.FlatStyle = FlatStyle.Flat;
             btnAddPointRight.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnAddPointRight.ForeColor = Color.White;
-            btnAddPointRight.Location = new Point(125, 282);
+            btnAddPointRight.Location = new Point(105, 253);
             btnAddPointRight.Name = "btnAddPointRight";
             btnAddPointRight.Size = new Size(48, 28);
             btnAddPointRight.TabIndex = 10;
@@ -1911,7 +1908,7 @@ namespace Site7DbEditor
             tabIbutu.Location = new Point(30, 4);
             tabIbutu.Name = "tabIbutu";
             tabIbutu.Padding = new Padding(3);
-            tabIbutu.Size = new Size(1356, 324);
+            tabIbutu.Size = new Size(1356, 298);
             tabIbutu.TabIndex = 1;
             tabIbutu.Text = "遺物";
             // 
@@ -1921,7 +1918,7 @@ namespace Site7DbEditor
             dgvIbutu.Dock = DockStyle.Fill;
             dgvIbutu.Location = new Point(3, 3);
             dgvIbutu.Name = "dgvIbutu";
-            dgvIbutu.Size = new Size(925, 318);
+            dgvIbutu.Size = new Size(925, 292);
             dgvIbutu.TabIndex = 2;
             // 
             // pnlIbutuRight
@@ -1930,7 +1927,7 @@ namespace Site7DbEditor
             pnlIbutuRight.Dock = DockStyle.Right;
             pnlIbutuRight.Location = new Point(928, 3);
             pnlIbutuRight.Name = "pnlIbutuRight";
-            pnlIbutuRight.Size = new Size(425, 318);
+            pnlIbutuRight.Size = new Size(425, 292);
             pnlIbutuRight.TabIndex = 5;
             // 
             // grpIbutuRecord
@@ -1953,7 +1950,7 @@ namespace Site7DbEditor
             grpIbutuRecord.ForeColor = Color.FromArgb(0, 180, 216);
             grpIbutuRecord.Location = new Point(0, 0);
             grpIbutuRecord.Name = "grpIbutuRecord";
-            grpIbutuRecord.Size = new Size(425, 318);
+            grpIbutuRecord.Size = new Size(425, 292);
             grpIbutuRecord.TabIndex = 0;
             grpIbutuRecord.TabStop = false;
             grpIbutuRecord.Text = "📦 遺物属性・検索";
@@ -1963,7 +1960,7 @@ namespace Site7DbEditor
             lblFilterIbutu.AutoSize = true;
             lblFilterIbutu.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblFilterIbutu.ForeColor = Color.White;
-            lblFilterIbutu.Location = new Point(6, 20);
+            lblFilterIbutu.Location = new Point(6, 26);
             lblFilterIbutu.Name = "lblFilterIbutu";
             lblFilterIbutu.Size = new Size(69, 15);
             lblFilterIbutu.TabIndex = 0;
@@ -1973,7 +1970,7 @@ namespace Site7DbEditor
             // 
             txtFilterIbutu.BackColor = Color.FromArgb(43, 45, 66);
             txtFilterIbutu.ForeColor = Color.White;
-            txtFilterIbutu.Location = new Point(80, 17);
+            txtFilterIbutu.Location = new Point(80, 23);
             txtFilterIbutu.Name = "txtFilterIbutu";
             txtFilterIbutu.Size = new Size(148, 27);
             txtFilterIbutu.TabIndex = 1;
@@ -1983,7 +1980,7 @@ namespace Site7DbEditor
             lblIbutuChiku.AutoSize = true;
             lblIbutuChiku.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblIbutuChiku.ForeColor = Color.White;
-            lblIbutuChiku.Location = new Point(6, 44);
+            lblIbutuChiku.Location = new Point(6, 50);
             lblIbutuChiku.Name = "lblIbutuChiku";
             lblIbutuChiku.Size = new Size(84, 15);
             lblIbutuChiku.TabIndex = 2;
@@ -1994,7 +1991,7 @@ namespace Site7DbEditor
             cmbIbutuChiku.BackColor = Color.FromArgb(255, 255, 190);
             cmbIbutuChiku.ForeColor = Color.Black;
             cmbIbutuChiku.FormattingEnabled = true;
-            cmbIbutuChiku.Location = new Point(6, 61);
+            cmbIbutuChiku.Location = new Point(6, 67);
             cmbIbutuChiku.Name = "cmbIbutuChiku";
             cmbIbutuChiku.Size = new Size(222, 28);
             cmbIbutuChiku.TabIndex = 3;
@@ -2004,7 +2001,7 @@ namespace Site7DbEditor
             lblIbutuSoui.AutoSize = true;
             lblIbutuSoui.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblIbutuSoui.ForeColor = Color.White;
-            lblIbutuSoui.Location = new Point(6, 88);
+            lblIbutuSoui.Location = new Point(6, 94);
             lblIbutuSoui.Name = "lblIbutuSoui";
             lblIbutuSoui.Size = new Size(55, 15);
             lblIbutuSoui.TabIndex = 4;
@@ -2015,7 +2012,7 @@ namespace Site7DbEditor
             cmbIbutuSoui.BackColor = Color.FromArgb(255, 255, 190);
             cmbIbutuSoui.ForeColor = Color.Black;
             cmbIbutuSoui.FormattingEnabled = true;
-            cmbIbutuSoui.Location = new Point(6, 105);
+            cmbIbutuSoui.Location = new Point(6, 111);
             cmbIbutuSoui.Name = "cmbIbutuSoui";
             cmbIbutuSoui.Size = new Size(222, 28);
             cmbIbutuSoui.TabIndex = 5;
@@ -2025,7 +2022,7 @@ namespace Site7DbEditor
             lblIbutuSyubetu.AutoSize = true;
             lblIbutuSyubetu.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblIbutuSyubetu.ForeColor = Color.White;
-            lblIbutuSyubetu.Location = new Point(6, 132);
+            lblIbutuSyubetu.Location = new Point(6, 138);
             lblIbutuSyubetu.Name = "lblIbutuSyubetu";
             lblIbutuSyubetu.Size = new Size(31, 15);
             lblIbutuSyubetu.TabIndex = 6;
@@ -2036,7 +2033,7 @@ namespace Site7DbEditor
             cmbIbutuSyubetu.BackColor = Color.FromArgb(255, 255, 190);
             cmbIbutuSyubetu.ForeColor = Color.Black;
             cmbIbutuSyubetu.FormattingEnabled = true;
-            cmbIbutuSyubetu.Location = new Point(6, 149);
+            cmbIbutuSyubetu.Location = new Point(6, 155);
             cmbIbutuSyubetu.Name = "cmbIbutuSyubetu";
             cmbIbutuSyubetu.Size = new Size(160, 28);
             cmbIbutuSyubetu.TabIndex = 7;
@@ -2046,7 +2043,7 @@ namespace Site7DbEditor
             lblIbutuLayer.AutoSize = true;
             lblIbutuLayer.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblIbutuLayer.ForeColor = Color.White;
-            lblIbutuLayer.Location = new Point(6, 178);
+            lblIbutuLayer.Location = new Point(6, 199);
             lblIbutuLayer.Name = "lblIbutuLayer";
             lblIbutuLayer.Size = new Size(35, 15);
             lblIbutuLayer.TabIndex = 8;
@@ -2057,7 +2054,7 @@ namespace Site7DbEditor
             cmbIbutuLayer.BackColor = Color.FromArgb(43, 45, 66);
             cmbIbutuLayer.ForeColor = Color.White;
             cmbIbutuLayer.FormattingEnabled = true;
-            cmbIbutuLayer.Location = new Point(50, 175);
+            cmbIbutuLayer.Location = new Point(50, 196);
             cmbIbutuLayer.Name = "cmbIbutuLayer";
             cmbIbutuLayer.Size = new Size(178, 28);
             cmbIbutuLayer.TabIndex = 9;
@@ -2067,7 +2064,7 @@ namespace Site7DbEditor
             lblIbutuNo.AutoSize = true;
             lblIbutuNo.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblIbutuNo.ForeColor = Color.White;
-            lblIbutuNo.Location = new Point(6, 208);
+            lblIbutuNo.Location = new Point(6, 229);
             lblIbutuNo.Name = "lblIbutuNo";
             lblIbutuNo.Size = new Size(55, 15);
             lblIbutuNo.TabIndex = 10;
@@ -2077,7 +2074,7 @@ namespace Site7DbEditor
             // 
             txtIbutuNo.BackColor = Color.FromArgb(43, 45, 66);
             txtIbutuNo.ForeColor = Color.White;
-            txtIbutuNo.Location = new Point(68, 205);
+            txtIbutuNo.Location = new Point(68, 226);
             txtIbutuNo.MaxLength = 3;
             txtIbutuNo.Name = "txtIbutuNo";
             txtIbutuNo.Size = new Size(35, 27);
@@ -2091,7 +2088,7 @@ namespace Site7DbEditor
             chkIbutuAutoInc.CheckState = CheckState.Checked;
             chkIbutuAutoInc.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             chkIbutuAutoInc.ForeColor = Color.White;
-            chkIbutuAutoInc.Location = new Point(129, 207);
+            chkIbutuAutoInc.Location = new Point(129, 228);
             chkIbutuAutoInc.Name = "chkIbutuAutoInc";
             chkIbutuAutoInc.Size = new Size(92, 19);
             chkIbutuAutoInc.TabIndex = 12;
@@ -2104,7 +2101,7 @@ namespace Site7DbEditor
             btnIbutuMaxPlusOne.FlatStyle = FlatStyle.Flat;
             btnIbutuMaxPlusOne.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             btnIbutuMaxPlusOne.ForeColor = Color.FromArgb(0, 225, 255);
-            btnIbutuMaxPlusOne.Location = new Point(68, 233);
+            btnIbutuMaxPlusOne.Location = new Point(68, 254);
             btnIbutuMaxPlusOne.Name = "btnIbutuMaxPlusOne";
             btnIbutuMaxPlusOne.Size = new Size(78, 26);
             btnIbutuMaxPlusOne.TabIndex = 13;
@@ -2119,7 +2116,7 @@ namespace Site7DbEditor
             tabKikai.Location = new Point(30, 4);
             tabKikai.Name = "tabKikai";
             tabKikai.Padding = new Padding(3);
-            tabKikai.Size = new Size(1356, 324);
+            tabKikai.Size = new Size(1356, 298);
             tabKikai.TabIndex = 2;
             tabKikai.Text = "基準点";
             // 
@@ -2129,7 +2126,7 @@ namespace Site7DbEditor
             dgvKikai.Dock = DockStyle.Fill;
             dgvKikai.Location = new Point(3, 3);
             dgvKikai.Name = "dgvKikai";
-            dgvKikai.Size = new Size(750, 318);
+            dgvKikai.Size = new Size(750, 292);
             dgvKikai.TabIndex = 0;
             // 
             // pnlKikaiRight
@@ -2139,7 +2136,7 @@ namespace Site7DbEditor
             pnlKikaiRight.Dock = DockStyle.Right;
             pnlKikaiRight.Location = new Point(753, 3);
             pnlKikaiRight.Name = "pnlKikaiRight";
-            pnlKikaiRight.Size = new Size(600, 318);
+            pnlKikaiRight.Size = new Size(600, 292);
             pnlKikaiRight.TabIndex = 3;
             // 
             // grpKikaiRecord
@@ -2152,7 +2149,7 @@ namespace Site7DbEditor
             grpKikaiRecord.ForeColor = Color.FromArgb(0, 180, 216);
             grpKikaiRecord.Location = new Point(0, 0);
             grpKikaiRecord.Name = "grpKikaiRecord";
-            grpKikaiRecord.Size = new Size(400, 318);
+            grpKikaiRecord.Size = new Size(400, 292);
             grpKikaiRecord.TabIndex = 0;
             grpKikaiRecord.TabStop = false;
             grpKikaiRecord.Text = "📍 基準点属性";
@@ -2206,10 +2203,57 @@ namespace Site7DbEditor
             grpPointGuidance.ForeColor = Color.FromArgb(0, 180, 216);
             grpPointGuidance.Location = new Point(400, 0);
             grpPointGuidance.Name = "grpPointGuidance";
-            grpPointGuidance.Size = new Size(200, 318);
+            grpPointGuidance.Size = new Size(200, 292);
             grpPointGuidance.TabIndex = 1;
             grpPointGuidance.TabStop = false;
             grpPointGuidance.Text = "🎯 点誘導";
+            // 
+            // grpYudo
+            // 
+            grpYudo.Controls.Add(lblYudo3);
+            grpYudo.Controls.Add(lblYudo2);
+            grpYudo.Controls.Add(lblYudo1);
+            grpYudo.Location = new Point(12, 62);
+            grpYudo.Name = "grpYudo";
+            grpYudo.Size = new Size(182, 156);
+            grpYudo.TabIndex = 1;
+            grpYudo.TabStop = false;
+            // 
+            // lblYudo3
+            // 
+            lblYudo3.AutoSize = true;
+            lblYudo3.BackColor = Color.Black;
+            lblYudo3.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblYudo3.ForeColor = Color.Red;
+            lblYudo3.Location = new Point(15, 93);
+            lblYudo3.Name = "lblYudo3";
+            lblYudo3.Size = new Size(54, 15);
+            lblYudo3.TabIndex = 1;
+            lblYudo3.Text = "lblYudo3";
+            // 
+            // lblYudo2
+            // 
+            lblYudo2.AutoSize = true;
+            lblYudo2.BackColor = Color.Black;
+            lblYudo2.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblYudo2.ForeColor = Color.Red;
+            lblYudo2.Location = new Point(15, 64);
+            lblYudo2.Name = "lblYudo2";
+            lblYudo2.Size = new Size(54, 15);
+            lblYudo2.TabIndex = 1;
+            lblYudo2.Text = "lblYudo2";
+            // 
+            // lblYudo1
+            // 
+            lblYudo1.AutoSize = true;
+            lblYudo1.BackColor = Color.Black;
+            lblYudo1.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblYudo1.ForeColor = Color.Red;
+            lblYudo1.Location = new Point(15, 36);
+            lblYudo1.Name = "lblYudo1";
+            lblYudo1.Size = new Size(52, 15);
+            lblYudo1.TabIndex = 1;
+            lblYudo1.Text = "lblYudo1";
             // 
             // chkPointGuidance
             // 
@@ -2537,53 +2581,6 @@ namespace Site7DbEditor
             panelMain1.Size = new Size(1520, 887);
             panelMain1.TabIndex = 5;
             // 
-            // grpYudo
-            // 
-            grpYudo.Controls.Add(lblYudo3);
-            grpYudo.Controls.Add(lblYudo2);
-            grpYudo.Controls.Add(lblYudo1);
-            grpYudo.Location = new Point(12, 62);
-            grpYudo.Name = "grpYudo";
-            grpYudo.Size = new Size(182, 156);
-            grpYudo.TabIndex = 1;
-            grpYudo.TabStop = false;
-            // 
-            // lblYudo1
-            // 
-            lblYudo1.AutoSize = true;
-            lblYudo1.BackColor = Color.Black;
-            lblYudo1.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblYudo1.ForeColor = Color.Red;
-            lblYudo1.Location = new Point(15, 36);
-            lblYudo1.Name = "lblYudo1";
-            lblYudo1.Size = new Size(52, 15);
-            lblYudo1.TabIndex = 1;
-            lblYudo1.Text = "lblYudo1";
-            // 
-            // lblYudo2
-            // 
-            lblYudo2.AutoSize = true;
-            lblYudo2.BackColor = Color.Black;
-            lblYudo2.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblYudo2.ForeColor = Color.Red;
-            lblYudo2.Location = new Point(15, 64);
-            lblYudo2.Name = "lblYudo2";
-            lblYudo2.Size = new Size(54, 15);
-            lblYudo2.TabIndex = 1;
-            lblYudo2.Text = "lblYudo2";
-            // 
-            // lblYudo3
-            // 
-            lblYudo3.AutoSize = true;
-            lblYudo3.BackColor = Color.Black;
-            lblYudo3.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblYudo3.ForeColor = Color.Red;
-            lblYudo3.Location = new Point(15, 93);
-            lblYudo3.Name = "lblYudo3";
-            lblYudo3.Size = new Size(54, 15);
-            lblYudo3.TabIndex = 1;
-            lblYudo3.Text = "lblYudo3";
-            // 
             // FormEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -2652,6 +2649,8 @@ namespace Site7DbEditor
             grpKikaiRecord.PerformLayout();
             grpPointGuidance.ResumeLayout(false);
             grpPointGuidance.PerformLayout();
+            grpYudo.ResumeLayout(false);
+            grpYudo.PerformLayout();
             panelBottomHeader.ResumeLayout(false);
             panelBottomHeader.PerformLayout();
             tabLayer.ResumeLayout(false);
@@ -2663,8 +2662,6 @@ namespace Site7DbEditor
             panelMainRight.ResumeLayout(false);
             panelStatus.ResumeLayout(false);
             panelMain1.ResumeLayout(false);
-            grpYudo.ResumeLayout(false);
-            grpYudo.PerformLayout();
             ResumeLayout(false);
         }
 
