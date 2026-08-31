@@ -164,46 +164,51 @@ namespace Site7DrawingEditor.Services
 
             var ikouPts = new List<(double surveyX, double surveyY)>();
 
-            // 1. マスター遺構リストから名前またはIDで照合
-            var matchedMasterIkou = ikouList.FirstOrDefault(ik =>
-                (!string.IsNullOrWhiteSpace(ik.Name) && ik.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
-                ($"遺構{ik.Id}".Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
-                (ik.Id.ToString().Equals(targetName, StringComparison.OrdinalIgnoreCase))
-            );
-
-            if (matchedMasterIkou != null)
+            // 1. もし対象遺構モデル (curIkou) があり、遺構枠 (3点指示枠) が設定されている場合は最優先で枠エリアを対象とする
+            if (curIkou != null && (Math.Abs(curIkou.P1.X) > 0.001 || Math.Abs(curIkou.P1.Y) > 0.001 ||
+                                    Math.Abs(curIkou.P2.X) > 0.001 || Math.Abs(curIkou.P2.Y) > 0.001))
             {
-                long featureId = matchedMasterIkou.Id;
-                foreach (var line in ikouLList)
-                {
-                    if (line.Id == featureId)
-                    {
-                        var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
-                        ikouPts.AddRange(pts.Select(p => (p.X, p.Y)));
-                    }
-                }
+                var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curIkou.P1, curIkou.P2, curIkou.P3);
+                ikouPts.Add((v1.X, v1.Y));
+                ikouPts.Add((v2.X, v2.Y));
+                ikouPts.Add((v3.X, v3.Y));
+                ikouPts.Add((v4.X, v4.Y));
+            }
 
-                if (ikouPts.Count == 0 && (Math.Abs(matchedMasterIkou.X) > 0.001 || Math.Abs(matchedMasterIkou.Y) > 0.001))
+            // 2. 枠がない場合は、マスター遺構リストから名前またはIDで照合して実測線を取得
+            if (ikouPts.Count == 0)
+            {
+                var matchedMasterIkou = ikouList.FirstOrDefault(ik =>
+                    (!string.IsNullOrWhiteSpace(ik.Name) && ik.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
+                    ($"遺構{ik.Id}".Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
+                    (ik.Id.ToString().Equals(targetName, StringComparison.OrdinalIgnoreCase))
+                );
+
+                if (matchedMasterIkou != null)
                 {
-                    ikouPts.Add((matchedMasterIkou.X, matchedMasterIkou.Y));
+                    long featureId = matchedMasterIkou.Id;
+                    foreach (var line in ikouLList)
+                    {
+                        if (line.Id == featureId)
+                        {
+                            var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
+                            ikouPts.AddRange(pts.Select(p => (p.X, p.Y)));
+                        }
+                    }
+
+                    if (ikouPts.Count == 0 && (Math.Abs(matchedMasterIkou.X) > 0.001 || Math.Abs(matchedMasterIkou.Y) > 0.001))
+                    {
+                        ikouPts.Add((matchedMasterIkou.X, matchedMasterIkou.Y));
+                    }
                 }
             }
 
-            // 2. もし未検出で curIkou に実測線があればそれを使用
+            // 3. それでも未検出で curIkou に実測線リストがあればそれを使用
             if (ikouPts.Count == 0 && curIkou != null)
             {
                 foreach (var line in curIkou.LList)
                 {
                     ikouPts.AddRange(line.Pnts.Select(p => (p.X, p.Y)));
-                }
-
-                if (ikouPts.Count == 0 && (Math.Abs(curIkou.P1.X) > 0.001 || Math.Abs(curIkou.P1.Y) > 0.001))
-                {
-                    var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curIkou.P1, curIkou.P2, curIkou.P3);
-                    ikouPts.Add((v1.X, v1.Y));
-                    ikouPts.Add((v2.X, v2.Y));
-                    ikouPts.Add((v3.X, v3.Y));
-                    ikouPts.Add((v4.X, v4.Y));
                 }
             }
 
@@ -229,7 +234,7 @@ namespace Site7DrawingEditor.Services
 
             double maxFRange = Math.Max(fRangeX, fRangeY);
             double maxBaseRange = Math.Max(rangeX, rangeY);
-            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.40, 1.5f, 15.0f);
+            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.75, 1.5f, 30.0f);
 
             CropZoom = targetZoom;
             CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);

@@ -638,9 +638,20 @@ namespace Site7DrawingEditor
             if (!force && !chkAutoZoomIkou.Checked) return;
 
             DrawingIkouModel? curIkou = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
-            string targetName = (curIkou != null && !string.IsNullOrWhiteSpace(curIkou.Name))
-                ? curIkou.Name
-                : cmbFeatureSelect.Text.Trim();
+            string targetName = cmbFeatureSelect.Text.Trim();
+            if (string.IsNullOrWhiteSpace(targetName) && curIkou != null)
+            {
+                targetName = curIkou.Name;
+            }
+
+            if (curIkou != null && !string.IsNullOrWhiteSpace(targetName) && !curIkou.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (GetSelectedDataBoundItem<DrawingModel>(dgvDrawings) is DrawingModel curDrawing)
+                {
+                    var matched = _db.DrawingIkousList.FirstOrDefault(di => di.ZID == curDrawing.ZID && di.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
+                    if (matched != null) curIkou = matched;
+                }
+            }
 
             _vc.FocusFeatureByNameOnFullMap(targetName, curIkou, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
             picCropCanvas.Invalidate();
