@@ -89,7 +89,7 @@ namespace Site7DrawingEditor
                 {
                     if (c is Label lbl)
                     {
-                        if (lbl != lblHeaderTitle && lbl != lblSubHeader && lbl != lblQuickDb &&
+                        if (lbl != lblHeaderTitle && lbl != lblSubHeader &&
                             lbl != lblFullMapTitle && lbl != lblPaperSheetTitle &&
                             lbl != lblIkouLayerGrpHeader && lbl != lblEntityNameHeader)
                         {
@@ -143,7 +143,13 @@ namespace Site7DrawingEditor
                     else if (c is Button btn)
                     {
                         string t = btn.Text;
-                        if (t.Contains("削除"))
+                        if (btn == btnExit)
+                        {
+                            btn.BackColor = Color.FromArgb(70, 75, 95);
+                            btn.ForeColor = Color.White;
+                            btn.FlatStyle = FlatStyle.Flat;
+                        }
+                        else if (t.Contains("削除"))
                         {
                             btn.BackColor = Color.FromArgb(220, 53, 69);
                             btn.ForeColor = Color.White;
@@ -161,7 +167,7 @@ namespace Site7DrawingEditor
                             btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
                         }
-                        else if (btn != btnOpenDb)
+                        else
                         {
                             btn.BackColor = subBtnBg;
                             btn.ForeColor = subBtnFg;
@@ -221,8 +227,7 @@ namespace Site7DrawingEditor
         private void WireEvents()
         {
             this.Load += FormDrawingEditor_Load;
-            this.btnOpenDb.Click += btnOpenDb_Click;
-            this.cmbQuickDbSelect.SelectedIndexChanged += cmbQuickDbSelect_SelectedIndexChanged;
+            this.btnExit.Click += (s, e) => this.Close();
             this.btnSaveDb.Click += btnSaveDb_Click;
 
             this.dgvDrawings.SelectionChanged += dgvDrawings_SelectionChanged;
@@ -398,7 +403,6 @@ namespace Site7DrawingEditor
         private void FormDrawingEditor_Load(object? sender, EventArgs e)
         {
             InitComboBoxes();
-            PopulateQuickDbList();
             PerformTopLeftLayout();
             PerformTopRightLayout();
         }
@@ -419,99 +423,6 @@ namespace Site7DrawingEditor
                 cmbScale.Items.Add($"{s}");
             }
             cmbScale.SelectedIndex = 1; // Default 1/20
-        }
-
-        private void PopulateQuickDbList()
-        {
-            string rootFolder = @"C:\SITE7";
-            if (!Directory.Exists(rootFolder))
-            {
-                rootFolder = @"C:\SITE7\GENBA\DATA";
-            }
-            if (!Directory.Exists(rootFolder))
-            {
-                try { Directory.CreateDirectory(rootFolder); } catch { }
-            }
-
-            PopulateQuickDbListFromFolder(rootFolder);
-        }
-
-        private void PopulateQuickDbListFromFolder(string targetFolder)
-        {
-            if (!Directory.Exists(targetFolder)) return;
-
-            cmbQuickDbSelect.Items.Clear();
-
-            var searchFolders = new List<string> { targetFolder };
-            string fallbackFolder = @"c:\Proj\Antigravity\MDB2Site7\ExportedSite7";
-            if (Directory.Exists(fallbackFolder) && !searchFolders.Contains(fallbackFolder))
-            {
-                searchFolders.Add(fallbackFolder);
-            }
-
-            foreach (var folder in searchFolders)
-            {
-                if (Directory.Exists(folder))
-                {
-                    var files = Directory.GetFiles(folder, "*.db3", SearchOption.AllDirectories)
-                        .Concat(Directory.GetFiles(folder, "*.db", SearchOption.AllDirectories))
-                        .Distinct()
-                        .OrderBy(f => f)
-                        .ToList();
-
-                    foreach (var file in files)
-                    {
-                        string relPath = Path.GetRelativePath(folder, file);
-                        string dirName = Path.GetDirectoryName(relPath) ?? "";
-                        string fileName = Path.GetFileName(file);
-
-                        string displayName = string.IsNullOrEmpty(dirName) ? fileName : $"{dirName} ({fileName})";
-
-                        if (folder == fallbackFolder)
-                        {
-                            displayName = $"[サンプル] {displayName}";
-                        }
-
-                        cmbQuickDbSelect.Items.Add(new DbItem { DisplayName = displayName, FullPath = file });
-                    }
-                }
-            }
-
-            if (cmbQuickDbSelect.Items.Count > 0)
-            {
-                cmbQuickDbSelect.SelectedIndex = 0;
-            }
-            else
-            {
-                MessageBox.Show($"選択されたフォルダ\n[{targetFolder}]\n内に Site7 データベースファイル (*.db3) が見つかりませんでした。",
-                    "DBファイル未検出", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void cmbQuickDbSelect_SelectedIndexChanged(object? sender, EventArgs e)
-        {
-            if (cmbQuickDbSelect.SelectedItem is DbItem item)
-            {
-                LoadDatabase(item.FullPath);
-            }
-        }
-
-        private void btnOpenDb_Click(object? sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                fbd.Description = "Site7データフォルダ（または親フォルダ C:\\SITE7 等）を選択してください";
-                fbd.UseDescriptionForTitle = true;
-                string defaultFolder = @"C:\SITE7";
-                if (!Directory.Exists(defaultFolder)) defaultFolder = @"C:\SITE7\GENBA\DATA";
-                if (!Directory.Exists(defaultFolder)) defaultFolder = AppDomain.CurrentDomain.BaseDirectory;
-                fbd.InitialDirectory = defaultFolder;
-
-                if (fbd.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    PopulateQuickDbListFromFolder(fbd.SelectedPath);
-                }
-            }
         }
 
         private void LoadDatabase(string dbPath)

@@ -20,9 +20,7 @@ namespace Site7DrawingEditor
             this.panelHeader = new System.Windows.Forms.Panel();
             this.lblHeaderTitle = new System.Windows.Forms.Label();
             this.lblSubHeader = new System.Windows.Forms.Label();
-            this.btnOpenDb = new System.Windows.Forms.Button();
-            this.lblQuickDb = new System.Windows.Forms.Label();
-            this.cmbQuickDbSelect = new System.Windows.Forms.ComboBox();
+            this.btnExit = new System.Windows.Forms.Button();
             this.chkIsFullDrawing = new System.Windows.Forms.CheckBox();
             this.btnSaveDb = new System.Windows.Forms.Button();
             this.lblDbStatus = new System.Windows.Forms.Label();
@@ -194,11 +192,9 @@ namespace Site7DrawingEditor
             // panelHeader
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(42)))));
+            this.panelHeader.Controls.Add(this.btnExit);
             this.panelHeader.Controls.Add(this.lblDbStatus);
             this.panelHeader.Controls.Add(this.btnSaveDb);
-            this.panelHeader.Controls.Add(this.cmbQuickDbSelect);
-            this.panelHeader.Controls.Add(this.lblQuickDb);
-            this.panelHeader.Controls.Add(this.btnOpenDb);
             this.panelHeader.Controls.Add(this.lblSubHeader);
             this.panelHeader.Controls.Add(this.lblHeaderTitle);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -227,58 +223,42 @@ namespace Site7DrawingEditor
             this.lblSubHeader.TabIndex = 1;
             this.lblSubHeader.Text = "全図3点切り出し・用紙図面レイアウト・断面図連動保存";
 
-            // btnOpenDb
-            this.btnOpenDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
-            this.btnOpenDb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenDb.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnOpenDb.ForeColor = System.Drawing.Color.White;
-            this.btnOpenDb.Location = new System.Drawing.Point(360, 14);
-            this.btnOpenDb.Name = "btnOpenDb";
-            this.btnOpenDb.Size = new System.Drawing.Size(125, 32);
-            this.btnOpenDb.TabIndex = 2;
-            this.btnOpenDb.Text = "📁 DBフォルダ選択";
-            this.btnOpenDb.UseVisualStyleBackColor = false;
-
-            // lblQuickDb
-            this.lblQuickDb.AutoSize = true;
-            this.lblQuickDb.ForeColor = System.Drawing.Color.White;
-            this.lblQuickDb.Location = new System.Drawing.Point(495, 23);
-            this.lblQuickDb.Name = "lblQuickDb";
-            this.lblQuickDb.Size = new System.Drawing.Size(63, 15);
-            this.lblQuickDb.TabIndex = 3;
-            this.lblQuickDb.Text = "DB選択:";
-
-            // cmbQuickDbSelect
-            this.cmbQuickDbSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbQuickDbSelect.BackColor = System.Drawing.Color.White;
-            this.cmbQuickDbSelect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.cmbQuickDbSelect.FormattingEnabled = true;
-            this.cmbQuickDbSelect.Location = new System.Drawing.Point(560, 19);
-            this.cmbQuickDbSelect.Name = "cmbQuickDbSelect";
-            this.cmbQuickDbSelect.Size = new System.Drawing.Size(245, 23);
-            this.cmbQuickDbSelect.TabIndex = 4;
-
             // btnSaveDb
             this.btnSaveDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnSaveDb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveDb.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnSaveDb.ForeColor = System.Drawing.Color.White;
-            this.btnSaveDb.Location = new System.Drawing.Point(820, 12);
+            this.btnSaveDb.Location = new System.Drawing.Point(360, 12);
             this.btnSaveDb.Name = "btnSaveDb";
-            this.btnSaveDb.Size = new System.Drawing.Size(140, 35);
-            this.btnSaveDb.TabIndex = 5;
-            this.btnSaveDb.Text = "💾 SQLite DB保存";
+            this.btnSaveDb.Size = new System.Drawing.Size(120, 35);
+            this.btnSaveDb.TabIndex = 2;
+            this.btnSaveDb.Text = "💾 DB保存";
             this.btnSaveDb.UseVisualStyleBackColor = false;
 
             // lblDbStatus
+            this.lblDbStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDbStatus.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblDbStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
-            this.lblDbStatus.Location = new System.Drawing.Point(970, 15);
+            this.lblDbStatus.Location = new System.Drawing.Point(500, 15);
             this.lblDbStatus.Name = "lblDbStatus";
-            this.lblDbStatus.Size = new System.Drawing.Size(490, 30);
-            this.lblDbStatus.TabIndex = 6;
+            this.lblDbStatus.Size = new System.Drawing.Size(850, 30);
+            this.lblDbStatus.TabIndex = 3;
             this.lblDbStatus.Text = "DB未読み込み";
             this.lblDbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+
+            // btnExit
+            this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(75)))), ((int)(((byte)(95)))));
+            this.btnExit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(105)))), ((int)(((byte)(130)))));
+            this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExit.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnExit.ForeColor = System.Drawing.Color.White;
+            this.btnExit.Location = new System.Drawing.Point(1365, 12);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(100, 35);
+            this.btnExit.TabIndex = 4;
+            this.btnExit.Text = "✖ 終了";
+            this.btnExit.UseVisualStyleBackColor = false;
 
             // 
             // splitContainerTopHorizontal (上部: 全体図 vs 用紙レイアウト 分割スプリッター)
@@ -1392,11 +1372,9 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Panel panelHeader;
         private System.Windows.Forms.Label lblHeaderTitle;
         private System.Windows.Forms.Label lblSubHeader;
-        private System.Windows.Forms.Button btnOpenDb;
-        private System.Windows.Forms.Label lblQuickDb;
-        private System.Windows.Forms.ComboBox cmbQuickDbSelect;
         private System.Windows.Forms.Button btnSaveDb;
         private System.Windows.Forms.Label lblDbStatus;
+        private System.Windows.Forms.Button btnExit;
 
         private System.Windows.Forms.SplitContainer splitContainerTopHorizontal;
         private System.Windows.Forms.Panel panelTopLeft;
