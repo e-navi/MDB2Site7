@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Site7DrawingEditor.Services
 {
@@ -42,6 +43,7 @@ namespace Site7DrawingEditor.Services
             foreach (var k in kikaiList) MasterKikaiList.Add(k);
             MasterLayerList.Clear();
             foreach (var ly in layerList) MasterLayerList.Add(ly);
+            LoadLayerSettings(dbPath);
 
             if (DrawingsList.Count == 0 && MasterIkouList.Count > 0)
             {
@@ -161,6 +163,73 @@ namespace Site7DrawingEditor.Services
 
                 item.LListStr = item.LList2Str();
                 return ($"✔ 遺構範囲 [{targetName}] (枠内 {extractedCount} 遺構線) を更新・抽出しました", true);
+            }
+        }
+
+        private void LoadLayerSettings(string dbPath)
+        {
+            string? genbaDir = Path.GetDirectoryName(dbPath);
+            var candidatePaths = new List<string>();
+            if (!string.IsNullOrEmpty(genbaDir))
+            {
+                candidatePaths.Add(Path.Combine(genbaDir, "Def", "Layer遺構.txt"));
+                candidatePaths.Add(Path.Combine(genbaDir, "Layer遺構.txt"));
+            }
+            candidatePaths.Add(@"C:\SITE7\GENBA\NEW\Def\Layer遺構.txt");
+            candidatePaths.Add(@"C:\SITE7\DEF\Layer遺構.txt");
+
+            string? foundFile = candidatePaths.FirstOrDefault(File.Exists);
+            if (foundFile != null)
+            {
+                try
+                {
+                    Encoding enc;
+                    try { enc = Encoding.GetEncoding(932); } catch { enc = Encoding.UTF8; }
+                    string[] lines = File.ReadAllLines(foundFile, enc);
+                    int lineIdx = 1;
+                    foreach (var line in lines)
+                    {
+                        if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
+                        string[] parts = line.Split('\t');
+                        if (parts.Length >= 5)
+                        {
+                            string code = parts[0].Trim();
+                            string name = parts[1].Trim();
+                            int ltype = int.TryParse(parts[4].Trim(), out int lt) ? lt : 2;
+
+                            int layerNum = lineIdx;
+                            if (code.StartsWith("L", StringComparison.OrdinalIgnoreCase) && int.TryParse(code.Substring(1), out int num))
+                            {
+                                layerNum = num;
+                            }
+
+                            var existing1 = MasterLayerList.FirstOrDefault(l => l.Id == layerNum);
+                            if (existing1 != null)
+                            {
+                                existing1.LType = ltype;
+                                if (!string.IsNullOrEmpty(name)) existing1.Name = name;
+                            }
+                            else
+                            {
+                                MasterLayerList.Add(new MasterLayerModel { Id = layerNum, Name = name, LType = ltype });
+                            }
+
+                            var existing2 = MasterLayerList.FirstOrDefault(l => l.Id == layerNum + 48);
+                            if (existing2 != null)
+                            {
+                                existing2.LType = ltype;
+                                if (!string.IsNullOrEmpty(name)) existing2.Name = name;
+                            }
+                            else
+                            {
+                                MasterLayerList.Add(new MasterLayerModel { Id = layerNum + 48, Name = name, LType = ltype });
+                            }
+
+                            lineIdx++;
+                        }
+                    }
+                }
+                catch { }
             }
         }
     }

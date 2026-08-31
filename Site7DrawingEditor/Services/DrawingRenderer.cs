@@ -148,8 +148,7 @@ namespace Site7DrawingEditor.Services
                     var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
                     if (pts.Count == 0) continue;
 
-                    var layerInfo = db.MasterLayerList.FirstOrDefault(ly => ly.Id == line.Layer);
-                    bool isLayerCurve = (layerInfo != null) ? (layerInfo.LType == 2) : false;
+                    bool isLayerCurve = LayerManager.IsLayerCurve(db, line.Layer);
 
                     PointF[] screenPts;
                     if (isLayerCurve && pts.Count >= 3)
@@ -554,9 +553,8 @@ namespace Site7DrawingEditor.Services
                     {
                         if (line.Pnts.Count == 0) continue;
 
-                        var layer = db.MasterLayerList.FirstOrDefault(l => l.Id == line.Layer || l.Id == (line.Layer >= 49 ? line.Layer : line.Layer + 48));
-                        bool isLayerCurve = (layer != null) ? (layer.LType == 2) : true;
-                        bool shouldDrawCurve = chkShowCurvePaper && isLayerCurve && line.Pnts.Count >= 3;
+                        bool isLayerCurve = LayerManager.IsLayerCurve(db, line.Layer);
+                        bool shouldDrawCurve = isLayerCurve && line.Pnts.Count >= 3;
 
                         List<Point3D> renderPnts;
                         if (shouldDrawCurve)
@@ -666,6 +664,7 @@ namespace Site7DrawingEditor.Services
             Graphics g,
             Size canvasSize,
             CanvasViewController vc,
+            DrawingDbManager db,
             DrawingModel? curDrawing,
             DrawingIkouModel? curIkou,
             bool chkColorByIkouFull,
@@ -713,8 +712,9 @@ namespace Site7DrawingEditor.Services
             {
                 if (line.Pnts.Count == 0) continue;
 
+                bool isLayerCurve = LayerManager.IsLayerCurve(db, line.Layer);
                 List<Point3D> renderPnts;
-                if (line.Pnts.Count >= 3)
+                if (isLayerCurve && line.Pnts.Count >= 3)
                 {
                     renderPnts = (line.Flag == 1)
                         ? spline.Calc3DCloseCurvePoints(line.Pnts, 5)

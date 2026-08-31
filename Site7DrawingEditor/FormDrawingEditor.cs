@@ -1287,6 +1287,7 @@ namespace Site7DrawingEditor
                 e.Graphics,
                 picFeatureDetailCanvas.Size,
                 _vc,
+                _db,
                 curDrawing,
                 curIkou,
                 chkColorByIkouFull.Checked,

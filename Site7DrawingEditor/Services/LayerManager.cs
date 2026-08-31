@@ -59,5 +59,26 @@ namespace Site7DrawingEditor.Services
 
             return col;
         }
+
+        public static bool IsLayerCurve(DrawingDbManager db, int layer)
+        {
+            if (db?.MasterLayerList == null || db.MasterLayerList.Count == 0) return true;
+
+            int normIdx = layer;
+            if (normIdx >= 49 && normIdx <= 64) normIdx -= 48;
+            if (normIdx > 16) normIdx = ((normIdx - 1) % 16) + 1;
+
+            var layerInfo = db.MasterLayerList.FirstOrDefault(ly =>
+                ly.Id == layer ||
+                ly.Id == normIdx ||
+                ly.Id == normIdx + 48 ||
+                ly.Id == (layer % 100));
+
+            if (layerInfo != null)
+            {
+                return layerInfo.LType == 2;
+            }
+            return true; // デフォルトは曲線
+        }
     }
 }
