@@ -23,6 +23,8 @@ namespace Site7DrawingEditor
             this.btnExit = new System.Windows.Forms.Button();
             this.btnSaveDb = new System.Windows.Forms.Button();
             this.lblDbStatus = new System.Windows.Forms.Label();
+            this.lblOrientation = new System.Windows.Forms.Label();
+            this.cmbOrientation = new System.Windows.Forms.ComboBox();
 
             // Top Left Panel (Full Survey Map)
             this.panelTopLeftHeader = new System.Windows.Forms.Panel();
@@ -1026,6 +1028,8 @@ namespace Site7DrawingEditor
             // grpDrawingProps (図面)
             this.grpDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawingProps.Controls.Add(this.btnUpdateDrawingProps);
+            this.grpDrawingProps.Controls.Add(this.cmbOrientation);
+            this.grpDrawingProps.Controls.Add(this.lblOrientation);
             this.grpDrawingProps.Controls.Add(this.cmbScale);
             this.grpDrawingProps.Controls.Add(this.lblScale);
             this.grpDrawingProps.Controls.Add(this.cmbPaperSize);
@@ -1045,7 +1049,7 @@ namespace Site7DrawingEditor
             this.lblDrawingName.AutoSize = true;
             this.lblDrawingName.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
             this.lblDrawingName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.lblDrawingName.Location = new System.Drawing.Point(10, 22);
+            this.lblDrawingName.Location = new System.Drawing.Point(8, 22);
             this.lblDrawingName.Name = "lblDrawingName";
             this.lblDrawingName.Size = new System.Drawing.Size(46, 15);
             this.lblDrawingName.TabIndex = 0;
@@ -1056,16 +1060,16 @@ namespace Site7DrawingEditor
             this.txtDrawingName.ForeColor = System.Drawing.Color.Black;
             this.txtDrawingName.Location = new System.Drawing.Point(55, 19);
             this.txtDrawingName.Name = "txtDrawingName";
-            this.txtDrawingName.Size = new System.Drawing.Size(85, 23);
+            this.txtDrawingName.Size = new System.Drawing.Size(80, 23);
             this.txtDrawingName.TabIndex = 1;
 
             // lblPaperSize
             this.lblPaperSize.AutoSize = true;
             this.lblPaperSize.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
             this.lblPaperSize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.lblPaperSize.Location = new System.Drawing.Point(145, 22);
+            this.lblPaperSize.Location = new System.Drawing.Point(140, 22);
             this.lblPaperSize.Name = "lblPaperSize";
-            this.lblPaperSize.Size = new System.Drawing.Size(35, 15);
+            this.lblPaperSize.Size = new System.Drawing.Size(32, 15);
             this.lblPaperSize.TabIndex = 2;
             this.lblPaperSize.Text = "用紙";
 
@@ -1073,9 +1077,9 @@ namespace Site7DrawingEditor
             this.cmbPaperSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPaperSize.BackColor = System.Drawing.Color.White;
             this.cmbPaperSize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.cmbPaperSize.Location = new System.Drawing.Point(182, 19);
+            this.cmbPaperSize.Location = new System.Drawing.Point(174, 19);
             this.cmbPaperSize.Name = "cmbPaperSize";
-            this.cmbPaperSize.Size = new System.Drawing.Size(135, 23);
+            this.cmbPaperSize.Size = new System.Drawing.Size(140, 23);
             this.cmbPaperSize.TabIndex = 3;
 
             // lblScale
@@ -1084,7 +1088,7 @@ namespace Site7DrawingEditor
             this.lblScale.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblScale.Location = new System.Drawing.Point(8, 50);
             this.lblScale.Name = "lblScale";
-            this.lblScale.Size = new System.Drawing.Size(50, 15);
+            this.lblScale.Size = new System.Drawing.Size(46, 15);
             this.lblScale.TabIndex = 4;
             this.lblScale.Text = "縮尺 1/";
 
@@ -1092,20 +1096,39 @@ namespace Site7DrawingEditor
             this.cmbScale.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbScale.BackColor = System.Drawing.Color.White;
             this.cmbScale.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.cmbScale.Location = new System.Drawing.Point(60, 47);
+            this.cmbScale.Location = new System.Drawing.Point(55, 47);
             this.cmbScale.Name = "cmbScale";
-            this.cmbScale.Size = new System.Drawing.Size(60, 23);
+            this.cmbScale.Size = new System.Drawing.Size(55, 23);
             this.cmbScale.TabIndex = 5;
+
+            // lblOrientation
+            this.lblOrientation.AutoSize = true;
+            this.lblOrientation.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.lblOrientation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.lblOrientation.Location = new System.Drawing.Point(118, 50);
+            this.lblOrientation.Name = "lblOrientation";
+            this.lblOrientation.Size = new System.Drawing.Size(32, 15);
+            this.lblOrientation.TabIndex = 6;
+            this.lblOrientation.Text = "向き";
+
+            // cmbOrientation
+            this.cmbOrientation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbOrientation.BackColor = System.Drawing.Color.White;
+            this.cmbOrientation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.cmbOrientation.Location = new System.Drawing.Point(152, 47);
+            this.cmbOrientation.Name = "cmbOrientation";
+            this.cmbOrientation.Size = new System.Drawing.Size(65, 23);
+            this.cmbOrientation.TabIndex = 7;
 
             // btnUpdateDrawingProps (図面プロパティの更新ボタン)
             this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
             this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdateDrawingProps.Location = new System.Drawing.Point(322, 19);
+            this.btnUpdateDrawingProps.Location = new System.Drawing.Point(320, 19);
             this.btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
-            this.btnUpdateDrawingProps.Size = new System.Drawing.Size(72, 26);
-            this.btnUpdateDrawingProps.TabIndex = 6;
+            this.btnUpdateDrawingProps.Size = new System.Drawing.Size(74, 51);
+            this.btnUpdateDrawingProps.TabIndex = 8;
             this.btnUpdateDrawingProps.Text = "図面更新";
             this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
 
@@ -1446,6 +1469,8 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.ComboBox cmbPaperSize;
         private System.Windows.Forms.Label lblScale;
         private System.Windows.Forms.ComboBox cmbScale;
+        private System.Windows.Forms.Label lblOrientation;
+        private System.Windows.Forms.ComboBox cmbOrientation;
         private System.Windows.Forms.Button btnUpdateDrawingProps;
 
         private System.Windows.Forms.GroupBox grpIkouProps;

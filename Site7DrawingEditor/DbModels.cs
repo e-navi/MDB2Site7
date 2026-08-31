@@ -78,14 +78,41 @@ namespace Site7DrawingEditor
     public class DrawingModel
     {
         public int ZID { get; set; }
-        public int Type { get; set; } = 1;  // 0:全図 1:部分図 (個別遺構図: 常に1)
+        public int Type { get; set; } = 0;  // 向き (0:横 Landscape, 1:縦 Portrait)
         public string Name { get; set; } = "";
         public int PaperSize { get; set; }  // 0:A0 1:A1 2:A2 3:A3 4:A4 5:A5
         public int Scale { get; set; }      // 1 / Scale (e.g. 20 for 1/20)
 
-        public PaperSizeInfo PaperInfo => (PaperSize >= 0 && PaperSize < PaperSizeInfo.PaperSizes.Length)
-            ? PaperSizeInfo.PaperSizes[PaperSize]
-            : PaperSizeInfo.PaperSizes[3];
+        public PaperSizeInfo PaperInfo
+        {
+            get
+            {
+                var baseInfo = (PaperSize >= 0 && PaperSize < PaperSizeInfo.PaperSizes.Length)
+                    ? PaperSizeInfo.PaperSizes[PaperSize]
+                    : PaperSizeInfo.PaperSizes[3];
+
+                if (Type == 1) // 縦 (Portrait)
+                {
+                    return new PaperSizeInfo
+                    {
+                        SizeId = baseInfo.SizeId,
+                        Name = $"{baseInfo.Name} 縦",
+                        WidthMm = Math.Min(baseInfo.WidthMm, baseInfo.HeightMm),
+                        HeightMm = Math.Max(baseInfo.WidthMm, baseInfo.HeightMm)
+                    };
+                }
+                else // 横 (Landscape)
+                {
+                    return new PaperSizeInfo
+                    {
+                        SizeId = baseInfo.SizeId,
+                        Name = $"{baseInfo.Name} 横",
+                        WidthMm = Math.Max(baseInfo.WidthMm, baseInfo.HeightMm),
+                        HeightMm = Math.Min(baseInfo.WidthMm, baseInfo.HeightMm)
+                    };
+                }
+            }
+        }
     }
 
     /// <summary>

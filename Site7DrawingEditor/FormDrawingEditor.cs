@@ -299,6 +299,17 @@ namespace Site7DrawingEditor
             this.cmbFeatureSelect.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
             this.txtDanmenName.TextChanged += (s, e) => UpdateControlEnableStates();
 
+            this.cmbOrientation.SelectedIndexChanged += (s, e) =>
+            {
+                if (_isUpdatingSelection) return;
+                if (GetSelectedDataBoundItem<DrawingModel>(dgvDrawings) is DrawingModel curDrawing)
+                {
+                    curDrawing.Type = (cmbOrientation.SelectedIndex == 1) ? 1 : 0;
+                    lblPaperInfoBanner.Text = $"{curDrawing.PaperInfo.Name} ({curDrawing.PaperInfo.WidthMm}×{curDrawing.PaperInfo.HeightMm}mm) | 1/{curDrawing.Scale}";
+                    RefreshAllCanvases();
+                }
+            };
+
             this.chkColorByIkouFull.CheckedChanged += (s, e) =>
             {
                 if (_isUpdatingSelection) return;
@@ -427,6 +438,10 @@ namespace Site7DrawingEditor
                 cmbPaperSize.Items.Add($"{p.Name} ({p.WidthMm} × {p.HeightMm} mm)");
             }
             if (cmbPaperSize.Items.Count > 3) cmbPaperSize.SelectedIndex = 3; // Default A3
+
+            cmbOrientation.Items.Clear();
+            cmbOrientation.Items.AddRange(new object[] { "横", "縦" });
+            cmbOrientation.SelectedIndex = 0; // Default 横
 
             cmbScale.Items.Clear();
             int[] defaultScales = new[] { 10, 20, 30, 50, 100, 200 };
@@ -590,6 +605,7 @@ namespace Site7DrawingEditor
                             _ => 1
                         };
                         cmbScale.SelectedIndex = scaleIdx;
+                        cmbOrientation.SelectedIndex = (selectedDrawing.Type == 1) ? 1 : 0;
                         lblPaperInfoBanner.Text = $"{selectedDrawing.PaperInfo.Name} ({selectedDrawing.PaperInfo.WidthMm}×{selectedDrawing.PaperInfo.HeightMm}mm) | 1/{selectedDrawing.Scale}";
 
                         var subIkous = _db.DrawingIkousList.Where(di => di.ZID == selectedDrawing.ZID).ToList();
@@ -688,7 +704,7 @@ namespace Site7DrawingEditor
                 sel.Name = txtDrawingName.Text.Trim();
                 sel.PaperSize = cmbPaperSize.SelectedIndex;
                 sel.Scale = int.Parse(cmbScale.SelectedItem?.ToString() ?? "20");
-                sel.Type = 1;
+                sel.Type = (cmbOrientation.SelectedIndex == 1) ? 1 : 0;
                 dgvDrawings.Refresh();
                 lblPaperInfoBanner.Text = $"{sel.PaperInfo.Name} ({sel.PaperInfo.WidthMm}×{sel.PaperInfo.HeightMm}mm) | 1/{sel.Scale}";
                 RefreshAllCanvases();
@@ -791,7 +807,7 @@ namespace Site7DrawingEditor
         private void btnAddDrawing_Click(object? sender, EventArgs e)
         {
             int newZid = _db.DrawingsList.Count > 0 ? _db.DrawingsList.Max(d => d.ZID) + 1 : 1;
-            var newDrawing = new DrawingModel { ZID = newZid, Name = $"遺構図{newZid}", PaperSize = 3, Scale = 20, Type = 1 };
+            var newDrawing = new DrawingModel { ZID = newZid, Name = $"遺構図{newZid}", PaperSize = 3, Scale = 20, Type = 0 };
             _db.DrawingsList.Add(newDrawing);
 
             var newIkou = new DrawingIkouModel

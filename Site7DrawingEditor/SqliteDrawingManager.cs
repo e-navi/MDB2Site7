@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS '図面遺構' (
                         drawings.Add(new DrawingModel
                         {
                             ZID = reader.GetInt32(0),
-                            Type = reader.IsDBNull(1) ? 1 : reader.GetInt32(1),
+                            Type = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
                             Name = reader.IsDBNull(2) ? "" : reader.GetString(2),
                             PaperSize = reader.IsDBNull(3) ? 3 : reader.GetInt32(3),
                             Scale = reader.IsDBNull(4) ? 20 : reader.GetInt32(4)
