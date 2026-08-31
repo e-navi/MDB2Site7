@@ -299,16 +299,6 @@ namespace Site7DrawingEditor
             this.cmbFeatureSelect.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
             this.txtDanmenName.TextChanged += (s, e) => UpdateControlEnableStates();
 
-            this.chkIsFullDrawing.CheckedChanged += (s, e) =>
-            {
-                if (_isUpdatingSelection) return;
-                if (GetSelectedDataBoundItem<DrawingModel>(dgvDrawings) is DrawingModel curDrawing)
-                {
-                    curDrawing.Type = this.chkIsFullDrawing.Checked ? 0 : 1;
-                    picPaperCanvas.Invalidate();
-                }
-            };
-
             this.chkColorByIkouFull.CheckedChanged += (s, e) =>
             {
                 if (_isUpdatingSelection) return;
@@ -600,7 +590,6 @@ namespace Site7DrawingEditor
                             _ => 1
                         };
                         cmbScale.SelectedIndex = scaleIdx;
-                        chkIsFullDrawing.Checked = (selectedDrawing.Type == 0);
                         lblPaperInfoBanner.Text = $"{selectedDrawing.PaperInfo.Name} ({selectedDrawing.PaperInfo.WidthMm}×{selectedDrawing.PaperInfo.HeightMm}mm) | 1/{selectedDrawing.Scale}";
 
                         var subIkous = _db.DrawingIkousList.Where(di => di.ZID == selectedDrawing.ZID).ToList();
@@ -699,7 +688,7 @@ namespace Site7DrawingEditor
                 sel.Name = txtDrawingName.Text.Trim();
                 sel.PaperSize = cmbPaperSize.SelectedIndex;
                 sel.Scale = int.Parse(cmbScale.SelectedItem?.ToString() ?? "20");
-                sel.Type = chkIsFullDrawing.Checked ? 0 : 1;
+                sel.Type = 1;
                 dgvDrawings.Refresh();
                 lblPaperInfoBanner.Text = $"{sel.PaperInfo.Name} ({sel.PaperInfo.WidthMm}×{sel.PaperInfo.HeightMm}mm) | 1/{sel.Scale}";
                 RefreshAllCanvases();

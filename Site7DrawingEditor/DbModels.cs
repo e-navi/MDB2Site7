@@ -78,7 +78,7 @@ namespace Site7DrawingEditor
     public class DrawingModel
     {
         public int ZID { get; set; }
-        public int Type { get; set; }       // 0:全図 1:部分図
+        public int Type { get; set; } = 1;  // 0:全図 1:部分図 (個別遺構図: 常に1)
         public string Name { get; set; } = "";
         public int PaperSize { get; set; }  // 0:A0 1:A1 2:A2 3:A3 4:A4 5:A5
         public int Scale { get; set; }      // 1 / Scale (e.g. 20 for 1/20)

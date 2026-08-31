@@ -21,7 +21,6 @@ namespace Site7DrawingEditor
             this.lblHeaderTitle = new System.Windows.Forms.Label();
             this.lblSubHeader = new System.Windows.Forms.Label();
             this.btnExit = new System.Windows.Forms.Button();
-            this.chkIsFullDrawing = new System.Windows.Forms.CheckBox();
             this.btnSaveDb = new System.Windows.Forms.Button();
             this.lblDbStatus = new System.Windows.Forms.Label();
 
@@ -1026,7 +1025,6 @@ namespace Site7DrawingEditor
 
             // grpDrawingProps (図面)
             this.grpDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
-            this.grpDrawingProps.Controls.Add(this.chkIsFullDrawing);
             this.grpDrawingProps.Controls.Add(this.btnUpdateDrawingProps);
             this.grpDrawingProps.Controls.Add(this.cmbScale);
             this.grpDrawingProps.Controls.Add(this.lblScale);
@@ -1098,17 +1096,6 @@ namespace Site7DrawingEditor
             this.cmbScale.Name = "cmbScale";
             this.cmbScale.Size = new System.Drawing.Size(60, 23);
             this.cmbScale.TabIndex = 5;
-
-            // chkIsFullDrawing
-            this.chkIsFullDrawing.AutoSize = true;
-            this.chkIsFullDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkIsFullDrawing.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.chkIsFullDrawing.Location = new System.Drawing.Point(125, 48);
-            this.chkIsFullDrawing.Name = "chkIsFullDrawing";
-            this.chkIsFullDrawing.Size = new System.Drawing.Size(150, 19);
-            this.chkIsFullDrawing.TabIndex = 6;
-            this.chkIsFullDrawing.Text = "全体遺構図 (トンボ表示)";
-            this.chkIsFullDrawing.UseVisualStyleBackColor = true;
 
             // btnUpdateDrawingProps (図面プロパティの更新ボタン)
             this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
@@ -1453,7 +1440,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Panel panelControls;
 
         private System.Windows.Forms.GroupBox grpDrawingProps;
-        private System.Windows.Forms.CheckBox chkIsFullDrawing;
         private System.Windows.Forms.Label lblDrawingName;
         private System.Windows.Forms.TextBox txtDrawingName;
         private System.Windows.Forms.Label lblPaperSize;
