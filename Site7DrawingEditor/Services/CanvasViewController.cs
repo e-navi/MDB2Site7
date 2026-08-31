@@ -283,9 +283,15 @@ namespace Site7DrawingEditor.Services
             float featureBaseX = (float)(offsetX + (fCenterY - posXMin) * baseScale);
             float featureBaseY = (float)(height - offsetY - (fCenterX - posYMin) * baseScale);
 
-            double maxFRange = Math.Max(fRangeX, fRangeY);
-            double maxBaseRange = Math.Max(rangeX, rangeY);
-            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.75, 1.5f, 30.0f);
+            // 遺構枠（または遺構点群）がキャンバス領域（余白を確保した82%サイズ）内にすっぽり収まるズーム倍率を正確に算出
+            double featureWidthPx = fRangeY * baseScale;
+            double featureHeightPx = fRangeX * baseScale;
+            if (featureWidthPx < 1.0) featureWidthPx = 1.0;
+            if (featureHeightPx < 1.0) featureHeightPx = 1.0;
+
+            double targetZoomX = (width * 0.82) / featureWidthPx;
+            double targetZoomY = (height * 0.82) / featureHeightPx;
+            float targetZoom = (float)Math.Clamp(Math.Min(targetZoomX, targetZoomY), 1.0f, 30.0f);
 
             CropZoom = targetZoom;
             CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);
