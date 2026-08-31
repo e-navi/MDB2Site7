@@ -30,7 +30,7 @@ namespace Site7DrawingEditor
             this.panelTopLeftHeader = new System.Windows.Forms.Panel();
             this.lblFullMapTitle = new System.Windows.Forms.Label();
             this.btnResetCropZoom = new System.Windows.Forms.Button();
-            this.btnCropPick3P = new System.Windows.Forms.Button();
+            this.chkAutoZoomIkou = new System.Windows.Forms.CheckBox();
             this.panelHcLeftSidebar = new System.Windows.Forms.Panel();
             this.btnBgSettings = new System.Windows.Forms.Button();
             this.btnEnvSettings = new System.Windows.Forms.Button();
@@ -285,7 +285,7 @@ namespace Site7DrawingEditor
 
             // panelTopLeftHeader
             this.panelTopLeftHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
-            this.panelTopLeftHeader.Controls.Add(this.btnCropPick3P);
+            this.panelTopLeftHeader.Controls.Add(this.chkAutoZoomIkou);
             this.panelTopLeftHeader.Controls.Add(this.btnResetCropZoom);
             this.panelTopLeftHeader.Controls.Add(this.lblFullMapTitle);
             this.panelTopLeftHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -300,33 +300,34 @@ namespace Site7DrawingEditor
             this.lblFullMapTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.lblFullMapTitle.Location = new System.Drawing.Point(8, 8);
             this.lblFullMapTitle.Name = "lblFullMapTitle";
-            this.lblFullMapTitle.Size = new System.Drawing.Size(120, 17);
+            this.lblFullMapTitle.Size = new System.Drawing.Size(90, 17);
             this.lblFullMapTitle.TabIndex = 0;
-            this.lblFullMapTitle.Text = "🗺 全体遺構測量図";
+            this.lblFullMapTitle.Text = "🗺 全体遺構図";
 
             // btnResetCropZoom
             this.btnResetCropZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
             this.btnResetCropZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetCropZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnResetCropZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnResetCropZoom.Location = new System.Drawing.Point(140, 5);
+            this.btnResetCropZoom.Location = new System.Drawing.Point(108, 5);
             this.btnResetCropZoom.Name = "btnResetCropZoom";
-            this.btnResetCropZoom.Size = new System.Drawing.Size(85, 25);
+            this.btnResetCropZoom.Size = new System.Drawing.Size(75, 25);
             this.btnResetCropZoom.TabIndex = 1;
-            this.btnResetCropZoom.Text = "リセット";
+            this.btnResetCropZoom.Text = "全図表示";
             this.btnResetCropZoom.UseVisualStyleBackColor = false;
 
-            // btnCropPick3P
-            this.btnCropPick3P.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
-            this.btnCropPick3P.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCropPick3P.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnCropPick3P.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnCropPick3P.Location = new System.Drawing.Point(235, 5);
-            this.btnCropPick3P.Name = "btnCropPick3P";
-            this.btnCropPick3P.Size = new System.Drawing.Size(120, 25);
-            this.btnCropPick3P.TabIndex = 2;
-            this.btnCropPick3P.Text = "遺構枠指示 (3点)";
-            this.btnCropPick3P.UseVisualStyleBackColor = false;
+            // chkAutoZoomIkou
+            this.chkAutoZoomIkou.AutoSize = true;
+            this.chkAutoZoomIkou.Checked = true;
+            this.chkAutoZoomIkou.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoZoomIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.chkAutoZoomIkou.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.chkAutoZoomIkou.Location = new System.Drawing.Point(195, 8);
+            this.chkAutoZoomIkou.Name = "chkAutoZoomIkou";
+            this.chkAutoZoomIkou.Size = new System.Drawing.Size(110, 19);
+            this.chkAutoZoomIkou.TabIndex = 2;
+            this.chkAutoZoomIkou.Text = "選択遺構を拡大";
+            this.chkAutoZoomIkou.UseVisualStyleBackColor = true;
 
             // panelHcLeftSidebar
             this.panelHcLeftSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
@@ -1393,7 +1394,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Panel panelTopLeftHeader;
         private System.Windows.Forms.Label lblFullMapTitle;
         private System.Windows.Forms.Button btnResetCropZoom;
-        private System.Windows.Forms.Button btnCropPick3P;
+        private System.Windows.Forms.CheckBox chkAutoZoomIkou;
         private System.Windows.Forms.Panel panelHcLeftSidebar;
         private System.Windows.Forms.Button btnBgSettings;
         private System.Windows.Forms.Button btnEnvSettings;

@@ -186,5 +186,61 @@ namespace Site7DrawingEditor.Services
             CropZoom = targetZoom;
             CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);
         }
+
+        /// <summary>
+        /// 遺構名指定時: 指定した遺構名の実測線を全体図の中央に適当な大きさでフォーカス表示する
+        /// </summary>
+        public void FocusFeatureByNameOnFullMap(string featureName, Size canvasSize,
+            IEnumerable<MasterIkouLModel> ikouLList,
+            IEnumerable<MasterIbutuModel> ibutuList,
+            IEnumerable<MasterKikaiModel> kikaiList)
+        {
+            if (string.IsNullOrWhiteSpace(featureName) || canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
+
+            int width = canvasSize.Width;
+            int height = canvasSize.Height;
+
+            var (posXMin, posXMax, posYMin, posYMax, baseScale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouLList, ibutuList, kikaiList);
+
+            double rangeX = posXMax - posXMin;
+            double rangeY = posYMax - posYMin;
+
+            var ikouPts = new List<(double surveyX, double surveyY)>();
+            foreach (var line in ikouLList)
+            {
+                if (string.Equals(line.Name, featureName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
+                    ikouPts.AddRange(pts.Select(p => (p.X, p.Y)));
+                }
+            }
+
+            if (ikouPts.Count == 0) return;
+
+            double fMinX = ikouPts.Min(p => p.surveyX);
+            double fMaxX = ikouPts.Max(p => p.surveyX);
+            double fMinY = ikouPts.Min(p => p.surveyY);
+            double fMaxY = ikouPts.Max(p => p.surveyY);
+
+            double fCenterX = (fMinX + fMaxX) / 2.0;
+            double fCenterY = (fMinY + fMaxY) / 2.0;
+            double fRangeX = fMaxX - fMinX;
+            double fRangeY = fMaxY - fMinY;
+            if (fRangeX < 0.001) fRangeX = 1.0;
+            if (fRangeY < 0.001) fRangeY = 1.0;
+
+            float cx = width / 2f;
+            float cy = height / 2f;
+
+            float featureBaseX = (float)(offsetX + (fCenterY - posXMin) * baseScale);
+            float featureBaseY = (float)(height - offsetY - (fCenterX - posYMin) * baseScale);
+
+            double maxFRange = Math.Max(fRangeX, fRangeY);
+            double maxBaseRange = Math.Max(rangeX, rangeY);
+            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.40, 1.2f, 18.0f);
+
+            CropZoom = targetZoom;
+            CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);
+        }
     }
 }

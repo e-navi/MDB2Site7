@@ -240,7 +240,6 @@ namespace Site7DrawingEditor
             this.btnUpdateDrawingProps.Click += btnUpdateDrawingProps_Click;
             this.btnUpdateIkouProps.Click += btnUpdateIkouProps_Click;
 
-            this.btnCropPick3P.Click += (s, e) => Start3PointPick();
             this.btnPickCropBounds.Click += (s, e) => Start3PointPick();
             this.btnSetPaperPosition.Click += (s, e) => StartPaperPositionPick();
 
@@ -250,6 +249,7 @@ namespace Site7DrawingEditor
 
             this.btnResetCropZoom.Click += (s, e) => { _vc.ResetCropZoom(); picCropCanvas.Invalidate(); };
             this.btnResetPaperZoom.Click += (s, e) => { _vc.ResetPaperZoom(); picPaperCanvas.Invalidate(); };
+            this.chkAutoZoomIkou.CheckedChanged += (s, e) => { if (chkAutoZoomIkou.Checked) FocusSelectedFeature(); };
 
             _chkLayers = new CheckBox[]
             {
@@ -296,7 +296,11 @@ namespace Site7DrawingEditor
             // リアルタイムに入力テキストが変更された際のボタン有効化更新ハンドラー
             this.txtDrawingName.TextChanged += (s, e) => UpdateControlEnableStates();
             this.cmbFeatureSelect.TextChanged += (s, e) => UpdateControlEnableStates();
-            this.cmbFeatureSelect.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
+            this.cmbFeatureSelect.SelectedIndexChanged += (s, e) =>
+            {
+                UpdateControlEnableStates();
+                FocusSelectedFeature();
+            };
             this.txtDanmenName.TextChanged += (s, e) => UpdateControlEnableStates();
 
             this.cmbOrientation.SelectedIndexChanged += (s, e) =>
@@ -571,7 +575,6 @@ namespace Site7DrawingEditor
             btnDeleteDanmen.Enabled = hasDanmen;
 
             // 4. 指示ボタン
-            btnCropPick3P.Enabled = hasIkou;
             btnPickCropBounds.Enabled = hasIkou;
             btnSetPaperPosition.Enabled = hasIkou;
             btnSetDirectionPosition.Enabled = hasIkou;
@@ -635,6 +638,25 @@ namespace Site7DrawingEditor
             }));
         }
 
+        private void FocusSelectedFeature()
+        {
+            if (!chkAutoZoomIkou.Checked) return;
+
+            if (GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel curIkou && !string.IsNullOrWhiteSpace(curIkou.Name))
+            {
+                _vc.FocusFeatureByNameOnFullMap(curIkou.Name, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+                picCropCanvas.Invalidate();
+                return;
+            }
+
+            string cmbText = cmbFeatureSelect.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(cmbText))
+            {
+                _vc.FocusFeatureByNameOnFullMap(cmbText, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+                picCropCanvas.Invalidate();
+            }
+        }
+
         private void dgvDrawingIkous_SelectionChanged(object? sender, EventArgs e)
         {
             if (this.IsDisposed || !this.IsHandleCreated) return;
@@ -656,6 +678,11 @@ namespace Site7DrawingEditor
                         }
 
                         dgvDanmen_SelectionChanged(this, EventArgs.Empty);
+
+                        if (chkAutoZoomIkou.Checked)
+                        {
+                            _vc.FocusFeatureByNameOnFullMap(selectedIkou.Name, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+                        }
                     }
                     else
                     {
