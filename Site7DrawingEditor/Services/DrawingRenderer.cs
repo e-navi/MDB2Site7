@@ -310,7 +310,7 @@ namespace Site7DrawingEditor.Services
             int canvasWidth = canvasSize.Width;
             int canvasHeight = canvasSize.Height;
 
-            g.Clear(Color.FromArgb(20, 20, 25));
+            g.Clear(Color.FromArgb(228, 232, 240));
 
             if (curDrawing == null) return;
 
@@ -343,8 +343,8 @@ namespace Site7DrawingEditor.Services
             float paperLeft = paperCenterX - paperW / 2f;
             float paperTop = paperCenterY - paperH / 2f;
 
-            using (var paperBrush = new SolidBrush(Color.FromArgb(250, 250, 250)))
-            using (var paperPen = new Pen(Color.FromArgb(0, 180, 216), 2f))
+            using (var paperBrush = new SolidBrush(Color.White))
+            using (var paperPen = new Pen(Color.FromArgb(160, 175, 195), 1.5f))
             {
                 g.FillRectangle(paperBrush, paperLeft, paperTop, paperW, paperH);
                 g.DrawRectangle(paperPen, paperLeft, paperTop, paperW, paperH);

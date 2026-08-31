@@ -39,9 +39,143 @@ namespace Site7DrawingEditor
 
         private void SetupStyles()
         {
+            ApplyTheme();
             ConfigureDgvColumns(dgvDrawings, "ZID", "ID", "Name", "図面名称");
             ConfigureDgvColumns(dgvDrawingIkous, "IID", "ID", "Name", "対象遺構名", isNameReadOnly: true);
             ConfigureDgvColumns(dgvDanmen, "DID", "ID", "Name", "断面名称");
+        }
+
+        private void ApplyTheme()
+        {
+            Color formBgColor = Color.FromArgb(245, 246, 248);
+            Color headerBgColor = Color.FromArgb(233, 236, 243);
+            Color headerFgColor = Color.FromArgb(25, 45, 80);
+            Color subBtnBg = Color.FromArgb(225, 232, 242);
+            Color subBtnFg = Color.FromArgb(25, 45, 80);
+            Color darkTextColor = Color.FromArgb(33, 37, 41);
+            Color grpHeaderColor = Color.FromArgb(25, 55, 105);
+
+            this.BackColor = formBgColor;
+
+            // 各ヘッダーバー
+            panelTopLeftHeader.BackColor = headerBgColor;
+            lblFullMapTitle.ForeColor = headerFgColor;
+            panelTopRightHeader.BackColor = headerBgColor;
+            lblPaperSheetTitle.ForeColor = headerFgColor;
+
+            // 下部コンテナ
+            panelBottomFixedGroup.BackColor = formBgColor;
+            panelControls.BackColor = formBgColor;
+            panelBottomGrids.BackColor = formBgColor;
+
+            // グループボックス
+            GroupBox[] grps = {
+                grpDrawings, grpDrawingIkous, grpDanmenList,
+                grpDrawingProps, grpIkouProps, grpCompassProps, grpDanmenProps, grpFeatureDetailPreview
+            };
+            foreach (var grp in grps)
+            {
+                if (grp != null)
+                {
+                    grp.BackColor = formBgColor;
+                    grp.ForeColor = grpHeaderColor;
+                }
+            }
+
+            // コントロール配色の自動適用
+            void StyleContainer(Control parent)
+            {
+                foreach (Control c in parent.Controls)
+                {
+                    if (c is Label lbl)
+                    {
+                        if (lbl != lblHeaderTitle && lbl != lblSubHeader && lbl != lblQuickDb &&
+                            lbl != lblFullMapTitle && lbl != lblPaperSheetTitle &&
+                            lbl != lblIkouLayerGrpHeader && lbl != lblEntityNameHeader)
+                        {
+                            if (lbl == lblPaperInfoBanner)
+                            {
+                                lbl.ForeColor = Color.FromArgb(0, 102, 204);
+                            }
+                            else
+                            {
+                                lbl.ForeColor = darkTextColor;
+                            }
+                        }
+                    }
+                    else if (c is CheckBox chk)
+                    {
+                        if (chk == chkShowIbutu || chk == chkShowIkou || chk == chkShowKikai)
+                        {
+                            // レイヤ色を保持
+                        }
+                        else
+                        {
+                            chk.ForeColor = darkTextColor;
+                        }
+                    }
+                    else if (c is TextBox txt)
+                    {
+                        if (txt == txtDrawingName || txt == txtDanmenName)
+                        {
+                            txt.BackColor = Color.FromArgb(255, 255, 220);
+                            txt.ForeColor = Color.Black;
+                        }
+                        else
+                        {
+                            txt.BackColor = Color.White;
+                            txt.ForeColor = darkTextColor;
+                        }
+                    }
+                    else if (c is ComboBox cmb)
+                    {
+                        if (cmb == cmbFeatureSelect)
+                        {
+                            cmb.BackColor = Color.FromArgb(255, 255, 220);
+                            cmb.ForeColor = Color.Black;
+                        }
+                        else
+                        {
+                            cmb.BackColor = Color.White;
+                            cmb.ForeColor = darkTextColor;
+                        }
+                    }
+                    else if (c is Button btn)
+                    {
+                        string t = btn.Text;
+                        if (t.Contains("削除"))
+                        {
+                            btn.BackColor = Color.FromArgb(220, 53, 69);
+                            btn.ForeColor = Color.White;
+                            btn.FlatStyle = FlatStyle.Flat;
+                        }
+                        else if (t.Contains("更新"))
+                        {
+                            btn.BackColor = Color.FromArgb(255, 193, 7);
+                            btn.ForeColor = Color.Black;
+                            btn.FlatStyle = FlatStyle.Flat;
+                        }
+                        else if (t.Contains("追加") || t.Contains("保存"))
+                        {
+                            btn.BackColor = Color.FromArgb(40, 167, 69);
+                            btn.ForeColor = Color.White;
+                            btn.FlatStyle = FlatStyle.Flat;
+                        }
+                        else if (btn != btnOpenDb)
+                        {
+                            btn.BackColor = subBtnBg;
+                            btn.ForeColor = subBtnFg;
+                            btn.FlatStyle = FlatStyle.Flat;
+                        }
+                    }
+                    if (c.HasChildren && !(c is DataGridView))
+                    {
+                        StyleContainer(c);
+                    }
+                }
+            }
+
+            StyleContainer(this);
         }
 
         private void ConfigureDgvColumns(DataGridView dgv, string idPropName, string idHeaderText, string namePropName, string nameHeaderText, bool isNameReadOnly = false)
@@ -50,20 +184,20 @@ namespace Site7DrawingEditor
             dgv.Columns.Clear();
             dgv.EnableHeadersVisualStyles = false;
             dgv.DataError += (s, e) => { e.ThrowException = false; };
-            dgv.BackgroundColor = Color.FromArgb(30, 30, 38);
-            dgv.ForeColor = Color.White;
-            dgv.GridColor = Color.FromArgb(55, 55, 65);
+            dgv.BackgroundColor = Color.FromArgb(248, 249, 250);
+            dgv.ForeColor = Color.FromArgb(33, 37, 41);
+            dgv.GridColor = Color.FromArgb(215, 220, 228);
             dgv.RowHeadersVisible = false;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 45, 66);
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(0, 180, 216);
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 235, 245);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(25, 45, 80);
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
 
-            dgv.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 38);
-            dgv.DefaultCellStyle.ForeColor = Color.White;
-            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 180, 216);
-            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgv.DefaultCellStyle.BackColor = Color.White;
+            dgv.DefaultCellStyle.ForeColor = Color.FromArgb(20, 20, 20);
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(179, 229, 252);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(0, 30, 80);
 
             var colId = new DataGridViewTextBoxColumn
             {

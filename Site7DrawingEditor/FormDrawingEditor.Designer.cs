@@ -193,7 +193,7 @@ namespace Site7DrawingEditor
             // 
             // panelHeader
             // 
-            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(35)))));
+            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(42)))));
             this.panelHeader.Controls.Add(this.lblDbStatus);
             this.panelHeader.Controls.Add(this.btnSaveDb);
             this.panelHeader.Controls.Add(this.cmbQuickDbSelect);
@@ -210,7 +210,7 @@ namespace Site7DrawingEditor
             // lblHeaderTitle
             this.lblHeaderTitle.AutoSize = true;
             this.lblHeaderTitle.Font = new System.Drawing.Font("Yu Gothic UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblHeaderTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblHeaderTitle.ForeColor = System.Drawing.Color.White;
             this.lblHeaderTitle.Location = new System.Drawing.Point(12, 8);
             this.lblHeaderTitle.Name = "lblHeaderTitle";
             this.lblHeaderTitle.Size = new System.Drawing.Size(320, 25);
@@ -220,7 +220,7 @@ namespace Site7DrawingEditor
             // lblSubHeader
             this.lblSubHeader.AutoSize = true;
             this.lblSubHeader.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblSubHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(170)))), ((int)(((byte)(190)))));
+            this.lblSubHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(185)))), ((int)(((byte)(210)))));
             this.lblSubHeader.Location = new System.Drawing.Point(14, 35);
             this.lblSubHeader.Name = "lblSubHeader";
             this.lblSubHeader.Size = new System.Drawing.Size(326, 15);
@@ -228,7 +228,7 @@ namespace Site7DrawingEditor
             this.lblSubHeader.Text = "全図3点切り出し・用紙図面レイアウト・断面図連動保存";
 
             // btnOpenDb
-            this.btnOpenDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnOpenDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
             this.btnOpenDb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOpenDb.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnOpenDb.ForeColor = System.Drawing.Color.White;
@@ -250,8 +250,8 @@ namespace Site7DrawingEditor
 
             // cmbQuickDbSelect
             this.cmbQuickDbSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbQuickDbSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(37)))), ((int)(((byte)(50)))));
-            this.cmbQuickDbSelect.ForeColor = System.Drawing.Color.White;
+            this.cmbQuickDbSelect.BackColor = System.Drawing.Color.White;
+            this.cmbQuickDbSelect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.cmbQuickDbSelect.FormattingEnabled = true;
             this.cmbQuickDbSelect.Location = new System.Drawing.Point(560, 19);
             this.cmbQuickDbSelect.Name = "cmbQuickDbSelect";
@@ -259,10 +259,10 @@ namespace Site7DrawingEditor
             this.cmbQuickDbSelect.TabIndex = 4;
 
             // btnSaveDb
-            this.btnSaveDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(176)))), ((int)(((byte)(0)))));
+            this.btnSaveDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnSaveDb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveDb.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSaveDb.ForeColor = System.Drawing.Color.Black;
+            this.btnSaveDb.ForeColor = System.Drawing.Color.White;
             this.btnSaveDb.Location = new System.Drawing.Point(820, 12);
             this.btnSaveDb.Name = "btnSaveDb";
             this.btnSaveDb.Size = new System.Drawing.Size(140, 35);
@@ -272,7 +272,7 @@ namespace Site7DrawingEditor
 
             // lblDbStatus
             this.lblDbStatus.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblDbStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(191)))), ((int)(((byte)(0)))));
+            this.lblDbStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
             this.lblDbStatus.Location = new System.Drawing.Point(970, 15);
             this.lblDbStatus.Name = "lblDbStatus";
             this.lblDbStatus.Size = new System.Drawing.Size(490, 30);
@@ -302,8 +302,53 @@ namespace Site7DrawingEditor
             this.panelTopLeft.TabIndex = 0;
             this.splitContainerTopHorizontal.Panel1.Controls.Add(this.panelTopLeft);
 
+            // panelTopLeftHeader
+            this.panelTopLeftHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
+            this.panelTopLeftHeader.Controls.Add(this.btnCropPick3P);
+            this.panelTopLeftHeader.Controls.Add(this.btnResetCropZoom);
+            this.panelTopLeftHeader.Controls.Add(this.lblFullMapTitle);
+            this.panelTopLeftHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTopLeftHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelTopLeftHeader.Name = "panelTopLeftHeader";
+            this.panelTopLeftHeader.Size = new System.Drawing.Size(740, 35);
+            this.panelTopLeftHeader.TabIndex = 2;
+
+            // lblFullMapTitle
+            this.lblFullMapTitle.AutoSize = true;
+            this.lblFullMapTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblFullMapTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.lblFullMapTitle.Location = new System.Drawing.Point(8, 8);
+            this.lblFullMapTitle.Name = "lblFullMapTitle";
+            this.lblFullMapTitle.Size = new System.Drawing.Size(120, 17);
+            this.lblFullMapTitle.TabIndex = 0;
+            this.lblFullMapTitle.Text = "🗺 全体遺構測量図";
+
+            // btnResetCropZoom
+            this.btnResetCropZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
+            this.btnResetCropZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetCropZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnResetCropZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.btnResetCropZoom.Location = new System.Drawing.Point(140, 5);
+            this.btnResetCropZoom.Name = "btnResetCropZoom";
+            this.btnResetCropZoom.Size = new System.Drawing.Size(85, 25);
+            this.btnResetCropZoom.TabIndex = 1;
+            this.btnResetCropZoom.Text = "リセット";
+            this.btnResetCropZoom.UseVisualStyleBackColor = false;
+
+            // btnCropPick3P
+            this.btnCropPick3P.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
+            this.btnCropPick3P.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCropPick3P.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnCropPick3P.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.btnCropPick3P.Location = new System.Drawing.Point(235, 5);
+            this.btnCropPick3P.Name = "btnCropPick3P";
+            this.btnCropPick3P.Size = new System.Drawing.Size(120, 25);
+            this.btnCropPick3P.TabIndex = 2;
+            this.btnCropPick3P.Text = "遺構枠指示 (3点)";
+            this.btnCropPick3P.UseVisualStyleBackColor = false;
+
             // panelHcLeftSidebar
-            this.panelHcLeftSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(242)))));
+            this.panelHcLeftSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.panelHcLeftSidebar.Controls.Add(this.btnBgSettings);
             this.panelHcLeftSidebar.Controls.Add(this.btnEnvSettings);
             this.panelHcLeftSidebar.Controls.Add(this.btnUndo);
@@ -341,40 +386,52 @@ namespace Site7DrawingEditor
             this.panelHcLeftSidebar.TabIndex = 1;
 
             // btnBgSettings
+            this.btnBgSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnBgSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBgSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnBgSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnBgSettings.Location = new System.Drawing.Point(6, 5);
             this.btnBgSettings.Name = "btnBgSettings";
             this.btnBgSettings.Size = new System.Drawing.Size(118, 23);
             this.btnBgSettings.TabIndex = 0;
             this.btnBgSettings.Text = "背景設定";
-            this.btnBgSettings.UseVisualStyleBackColor = true;
+            this.btnBgSettings.UseVisualStyleBackColor = false;
 
             // btnEnvSettings
+            this.btnEnvSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnEnvSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEnvSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnEnvSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnEnvSettings.Location = new System.Drawing.Point(6, 30);
             this.btnEnvSettings.Name = "btnEnvSettings";
             this.btnEnvSettings.Size = new System.Drawing.Size(118, 23);
             this.btnEnvSettings.TabIndex = 1;
             this.btnEnvSettings.Text = "環境設定";
-            this.btnEnvSettings.UseVisualStyleBackColor = true;
+            this.btnEnvSettings.UseVisualStyleBackColor = false;
 
             // btnUndo
+            this.btnUndo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnUndo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUndo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnUndo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnUndo.Location = new System.Drawing.Point(6, 55);
             this.btnUndo.Name = "btnUndo";
             this.btnUndo.Size = new System.Drawing.Size(57, 23);
             this.btnUndo.TabIndex = 2;
             this.btnUndo.Text = "Undo";
-            this.btnUndo.UseVisualStyleBackColor = true;
+            this.btnUndo.UseVisualStyleBackColor = false;
 
             // btnRedo
+            this.btnRedo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnRedo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRedo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnRedo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnRedo.Location = new System.Drawing.Point(67, 55);
             this.btnRedo.Name = "btnRedo";
             this.btnRedo.Size = new System.Drawing.Size(57, 23);
             this.btnRedo.TabIndex = 3;
             this.btnRedo.Text = "Redo";
-            this.btnRedo.UseVisualStyleBackColor = true;
+            this.btnRedo.UseVisualStyleBackColor = false;
 
             // lblIkouLayerGrpHeader
             this.lblIkouLayerGrpHeader.AutoSize = true;
@@ -579,31 +636,40 @@ namespace Site7DrawingEditor
             this.chkLayer16.UseVisualStyleBackColor = true;
 
             // btnLayerAllOn
+            this.btnLayerAllOn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnLayerAllOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLayerAllOn.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnLayerAllOn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnLayerAllOn.Location = new System.Drawing.Point(6, 263);
             this.btnLayerAllOn.Name = "btnLayerAllOn";
             this.btnLayerAllOn.Size = new System.Drawing.Size(57, 23);
             this.btnLayerAllOn.TabIndex = 21;
             this.btnLayerAllOn.Text = "全ON";
-            this.btnLayerAllOn.UseVisualStyleBackColor = true;
+            this.btnLayerAllOn.UseVisualStyleBackColor = false;
 
             // btnLayerAllOff
+            this.btnLayerAllOff.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnLayerAllOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLayerAllOff.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnLayerAllOff.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnLayerAllOff.Location = new System.Drawing.Point(67, 263);
             this.btnLayerAllOff.Name = "btnLayerAllOff";
             this.btnLayerAllOff.Size = new System.Drawing.Size(57, 23);
             this.btnLayerAllOff.TabIndex = 22;
-            this.btnLayerAllOff.Text = "全";
-            this.btnLayerAllOff.UseVisualStyleBackColor = true;
+            this.btnLayerAllOff.Text = "全OFF";
+            this.btnLayerAllOff.UseVisualStyleBackColor = false;
 
             // btnLayerSettings
+            this.btnLayerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnLayerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLayerSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnLayerSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnLayerSettings.Location = new System.Drawing.Point(6, 289);
             this.btnLayerSettings.Name = "btnLayerSettings";
             this.btnLayerSettings.Size = new System.Drawing.Size(118, 23);
             this.btnLayerSettings.TabIndex = 23;
             this.btnLayerSettings.Text = "レイヤ設定";
-            this.btnLayerSettings.UseVisualStyleBackColor = true;
+            this.btnLayerSettings.UseVisualStyleBackColor = false;
 
             // lblEntityNameHeader
             this.lblEntityNameHeader.AutoSize = true;
@@ -684,7 +750,7 @@ namespace Site7DrawingEditor
             this.picCropCanvas.TabStop = false;
 
             // panelTopRightHeader
-            this.panelTopRightHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
+            this.panelTopRightHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.panelTopRightHeader.Controls.Add(this.lblPaperInfoBanner);
             this.panelTopRightHeader.Controls.Add(this.btnResetPaperZoom);
             this.panelTopRightHeader.Controls.Add(this.lblPaperSheetTitle);
@@ -697,7 +763,7 @@ namespace Site7DrawingEditor
             // lblPaperSheetTitle
             this.lblPaperSheetTitle.AutoSize = true;
             this.lblPaperSheetTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblPaperSheetTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblPaperSheetTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.lblPaperSheetTitle.Location = new System.Drawing.Point(8, 8);
             this.lblPaperSheetTitle.Name = "lblPaperSheetTitle";
             this.lblPaperSheetTitle.Size = new System.Drawing.Size(154, 17);
@@ -705,10 +771,10 @@ namespace Site7DrawingEditor
             this.lblPaperSheetTitle.Text = "📐 用紙レイアウトプレビュー";
 
             // btnResetPaperZoom
-            this.btnResetPaperZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnResetPaperZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
             this.btnResetPaperZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetPaperZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnResetPaperZoom.ForeColor = System.Drawing.Color.White;
+            this.btnResetPaperZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnResetPaperZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
             this.btnResetPaperZoom.Location = new System.Drawing.Point(170, 5);
             this.btnResetPaperZoom.Name = "btnResetPaperZoom";
             this.btnResetPaperZoom.Size = new System.Drawing.Size(85, 25);
@@ -718,11 +784,11 @@ namespace Site7DrawingEditor
 
             // chkShowCurvePaper
             this.chkShowCurvePaper.AutoSize = true;
-            this.chkShowCurvePaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(28)))));
+            this.chkShowCurvePaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.chkShowCurvePaper.Checked = true;
             this.chkShowCurvePaper.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowCurvePaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkShowCurvePaper.ForeColor = System.Drawing.Color.White;
+            this.chkShowCurvePaper.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.chkShowCurvePaper.Location = new System.Drawing.Point(6, 42);
             this.chkShowCurvePaper.Name = "chkShowCurvePaper";
             this.chkShowCurvePaper.Size = new System.Drawing.Size(50, 19);
@@ -732,11 +798,11 @@ namespace Site7DrawingEditor
 
             // chkShowDirectionPaper
             this.chkShowDirectionPaper.AutoSize = true;
-            this.chkShowDirectionPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(28)))));
+            this.chkShowDirectionPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.chkShowDirectionPaper.Checked = true;
             this.chkShowDirectionPaper.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowDirectionPaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkShowDirectionPaper.ForeColor = System.Drawing.Color.White;
+            this.chkShowDirectionPaper.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.chkShowDirectionPaper.Location = new System.Drawing.Point(6, 64);
             this.chkShowDirectionPaper.Name = "chkShowDirectionPaper";
             this.chkShowDirectionPaper.Size = new System.Drawing.Size(50, 19);
@@ -746,11 +812,11 @@ namespace Site7DrawingEditor
 
             // chkShowDanmenPaper
             this.chkShowDanmenPaper.AutoSize = true;
-            this.chkShowDanmenPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(28)))));
+            this.chkShowDanmenPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.chkShowDanmenPaper.Checked = true;
             this.chkShowDanmenPaper.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowDanmenPaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkShowDanmenPaper.ForeColor = System.Drawing.Color.White;
+            this.chkShowDanmenPaper.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.chkShowDanmenPaper.Location = new System.Drawing.Point(6, 86);
             this.chkShowDanmenPaper.Name = "chkShowDanmenPaper";
             this.chkShowDanmenPaper.Size = new System.Drawing.Size(50, 19);
@@ -792,6 +858,7 @@ namespace Site7DrawingEditor
             // panelBottomFixedGroup (下部単一Panel: 5つのGroupBox + 詳細プレビューの計6項目をすべて内包)
             // 
             this.panelBottomFixedGroup = new System.Windows.Forms.Panel();
+            this.panelBottomFixedGroup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.panelBottomFixedGroup.Controls.Add(this.grpFeatureDetailPreview);
             this.panelBottomFixedGroup.Controls.Add(this.panelControls);
             this.panelBottomFixedGroup.Controls.Add(this.panelBottomGrids);
@@ -802,6 +869,7 @@ namespace Site7DrawingEditor
             this.panelBottomFixedGroup.TabIndex = 3;
 
             // panelBottomGrids
+            this.panelBottomGrids.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.panelBottomGrids.ColumnCount = 3;
             this.panelBottomGrids.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
             this.panelBottomGrids.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
@@ -818,11 +886,13 @@ namespace Site7DrawingEditor
             this.panelBottomGrids.TabIndex = 0;
 
             // grpDrawings
+            this.grpDrawings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawings.Controls.Add(this.dgvDrawings);
             this.grpDrawings.Controls.Add(this.btnAddDrawing);
             this.grpDrawings.Controls.Add(this.btnDeleteDrawing);
             this.grpDrawings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpDrawings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpDrawings.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpDrawings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpDrawings.Location = new System.Drawing.Point(3, 3);
             this.grpDrawings.Name = "grpDrawings";
             this.grpDrawings.Size = new System.Drawing.Size(193, 355);
@@ -841,8 +911,9 @@ namespace Site7DrawingEditor
             this.dgvDrawings.TabIndex = 0;
 
             // btnAddDrawing
-            this.btnAddDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
+            this.btnAddDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnAddDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnAddDrawing.ForeColor = System.Drawing.Color.White;
             this.btnAddDrawing.Location = new System.Drawing.Point(6, 320);
             this.btnAddDrawing.Name = "btnAddDrawing";
@@ -852,8 +923,9 @@ namespace Site7DrawingEditor
             this.btnAddDrawing.UseVisualStyleBackColor = false;
 
             // btnDeleteDrawing
-            this.btnDeleteDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
+            this.btnDeleteDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this.btnDeleteDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDrawing.ForeColor = System.Drawing.Color.White;
             this.btnDeleteDrawing.Location = new System.Drawing.Point(88, 320);
             this.btnDeleteDrawing.Name = "btnDeleteDrawing";
@@ -863,11 +935,13 @@ namespace Site7DrawingEditor
             this.btnDeleteDrawing.UseVisualStyleBackColor = false;
 
             // grpDrawingIkous
+            this.grpDrawingIkous.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawingIkous.Controls.Add(this.dgvDrawingIkous);
             this.grpDrawingIkous.Controls.Add(this.btnAddDrawingIkou);
             this.grpDrawingIkous.Controls.Add(this.btnDeleteDrawingIkou);
             this.grpDrawingIkous.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpDrawingIkous.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpDrawingIkous.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpDrawingIkous.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpDrawingIkous.Location = new System.Drawing.Point(202, 3);
             this.grpDrawingIkous.Name = "grpDrawingIkous";
             this.grpDrawingIkous.Size = new System.Drawing.Size(187, 355);
@@ -886,8 +960,9 @@ namespace Site7DrawingEditor
             this.dgvDrawingIkous.TabIndex = 0;
 
             // btnAddDrawingIkou
-            this.btnAddDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
+            this.btnAddDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnAddDrawingIkou.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDrawingIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnAddDrawingIkou.ForeColor = System.Drawing.Color.White;
             this.btnAddDrawingIkou.Location = new System.Drawing.Point(6, 320);
             this.btnAddDrawingIkou.Name = "btnAddDrawingIkou";
@@ -897,8 +972,9 @@ namespace Site7DrawingEditor
             this.btnAddDrawingIkou.UseVisualStyleBackColor = false;
 
             // btnDeleteDrawingIkou
-            this.btnDeleteDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
+            this.btnDeleteDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this.btnDeleteDrawingIkou.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteDrawingIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDrawingIkou.ForeColor = System.Drawing.Color.White;
             this.btnDeleteDrawingIkou.Location = new System.Drawing.Point(88, 320);
             this.btnDeleteDrawingIkou.Name = "btnDeleteDrawingIkou";
@@ -908,11 +984,13 @@ namespace Site7DrawingEditor
             this.btnDeleteDrawingIkou.UseVisualStyleBackColor = false;
 
             // grpDanmenList
+            this.grpDanmenList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDanmenList.Controls.Add(this.dgvDanmen);
             this.grpDanmenList.Controls.Add(this.btnAddDanmen);
             this.grpDanmenList.Controls.Add(this.btnDeleteDanmen);
             this.grpDanmenList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpDanmenList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpDanmenList.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpDanmenList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpDanmenList.Location = new System.Drawing.Point(395, 3);
             this.grpDanmenList.Name = "grpDanmenList";
             this.grpDanmenList.Size = new System.Drawing.Size(187, 355);
@@ -931,8 +1009,9 @@ namespace Site7DrawingEditor
             this.dgvDanmen.TabIndex = 0;
 
             // btnAddDanmen
-            this.btnAddDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(45)))), ((int)(((byte)(66)))));
+            this.btnAddDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnAddDanmen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDanmen.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnAddDanmen.ForeColor = System.Drawing.Color.White;
             this.btnAddDanmen.Location = new System.Drawing.Point(6, 320);
             this.btnAddDanmen.Name = "btnAddDanmen";
@@ -942,8 +1021,9 @@ namespace Site7DrawingEditor
             this.btnAddDanmen.UseVisualStyleBackColor = false;
 
             // btnDeleteDanmen
-            this.btnDeleteDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
+            this.btnDeleteDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
             this.btnDeleteDanmen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteDanmen.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDanmen.ForeColor = System.Drawing.Color.White;
             this.btnDeleteDanmen.Location = new System.Drawing.Point(88, 320);
             this.btnDeleteDanmen.Name = "btnDeleteDanmen";
@@ -954,6 +1034,7 @@ namespace Site7DrawingEditor
 
             // panelControls (Middle Property Controls)
             this.panelControls.AutoScroll = true;
+            this.panelControls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.panelControls.Controls.Add(this.grpIkouProps);
             this.panelControls.Controls.Add(this.grpDrawingProps);
             this.panelControls.Dock = System.Windows.Forms.DockStyle.Left;
@@ -964,6 +1045,7 @@ namespace Site7DrawingEditor
             this.panelControls.TabIndex = 1;
 
             // grpDrawingProps (図面)
+            this.grpDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawingProps.Controls.Add(this.chkIsFullDrawing);
             this.grpDrawingProps.Controls.Add(this.btnUpdateDrawingProps);
             this.grpDrawingProps.Controls.Add(this.cmbScale);
@@ -972,7 +1054,8 @@ namespace Site7DrawingEditor
             this.grpDrawingProps.Controls.Add(this.lblPaperSize);
             this.grpDrawingProps.Controls.Add(this.txtDrawingName);
             this.grpDrawingProps.Controls.Add(this.lblDrawingName);
-            this.grpDrawingProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpDrawingProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpDrawingProps.Location = new System.Drawing.Point(3, 3);
             this.grpDrawingProps.Name = "grpDrawingProps";
             this.grpDrawingProps.Size = new System.Drawing.Size(400, 80);
@@ -982,7 +1065,8 @@ namespace Site7DrawingEditor
 
             // lblDrawingName
             this.lblDrawingName.AutoSize = true;
-            this.lblDrawingName.ForeColor = System.Drawing.Color.White;
+            this.lblDrawingName.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.lblDrawingName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblDrawingName.Location = new System.Drawing.Point(10, 22);
             this.lblDrawingName.Name = "lblDrawingName";
             this.lblDrawingName.Size = new System.Drawing.Size(46, 15);
@@ -999,7 +1083,8 @@ namespace Site7DrawingEditor
 
             // lblPaperSize
             this.lblPaperSize.AutoSize = true;
-            this.lblPaperSize.ForeColor = System.Drawing.Color.White;
+            this.lblPaperSize.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.lblPaperSize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblPaperSize.Location = new System.Drawing.Point(145, 22);
             this.lblPaperSize.Name = "lblPaperSize";
             this.lblPaperSize.Size = new System.Drawing.Size(35, 15);
@@ -1008,8 +1093,8 @@ namespace Site7DrawingEditor
 
             // cmbPaperSize
             this.cmbPaperSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbPaperSize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(37)))), ((int)(((byte)(50)))));
-            this.cmbPaperSize.ForeColor = System.Drawing.Color.White;
+            this.cmbPaperSize.BackColor = System.Drawing.Color.White;
+            this.cmbPaperSize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.cmbPaperSize.Location = new System.Drawing.Point(182, 19);
             this.cmbPaperSize.Name = "cmbPaperSize";
             this.cmbPaperSize.Size = new System.Drawing.Size(135, 23);
@@ -1017,7 +1102,8 @@ namespace Site7DrawingEditor
 
             // lblScale
             this.lblScale.AutoSize = true;
-            this.lblScale.ForeColor = System.Drawing.Color.White;
+            this.lblScale.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.lblScale.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblScale.Location = new System.Drawing.Point(8, 50);
             this.lblScale.Name = "lblScale";
             this.lblScale.Size = new System.Drawing.Size(50, 15);
@@ -1026,8 +1112,8 @@ namespace Site7DrawingEditor
 
             // cmbScale
             this.cmbScale.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbScale.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(37)))), ((int)(((byte)(50)))));
-            this.cmbScale.ForeColor = System.Drawing.Color.White;
+            this.cmbScale.BackColor = System.Drawing.Color.White;
+            this.cmbScale.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.cmbScale.Location = new System.Drawing.Point(60, 47);
             this.cmbScale.Name = "cmbScale";
             this.cmbScale.Size = new System.Drawing.Size(60, 23);
@@ -1036,7 +1122,7 @@ namespace Site7DrawingEditor
             // chkIsFullDrawing
             this.chkIsFullDrawing.AutoSize = true;
             this.chkIsFullDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkIsFullDrawing.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.chkIsFullDrawing.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.chkIsFullDrawing.Location = new System.Drawing.Point(125, 48);
             this.chkIsFullDrawing.Name = "chkIsFullDrawing";
             this.chkIsFullDrawing.Size = new System.Drawing.Size(150, 19);
@@ -1045,7 +1131,7 @@ namespace Site7DrawingEditor
             this.chkIsFullDrawing.UseVisualStyleBackColor = true;
 
             // btnUpdateDrawingProps (図面プロパティの更新ボタン)
-            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(216)))));
+            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
             this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.Black;
@@ -1057,6 +1143,7 @@ namespace Site7DrawingEditor
             this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
 
             // grpIkouProps (遺構 GroupBox: 内側に方位マーク・断面 GroupBox を内包)
+            this.grpIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpIkouProps.Controls.Add(this.grpDanmenProps);
             this.grpIkouProps.Controls.Add(this.grpCompassProps);
             this.grpIkouProps.Controls.Add(this.btnSetPaperPosition);
@@ -1064,7 +1151,8 @@ namespace Site7DrawingEditor
             this.grpIkouProps.Controls.Add(this.btnUpdateIkouProps);
             this.grpIkouProps.Controls.Add(this.cmbFeatureSelect);
             this.grpIkouProps.Controls.Add(this.lblTargetIkou);
-            this.grpIkouProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpIkouProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpIkouProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpIkouProps.Location = new System.Drawing.Point(3, 86);
             this.grpIkouProps.Name = "grpIkouProps";
             this.grpIkouProps.Size = new System.Drawing.Size(400, 260);
@@ -1074,7 +1162,8 @@ namespace Site7DrawingEditor
 
             // lblTargetIkou
             this.lblTargetIkou.AutoSize = true;
-            this.lblTargetIkou.ForeColor = System.Drawing.Color.White;
+            this.lblTargetIkou.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.lblTargetIkou.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblTargetIkou.Location = new System.Drawing.Point(10, 22);
             this.lblTargetIkou.Name = "lblTargetIkou";
             this.lblTargetIkou.Size = new System.Drawing.Size(43, 15);
@@ -1091,7 +1180,7 @@ namespace Site7DrawingEditor
             this.cmbFeatureSelect.TabIndex = 1;
 
             // btnUpdateIkouProps (遺構プロパティの更新ボタン)
-            this.btnUpdateIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(191)))), ((int)(((byte)(0)))));
+            this.btnUpdateIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
             this.btnUpdateIkouProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateIkouProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnUpdateIkouProps.ForeColor = System.Drawing.Color.Black;
@@ -1103,9 +1192,10 @@ namespace Site7DrawingEditor
             this.btnUpdateIkouProps.UseVisualStyleBackColor = false;
 
             // btnPickCropBounds
-            this.btnPickCropBounds.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnPickCropBounds.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
             this.btnPickCropBounds.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPickCropBounds.ForeColor = System.Drawing.Color.White;
+            this.btnPickCropBounds.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnPickCropBounds.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnPickCropBounds.Location = new System.Drawing.Point(10, 48);
             this.btnPickCropBounds.Name = "btnPickCropBounds";
             this.btnPickCropBounds.Size = new System.Drawing.Size(120, 26);
@@ -1114,9 +1204,10 @@ namespace Site7DrawingEditor
             this.btnPickCropBounds.UseVisualStyleBackColor = false;
 
             // btnSetPaperPosition
-            this.btnSetPaperPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnSetPaperPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
             this.btnSetPaperPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetPaperPosition.ForeColor = System.Drawing.Color.White;
+            this.btnSetPaperPosition.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnSetPaperPosition.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnSetPaperPosition.Location = new System.Drawing.Point(140, 48);
             this.btnSetPaperPosition.Name = "btnSetPaperPosition";
             this.btnSetPaperPosition.Size = new System.Drawing.Size(120, 26);
@@ -1125,9 +1216,11 @@ namespace Site7DrawingEditor
             this.btnSetPaperPosition.UseVisualStyleBackColor = false;
 
             // grpCompassProps (遺構 GroupBox の内側に配置)
+            this.grpCompassProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpCompassProps.Controls.Add(this.btnSetDirectionPosition);
             this.grpCompassProps.Controls.Add(this.chkShowDirection);
-            this.grpCompassProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpCompassProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpCompassProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpCompassProps.Location = new System.Drawing.Point(10, 90);
             this.grpCompassProps.Name = "grpCompassProps";
             this.grpCompassProps.Size = new System.Drawing.Size(380, 65);
@@ -1139,7 +1232,8 @@ namespace Site7DrawingEditor
             this.chkShowDirection.AutoSize = true;
             this.chkShowDirection.Checked = true;
             this.chkShowDirection.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowDirection.ForeColor = System.Drawing.Color.White;
+            this.chkShowDirection.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.chkShowDirection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.chkShowDirection.Location = new System.Drawing.Point(10, 24);
             this.chkShowDirection.Name = "chkShowDirection";
             this.chkShowDirection.Size = new System.Drawing.Size(50, 19);
@@ -1148,9 +1242,10 @@ namespace Site7DrawingEditor
             this.chkShowDirection.UseVisualStyleBackColor = true;
 
             // btnSetDirectionPosition
-            this.btnSetDirectionPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnSetDirectionPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
             this.btnSetDirectionPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetDirectionPosition.ForeColor = System.Drawing.Color.White;
+            this.btnSetDirectionPosition.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnSetDirectionPosition.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnSetDirectionPosition.Location = new System.Drawing.Point(70, 20);
             this.btnSetDirectionPosition.Name = "btnSetDirectionPosition";
             this.btnSetDirectionPosition.Size = new System.Drawing.Size(120, 25);
@@ -1159,10 +1254,12 @@ namespace Site7DrawingEditor
             this.btnSetDirectionPosition.UseVisualStyleBackColor = false;
 
             // grpDanmenProps (遺構 GroupBox の内側に配置)
+            this.grpDanmenProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDanmenProps.Controls.Add(this.btnSetDanmenPosition);
             this.grpDanmenProps.Controls.Add(this.txtDanmenName);
             this.grpDanmenProps.Controls.Add(this.lblDanmenName);
-            this.grpDanmenProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpDanmenProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpDanmenProps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpDanmenProps.Location = new System.Drawing.Point(10, 168);
             this.grpDanmenProps.Name = "grpDanmenProps";
             this.grpDanmenProps.Size = new System.Drawing.Size(380, 82);
@@ -1172,7 +1269,8 @@ namespace Site7DrawingEditor
 
             // lblDanmenName
             this.lblDanmenName.AutoSize = true;
-            this.lblDanmenName.ForeColor = System.Drawing.Color.White;
+            this.lblDanmenName.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            this.lblDanmenName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblDanmenName.Location = new System.Drawing.Point(10, 24);
             this.lblDanmenName.Name = "lblDanmenName";
             this.lblDanmenName.Size = new System.Drawing.Size(46, 15);
@@ -1188,9 +1286,10 @@ namespace Site7DrawingEditor
             this.txtDanmenName.TabIndex = 1;
 
             // btnSetDanmenPosition
-            this.btnSetDanmenPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(55)))), ((int)(((byte)(76)))));
+            this.btnSetDanmenPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
             this.btnSetDanmenPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetDanmenPosition.ForeColor = System.Drawing.Color.White;
+            this.btnSetDanmenPosition.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnSetDanmenPosition.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnSetDanmenPosition.Location = new System.Drawing.Point(150, 19);
             this.btnSetDanmenPosition.Name = "btnSetDanmenPosition";
             this.btnSetDanmenPosition.Size = new System.Drawing.Size(100, 26);
@@ -1200,8 +1299,10 @@ namespace Site7DrawingEditor
 
             // grpFeatureDetailPreview
             this.grpFeatureDetailPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpFeatureDetailPreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpFeatureDetailPreview.Controls.Add(this.picFeatureDetailCanvas);
-            this.grpFeatureDetailPreview.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.grpFeatureDetailPreview.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpFeatureDetailPreview.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
             this.grpFeatureDetailPreview.Location = new System.Drawing.Point(995, 0);
             this.grpFeatureDetailPreview.Name = "grpFeatureDetailPreview";
             this.grpFeatureDetailPreview.Size = new System.Drawing.Size(485, 361);
@@ -1219,7 +1320,7 @@ namespace Site7DrawingEditor
             this.picFeatureDetailCanvas.TabStop = false;
 
             // statusStripBar
-            this.statusStripBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(35)))));
+            this.statusStripBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.statusStripBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatusCoords,
             this.lblStatusMessage});
@@ -1229,13 +1330,13 @@ namespace Site7DrawingEditor
             this.statusStripBar.TabIndex = 2;
 
             // lblStatusCoords
-            this.lblStatusCoords.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblStatusCoords.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.lblStatusCoords.Name = "lblStatusCoords";
             this.lblStatusCoords.Size = new System.Drawing.Size(160, 17);
             this.lblStatusCoords.Text = "(-60262.447, 85099.983)";
 
             // lblStatusMessage
-            this.lblStatusMessage.ForeColor = System.Drawing.Color.White;
+            this.lblStatusMessage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(75)))));
             this.lblStatusMessage.Name = "lblStatusMessage";
             this.lblStatusMessage.Size = new System.Drawing.Size(1305, 17);
             this.lblStatusMessage.Spring = true;
@@ -1247,7 +1348,7 @@ namespace Site7DrawingEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(25)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.ClientSize = new System.Drawing.Size(1520, 960);
             this.MinimumSize = new System.Drawing.Size(1280, 780);
             this.Controls.Add(this.panelHeader);
