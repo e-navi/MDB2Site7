@@ -222,12 +222,7 @@ namespace Site7DrawingEditor
 
             this.dgvDrawings.SelectionChanged += dgvDrawings_SelectionChanged;
             this.dgvDrawingIkous.SelectionChanged += dgvDrawingIkous_SelectionChanged;
-            this.dgvDrawingIkous.CellDoubleClick += (s, e) =>
-            {
-                if (GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel cur)
-                    _vc.FocusFeatureOnFullMap(cur, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
-                picCropCanvas.Invalidate();
-            };
+            this.dgvDrawingIkous.CellDoubleClick += (s, e) => FocusSelectedFeature(force: true);
             this.dgvDanmen.SelectionChanged += dgvDanmen_SelectionChanged;
 
             this.btnAddDrawing.Click += btnAddDrawing_Click;
@@ -638,23 +633,17 @@ namespace Site7DrawingEditor
             }));
         }
 
-        private void FocusSelectedFeature()
+        private void FocusSelectedFeature(bool force = false)
         {
-            if (!chkAutoZoomIkou.Checked) return;
+            if (!force && !chkAutoZoomIkou.Checked) return;
 
-            if (GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel curIkou && !string.IsNullOrWhiteSpace(curIkou.Name))
-            {
-                _vc.FocusFeatureByNameOnFullMap(curIkou.Name, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
-                picCropCanvas.Invalidate();
-                return;
-            }
+            DrawingIkouModel? curIkou = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
+            string targetName = (curIkou != null && !string.IsNullOrWhiteSpace(curIkou.Name))
+                ? curIkou.Name
+                : cmbFeatureSelect.Text.Trim();
 
-            string cmbText = cmbFeatureSelect.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(cmbText))
-            {
-                _vc.FocusFeatureByNameOnFullMap(cmbText, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
-                picCropCanvas.Invalidate();
-            }
+            _vc.FocusFeatureByNameOnFullMap(targetName, curIkou, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+            picCropCanvas.Invalidate();
         }
 
         private void dgvDrawingIkous_SelectionChanged(object? sender, EventArgs e)
@@ -681,7 +670,7 @@ namespace Site7DrawingEditor
 
                         if (chkAutoZoomIkou.Checked)
                         {
-                            _vc.FocusFeatureByNameOnFullMap(selectedIkou.Name, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+                            _vc.FocusFeatureByNameOnFullMap(selectedIkou.Name, selectedIkou, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
                         }
                     }
                     else
@@ -1043,7 +1032,7 @@ namespace Site7DrawingEditor
             {
                 if (_vc.CropStep > 0 && GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel curIkou)
                 {
-                    var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+                    var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIbutuList, _db.MasterKikaiList);
                     if (_vc.CropStep == 1)
                     {
                         curIkou.P1 = new XYZ(sx, sy);
@@ -1075,7 +1064,7 @@ namespace Site7DrawingEditor
 
         private void picCropCanvas_MouseMove(object? sender, MouseEventArgs e)
         {
-            var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+            var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIbutuList, _db.MasterKikaiList);
             lblStatusCoords.Text = $"({sx:0.000}, {sy:0.000})";
 
             if (_vc.IsCropMouseDown)

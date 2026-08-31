@@ -42,14 +42,14 @@ namespace Site7DrawingEditor.Services
         /// 測量座標 (X: North, Y: East) ➔ Cropキャンバス画面ピクセル座標へ変換
         /// </summary>
         public PointF ToCropCanvasPoint(double surveyX, double surveyY, Size canvasSize,
-            IEnumerable<MasterIkouLModel> ikouLList,
+            IEnumerable<MasterIkouModel> ikouList,
             IEnumerable<MasterIbutuModel> ibutuList,
             IEnumerable<MasterKikaiModel> kikaiList)
         {
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouLList, ibutuList, kikaiList);
+            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ibutuList, kikaiList);
 
             float cx = width / 2f;
             float cy = height / 2f;
@@ -67,14 +67,14 @@ namespace Site7DrawingEditor.Services
         /// Cropキャンバス画面ピクセル座標 ➔ 測量座標 (X: North, Y: East) へ逆変換
         /// </summary>
         public (double surveyX, double surveyY) CanvasToSurveyCrop(PointF canvasPt, Size canvasSize,
-            IEnumerable<MasterIkouLModel> ikouLList,
+            IEnumerable<MasterIkouModel> ikouList,
             IEnumerable<MasterIbutuModel> ibutuList,
             IEnumerable<MasterKikaiModel> kikaiList)
         {
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouLList, ibutuList, kikaiList);
+            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ibutuList, kikaiList);
             if (scale <= 0) return (0, 0);
 
             float cx = width / 2f;
@@ -89,32 +89,43 @@ namespace Site7DrawingEditor.Services
 
         private (double posXMin, double posXMax, double posYMin, double posYMax, double scale, float offsetX, float offsetY)
             GetSurveyBoundsAndScale(Size canvasSize,
-                IEnumerable<MasterIkouLModel> ikouLList,
+                IEnumerable<MasterIkouModel> ikouList,
                 IEnumerable<MasterIbutuModel> ibutuList,
                 IEnumerable<MasterKikaiModel> kikaiList)
         {
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var rawPoints = new List<(double surveyX, double surveyY)>();
+            double posXMin = double.MaxValue, posXMax = double.MinValue;
+            double posYMin = double.MaxValue, posYMax = double.MinValue;
 
-            foreach (var line in ikouLList)
+            foreach (var ik in ikouList)
             {
-                var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
-                rawPoints.AddRange(pts.Select(p => (p.X, p.Y)));
+                if (ik.Y < posXMin) posXMin = ik.Y;
+                if (ik.Y > posXMax) posXMax = ik.Y;
+                if (ik.X < posYMin) posYMin = ik.X;
+                if (ik.X > posYMax) posYMax = ik.X;
             }
-            foreach (var ib in ibutuList) rawPoints.Add((ib.X, ib.Y));
-            foreach (var k in kikaiList) rawPoints.Add((k.X, k.Y));
+            foreach (var ib in ibutuList)
+            {
+                if (ib.Y < posXMin) posXMin = ib.Y;
+                if (ib.Y > posXMax) posXMax = ib.Y;
+                if (ib.X < posYMin) posYMin = ib.X;
+                if (ib.X > posYMax) posYMax = ib.X;
+            }
+            foreach (var k in kikaiList)
+            {
+                if (k.Y < posXMin) posXMin = k.Y;
+                if (k.Y > posXMax) posXMax = k.Y;
+                if (k.X < posYMin) posYMin = k.X;
+                if (k.X > posYMax) posYMax = k.X;
+            }
 
-            var validPoints = rawPoints.Where(p => Math.Abs(p.surveyX) > 10.0 || Math.Abs(p.surveyY) > 10.0).ToList();
-            if (validPoints.Count == 0) validPoints = rawPoints;
-
-            if (validPoints.Count == 0) return (0, 1, 0, 1, 1, 0, 0);
-
-            double posXMin = validPoints.Min(p => p.surveyY);
-            double posXMax = validPoints.Max(p => p.surveyY);
-            double posYMin = validPoints.Min(p => p.surveyX);
-            double posYMax = validPoints.Max(p => p.surveyX);
+            if (posXMin == double.MaxValue)
+            {
+                posXMin = -50; posXMax = 50;
+                posYMin = -50; posYMax = 50;
+            }
 
             double rangeX = posXMax - posXMin;
             double rangeY = posYMax - posYMin;
@@ -130,88 +141,69 @@ namespace Site7DrawingEditor.Services
         }
 
         /// <summary>
-        /// ダブルクリック時: 指定した遺構を全体図の中央に適当な大きさでフォーカス表示する
+        /// 指定した遺構（または遺構名）を全体図の中央に適当な大きさでフォーカス表示する
         /// </summary>
-        public void FocusFeatureOnFullMap(DrawingIkouModel curIkou, Size canvasSize,
+        public void FocusFeatureByNameOnFullMap(string featureName, DrawingIkouModel? curIkou, Size canvasSize,
+            IEnumerable<MasterIkouModel> ikouList,
             IEnumerable<MasterIkouLModel> ikouLList,
             IEnumerable<MasterIbutuModel> ibutuList,
             IEnumerable<MasterKikaiModel> kikaiList)
         {
-            if (curIkou == null || canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
+            if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
+
+            string targetName = !string.IsNullOrWhiteSpace(featureName) ? featureName.Trim() : (curIkou?.Name ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(targetName) && curIkou == null) return;
 
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var (posXMin, posXMax, posYMin, posYMax, baseScale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouLList, ibutuList, kikaiList);
+            var (posXMin, posXMax, posYMin, posYMax, baseScale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ibutuList, kikaiList);
 
             double rangeX = posXMax - posXMin;
             double rangeY = posYMax - posYMin;
 
             var ikouPts = new List<(double surveyX, double surveyY)>();
-            foreach (var line in curIkou.LList)
+
+            // 1. マスター遺構リストから名前またはIDで照合
+            var matchedMasterIkou = ikouList.FirstOrDefault(ik =>
+                (!string.IsNullOrWhiteSpace(ik.Name) && ik.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
+                ($"遺構{ik.Id}".Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
+                (ik.Id.ToString().Equals(targetName, StringComparison.OrdinalIgnoreCase))
+            );
+
+            if (matchedMasterIkou != null)
             {
-                ikouPts.AddRange(line.Pnts.Select(p => (p.X, p.Y)));
-            }
-            if (ikouPts.Count == 0)
-            {
-                var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curIkou.P1, curIkou.P2, curIkou.P3);
-                ikouPts.Add((v1.X, v1.Y));
-                ikouPts.Add((v2.X, v2.Y));
-                ikouPts.Add((v3.X, v3.Y));
-                ikouPts.Add((v4.X, v4.Y));
-            }
-
-            double fMinX = ikouPts.Min(p => p.surveyX);
-            double fMaxX = ikouPts.Max(p => p.surveyX);
-            double fMinY = ikouPts.Min(p => p.surveyY);
-            double fMaxY = ikouPts.Max(p => p.surveyY);
-
-            double fCenterX = (fMinX + fMaxX) / 2.0; // Survey X (North)
-            double fCenterY = (fMinY + fMaxY) / 2.0; // Survey Y (East)
-            double fRangeX = fMaxX - fMinX;
-            double fRangeY = fMaxY - fMinY;
-            if (fRangeX < 0.001) fRangeX = 1.0;
-            if (fRangeY < 0.001) fRangeY = 1.0;
-
-            float cx = width / 2f;
-            float cy = height / 2f;
-
-            float featureBaseX = (float)(offsetX + (fCenterY - posXMin) * baseScale);
-            float featureBaseY = (float)(height - offsetY - (fCenterX - posYMin) * baseScale);
-
-            double maxFRange = Math.Max(fRangeX, fRangeY);
-            double maxBaseRange = Math.Max(rangeX, rangeY);
-            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.40, 1.2f, 18.0f);
-
-            CropZoom = targetZoom;
-            CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);
-        }
-
-        /// <summary>
-        /// 遺構名指定時: 指定した遺構名の実測線を全体図の中央に適当な大きさでフォーカス表示する
-        /// </summary>
-        public void FocusFeatureByNameOnFullMap(string featureName, Size canvasSize,
-            IEnumerable<MasterIkouLModel> ikouLList,
-            IEnumerable<MasterIbutuModel> ibutuList,
-            IEnumerable<MasterKikaiModel> kikaiList)
-        {
-            if (string.IsNullOrWhiteSpace(featureName) || canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
-
-            int width = canvasSize.Width;
-            int height = canvasSize.Height;
-
-            var (posXMin, posXMax, posYMin, posYMax, baseScale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouLList, ibutuList, kikaiList);
-
-            double rangeX = posXMax - posXMin;
-            double rangeY = posYMax - posYMin;
-
-            var ikouPts = new List<(double surveyX, double surveyY)>();
-            foreach (var line in ikouLList)
-            {
-                if (string.Equals(line.Name, featureName, StringComparison.OrdinalIgnoreCase))
+                long featureId = matchedMasterIkou.Id;
+                foreach (var line in ikouLList)
                 {
-                    var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
-                    ikouPts.AddRange(pts.Select(p => (p.X, p.Y)));
+                    if (line.Id == featureId)
+                    {
+                        var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
+                        ikouPts.AddRange(pts.Select(p => (p.X, p.Y)));
+                    }
+                }
+
+                if (ikouPts.Count == 0 && (Math.Abs(matchedMasterIkou.X) > 0.001 || Math.Abs(matchedMasterIkou.Y) > 0.001))
+                {
+                    ikouPts.Add((matchedMasterIkou.X, matchedMasterIkou.Y));
+                }
+            }
+
+            // 2. もし未検出で curIkou に実測線があればそれを使用
+            if (ikouPts.Count == 0 && curIkou != null)
+            {
+                foreach (var line in curIkou.LList)
+                {
+                    ikouPts.AddRange(line.Pnts.Select(p => (p.X, p.Y)));
+                }
+
+                if (ikouPts.Count == 0 && (Math.Abs(curIkou.P1.X) > 0.001 || Math.Abs(curIkou.P1.Y) > 0.001))
+                {
+                    var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curIkou.P1, curIkou.P2, curIkou.P3);
+                    ikouPts.Add((v1.X, v1.Y));
+                    ikouPts.Add((v2.X, v2.Y));
+                    ikouPts.Add((v3.X, v3.Y));
+                    ikouPts.Add((v4.X, v4.Y));
                 }
             }
 
@@ -222,12 +214,12 @@ namespace Site7DrawingEditor.Services
             double fMinY = ikouPts.Min(p => p.surveyY);
             double fMaxY = ikouPts.Max(p => p.surveyY);
 
-            double fCenterX = (fMinX + fMaxX) / 2.0;
-            double fCenterY = (fMinY + fMaxY) / 2.0;
+            double fCenterX = (fMinX + fMaxX) / 2.0; // Survey X (North)
+            double fCenterY = (fMinY + fMaxY) / 2.0; // Survey Y (East)
             double fRangeX = fMaxX - fMinX;
             double fRangeY = fMaxY - fMinY;
-            if (fRangeX < 0.001) fRangeX = 1.0;
-            if (fRangeY < 0.001) fRangeY = 1.0;
+            if (fRangeX < 0.5) fRangeX = 2.0;
+            if (fRangeY < 0.5) fRangeY = 2.0;
 
             float cx = width / 2f;
             float cy = height / 2f;
@@ -237,7 +229,7 @@ namespace Site7DrawingEditor.Services
 
             double maxFRange = Math.Max(fRangeX, fRangeY);
             double maxBaseRange = Math.Max(rangeX, rangeY);
-            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.40, 1.2f, 18.0f);
+            float targetZoom = (float)Math.Clamp((maxBaseRange / maxFRange) * 0.40, 1.5f, 15.0f);
 
             CropZoom = targetZoom;
             CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);

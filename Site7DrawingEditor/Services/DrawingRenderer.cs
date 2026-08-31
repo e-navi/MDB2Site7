@@ -273,7 +273,7 @@ namespace Site7DrawingEditor.Services
                     }
                     else if (vc.CropStep == 3)
                     {
-                        var (msx, msy) = vc.CanvasToSurveyCrop(vc.CropLastMousePos, canvasSize, db.MasterIkouLList, db.MasterIbutuList, db.MasterKikaiList);
+                        var (msx, msy) = vc.CanvasToSurveyCrop(vc.CropLastMousePos, canvasSize, db.MasterIkouList, db.MasterIbutuList, db.MasterKikaiList);
                         XYZ p3Temp = GeometryMath.ProjectToPerpendicular(curSelectedIkou.P1, curSelectedIkou.P2, msx, msy);
                         var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curSelectedIkou.P1, curSelectedIkou.P2, p3Temp);
 
