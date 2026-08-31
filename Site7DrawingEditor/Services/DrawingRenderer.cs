@@ -148,10 +148,15 @@ namespace Site7DrawingEditor.Services
                     var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
                     if (pts.Count == 0) continue;
 
+                    var layerInfo = db.MasterLayerList.FirstOrDefault(ly => ly.Id == line.Layer);
+                    bool isLayerCurve = (layerInfo != null) ? (layerInfo.LType == 2) : false;
+
                     PointF[] screenPts;
-                    if (chkShowCurveFull && pts.Count >= 3)
+                    if (isLayerCurve && pts.Count >= 3)
                     {
-                        var curvePts = line.Mode == 1 ? spline.Calc3DCloseCurvePoints(pts, 5) : spline.Calc3DCurvePoints(pts, 5);
+                        var curvePts = (line.Mode == 1)
+                            ? spline.Calc3DCloseCurvePoints(pts, 5)
+                            : spline.Calc3DCurvePoints(pts, 5);
                         screenPts = curvePts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                     }
                     else
