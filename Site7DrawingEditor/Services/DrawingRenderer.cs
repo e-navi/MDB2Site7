@@ -732,7 +732,7 @@ namespace Site7DrawingEditor.Services
                     Color col = chkColorByIkouFull
                         ? LayerManager.PaletteColors[(int)(curIkou.IID % LayerManager.PaletteColors.Length)]
                         : LayerManager.GetLayerColor(line.Layer);
-                    using (var pen = new Pen(col, 2f))
+                    using (var pen = new Pen(col, 1.5f))
                     {
                         g.DrawLines(pen, pts);
                     }
@@ -852,9 +852,9 @@ namespace Site7DrawingEditor.Services
 
             PointF dpEnd = new PointF((float)(dp.X + lenPx * uX), (float)(dp.Y + lenPx * uY));
 
-            using (var cutLinePen = new Pen(Color.Red, 2f))
-            using (var baseLinePen = new Pen(Color.Blue, 2f))
-            using (var profilePen = new Pen(Color.Red, 2.2f))
+            using (var cutLinePen = new Pen(Color.Red, 1.5f))
+            using (var baseLinePen = new Pen(Color.Blue, 1.5f))
+            using (var profilePen = new Pen(Color.Red, 1.5f))
             using (var font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
             using (var labelBrush = new SolidBrush(Color.FromArgb(255, 120, 160)))
             {
