@@ -43,13 +43,14 @@ namespace Site7DrawingEditor.Services
         /// </summary>
         public PointF ToCropCanvasPoint(double surveyX, double surveyY, Size canvasSize,
             IEnumerable<MasterIkouModel> ikouList,
+            IEnumerable<MasterIkouLModel> ikouLList,
             IEnumerable<MasterIbutuModel> ibutuList,
             IEnumerable<MasterKikaiModel> kikaiList)
         {
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ibutuList, kikaiList);
+            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ikouLList, ibutuList, kikaiList);
 
             float cx = width / 2f;
             float cy = height / 2f;
@@ -68,13 +69,14 @@ namespace Site7DrawingEditor.Services
         /// </summary>
         public (double surveyX, double surveyY) CanvasToSurveyCrop(PointF canvasPt, Size canvasSize,
             IEnumerable<MasterIkouModel> ikouList,
+            IEnumerable<MasterIkouLModel> ikouLList,
             IEnumerable<MasterIbutuModel> ibutuList,
             IEnumerable<MasterKikaiModel> kikaiList)
         {
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ibutuList, kikaiList);
+            var (posXMin, posXMax, posYMin, posYMax, scale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ikouLList, ibutuList, kikaiList);
             if (scale <= 0) return (0, 0);
 
             float cx = width / 2f;
@@ -90,6 +92,7 @@ namespace Site7DrawingEditor.Services
         private (double posXMin, double posXMax, double posYMin, double posYMax, double scale, float offsetX, float offsetY)
             GetSurveyBoundsAndScale(Size canvasSize,
                 IEnumerable<MasterIkouModel> ikouList,
+                IEnumerable<MasterIkouLModel> ikouLList,
                 IEnumerable<MasterIbutuModel> ibutuList,
                 IEnumerable<MasterKikaiModel> kikaiList)
         {
@@ -99,26 +102,61 @@ namespace Site7DrawingEditor.Services
             double posXMin = double.MaxValue, posXMax = double.MinValue;
             double posYMin = double.MaxValue, posYMax = double.MinValue;
 
-            foreach (var ik in ikouList)
+            if (ikouLList != null)
             {
-                if (ik.Y < posXMin) posXMin = ik.Y;
-                if (ik.Y > posXMax) posXMax = ik.Y;
-                if (ik.X < posYMin) posYMin = ik.X;
-                if (ik.X > posYMax) posYMax = ik.X;
+                foreach (var line in ikouLList)
+                {
+                    var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
+                    foreach (var pt in pts)
+                    {
+                        if (pt.Y < posXMin) posXMin = pt.Y;
+                        if (pt.Y > posXMax) posXMax = pt.Y;
+                        if (pt.X < posYMin) posYMin = pt.X;
+                        if (pt.X > posYMax) posYMax = pt.X;
+                    }
+                }
             }
-            foreach (var ib in ibutuList)
+
+            if (ikouList != null)
             {
-                if (ib.Y < posXMin) posXMin = ib.Y;
-                if (ib.Y > posXMax) posXMax = ib.Y;
-                if (ib.X < posYMin) posYMin = ib.X;
-                if (ib.X > posYMax) posYMax = ib.X;
+                foreach (var ik in ikouList)
+                {
+                    if (Math.Abs(ik.X) > 0.001 || Math.Abs(ik.Y) > 0.001)
+                    {
+                        if (ik.Y < posXMin) posXMin = ik.Y;
+                        if (ik.Y > posXMax) posXMax = ik.Y;
+                        if (ik.X < posYMin) posYMin = ik.X;
+                        if (ik.X > posYMax) posYMax = ik.X;
+                    }
+                }
             }
-            foreach (var k in kikaiList)
+
+            if (ibutuList != null)
             {
-                if (k.Y < posXMin) posXMin = k.Y;
-                if (k.Y > posXMax) posXMax = k.Y;
-                if (k.X < posYMin) posYMin = k.X;
-                if (k.X > posYMax) posYMax = k.X;
+                foreach (var ib in ibutuList)
+                {
+                    if (Math.Abs(ib.X) > 0.001 || Math.Abs(ib.Y) > 0.001)
+                    {
+                        if (ib.Y < posXMin) posXMin = ib.Y;
+                        if (ib.Y > posXMax) posXMax = ib.Y;
+                        if (ib.X < posYMin) posYMin = ib.X;
+                        if (ib.X > posYMax) posYMax = ib.X;
+                    }
+                }
+            }
+
+            if (kikaiList != null)
+            {
+                foreach (var k in kikaiList)
+                {
+                    if (Math.Abs(k.X) > 0.001 || Math.Abs(k.Y) > 0.001)
+                    {
+                        if (k.Y < posXMin) posXMin = k.Y;
+                        if (k.Y > posXMax) posXMax = k.Y;
+                        if (k.X < posYMin) posYMin = k.X;
+                        if (k.X > posYMax) posYMax = k.X;
+                    }
+                }
             }
 
             if (posXMin == double.MaxValue)
@@ -143,30 +181,32 @@ namespace Site7DrawingEditor.Services
         /// <summary>
         /// 指定した遺構（または遺構名）を全体図の中央に適当な大きさでフォーカス表示する
         /// </summary>
-        public void FocusFeatureByNameOnFullMap(string featureName, DrawingIkouModel? curIkou, Size canvasSize,
+        public void FocusFeatureByNameOnFullMap(string targetName, DrawingIkouModel? curIkou, Size canvasSize,
             IEnumerable<MasterIkouModel> ikouList,
             IEnumerable<MasterIkouLModel> ikouLList,
             IEnumerable<MasterIbutuModel> ibutuList,
             IEnumerable<MasterKikaiModel> kikaiList)
         {
             if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
-
-            string targetName = !string.IsNullOrWhiteSpace(featureName) ? featureName.Trim() : (curIkou?.Name ?? "").Trim();
-            if (string.IsNullOrWhiteSpace(targetName) && curIkou == null) return;
+            targetName = targetName?.Trim() ?? "";
 
             int width = canvasSize.Width;
             int height = canvasSize.Height;
 
-            var (posXMin, posXMax, posYMin, posYMax, baseScale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ibutuList, kikaiList);
+            var (posXMin, posXMax, posYMin, posYMax, baseScale, offsetX, offsetY) = GetSurveyBoundsAndScale(canvasSize, ikouList, ikouLList, ibutuList, kikaiList);
 
             double rangeX = posXMax - posXMin;
             double rangeY = posYMax - posYMin;
 
             var ikouPts = new List<(double surveyX, double surveyY)>();
 
-            // 1. もし対象遺構モデル (curIkou) があり、遺構枠 (3点指示枠) が設定されている場合は最優先で枠エリアを対象とする
-            if (curIkou != null && (Math.Abs(curIkou.P1.X) > 0.001 || Math.Abs(curIkou.P1.Y) > 0.001 ||
-                                    Math.Abs(curIkou.P2.X) > 0.001 || Math.Abs(curIkou.P2.Y) > 0.001))
+            // 1. もし対象遺構モデル (curIkou) があり、名称が targetName と一致している場合、設定済みの遺構枠 (3点指示枠) を優先
+            bool isCurIkouMatching = curIkou != null && !string.IsNullOrWhiteSpace(targetName) &&
+                (curIkou.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(curIkou.Name));
+
+            if (isCurIkouMatching && curIkou != null &&
+                (Math.Abs(curIkou.P1.X) > 0.001 || Math.Abs(curIkou.P1.Y) > 0.001 ||
+                 Math.Abs(curIkou.P2.X) > 0.001 || Math.Abs(curIkou.P2.Y) > 0.001))
             {
                 var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curIkou.P1, curIkou.P2, curIkou.P3);
                 ikouPts.Add((v1.X, v1.Y));
@@ -175,8 +215,8 @@ namespace Site7DrawingEditor.Services
                 ikouPts.Add((v4.X, v4.Y));
             }
 
-            // 2. 枠がない場合は、マスター遺構リストから名前またはIDで照合して実測線を取得
-            if (ikouPts.Count == 0)
+            // 2. 枠がない、または ComboBox 等で直接遺構名を指定した場合は、マスター遺構実測線 (MasterIkouLList) から該当遺構の点群を取得
+            if (ikouPts.Count == 0 && !string.IsNullOrWhiteSpace(targetName))
             {
                 var matchedMasterIkou = ikouList.FirstOrDefault(ik =>
                     (!string.IsNullOrWhiteSpace(ik.Name) && ik.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase)) ||
@@ -199,6 +239,17 @@ namespace Site7DrawingEditor.Services
                     if (ikouPts.Count == 0 && (Math.Abs(matchedMasterIkou.X) > 0.001 || Math.Abs(matchedMasterIkou.Y) > 0.001))
                     {
                         ikouPts.Add((matchedMasterIkou.X, matchedMasterIkou.Y));
+                    }
+                }
+                else
+                {
+                    foreach (var line in ikouLList)
+                    {
+                        if (string.Equals(line.Name, targetName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
+                            ikouPts.AddRange(pts.Select(p => (p.X, p.Y)));
+                        }
                     }
                 }
             }

@@ -40,26 +40,50 @@ namespace Site7DrawingEditor.Services
             double posXMin = double.MaxValue, posXMax = double.MinValue;
             double posYMin = double.MaxValue, posYMax = double.MinValue;
 
+            if (db.MasterIkouLList != null)
+            {
+                foreach (var line in db.MasterIkouLList)
+                {
+                    var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
+                    foreach (var pt in pts)
+                    {
+                        if (pt.Y < posXMin) posXMin = pt.Y;
+                        if (pt.Y > posXMax) posXMax = pt.Y;
+                        if (pt.X < posYMin) posYMin = pt.X;
+                        if (pt.X > posYMax) posYMax = pt.X;
+                    }
+                }
+            }
+
             foreach (var ik in db.MasterIkouList)
             {
-                if (ik.Y < posXMin) posXMin = ik.Y;
-                if (ik.Y > posXMax) posXMax = ik.Y;
-                if (ik.X < posYMin) posYMin = ik.X;
-                if (ik.X > posYMax) posYMax = ik.X;
+                if (Math.Abs(ik.X) > 0.001 || Math.Abs(ik.Y) > 0.001)
+                {
+                    if (ik.Y < posXMin) posXMin = ik.Y;
+                    if (ik.Y > posXMax) posXMax = ik.Y;
+                    if (ik.X < posYMin) posYMin = ik.X;
+                    if (ik.X > posYMax) posYMax = ik.X;
+                }
             }
             foreach (var ib in db.MasterIbutuList)
             {
-                if (ib.Y < posXMin) posXMin = ib.Y;
-                if (ib.Y > posXMax) posXMax = ib.Y;
-                if (ib.X < posYMin) posYMin = ib.X;
-                if (ib.X > posYMax) posYMax = ib.X;
+                if (Math.Abs(ib.X) > 0.001 || Math.Abs(ib.Y) > 0.001)
+                {
+                    if (ib.Y < posXMin) posXMin = ib.Y;
+                    if (ib.Y > posXMax) posXMax = ib.Y;
+                    if (ib.X < posYMin) posYMin = ib.X;
+                    if (ib.X > posYMax) posYMax = ib.X;
+                }
             }
             foreach (var k in db.MasterKikaiList)
             {
-                if (k.Y < posXMin) posXMin = k.Y;
-                if (k.Y > posXMax) posXMax = k.Y;
-                if (k.X < posYMin) posYMin = k.X;
-                if (k.X > posYMax) posYMax = k.X;
+                if (Math.Abs(k.X) > 0.001 || Math.Abs(k.Y) > 0.001)
+                {
+                    if (k.Y < posXMin) posXMin = k.Y;
+                    if (k.Y > posXMax) posXMax = k.Y;
+                    if (k.X < posYMin) posYMin = k.X;
+                    if (k.X > posYMax) posYMax = k.X;
+                }
             }
 
             if (posXMin == double.MaxValue)
@@ -115,7 +139,9 @@ namespace Site7DrawingEditor.Services
                     if (matched != null) selectedMasterId = matched.Id;
                 }
 
-                foreach (var line in db.MasterIkouLList)
+                if (db.MasterIkouLList != null)
+                {
+                    foreach (var line in db.MasterIkouLList)
                 {
                     if (isLayerVisible != null && !isLayerVisible(line.Layer)) continue;
 
@@ -151,6 +177,7 @@ namespace Site7DrawingEditor.Services
                                 g.DrawLines(linePen, screenPts);
                         }
                     }
+                }
                 }
 
                 if (showIkouName)
@@ -273,7 +300,7 @@ namespace Site7DrawingEditor.Services
                     }
                     else if (vc.CropStep == 3)
                     {
-                        var (msx, msy) = vc.CanvasToSurveyCrop(vc.CropLastMousePos, canvasSize, db.MasterIkouList, db.MasterIbutuList, db.MasterKikaiList);
+                        var (msx, msy) = vc.CanvasToSurveyCrop(vc.CropLastMousePos, canvasSize, db.MasterIkouList, db.MasterIkouLList ?? Enumerable.Empty<MasterIkouLModel>(), db.MasterIbutuList, db.MasterKikaiList);
                         XYZ p3Temp = GeometryMath.ProjectToPerpendicular(curSelectedIkou.P1, curSelectedIkou.P2, msx, msy);
                         var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curSelectedIkou.P1, curSelectedIkou.P2, p3Temp);
 

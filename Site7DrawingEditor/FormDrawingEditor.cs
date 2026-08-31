@@ -649,7 +649,11 @@ namespace Site7DrawingEditor
                 if (GetSelectedDataBoundItem<DrawingModel>(dgvDrawings) is DrawingModel curDrawing)
                 {
                     var matched = _db.DrawingIkousList.FirstOrDefault(di => di.ZID == curDrawing.ZID && di.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
-                    if (matched != null) curIkou = matched;
+                    curIkou = matched; // 一致する図面遺構が無ければ null にして Master 実測線から検索
+                }
+                else
+                {
+                    curIkou = null;
                 }
             }
 
@@ -1043,7 +1047,7 @@ namespace Site7DrawingEditor
             {
                 if (_vc.CropStep > 0 && GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel curIkou)
                 {
-                    var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIbutuList, _db.MasterKikaiList);
+                    var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
                     if (_vc.CropStep == 1)
                     {
                         curIkou.P1 = new XYZ(sx, sy);
@@ -1075,7 +1079,7 @@ namespace Site7DrawingEditor
 
         private void picCropCanvas_MouseMove(object? sender, MouseEventArgs e)
         {
-            var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIbutuList, _db.MasterKikaiList);
+            var (sx, sy) = _vc.CanvasToSurveyCrop(e.Location, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
             lblStatusCoords.Text = $"({sx:0.000}, {sy:0.000})";
 
             if (_vc.IsCropMouseDown)
