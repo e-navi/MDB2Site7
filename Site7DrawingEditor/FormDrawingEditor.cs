@@ -14,27 +14,17 @@ namespace Site7DrawingEditor
     public partial class FormDrawingEditor : Form
     {
         private bool _isUpdatingSelection = false;
+        private string? _initialDbPath;
 
         private readonly DrawingDbManager _db = new DrawingDbManager();
         private readonly CanvasViewController _vc = new CanvasViewController();
 
-        public class DbItem
-        {
-            public string DisplayName { get; set; } = "";
-            public string FullPath { get; set; } = "";
-            public override string ToString() => DisplayName;
-        }
-
         public FormDrawingEditor(string? initialDbPath = null)
         {
+            _initialDbPath = initialDbPath;
             InitializeComponent();
             SetupStyles();
             WireEvents();
-
-            if (!string.IsNullOrEmpty(initialDbPath) && File.Exists(initialDbPath))
-            {
-                this.Shown += (s, e) => LoadDatabase(initialDbPath);
-            }
         }
 
         private void SetupStyles()
@@ -405,6 +395,38 @@ namespace Site7DrawingEditor
             InitComboBoxes();
             PerformTopLeftLayout();
             PerformTopRightLayout();
+
+            string? targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
+            string? resolvedDb = ResolveDbPath(targetDb);
+
+            if (!string.IsNullOrEmpty(resolvedDb) && File.Exists(resolvedDb))
+            {
+                LoadDatabase(resolvedDb);
+            }
+            else
+            {
+                lblDbStatus.Text = "現場未選択 (現場管理ランチャで現場を選択して起動してください)";
+                lblDbStatus.ForeColor = Color.FromArgb(255, 193, 7);
+            }
+        }
+
+        private string? ResolveDbPath(string? inputPath)
+        {
+            if (string.IsNullOrWhiteSpace(inputPath)) return null;
+
+            if (File.Exists(inputPath)) return inputPath;
+
+            if (Directory.Exists(inputPath))
+            {
+                var files = Directory.GetFiles(inputPath, "*.db3")
+                    .Concat(Directory.GetFiles(inputPath, "*.db"))
+                    .OrderBy(f => f)
+                    .ToList();
+
+                if (files.Count > 0) return files[0];
+            }
+
+            return null;
         }
 
         private void InitComboBoxes()
@@ -430,6 +452,7 @@ namespace Site7DrawingEditor
             try
             {
                 _db.LoadDatabase(dbPath);
+                Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
 
                 cmbFeatureSelect.Items.Clear();
                 foreach (var ik in _db.MasterIkouList)
@@ -441,7 +464,12 @@ namespace Site7DrawingEditor
 
                 BindAllData();
 
-                lblDbStatus.Text = $"✔ {_db.DrawingsList.Count}図面 | {_db.DrawingIkousList.Count}配置遺構 | {_db.MasterIkouList.Count}遺構 | {_db.MasterIbutuList.Count}遺物 | {_db.MasterKikaiList.Count}基準点";
+                string dirName = Path.GetFileName(Path.GetDirectoryName(dbPath)) ?? "";
+                string fileName = Path.GetFileName(dbPath);
+                string siteName = !string.IsNullOrEmpty(dirName) ? dirName : fileName;
+
+                this.Text = $"遺跡調査システム(内業) - 遺構図面作成エディタ [{siteName}]";
+                lblDbStatus.Text = $"✔ [{siteName}]  {_db.DrawingsList.Count}図面 | {_db.DrawingIkousList.Count}配置遺構 | {_db.MasterIkouList.Count}遺構 | {_db.MasterIbutuList.Count}遺物 | {_db.MasterKikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
 
                 _vc.ResetCropZoom();
