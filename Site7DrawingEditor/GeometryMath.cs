@@ -23,7 +23,7 @@ namespace Site7DrawingEditor
 
             double rangeX = maxX - minX;
             double rangeY = maxY - minY;
-            double margin = Math.Max(0.5, Math.Max(rangeX, rangeY) * 0.10);
+            double margin = Math.Max(0.10, Math.Max(rangeX, rangeY) * 0.03);
 
             minX -= margin;
             maxX += margin;
