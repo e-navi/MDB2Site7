@@ -6,6 +6,38 @@ namespace Site7DrawingEditor
     public static class GeometryMath
     {
         /// <summary>
+        /// 点群の外接矩形からデフォルトの3点指示枠 (P1:左下, P2:右下, P3:高さ指示) を算出する
+        /// </summary>
+        public static (XYZ p1, XYZ p2, XYZ p3) ComputeDefaultCropBox(IEnumerable<Point3D> points)
+        {
+            var pts = points.ToList();
+            if (pts.Count == 0)
+            {
+                return (new XYZ(0, 0), new XYZ(0, 1), new XYZ(1, 1));
+            }
+
+            double minX = pts.Min(p => p.X);
+            double maxX = pts.Max(p => p.X);
+            double minY = pts.Min(p => p.Y);
+            double maxY = pts.Max(p => p.Y);
+
+            double rangeX = maxX - minX;
+            double rangeY = maxY - minY;
+            double margin = Math.Max(0.5, Math.Max(rangeX, rangeY) * 0.10);
+
+            minX -= margin;
+            maxX += margin;
+            minY -= margin;
+            maxY += margin;
+
+            XYZ p1 = new XYZ(minX, minY);
+            XYZ p2 = new XYZ(minX, maxY);
+            XYZ p3 = new XYZ(maxX, maxY);
+
+            return (p1, p2, p3);
+        }
+
+        /// <summary>
         /// 3点指示（p1:左下, p2:右下, p3:高さ指示点）から長方形枠のパラメータを計算する
         /// P3は枠の高さ(H)を決定する指示点であり、頂点ではない
         /// 測量座標系: X=北(上), Y=東(右)

@@ -762,7 +762,15 @@ namespace Site7DrawingEditor
                     return;
                 }
 
+                bool isNameChanged = !curIkou.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase);
                 curIkou.Name = targetName;
+                if (isNameChanged)
+                {
+                    curIkou.P1 = new XYZ(0, 0);
+                    curIkou.P2 = new XYZ(0, 0);
+                    curIkou.P3 = new XYZ(0, 0);
+                }
+
                 var (msg, isSuccess) = _db.AutoExtractFeatureLines(curIkou, targetName);
                 lblStatusMessage.Text = msg;
                 lblStatusMessage.ForeColor = isSuccess ? Color.FromArgb(56, 176, 0) : Color.FromArgb(0, 225, 255);
@@ -841,16 +849,21 @@ namespace Site7DrawingEditor
             var newDrawing = new DrawingModel { ZID = newZid, Name = $"遺構図{newZid}", PaperSize = 3, Scale = 20, Type = 0 };
             _db.DrawingsList.Add(newDrawing);
 
+            string featureName = _db.MasterIkouList.Count > 0
+                ? (string.IsNullOrWhiteSpace(_db.MasterIkouList[0].Name) ? $"遺構{_db.MasterIkouList[0].Id}" : _db.MasterIkouList[0].Name)
+                : "遺構1";
+
             var newIkou = new DrawingIkouModel
             {
                 ZID = newZid,
                 IID = 1,
-                Name = $"遺構1",
-                P1 = new XYZ(-60262.8, 85099.6),
-                P2 = new XYZ(-60262.8, 85100.2),
-                P3 = new XYZ(-60262.3, 85100.2),
+                Name = featureName,
+                P1 = new XYZ(0, 0),
+                P2 = new XYZ(0, 0),
+                P3 = new XYZ(0, 0),
                 PP = new Point3D(0, 0, 0)
             };
+            _db.AutoExtractFeatureLines(newIkou, featureName);
             _db.DrawingIkousList.Add(newIkou);
 
             dgvDrawings.Refresh();
@@ -892,17 +905,16 @@ namespace Site7DrawingEditor
                 }
 
                 int nextSeqId = existing.Count + 1;
-                DrawingIkouModel? curSelected = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
 
                 var newItem = new DrawingIkouModel
                 {
                     ZID = selectedDrawing.ZID,
                     IID = nextSeqId,
                     Name = featureName,
-                    P1 = curSelected != null ? new XYZ(curSelected.P1) : new XYZ(-60262.8, 85099.6),
-                    P2 = curSelected != null ? new XYZ(curSelected.P2) : new XYZ(-60262.8, 85100.2),
-                    P3 = curSelected != null ? new XYZ(curSelected.P3) : new XYZ(-60262.3, 85100.2),
-                    PP = curSelected != null ? new Point3D(curSelected.PP.X, curSelected.PP.Y, curSelected.PP.Z) : new Point3D(0, 0, 0)
+                    P1 = new XYZ(0, 0),
+                    P2 = new XYZ(0, 0),
+                    P3 = new XYZ(0, 0),
+                    PP = new Point3D(0, 0, 0)
                 };
 
                 _db.AutoExtractFeatureLines(newItem, featureName);

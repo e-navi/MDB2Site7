@@ -104,12 +104,32 @@ namespace Site7DrawingEditor.Services
             {
                 long singleFeatureId = matchedMasterIkou.Id;
                 var targetLines = MasterIkouLList.Where(l => l.Id == singleFeatureId).ToList();
+                var allExtractedPts = new List<Point3D>();
+
                 foreach (var line in targetLines)
                 {
                     var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
                     if (pts.Count == 0) continue;
                     int flag = line.Mode == 1 ? 1 : 0;
                     item.LList.Add(new ZIkouLRec((int)line.Lid, line.Layer, flag, pts));
+                    allExtractedPts.AddRange(pts);
+                }
+
+                if (allExtractedPts.Count == 0 && (Math.Abs(matchedMasterIkou.X) > 0.001 || Math.Abs(matchedMasterIkou.Y) > 0.001))
+                {
+                    allExtractedPts.Add(new Point3D(matchedMasterIkou.X, matchedMasterIkou.Y, matchedMasterIkou.Z));
+                }
+
+                // 遺構枠が未設定 (0,0) の場合、自動的に遺構範囲から枠を設定
+                bool isCropUnset = (Math.Abs(item.P1.X) < 0.001 && Math.Abs(item.P1.Y) < 0.001 &&
+                                    Math.Abs(item.P2.X) < 0.001 && Math.Abs(item.P2.Y) < 0.001);
+
+                if (isCropUnset && allExtractedPts.Count > 0)
+                {
+                    var (p1, p2, p3) = GeometryMath.ComputeDefaultCropBox(allExtractedPts);
+                    item.P1 = p1;
+                    item.P2 = p2;
+                    item.P3 = p3;
                 }
 
                 item.LListStr = item.LList2Str();
