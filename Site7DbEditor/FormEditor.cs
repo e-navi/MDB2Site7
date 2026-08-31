@@ -150,14 +150,15 @@ namespace Site7DbEditor {
                 if (lblStatusMessage != null) {
                     lblStatusMessage.Text = info;
                 }
+                string tabName = tabControlData?.SelectedTab?.Text ?? "";
+                string titleText = string.IsNullOrEmpty(tabName)
+                    ? "📋 データ・編集テーブル"
+                    : $"📋 データ・編集テーブル({tabName})";
                 if (lblBottomTitle != null) {
-                    string tabName = tabControlData?.SelectedTab?.Text ?? "";
-                    lblBottomTitle.Text = string.IsNullOrEmpty(tabName)
-                        ? "📋 データ・編集テーブル"
-                        : $"📋 データ・編集テーブル({tabName})";
+                    lblBottomTitle.Text = titleText;
                 }
                 if (_dlgBottom != null && !_dlgBottom.IsDisposed && _dlgBottom.lblTitle != null) {
-                    _dlgBottom.lblTitle.Text = info;
+                    _dlgBottom.lblTitle.Text = titleText;
                 }
             }
         }
@@ -1202,6 +1203,13 @@ namespace Site7DbEditor {
                     _dlgBottom.FormClosed += (s, e) => { _dlgBottom = null; };
                 }
 
+                string curTabName = tabControlData.SelectedTab?.Text ?? "";
+                if (_dlgBottom.lblTitle != null) {
+                    _dlgBottom.lblTitle.Text = string.IsNullOrEmpty(curTabName)
+                        ? "📋 データ・編集テーブル"
+                        : $"📋 データ・編集テーブル({curTabName})";
+                }
+
                 if (panelBottomContent.Controls.Contains(splitContainerBottom)) {
                     panelBottomContent.Controls.Remove(splitContainerBottom);
                 }
@@ -1902,8 +1910,8 @@ namespace Site7DbEditor {
             if (_dlgBottom != null && !_dlgBottom.IsDisposed) {
                 if (_dlgBottom.lblTitle != null) {
                     _dlgBottom.lblTitle.Text = string.IsNullOrEmpty(tabName)
-                        ? "📋 データ・編集テーブル (分離ウィンドウ)"
-                        : $"📋 データ・編集テーブル({tabName}) (分離ウィンドウ)";
+                        ? "📋 データ・編集テーブル"
+                        : $"📋 データ・編集テーブル({tabName})";
                 }
                 _dlgBottom.Text = string.IsNullOrEmpty(tabName)
                     ? "データ・編集テーブル (分離ウィンドウ)"

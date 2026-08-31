@@ -26,7 +26,7 @@ namespace Site7DbEditor
             // 
             // panelDockHeader
             // 
-            this.panelDockHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(42)))), ((int)(((byte)(54)))));
+            this.panelDockHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.panelDockHeader.Controls.Add(this.lblTitle);
             this.panelDockHeader.Controls.Add(this.btnDockToPanel);
             this.panelDockHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -39,23 +39,23 @@ namespace Site7DbEditor
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.lblTitle.Location = new System.Drawing.Point(10, 7);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(155, 15);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "📋 データ・編集テーブル (分離ウィンドウ)";
+            this.lblTitle.Text = "📋 データ・編集テーブル";
             // 
             // btnDockToPanel
             // 
-            this.btnDockToPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDockToPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(80)))));
+            this.btnDockToPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
+            this.btnDockToPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnDockToPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDockToPanel.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnDockToPanel.ForeColor = System.Drawing.Color.White;
-            this.btnDockToPanel.Location = new System.Drawing.Point(1400, 3);
+            this.btnDockToPanel.Font = new System.Drawing.Font("MS UI Gothic", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnDockToPanel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.btnDockToPanel.Location = new System.Drawing.Point(1406, 0);
             this.btnDockToPanel.Name = "btnDockToPanel";
-            this.btnDockToPanel.Size = new System.Drawing.Size(74, 24);
+            this.btnDockToPanel.Size = new System.Drawing.Size(74, 30);
             this.btnDockToPanel.TabIndex = 1;
             this.btnDockToPanel.Text = "↙ 復帰";
             this.btnDockToPanel.UseVisualStyleBackColor = false;
