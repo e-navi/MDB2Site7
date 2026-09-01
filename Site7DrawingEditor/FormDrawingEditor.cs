@@ -320,6 +320,7 @@ namespace Site7DrawingEditor
             this.btnResetPaperZoom.Click += (s, e) => { _vc.ResetPaperZoom(); picPaperCanvas.Invalidate(); };
             this.chkAutoZoomIkou.CheckedChanged += (s, e) => { if (chkAutoZoomIkou.Checked) FocusSelectedFeature(); };
             this.chkAutoZoomPaperIkou.CheckedChanged += (s, e) => { if (chkAutoZoomPaperIkou.Checked) FocusSelectedFeature(); };
+            this.btnPrintPaper.Click += (s, e) => ExecutePrintPaper();
 
             _chkLayers = new CheckBox[]
             {
@@ -1131,6 +1132,85 @@ namespace Site7DrawingEditor
             catch (Exception ex)
             {
                 MessageBox.Show($"DB保存エラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ExecutePrintPaper()
+        {
+            DrawingModel? curDrawing = GetSelectedDataBoundItem<DrawingModel>(dgvDrawings);
+            if (curDrawing == null)
+            {
+                MessageBox.Show("印刷対象の遺構図面を選択してください。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DrawingIkouModel? curSelectedIkou = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
+            var pInfo = curDrawing.PaperInfo;
+            bool isLandscape = (curDrawing.Type == 0); // 0: 横, 1: 縦
+
+            try
+            {
+                using (var pd = new System.Drawing.Printing.PrintDocument())
+                {
+                    pd.DocumentName = $"{curDrawing.Name}_{pInfo.Name}_{(isLandscape ? "横" : "縦")}";
+                    pd.DefaultPageSettings.Landscape = isLandscape;
+
+                    // プリンタでサポートされている用紙サイズを検索して設定
+                    foreach (System.Drawing.Printing.PaperSize ps in pd.PrinterSettings.PaperSizes)
+                    {
+                        if (string.Equals(ps.PaperName, pInfo.Name, StringComparison.OrdinalIgnoreCase) ||
+                            ps.PaperName.StartsWith(pInfo.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            pd.DefaultPageSettings.PaperSize = ps;
+                            break;
+                        }
+                    }
+
+                    using (var dlg = new PrintDialog())
+                    {
+                        dlg.Document = pd;
+                        dlg.UseEXDialog = false; // クラシックWin32ダイアログ
+                        dlg.AllowSomePages = false;
+                        dlg.AllowSelection = false;
+
+                        if (dlg.ShowDialog(this) == DialogResult.OK)
+                        {
+                            pd.PrintPage += (s, e) =>
+                            {
+                                if (e.Graphics == null) return;
+
+                                Size printSize = new Size(e.PageBounds.Width, e.PageBounds.Height);
+                                var printVc = new CanvasViewController
+                                {
+                                    PaperZoom = 1.0f,
+                                    PaperPan = PointF.Empty
+                                };
+
+                                DrawingRenderer.DrawPaperCanvas(
+                                    e.Graphics,
+                                    printSize,
+                                    printVc,
+                                    _db,
+                                    curDrawing,
+                                    curSelectedIkou,
+                                    true,
+                                    false,
+                                    true,
+                                    true);
+
+                                e.HasMorePages = false;
+                            };
+
+                            pd.Print();
+                            lblStatusMessage.Text = $"✔ 図面「{curDrawing.Name}」の印刷ジョブを送信しました";
+                            lblStatusMessage.ForeColor = Color.FromArgb(56, 176, 0);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"印刷エラー: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

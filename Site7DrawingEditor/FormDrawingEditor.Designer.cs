@@ -65,6 +65,7 @@ namespace Site7DrawingEditor
             panelTopRightHeader = new Panel();
             lblPaperInfoBanner = new Label();
             chkAutoZoomPaperIkou = new CheckBox();
+            btnPrintPaper = new Button();
             btnResetPaperZoom = new Button();
             lblPaperSheetTitle = new Label();
             picPaperCanvas = new PictureBox();
@@ -726,6 +727,7 @@ namespace Site7DrawingEditor
             // 
             panelTopRightHeader.BackColor = Color.FromArgb(233, 236, 243);
             panelTopRightHeader.Controls.Add(lblPaperInfoBanner);
+            panelTopRightHeader.Controls.Add(btnPrintPaper);
             panelTopRightHeader.Controls.Add(chkAutoZoomPaperIkou);
             panelTopRightHeader.Controls.Add(btnResetPaperZoom);
             panelTopRightHeader.Controls.Add(lblPaperSheetTitle);
@@ -759,6 +761,16 @@ namespace Site7DrawingEditor
             chkAutoZoomPaperIkou.TabIndex = 2;
             chkAutoZoomPaperIkou.Text = "選択遺構を拡大";
             chkAutoZoomPaperIkou.UseVisualStyleBackColor = true;
+            // 
+            // btnPrintPaper
+            // 
+            btnPrintPaper.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnPrintPaper.Location = new Point(312, 4);
+            btnPrintPaper.Name = "btnPrintPaper";
+            btnPrintPaper.Size = new Size(75, 26);
+            btnPrintPaper.TabIndex = 3;
+            btnPrintPaper.Text = "🖨 印刷...";
+            btnPrintPaper.UseVisualStyleBackColor = true;
             // 
             // btnResetPaperZoom
             // 
@@ -1463,6 +1475,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Label lblPaperSheetTitle;
         private System.Windows.Forms.Button btnResetPaperZoom;
         private System.Windows.Forms.CheckBox chkAutoZoomPaperIkou;
+        private System.Windows.Forms.Button btnPrintPaper;
         private System.Windows.Forms.Label lblPaperInfoBanner;
         private System.Windows.Forms.PictureBox picPaperCanvas;
 
