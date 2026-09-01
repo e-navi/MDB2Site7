@@ -141,19 +141,19 @@ namespace Site7DrawingEditor
                         }
                         else if (t.Contains("削除"))
                         {
-                            btn.BackColor = Color.FromArgb(220, 53, 69);
+                            btn.BackColor = Color.FromArgb(195, 55, 55);
                             btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
                         }
                         else if (t.Contains("更新"))
                         {
-                            btn.BackColor = Color.FromArgb(255, 193, 7);
-                            btn.ForeColor = Color.Black;
+                            btn.BackColor = Color.FromArgb(38, 145, 75);
+                            btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
                         }
                         else if (t.Contains("追加") || t.Contains("保存"))
                         {
-                            btn.BackColor = Color.FromArgb(40, 167, 69);
+                            btn.BackColor = Color.FromArgb(30, 115, 210);
                             btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
                         }
@@ -200,7 +200,8 @@ namespace Site7DrawingEditor
                 DataPropertyName = idPropName,
                 HeaderText = idHeaderText,
                 Width = 45,
-                ReadOnly = true
+                ReadOnly = true,
+                DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
             var colName = new DataGridViewTextBoxColumn
             {
@@ -230,6 +231,7 @@ namespace Site7DrawingEditor
             this.btnAddDrawingIkou.Click += btnAddDrawingIkou_Click;
             this.btnDeleteDrawingIkou.Click += btnDeleteDrawingIkou_Click;
             this.btnAddDanmen.Click += btnAddDanmen_Click;
+            this.btnUpdateDanmenName.Click += btnUpdateDanmenName_Click;
             this.btnDeleteDanmen.Click += btnDeleteDanmen_Click;
 
             this.btnUpdateDrawingProps.Click += btnUpdateDrawingProps_Click;
@@ -979,6 +981,36 @@ namespace Site7DrawingEditor
                 selIkou.DmList.Add(newDm);
 
                 dgvDrawingIkous_SelectionChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private void btnUpdateDanmenName_Click(object? sender, EventArgs e)
+        {
+            if (GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel selIkou &&
+                GetSelectedDataBoundItem<DanmenRec>(dgvDanmen) is DanmenRec selDm)
+            {
+                string newName = txtDanmenName.Text.Trim();
+                if (string.IsNullOrEmpty(newName))
+                {
+                    MessageBox.Show("断面名を入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                selDm.Name = newName;
+                selIkou.DmListStr = selIkou.DmList2Str();
+
+                int curRow = dgvDanmen.CurrentCell?.RowIndex ?? -1;
+                dgvDrawingIkous_SelectionChanged(this, EventArgs.Empty);
+                if (curRow >= 0 && curRow < dgvDanmen.Rows.Count)
+                {
+                    dgvDanmen.CurrentCell = dgvDanmen.Rows[curRow].Cells[0];
+                }
+                RefreshAllCanvases();
+                lblStatusMessage.Text = $"✔ 断面「{selDm.DID}」の名称を「{newName}」に更新しました";
+                lblStatusMessage.ForeColor = Color.FromArgb(38, 145, 75);
+            }
+            else
+            {
+                MessageBox.Show("名称変更する断面を選択してください。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

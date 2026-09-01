@@ -106,6 +106,7 @@ namespace Site7DrawingEditor
             this.grpDanmenList = new System.Windows.Forms.GroupBox();
             this.dgvDanmen = new System.Windows.Forms.DataGridView();
             this.btnAddDanmen = new System.Windows.Forms.Button();
+            this.btnUpdateDanmenName = new System.Windows.Forms.Button();
             this.btnDeleteDanmen = new System.Windows.Forms.Button();
 
             // Middle Control Panel & Right Detail Preview
@@ -899,8 +900,9 @@ namespace Site7DrawingEditor
             // grpDrawings
             this.grpDrawings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawings.Controls.Add(this.dgvDrawings);
-            this.grpDrawings.Controls.Add(this.btnAddDrawing);
             this.grpDrawings.Controls.Add(this.btnDeleteDrawing);
+            this.grpDrawings.Controls.Add(this.btnUpdateDrawingProps);
+            this.grpDrawings.Controls.Add(this.btnAddDrawing);
             this.grpDrawings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpDrawings.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpDrawings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
@@ -921,35 +923,48 @@ namespace Site7DrawingEditor
             this.dgvDrawings.Size = new System.Drawing.Size(187, 290);
             this.dgvDrawings.TabIndex = 0;
 
-            // btnAddDrawing
-            this.btnAddDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
-            this.btnAddDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnAddDrawing.ForeColor = System.Drawing.Color.White;
-            this.btnAddDrawing.Location = new System.Drawing.Point(6, 320);
-            this.btnAddDrawing.Name = "btnAddDrawing";
-            this.btnAddDrawing.Size = new System.Drawing.Size(75, 26);
-            this.btnAddDrawing.TabIndex = 1;
-            this.btnAddDrawing.Text = "➕ 追加";
-            this.btnAddDrawing.UseVisualStyleBackColor = false;
-
             // btnDeleteDrawing
-            this.btnDeleteDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this.btnDeleteDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(195)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
             this.btnDeleteDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDrawing.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteDrawing.Location = new System.Drawing.Point(88, 320);
+            this.btnDeleteDrawing.Location = new System.Drawing.Point(8, 320);
             this.btnDeleteDrawing.Name = "btnDeleteDrawing";
-            this.btnDeleteDrawing.Size = new System.Drawing.Size(75, 26);
-            this.btnDeleteDrawing.TabIndex = 2;
+            this.btnDeleteDrawing.Size = new System.Drawing.Size(54, 26);
+            this.btnDeleteDrawing.TabIndex = 1;
             this.btnDeleteDrawing.Text = "削除";
             this.btnDeleteDrawing.UseVisualStyleBackColor = false;
+
+            // btnUpdateDrawingProps (図面更新)
+            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
+            this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.White;
+            this.btnUpdateDrawingProps.Location = new System.Drawing.Point(66, 320);
+            this.btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
+            this.btnUpdateDrawingProps.Size = new System.Drawing.Size(54, 26);
+            this.btnUpdateDrawingProps.TabIndex = 2;
+            this.btnUpdateDrawingProps.Text = "更新";
+            this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
+
+            // btnAddDrawing
+            this.btnAddDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(115)))), ((int)(((byte)(210)))));
+            this.btnAddDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnAddDrawing.ForeColor = System.Drawing.Color.White;
+            this.btnAddDrawing.Location = new System.Drawing.Point(124, 320);
+            this.btnAddDrawing.Name = "btnAddDrawing";
+            this.btnAddDrawing.Size = new System.Drawing.Size(54, 26);
+            this.btnAddDrawing.TabIndex = 3;
+            this.btnAddDrawing.Text = "追加";
+            this.btnAddDrawing.UseVisualStyleBackColor = false;
 
             // grpDrawingIkous
             this.grpDrawingIkous.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawingIkous.Controls.Add(this.dgvDrawingIkous);
-            this.grpDrawingIkous.Controls.Add(this.btnAddDrawingIkou);
             this.grpDrawingIkous.Controls.Add(this.btnDeleteDrawingIkou);
+            this.grpDrawingIkous.Controls.Add(this.btnUpdateIkouProps);
+            this.grpDrawingIkous.Controls.Add(this.btnAddDrawingIkou);
             this.grpDrawingIkous.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpDrawingIkous.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpDrawingIkous.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
@@ -970,35 +985,48 @@ namespace Site7DrawingEditor
             this.dgvDrawingIkous.Size = new System.Drawing.Size(181, 290);
             this.dgvDrawingIkous.TabIndex = 0;
 
-            // btnAddDrawingIkou
-            this.btnAddDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
-            this.btnAddDrawingIkou.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddDrawingIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnAddDrawingIkou.ForeColor = System.Drawing.Color.White;
-            this.btnAddDrawingIkou.Location = new System.Drawing.Point(6, 320);
-            this.btnAddDrawingIkou.Name = "btnAddDrawingIkou";
-            this.btnAddDrawingIkou.Size = new System.Drawing.Size(75, 26);
-            this.btnAddDrawingIkou.TabIndex = 1;
-            this.btnAddDrawingIkou.Text = "➕ 追加";
-            this.btnAddDrawingIkou.UseVisualStyleBackColor = false;
-
             // btnDeleteDrawingIkou
-            this.btnDeleteDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this.btnDeleteDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(195)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
             this.btnDeleteDrawingIkou.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteDrawingIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDrawingIkou.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteDrawingIkou.Location = new System.Drawing.Point(88, 320);
+            this.btnDeleteDrawingIkou.Location = new System.Drawing.Point(8, 320);
             this.btnDeleteDrawingIkou.Name = "btnDeleteDrawingIkou";
-            this.btnDeleteDrawingIkou.Size = new System.Drawing.Size(75, 26);
-            this.btnDeleteDrawingIkou.TabIndex = 2;
+            this.btnDeleteDrawingIkou.Size = new System.Drawing.Size(54, 26);
+            this.btnDeleteDrawingIkou.TabIndex = 1;
             this.btnDeleteDrawingIkou.Text = "削除";
             this.btnDeleteDrawingIkou.UseVisualStyleBackColor = false;
+
+            // btnUpdateIkouProps (遺構更新)
+            this.btnUpdateIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
+            this.btnUpdateIkouProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdateIkouProps.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnUpdateIkouProps.ForeColor = System.Drawing.Color.White;
+            this.btnUpdateIkouProps.Location = new System.Drawing.Point(66, 320);
+            this.btnUpdateIkouProps.Name = "btnUpdateIkouProps";
+            this.btnUpdateIkouProps.Size = new System.Drawing.Size(54, 26);
+            this.btnUpdateIkouProps.TabIndex = 2;
+            this.btnUpdateIkouProps.Text = "更新";
+            this.btnUpdateIkouProps.UseVisualStyleBackColor = false;
+
+            // btnAddDrawingIkou
+            this.btnAddDrawingIkou.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(115)))), ((int)(((byte)(210)))));
+            this.btnAddDrawingIkou.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDrawingIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnAddDrawingIkou.ForeColor = System.Drawing.Color.White;
+            this.btnAddDrawingIkou.Location = new System.Drawing.Point(124, 320);
+            this.btnAddDrawingIkou.Name = "btnAddDrawingIkou";
+            this.btnAddDrawingIkou.Size = new System.Drawing.Size(54, 26);
+            this.btnAddDrawingIkou.TabIndex = 3;
+            this.btnAddDrawingIkou.Text = "追加";
+            this.btnAddDrawingIkou.UseVisualStyleBackColor = false;
 
             // grpDanmenList
             this.grpDanmenList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDanmenList.Controls.Add(this.dgvDanmen);
-            this.grpDanmenList.Controls.Add(this.btnAddDanmen);
             this.grpDanmenList.Controls.Add(this.btnDeleteDanmen);
+            this.grpDanmenList.Controls.Add(this.btnUpdateDanmenName);
+            this.grpDanmenList.Controls.Add(this.btnAddDanmen);
             this.grpDanmenList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpDanmenList.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpDanmenList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(55)))), ((int)(((byte)(105)))));
@@ -1019,29 +1047,41 @@ namespace Site7DrawingEditor
             this.dgvDanmen.Size = new System.Drawing.Size(181, 290);
             this.dgvDanmen.TabIndex = 0;
 
-            // btnAddDanmen
-            this.btnAddDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
-            this.btnAddDanmen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddDanmen.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnAddDanmen.ForeColor = System.Drawing.Color.White;
-            this.btnAddDanmen.Location = new System.Drawing.Point(6, 320);
-            this.btnAddDanmen.Name = "btnAddDanmen";
-            this.btnAddDanmen.Size = new System.Drawing.Size(75, 26);
-            this.btnAddDanmen.TabIndex = 1;
-            this.btnAddDanmen.Text = "➕ 追加";
-            this.btnAddDanmen.UseVisualStyleBackColor = false;
-
             // btnDeleteDanmen
-            this.btnDeleteDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this.btnDeleteDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(195)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
             this.btnDeleteDanmen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteDanmen.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDanmen.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteDanmen.Location = new System.Drawing.Point(88, 320);
+            this.btnDeleteDanmen.Location = new System.Drawing.Point(8, 320);
             this.btnDeleteDanmen.Name = "btnDeleteDanmen";
-            this.btnDeleteDanmen.Size = new System.Drawing.Size(75, 26);
-            this.btnDeleteDanmen.TabIndex = 2;
+            this.btnDeleteDanmen.Size = new System.Drawing.Size(54, 26);
+            this.btnDeleteDanmen.TabIndex = 1;
             this.btnDeleteDanmen.Text = "削除";
             this.btnDeleteDanmen.UseVisualStyleBackColor = false;
+
+            // btnUpdateDanmenName
+            this.btnUpdateDanmenName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
+            this.btnUpdateDanmenName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdateDanmenName.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnUpdateDanmenName.ForeColor = System.Drawing.Color.White;
+            this.btnUpdateDanmenName.Location = new System.Drawing.Point(66, 320);
+            this.btnUpdateDanmenName.Name = "btnUpdateDanmenName";
+            this.btnUpdateDanmenName.Size = new System.Drawing.Size(54, 26);
+            this.btnUpdateDanmenName.TabIndex = 2;
+            this.btnUpdateDanmenName.Text = "更新";
+            this.btnUpdateDanmenName.UseVisualStyleBackColor = false;
+
+            // btnAddDanmen
+            this.btnAddDanmen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(115)))), ((int)(((byte)(210)))));
+            this.btnAddDanmen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddDanmen.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnAddDanmen.ForeColor = System.Drawing.Color.White;
+            this.btnAddDanmen.Location = new System.Drawing.Point(124, 320);
+            this.btnAddDanmen.Name = "btnAddDanmen";
+            this.btnAddDanmen.Size = new System.Drawing.Size(54, 26);
+            this.btnAddDanmen.TabIndex = 3;
+            this.btnAddDanmen.Text = "追加";
+            this.btnAddDanmen.UseVisualStyleBackColor = false;
 
             // panelControls (Middle Property Controls)
             this.panelControls.AutoScroll = true;
@@ -1151,15 +1191,15 @@ namespace Site7DrawingEditor
             this.cmbOrientation.TabIndex = 7;
 
             // btnUpdateDrawingProps (図面プロパティの更新ボタン)
-            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
+            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
             this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.Black;
+            this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.White;
             this.btnUpdateDrawingProps.Location = new System.Drawing.Point(320, 19);
             this.btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
             this.btnUpdateDrawingProps.Size = new System.Drawing.Size(74, 51);
             this.btnUpdateDrawingProps.TabIndex = 8;
-            this.btnUpdateDrawingProps.Text = "図面更新";
+            this.btnUpdateDrawingProps.Text = "更新";
             this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
 
             // grpIkouProps (遺構 GroupBox: 内側に方位マーク・断面 GroupBox を内包)
@@ -1200,15 +1240,15 @@ namespace Site7DrawingEditor
             this.cmbFeatureSelect.TabIndex = 1;
 
             // btnUpdateIkouProps (遺構プロパティの更新ボタン)
-            this.btnUpdateIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
+            this.btnUpdateIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
             this.btnUpdateIkouProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateIkouProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdateIkouProps.ForeColor = System.Drawing.Color.Black;
+            this.btnUpdateIkouProps.ForeColor = System.Drawing.Color.White;
             this.btnUpdateIkouProps.Location = new System.Drawing.Point(252, 17);
             this.btnUpdateIkouProps.Name = "btnUpdateIkouProps";
             this.btnUpdateIkouProps.Size = new System.Drawing.Size(83, 26);
             this.btnUpdateIkouProps.TabIndex = 2;
-            this.btnUpdateIkouProps.Text = "遺構更新";
+            this.btnUpdateIkouProps.Text = "更新";
             this.btnUpdateIkouProps.UseVisualStyleBackColor = false;
 
             // btnPickCropBounds
@@ -1489,6 +1529,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.GroupBox grpDanmenList;
         private System.Windows.Forms.DataGridView dgvDanmen;
         private System.Windows.Forms.Button btnAddDanmen;
+        private System.Windows.Forms.Button btnUpdateDanmenName;
         private System.Windows.Forms.Button btnDeleteDanmen;
 
         private System.Windows.Forms.Panel panelControls;
