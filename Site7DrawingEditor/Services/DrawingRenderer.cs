@@ -390,13 +390,15 @@ namespace Site7DrawingEditor.Services
                 return new PointF(px, py);
             }
 
+            var sheetSettings = DrawingSheetSettings.Instance;
             double halfW = pInfo.WidthMm / 2.0;
             double halfH = pInfo.HeightMm / 2.0;
-            double marginMm = 10.0; // 外枠マージン 10mm
+            double marginLeftMm = sheetSettings.MarginLeftMm;
+            double marginOtherMm = sheetSettings.MarginOtherMm;
 
             // 1. 外枠 (Outer Frame) の描画
-            PointF pFrameBL = PaperMmToCanvas(-halfW + marginMm, -halfH + marginMm);
-            PointF pFrameTR = PaperMmToCanvas(halfW - marginMm, halfH - marginMm);
+            PointF pFrameBL = PaperMmToCanvas(-halfW + marginLeftMm, -halfH + marginOtherMm);
+            PointF pFrameTR = PaperMmToCanvas(halfW - marginOtherMm, halfH - marginOtherMm);
             float frameX = Math.Min(pFrameBL.X, pFrameTR.X);
             float frameY = Math.Min(pFrameBL.Y, pFrameTR.Y);
             float frameW = Math.Abs(pFrameTR.X - pFrameBL.X);
@@ -408,95 +410,155 @@ namespace Site7DrawingEditor.Services
             }
 
             // 2. 表題欄 (Title Block) の描画 (外枠右下に配置)
-            double tbWidthMm = 65.0;
-            double tbHeightMm = 18.0;
-            PointF ptTbBL = PaperMmToCanvas(halfW - marginMm - tbWidthMm, -halfH + marginMm);
-            PointF ptTbTR = PaperMmToCanvas(halfW - marginMm, -halfH + marginMm + tbHeightMm);
-
-            float tbX = Math.Min(ptTbBL.X, ptTbTR.X);
-            float tbY = Math.Min(ptTbBL.Y, ptTbTR.Y);
-            float tbW = Math.Abs(ptTbTR.X - ptTbBL.X);
-            float tbH = Math.Abs(ptTbBL.Y - ptTbTR.Y);
-
-            using (var tbPen = new Pen(Color.Black, 1.2f))
-            using (var tbBgBrush = new SolidBrush(Color.White))
-            using (var headerBrush = new SolidBrush(Color.FromArgb(242, 244, 248)))
-            using (var textBrush = new SolidBrush(Color.Black))
-            using (var titleFont = new Font("Yu Gothic UI", Math.Max(7.0f, (float)(2.8 * (tbH / tbHeightMm))), FontStyle.Bold))
-            using (var subFont = new Font("Yu Gothic UI", Math.Max(6.0f, (float)(2.2 * (tbH / tbHeightMm))), FontStyle.Regular))
+            if (sheetSettings.ShowTitleBlock)
             {
-                g.FillRectangle(tbBgBrush, tbX, tbY, tbW, tbH);
-                g.DrawRectangle(tbPen, tbX, tbY, tbW, tbH);
+                double tbWidthMm = 70.0;
+                double tbHeightMm = (sheetSettings.ShowAuthor || sheetSettings.ShowDate) ? 24.0 : 18.0;
+                PointF ptTbBL = PaperMmToCanvas(halfW - marginOtherMm - tbWidthMm, -halfH + marginOtherMm);
+                PointF ptTbTR = PaperMmToCanvas(halfW - marginOtherMm, -halfH + marginOtherMm + tbHeightMm);
 
-                // 上段 (図面名ヘッダー)
-                float rowH = tbH / 2f;
-                g.FillRectangle(headerBrush, tbX + 1f, tbY + 1f, tbW - 2f, rowH);
-                g.DrawLine(tbPen, tbX, tbY + rowH, tbX + tbW, tbY + rowH);
-                g.DrawString($"図面名: {curDrawing.Name}", titleFont, textBrush, tbX + 4f, tbY + 2f);
+                float tbX = Math.Min(ptTbBL.X, ptTbTR.X);
+                float tbY = Math.Min(ptTbBL.Y, ptTbTR.Y);
+                float tbW = Math.Abs(ptTbTR.X - ptTbBL.X);
+                float tbH = Math.Abs(ptTbBL.Y - ptTbTR.Y);
 
-                // 下段 (縮尺 / 用紙)
-                float colW = tbW / 2f;
-                g.DrawLine(tbPen, tbX + colW, tbY + rowH, tbX + colW, tbY + tbH);
-                g.DrawString($"縮尺: 1/{curDrawing.Scale}", subFont, textBrush, tbX + 4f, tbY + rowH + 2f);
-                g.DrawString($"用紙: {pInfo.Name}", subFont, textBrush, tbX + colW + 4f, tbY + rowH + 2f);
+                using (var tbPen = new Pen(Color.Black, 1.2f))
+                using (var tbBgBrush = new SolidBrush(Color.White))
+                using (var headerBrush = new SolidBrush(Color.FromArgb(242, 244, 248)))
+                using (var textBrush = new SolidBrush(Color.Black))
+                using (var titleFont = new Font("Yu Gothic UI", Math.Max(7.0f, (float)(2.8 * (tbH / tbHeightMm))), FontStyle.Bold))
+                using (var subFont = new Font("Yu Gothic UI", Math.Max(6.0f, (float)(2.0 * (tbH / tbHeightMm))), FontStyle.Regular))
+                {
+                    g.FillRectangle(tbBgBrush, tbX, tbY, tbW, tbH);
+                    g.DrawRectangle(tbPen, tbX, tbY, tbW, tbH);
+
+                    // 行数計算
+                    int rowCount = (sheetSettings.ShowAuthor || sheetSettings.ShowDate) ? 3 : 2;
+                    float rowH = tbH / (float)rowCount;
+
+                    // 上段 (図面名ヘッダー)
+                    g.FillRectangle(headerBrush, tbX + 1f, tbY + 1f, tbW - 2f, rowH);
+                    g.DrawLine(tbPen, tbX, tbY + rowH, tbX + tbW, tbY + rowH);
+                    string dName = sheetSettings.ShowDrawingName ? curDrawing.Name : "";
+                    g.DrawString($"図面名: {dName}", titleFont, textBrush, tbX + 4f, tbY + 2f);
+
+                    // 中段 (縮尺 / 用紙)
+                    g.DrawLine(tbPen, tbX, tbY + rowH * 2f, tbX + tbW, tbY + rowH * 2f);
+                    float colW = tbW / 2f;
+                    g.DrawLine(tbPen, tbX + colW, tbY + rowH, tbX + colW, tbY + rowH * 2f);
+                    string scaleStr = sheetSettings.ShowScale ? $"1/{curDrawing.Scale}" : "-";
+                    string paperStr = sheetSettings.ShowPaperSize ? pInfo.Name : "-";
+                    g.DrawString($"縮尺: {scaleStr}", subFont, textBrush, tbX + 4f, tbY + rowH + 2f);
+                    g.DrawString($"用紙: {paperStr}", subFont, textBrush, tbX + colW + 4f, tbY + rowH + 2f);
+
+                    // 下段 (作成者 / 日付)
+                    if (rowCount == 3)
+                    {
+                        g.DrawLine(tbPen, tbX + colW, tbY + rowH * 2f, tbX + colW, tbY + tbH);
+                        string authStr = sheetSettings.ShowAuthor && !string.IsNullOrEmpty(sheetSettings.AuthorText) ? sheetSettings.AuthorText : "";
+                        string dateStr = sheetSettings.ShowDate && !string.IsNullOrEmpty(sheetSettings.DateText) ? sheetSettings.DateText : "";
+                        g.DrawString($"作成: {authStr}", subFont, textBrush, tbX + 4f, tbY + rowH * 2f + 2f);
+                        g.DrawString($"日付: {dateStr}", subFont, textBrush, tbX + colW + 4f, tbY + rowH * 2f + 2f);
+                    }
+                }
             }
 
-            // 3. スケールバー (Scale Bar) の描画 (外枠下部中央に精密線スタイルで配置)
-            double targetBarMm = 50.0;
-            double idealMeters = (targetBarMm / 1000.0) * curDrawing.Scale;
-            double barMeters;
-            if (idealMeters <= 1.5) barMeters = 1.0;
-            else if (idealMeters <= 3.0) barMeters = 2.0;
-            else if (idealMeters <= 7.5) barMeters = 5.0;
-            else if (idealMeters <= 15.0) barMeters = 10.0;
-            else if (idealMeters <= 35.0) barMeters = 20.0;
-            else if (idealMeters <= 75.0) barMeters = 50.0;
-            else if (idealMeters <= 150.0) barMeters = 100.0;
-            else barMeters = Math.Ceiling(idealMeters / 50.0) * 50.0;
-
-            double barMm = (barMeters / curDrawing.Scale) * 1000.0;
-            double scaleBarCenterYMm = -halfH + marginMm + 6.5; // 外枠下辺から6.5mm上
-            PointF sbStart = PaperMmToCanvas(-barMm / 2.0, scaleBarCenterYMm);
-            PointF sbEnd = PaperMmToCanvas(barMm / 2.0, scaleBarCenterYMm);
-            PointF sbMid = PaperMmToCanvas(0.0, scaleBarCenterYMm);
-
-            float sbLeftX = sbStart.X;
-            float sbRightX = sbEnd.X;
-            float sbMidX = sbMid.X;
-            float sbLineY = sbStart.Y;
-            float tickH = Math.Max(3.0f, (float)(2.5 * (paperH / pInfo.HeightMm)));
-
-            using (var sbPen = new Pen(Color.Black, 1.2f))
-            using (var sbBrush = new SolidBrush(Color.Black))
-            using (var sbFont = new Font("Yu Gothic UI", Math.Max(6.0f, (float)(2.2 * (paperH / pInfo.HeightMm))), FontStyle.Bold))
+            // 3. スケールバー (Scale Bar) の描画
+            if (sheetSettings.ShowScaleBar)
             {
-                // 基準水平線
-                g.DrawLine(sbPen, sbLeftX, sbLineY, sbRightX, sbLineY);
+                double targetBarMm = 50.0;
+                double idealMeters = (targetBarMm / 1000.0) * curDrawing.Scale;
+                double barMeters;
+                if (idealMeters <= 1.5) barMeters = 1.0;
+                else if (idealMeters <= 3.0) barMeters = 2.0;
+                else if (idealMeters <= 7.5) barMeters = 5.0;
+                else if (idealMeters <= 15.0) barMeters = 10.0;
+                else if (idealMeters <= 35.0) barMeters = 20.0;
+                else if (idealMeters <= 75.0) barMeters = 50.0;
+                else if (idealMeters <= 150.0) barMeters = 100.0;
+                else barMeters = Math.Ceiling(idealMeters / 50.0) * 50.0;
 
-                // 左端 (0)、中央、右端 (barMeters) 目盛
-                g.DrawLine(sbPen, sbLeftX, sbLineY, sbLeftX, sbLineY - tickH);
-                g.DrawLine(sbPen, sbMidX, sbLineY, sbMidX, sbLineY - tickH);
-                g.DrawLine(sbPen, sbRightX, sbLineY, sbRightX, sbLineY - tickH);
+                double barMm = (barMeters / curDrawing.Scale) * 1000.0;
 
-                // 左半分の5分割中間目盛
-                for (int i = 1; i <= 4; i++)
+                double sbCenterXMm = 0.0;
+                double sbCenterYMm = -halfH + marginOtherMm + 6.5;
+
+                string pos = sheetSettings.ScaleBarPos;
+                if (pos == "左下")
                 {
-                    float subX = sbLeftX + (sbMidX - sbLeftX) * (i / 5f);
-                    g.DrawLine(sbPen, subX, sbLineY, subX, sbLineY - (tickH * 0.5f));
+                    sbCenterXMm = -halfW + marginLeftMm + (barMm / 2.0) + 5.0;
+                    sbCenterYMm = -halfH + marginOtherMm + 6.5;
+                }
+                else if (pos == "右下")
+                {
+                    double rightOffset = sheetSettings.ShowTitleBlock ? 75.0 : 5.0;
+                    sbCenterXMm = halfW - marginOtherMm - rightOffset - (barMm / 2.0);
+                    sbCenterYMm = -halfH + marginOtherMm + 6.5;
+                }
+                else if (pos == "左上")
+                {
+                    sbCenterXMm = -halfW + marginLeftMm + (barMm / 2.0) + 5.0;
+                    sbCenterYMm = halfH - marginOtherMm - 10.0;
+                }
+                else if (pos == "右上")
+                {
+                    sbCenterXMm = halfW - marginOtherMm - (barMm / 2.0) - 5.0;
+                    sbCenterYMm = halfH - marginOtherMm - 10.0;
                 }
 
-                // 上部数値テキスト
-                string l0 = "0";
-                string lEnd = (barMeters % 1 == 0) ? $"{barMeters:0}m" : $"{barMeters:0.#}m";
-                var sz0 = g.MeasureString(l0, sbFont);
-                var szEnd = g.MeasureString(lEnd, sbFont);
-                g.DrawString(l0, sbFont, sbBrush, sbLeftX - (sz0.Width / 2f), sbLineY - tickH - sz0.Height);
-                g.DrawString(lEnd, sbFont, sbBrush, sbRightX - (szEnd.Width / 2f), sbLineY - tickH - szEnd.Height);
+                PointF sbStart = PaperMmToCanvas(sbCenterXMm - barMm / 2.0, sbCenterYMm);
+                PointF sbEnd = PaperMmToCanvas(sbCenterXMm + barMm / 2.0, sbCenterYMm);
+                PointF sbMid = PaperMmToCanvas(sbCenterXMm, sbCenterYMm);
 
-                // 下部縮尺表記
-                string scaleText = $"(S=1:{curDrawing.Scale})";
-                var szScale = g.MeasureString(scaleText, sbFont);
-                g.DrawString(scaleText, sbFont, sbBrush, sbMidX - (szScale.Width / 2f), sbLineY + 2f);
+                float sbLeftX = sbStart.X;
+                float sbRightX = sbEnd.X;
+                float sbMidX = sbMid.X;
+                float sbLineY = sbStart.Y;
+                float tickH = Math.Max(3.0f, (float)(2.5 * (paperH / pInfo.HeightMm)));
+
+                using (var sbPen = new Pen(Color.Black, 1.2f))
+                using (var sbBrush = new SolidBrush(Color.Black))
+                using (var sbFont = new Font("Yu Gothic UI", Math.Max(6.0f, (float)(2.2 * (paperH / pInfo.HeightMm))), FontStyle.Bold))
+                {
+                    // 基準水平線
+                    g.DrawLine(sbPen, sbLeftX, sbLineY, sbRightX, sbLineY);
+
+                    // 左端 (0)、中央、右端 (barMeters) 目盛
+                    g.DrawLine(sbPen, sbLeftX, sbLineY, sbLeftX, sbLineY - tickH);
+                    g.DrawLine(sbPen, sbMidX, sbLineY, sbMidX, sbLineY - tickH);
+                    g.DrawLine(sbPen, sbRightX, sbLineY, sbRightX, sbLineY - tickH);
+
+                    // 左半分の5分割中間目盛
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        float subX = sbLeftX + (sbMidX - sbLeftX) * (i / 5f);
+                        g.DrawLine(sbPen, subX, sbLineY, subX, sbLineY - (tickH * 0.5f));
+                    }
+
+                    // 上部数値テキスト
+                    string l0 = "0";
+                    string lEnd = (barMeters % 1 == 0) ? $"{barMeters:0}m" : $"{barMeters:0.#}m";
+                    var sz0 = g.MeasureString(l0, sbFont);
+                    var szEnd = g.MeasureString(lEnd, sbFont);
+                    g.DrawString(l0, sbFont, sbBrush, sbLeftX - (sz0.Width / 2f), sbLineY - tickH - sz0.Height);
+                    g.DrawString(lEnd, sbFont, sbBrush, sbRightX - (szEnd.Width / 2f), sbLineY - tickH - szEnd.Height);
+
+                    // 下部縮尺表記
+                    string scaleText = $"(S=1:{curDrawing.Scale})";
+                    var szScale = g.MeasureString(scaleText, sbFont);
+                    g.DrawString(scaleText, sbFont, sbBrush, sbMidX - (szScale.Width / 2f), sbLineY + 2f);
+                }
+            }
+
+            // 4. 方位記号 (North Arrow) の描画
+            if (sheetSettings.ShowNorthArrow)
+            {
+                double nSizeMm = sheetSettings.NorthArrowSizeMm;
+                PointF ptNorthCenter = PaperMmToCanvas(halfW - marginOtherMm - (nSizeMm / 2.0) - 5.0, halfH - marginOtherMm - (nSizeMm / 2.0) - 5.0);
+
+                float renderLen = (float)(nSizeMm / pInfo.HeightMm * paperH);
+                float renderWidth = renderLen * 0.45f;
+                DrawNorthArrowCore(g, ptNorthCenter, 0f, renderLen, renderWidth, sheetSettings.NorthArrowType, false, 1.2f, Math.Max(7f, renderLen * 0.4f));
             }
 
             var currentIkous = db.DrawingIkousList.Where(di => di.ZID == curDrawing.ZID).ToList();
@@ -873,6 +935,91 @@ namespace Site7DrawingEditor.Services
                     {
                         g.DrawLines(profilePen, profilePts.ToArray());
                     }
+                }
+            }
+        }
+
+        public static void DrawNorthArrowCore(Graphics g, PointF anchor, float needleRad, float length, float width, string style, bool isDarkBackground, float penWidth, float fontPt)
+        {
+            float cos = (float)Math.Cos(needleRad);
+            float sin = (float)Math.Sin(needleRad);
+
+            Color fg = isDarkBackground ? Color.White : Color.Black;
+            Color bg = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.White;
+
+            using (var blackBrush = new SolidBrush(fg))
+            using (var whiteBrush = new SolidBrush(bg))
+            using (var outlinePen = new Pen(fg, penWidth))
+            using (var font = new Font("Arial", fontPt, FontStyle.Bold, GraphicsUnit.Pixel))
+            {
+                string nStr = "N";
+                var nSz = g.MeasureString(nStr, font);
+
+                if (style == "シンプル")
+                {
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
+                    PointF headLeft = new PointF(tip.X + sin * (length * 0.45f) - cos * (width * 0.7f), tip.Y + cos * (length * 0.45f) + sin * (width * 0.7f));
+                    PointF headRight = new PointF(tip.X + sin * (length * 0.45f) + cos * (width * 0.7f), tip.Y + cos * (length * 0.45f) - sin * (width * 0.7f));
+                    PointF headCenter = new PointF(tip.X + sin * (length * 0.35f), tip.Y + cos * (length * 0.35f));
+
+                    g.DrawLine(outlinePen, tip, tail);
+                    g.FillPolygon(blackBrush, new PointF[] { tip, headLeft, headCenter });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, headRight, headCenter });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, headLeft, headCenter, headRight });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+                else if (style == "円形コンパス")
+                {
+                    float radius = length * 0.45f;
+                    g.DrawEllipse(outlinePen, anchor.X - radius, anchor.Y - radius, radius * 2f, radius * 2f);
+
+                    PointF east = new PointF(anchor.X + cos * radius, anchor.Y - sin * radius);
+                    PointF west = new PointF(anchor.X - cos * radius, anchor.Y + sin * radius);
+                    PointF south = new PointF(anchor.X + sin * radius, anchor.Y + cos * radius);
+                    g.DrawLine(outlinePen, east, west);
+                    g.DrawLine(outlinePen, anchor, south);
+
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF leftWing = new PointF(anchor.X - cos * (width * 0.6f), anchor.Y + sin * (width * 0.6f));
+                    PointF rightWing = new PointF(anchor.X + cos * (width * 0.6f), anchor.Y - sin * (width * 0.6f));
+
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, anchor });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, anchor });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, anchor, rightWing });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+                else if (style == "モダン")
+                {
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF tail = new PointF(anchor.X + sin * (length * 0.15f), anchor.Y + cos * (length * 0.15f));
+                    PointF leftWing = new PointF(anchor.X - cos * (width * 0.9f) + sin * (length * 0.35f), anchor.Y + sin * (width * 0.9f) + cos * (length * 0.35f));
+                    PointF rightWing = new PointF(anchor.X + cos * (width * 0.9f) + sin * (length * 0.35f), anchor.Y - sin * (width * 0.9f) + cos * (length * 0.35f));
+
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
+                }
+                else // "標準矢印" (デフォルト)
+                {
+                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
+                    PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
+                    PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
+                    PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
+
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
+
+                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
+                    g.DrawString(nStr, font, blackBrush, nPos);
                 }
             }
         }

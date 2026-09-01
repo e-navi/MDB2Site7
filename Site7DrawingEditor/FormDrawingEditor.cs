@@ -348,6 +348,17 @@ namespace Site7DrawingEditor
                 picCropCanvas.Invalidate();
             };
 
+            btnEnvSettings.Click += (s, e) =>
+            {
+                using (var form = new FormDrawingSettings())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        picPaperCanvas.Invalidate();
+                    }
+                }
+            };
+
             btnLayerSettings.Click += (s, e) =>
             {
                 string? targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");

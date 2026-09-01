@@ -60,6 +60,18 @@ namespace Site7DrawingEditor
             return GetIniStr(iniFileName, app, key);
         }
 
+        public static int GetIniInt(string app, string key, int defaultVal)
+        {
+            string s = GetIniStr(app, key);
+            return int.TryParse(s, out int v) ? v : defaultVal;
+        }
+
+        public static double GetIniDouble(string app, string key, double defaultVal)
+        {
+            string s = GetIniStr(app, key);
+            return double.TryParse(s, out double v) ? v : defaultVal;
+        }
+
         public static void SetIniStr(string fname, string app, string key, string val)
         {
             try
@@ -75,6 +87,16 @@ namespace Site7DrawingEditor
             string sysIni = GetSystemIniFileName();
             SetIniStr(sysIni, app, key, val);
             SetIniStr(iniFileName, app, key, val);
+        }
+
+        public static void SetIniInt(string app, string key, int val)
+        {
+            SetIniStr(app, key, val.ToString());
+        }
+
+        public static void SetIniDouble(string app, string key, double val)
+        {
+            SetIniStr(app, key, val.ToString("F2"));
         }
     }
 }
