@@ -34,7 +34,7 @@ namespace Site7DrawingEditor.Services
             int height = canvasSize.Height;
             if (width <= 0 || height <= 0) return;
 
-            g.Clear(isDarkBackground ? Color.FromArgb(20, 20, 25) : Color.FromArgb(248, 249, 250));
+            g.Clear(isDarkBackground ? Color.FromArgb(20, 20, 25) : Color.White);
 
             // Fast single-pass bounding box calculation without string allocations
             double posXMin = double.MaxValue, posXMax = double.MinValue;

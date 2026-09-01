@@ -33,8 +33,6 @@ namespace Site7DrawingEditor
             this.chkAutoZoomIkou = new System.Windows.Forms.CheckBox();
             this.panelHcLeftSidebar = new System.Windows.Forms.Panel();
             this.btnEnvSettings = new System.Windows.Forms.Button();
-            this.btnUndo = new System.Windows.Forms.Button();
-            this.btnRedo = new System.Windows.Forms.Button();
             this.lblIkouLayerGrpHeader = new System.Windows.Forms.Label();
             this.chkLayer01 = new System.Windows.Forms.CheckBox();
             this.chkLayer02 = new System.Windows.Forms.CheckBox();
@@ -302,25 +300,11 @@ namespace Site7DrawingEditor
             this.lblFullMapTitle.TabIndex = 0;
             this.lblFullMapTitle.Text = "🗺 全体遺構図";
 
-            // chkAutoZoomIkou
-            this.chkAutoZoomIkou.AutoSize = true;
-            this.chkAutoZoomIkou.Checked = true;
-            this.chkAutoZoomIkou.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAutoZoomIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkAutoZoomIkou.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.chkAutoZoomIkou.Location = new System.Drawing.Point(115, 8);
-            this.chkAutoZoomIkou.Name = "chkAutoZoomIkou";
-            this.chkAutoZoomIkou.Size = new System.Drawing.Size(110, 19);
-            this.chkAutoZoomIkou.TabIndex = 1;
-            this.chkAutoZoomIkou.Text = "選択遺構を拡大";
-            this.chkAutoZoomIkou.UseVisualStyleBackColor = true;
-
             // panelHcLeftSidebar
             this.panelHcLeftSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.panelHcLeftSidebar.Controls.Add(this.btnResetCropZoom);
+            this.panelHcLeftSidebar.Controls.Add(this.chkAutoZoomIkou);
             this.panelHcLeftSidebar.Controls.Add(this.btnEnvSettings);
-            this.panelHcLeftSidebar.Controls.Add(this.btnUndo);
-            this.panelHcLeftSidebar.Controls.Add(this.btnRedo);
             this.panelHcLeftSidebar.Controls.Add(this.lblIkouLayerGrpHeader);
             this.panelHcLeftSidebar.Controls.Add(this.chkLayer01);
             this.panelHcLeftSidebar.Controls.Add(this.chkLayer02);
@@ -366,41 +350,30 @@ namespace Site7DrawingEditor
             this.btnResetCropZoom.Text = "全図表示";
             this.btnResetCropZoom.UseVisualStyleBackColor = false;
 
-            // btnEnvSettings
+            // chkAutoZoomIkou (選択遺構を拡大: 環境設定の位置へ移動)
+            this.chkAutoZoomIkou.AutoSize = true;
+            this.chkAutoZoomIkou.Checked = true;
+            this.chkAutoZoomIkou.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoZoomIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.chkAutoZoomIkou.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.chkAutoZoomIkou.Location = new System.Drawing.Point(6, 32);
+            this.chkAutoZoomIkou.Name = "chkAutoZoomIkou";
+            this.chkAutoZoomIkou.Size = new System.Drawing.Size(110, 19);
+            this.chkAutoZoomIkou.TabIndex = 1;
+            this.chkAutoZoomIkou.Text = "選択遺構を拡大";
+            this.chkAutoZoomIkou.UseVisualStyleBackColor = true;
+
+            // btnEnvSettings (Undo/Redoの位置へ移動し、遺構図面設定に変更)
             this.btnEnvSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
             this.btnEnvSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEnvSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnEnvSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnEnvSettings.Location = new System.Drawing.Point(6, 30);
+            this.btnEnvSettings.Location = new System.Drawing.Point(6, 55);
             this.btnEnvSettings.Name = "btnEnvSettings";
             this.btnEnvSettings.Size = new System.Drawing.Size(118, 23);
-            this.btnEnvSettings.TabIndex = 1;
-            this.btnEnvSettings.Text = "環境設定";
+            this.btnEnvSettings.TabIndex = 2;
+            this.btnEnvSettings.Text = "遺構図面設定";
             this.btnEnvSettings.UseVisualStyleBackColor = false;
-
-            // btnUndo
-            this.btnUndo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnUndo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUndo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnUndo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnUndo.Location = new System.Drawing.Point(6, 55);
-            this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(57, 23);
-            this.btnUndo.TabIndex = 2;
-            this.btnUndo.Text = "Undo";
-            this.btnUndo.UseVisualStyleBackColor = false;
-
-            // btnRedo
-            this.btnRedo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnRedo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRedo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnRedo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnRedo.Location = new System.Drawing.Point(67, 55);
-            this.btnRedo.Name = "btnRedo";
-            this.btnRedo.Size = new System.Drawing.Size(57, 23);
-            this.btnRedo.TabIndex = 3;
-            this.btnRedo.Text = "Redo";
-            this.btnRedo.UseVisualStyleBackColor = false;
 
             // lblIkouLayerGrpHeader
             this.lblIkouLayerGrpHeader.AutoSize = true;
@@ -409,7 +382,7 @@ namespace Site7DrawingEditor
             this.lblIkouLayerGrpHeader.Location = new System.Drawing.Point(6, 83);
             this.lblIkouLayerGrpHeader.Name = "lblIkouLayerGrpHeader";
             this.lblIkouLayerGrpHeader.Size = new System.Drawing.Size(76, 15);
-            this.lblIkouLayerGrpHeader.TabIndex = 4;
+            this.lblIkouLayerGrpHeader.TabIndex = 3;
             this.lblIkouLayerGrpHeader.Text = "遺構レイヤGRP";
 
             // chkLayer01
@@ -713,7 +686,8 @@ namespace Site7DrawingEditor
 
             // chkShowWhiteBackground (基準点の下に配置: 背景白色チェックボックス)
             this.chkShowWhiteBackground.AutoSize = true;
-            this.chkShowWhiteBackground.Checked = false;
+            this.chkShowWhiteBackground.Checked = true;
+            this.chkShowWhiteBackground.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowWhiteBackground.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
             this.chkShowWhiteBackground.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
             this.chkShowWhiteBackground.Location = new System.Drawing.Point(6, 400);
@@ -1378,8 +1352,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.CheckBox chkAutoZoomIkou;
         private System.Windows.Forms.Panel panelHcLeftSidebar;
         private System.Windows.Forms.Button btnEnvSettings;
-        private System.Windows.Forms.Button btnUndo;
-        private System.Windows.Forms.Button btnRedo;
         private System.Windows.Forms.Label lblIkouLayerGrpHeader;
         private System.Windows.Forms.CheckBox chkLayer01;
         private System.Windows.Forms.CheckBox chkLayer02;
