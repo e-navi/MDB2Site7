@@ -560,10 +560,12 @@ namespace Site7DrawingEditor.Services
                 var (_, widthM, heightM, ux, uy, _, _, _) = GeometryMath.CalculateCropBox(ikou.P1, ikou.P2, ikou.P3);
                 double scaleFactorMm = 1000.0 / curDrawing.Scale;
 
-                PointF ptBL = PaperMmToCanvas(ikou.PP.X - (widthM / 2.0) * scaleFactorMm, ikou.PP.Y - (heightM / 2.0) * scaleFactorMm);
-                PointF ptBR = PaperMmToCanvas(ikou.PP.X + (widthM / 2.0) * scaleFactorMm, ikou.PP.Y - (heightM / 2.0) * scaleFactorMm);
-                PointF ptTR = PaperMmToCanvas(ikou.PP.X + (widthM / 2.0) * scaleFactorMm, ikou.PP.Y + (heightM / 2.0) * scaleFactorMm);
-                PointF ptTL = PaperMmToCanvas(ikou.PP.X - (widthM / 2.0) * scaleFactorMm, ikou.PP.Y + (heightM / 2.0) * scaleFactorMm);
+                Point3D effPP = GeometryMath.CalculateEffectivePaperPosition(ikou, currentIkous, curDrawing.Scale);
+
+                PointF ptBL = PaperMmToCanvas(effPP.X - (widthM / 2.0) * scaleFactorMm, effPP.Y - (heightM / 2.0) * scaleFactorMm);
+                PointF ptBR = PaperMmToCanvas(effPP.X + (widthM / 2.0) * scaleFactorMm, effPP.Y - (heightM / 2.0) * scaleFactorMm);
+                PointF ptTR = PaperMmToCanvas(effPP.X + (widthM / 2.0) * scaleFactorMm, effPP.Y + (heightM / 2.0) * scaleFactorMm);
+                PointF ptTL = PaperMmToCanvas(effPP.X - (widthM / 2.0) * scaleFactorMm, effPP.Y + (heightM / 2.0) * scaleFactorMm);
 
                 using (var clipPath = new GraphicsPath())
                 {
@@ -591,7 +593,7 @@ namespace Site7DrawingEditor.Services
                         var paperScreenPts = new List<PointF>();
                         foreach (var pt in renderPnts)
                         {
-                            PointF paperPt = GeometryMath.SurveyToPaperPoint(pt.X, pt.Y, ikou.P1, ikou.P2, ikou.P3, ikou.PP, curDrawing.Scale);
+                            PointF paperPt = GeometryMath.SurveyToPaperPoint(pt.X, pt.Y, ikou.P1, ikou.P2, ikou.P3, effPP, curDrawing.Scale);
                             paperScreenPts.Add(PaperMmToCanvas(paperPt.X, paperPt.Y));
                         }
 
@@ -621,7 +623,7 @@ namespace Site7DrawingEditor.Services
                 // 各遺構図の方位記号 (遺構図面設定の種類・寸法を適用)
                 if (sheetSettings.ShowNorthArrow && chkShowDirectionPaper && ikou.IsShowDirection == 1)
                 {
-                    PointF compassCenter = PaperMmToCanvas(ikou.PP.X + ikou.PDirection.X, ikou.PP.Y + ikou.PDirection.Y);
+                    PointF compassCenter = PaperMmToCanvas(effPP.X + ikou.PDirection.X, effPP.Y + ikou.PDirection.Y);
 
                     double nSizeMm = sheetSettings.NorthArrowSizeMm;
                     float renderLen = (float)(nSizeMm / pInfo.HeightMm * paperH);
@@ -638,9 +640,9 @@ namespace Site7DrawingEditor.Services
                 {
                     foreach (var dm in ikou.DmList)
                     {
-                        PointF spPt = GeometryMath.SurveyToPaperPoint(dm.Sp.X, dm.Sp.Y, ikou.P1, ikou.P2, ikou.P3, ikou.PP, curDrawing.Scale);
-                        PointF epPt = GeometryMath.SurveyToPaperPoint(dm.Ep.X, dm.Ep.Y, ikou.P1, ikou.P2, ikou.P3, ikou.PP, curDrawing.Scale);
-                        PointF dpPt = GeometryMath.SurveyToPaperPoint(dm.Dp.X, dm.Dp.Y, ikou.P1, ikou.P2, ikou.P3, ikou.PP, curDrawing.Scale);
+                        PointF spPt = GeometryMath.SurveyToPaperPoint(dm.Sp.X, dm.Sp.Y, ikou.P1, ikou.P2, ikou.P3, effPP, curDrawing.Scale);
+                        PointF epPt = GeometryMath.SurveyToPaperPoint(dm.Ep.X, dm.Ep.Y, ikou.P1, ikou.P2, ikou.P3, effPP, curDrawing.Scale);
+                        PointF dpPt = GeometryMath.SurveyToPaperPoint(dm.Dp.X, dm.Dp.Y, ikou.P1, ikou.P2, ikou.P3, effPP, curDrawing.Scale);
 
                         PointF spCanvas = PaperMmToCanvas(spPt.X, spPt.Y);
                         PointF epCanvas = PaperMmToCanvas(epPt.X, epPt.Y);
@@ -658,7 +660,8 @@ namespace Site7DrawingEditor.Services
             // 遺構枠配置位置指定（Paper Position Pick）ラバーバンド描画
             if (vc.IsPickingPaperPosition && curSelectedIkou != null)
             {
-                PointF originPt = PaperMmToCanvas(curSelectedIkou.PP.X, curSelectedIkou.PP.Y);
+                Point3D effSelPP = GeometryMath.CalculateEffectivePaperPosition(curSelectedIkou, currentIkous, curDrawing.Scale);
+                PointF originPt = PaperMmToCanvas(effSelPP.X, effSelPP.Y);
                 using (var rubberPen = new Pen(Color.FromArgb(0, 225, 255), 2f) { DashStyle = DashStyle.Dash })
                 using (var font = new Font("Yu Gothic UI", 9F, FontStyle.Bold))
                 using (var brush = new SolidBrush(Color.FromArgb(0, 225, 255)))

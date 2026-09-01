@@ -298,9 +298,9 @@ namespace Site7DrawingEditor.Services
         }
 
         /// <summary>
-        /// 遺構図面 (用紙ビュー) 上で指定された遺構配置位置 (PP.X, PP.Y) を中心に自動拡大フォーカスする
+        /// 遺構図面 (用紙ビュー) 上で指定された遺構の実座標換算配置位置を中心に自動拡大フォーカスする
         /// </summary>
-        public void FocusPaperFeature(DrawingIkouModel curIkou, Size canvasSize, PaperSizeInfo pInfo, int scale)
+        public void FocusPaperFeature(DrawingIkouModel curIkou, Size canvasSize, PaperSizeInfo pInfo, int scale, List<DrawingIkouModel>? allDrawingIkous = null)
         {
             if (canvasSize.Width <= 0 || canvasSize.Height <= 0 || curIkou == null || pInfo == null) return;
 
@@ -333,9 +333,12 @@ namespace Site7DrawingEditor.Services
             double targetZoomY = (canvasSize.Height * 0.70) / Math.Max(1.0, ikouBasePxH);
             float targetZoom = (float)Math.Clamp(Math.Min(targetZoomX, targetZoomY), 1.0f, 20.0f);
 
-            // PP.X, PP.Y (用紙中心 0,0 基準 mm)
-            float basePxFromCenter = (float)(curIkou.PP.X / pInfo.WidthMm * renderPaperWidth);
-            float basePyFromCenter = -(float)(curIkou.PP.Y / pInfo.HeightMm * renderPaperHeight);
+            Point3D effPP = (allDrawingIkous != null && allDrawingIkous.Count > 0)
+                ? GeometryMath.CalculateEffectivePaperPosition(curIkou, allDrawingIkous, scale)
+                : (curIkou.PP ?? new Point3D());
+
+            float basePxFromCenter = (float)(effPP.X / pInfo.WidthMm * renderPaperWidth);
+            float basePyFromCenter = -(float)(effPP.Y / pInfo.HeightMm * renderPaperHeight);
 
             PaperZoom = targetZoom;
             PaperPan = new PointF(-basePxFromCenter * targetZoom, -basePyFromCenter * targetZoom);

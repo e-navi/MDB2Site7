@@ -194,6 +194,44 @@ namespace Site7DrawingEditor
         }
 
         /// <summary>
+        /// 図面に属する全遺構の実測量座標中心を基準として、各遺構の実座標に基づく用紙中心(0,0)からの用紙配置座標 (Point3D [mm]) を計算する
+        /// </summary>
+        public static Point3D CalculateEffectivePaperPosition(DrawingIkouModel ikou, List<DrawingIkouModel> allDrawingIkous, int scale)
+        {
+            if (scale <= 0) scale = 20;
+
+            var validIkous = allDrawingIkous.Where(ik => ik.P1 != null && ik.P2 != null && ik.P3 != null &&
+                (ik.P1.X != 0 || ik.P1.Y != 0 || ik.P2.X != 0 || ik.P2.Y != 0)).ToList();
+
+            if (validIkous.Count == 0) return ikou.PP ?? new Point3D();
+
+            double minX = double.MaxValue, maxX = double.MinValue;
+            double minY = double.MaxValue, maxY = double.MinValue;
+
+            foreach (var ik in validIkous)
+            {
+                var (_, _, _, _, _, _, _, c) = CalculateCropBox(ik.P1, ik.P2, ik.P3);
+                if (c.X < minX) minX = c.X;
+                if (c.X > maxX) maxX = c.X;
+                if (c.Y < minY) minY = c.Y;
+                if (c.Y > maxY) maxY = c.Y;
+            }
+
+            double originSurveyX = (minX + maxX) / 2.0;
+            double originSurveyY = (minY + maxY) / 2.0;
+
+            var (_, _, _, _, _, _, _, curCenter) = CalculateCropBox(ikou.P1, ikou.P2, ikou.P3);
+            double deltaSurveyX = curCenter.X - originSurveyX;
+            double deltaSurveyY = curCenter.Y - originSurveyY;
+
+            double mmPerMeter = 1000.0 / scale;
+            double paperMmX = deltaSurveyX * mmPerMeter;
+            double paperMmY = deltaSurveyY * mmPerMeter;
+
+            return new Point3D(paperMmX, paperMmY, 0);
+        }
+
+        /// <summary>
         /// 測量座標直線 (2点指定) と用紙外枠 (長方形 [-halfW, +halfW] x [-halfH, +halfH]) の交点を算出
         /// </summary>
         public static List<(PointF paperMmPt, string borderSide)> FindGridLinePaperIntersections(

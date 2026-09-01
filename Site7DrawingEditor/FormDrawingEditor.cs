@@ -767,7 +767,8 @@ namespace Site7DrawingEditor
             // 2. 遺構図面 (用紙ビュー) の自動フォーカス
             if ((force || chkAutoZoomPaperIkou.Checked) && curIkou != null && curDrawing != null)
             {
-                _vc.FocusPaperFeature(curIkou, picPaperCanvas.Size, curDrawing.PaperInfo, curDrawing.Scale);
+                var subIkous = _db.DrawingIkousList.Where(di => di.ZID == curDrawing.ZID).ToList();
+                _vc.FocusPaperFeature(curIkou, picPaperCanvas.Size, curDrawing.PaperInfo, curDrawing.Scale, subIkous);
                 picPaperCanvas.Invalidate();
             }
         }
