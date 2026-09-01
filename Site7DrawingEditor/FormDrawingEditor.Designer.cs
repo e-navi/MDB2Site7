@@ -851,6 +851,20 @@ namespace Site7DrawingEditor
             this.picPaperCanvas.TabIndex = 1;
             this.picPaperCanvas.TabStop = false;
 
+            // panelTopRight
+            this.panelTopRight.Controls.Add(this.chkShowCurvePaper);
+            this.panelTopRight.Controls.Add(this.chkShowDirectionPaper);
+            this.panelTopRight.Controls.Add(this.chkShowDanmenPaper);
+            this.panelTopRight.Controls.Add(this.chkColorByIkouPaper);
+            this.panelTopRight.Controls.Add(this.picPaperCanvas);
+            this.panelTopRight.Controls.Add(this.panelTopRightHeader);
+            this.panelTopRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelTopRight.Location = new System.Drawing.Point(0, 0);
+            this.panelTopRight.Name = "panelTopRight";
+            this.panelTopRight.Size = new System.Drawing.Size(736, 450);
+            this.panelTopRight.TabIndex = 0;
+            this.splitContainerTopHorizontal.Panel2.Controls.Add(this.panelTopRight);
+
             // 
             // panelBottomFixedGroup (下部単一Panel: 5つのGroupBox + 詳細プレビューの計6項目をすべて内包)
             // 

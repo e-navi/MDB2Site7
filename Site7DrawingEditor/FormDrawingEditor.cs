@@ -383,6 +383,11 @@ namespace Site7DrawingEditor
         {
             if (this.panelTopRight == null || this.picPaperCanvas == null) return;
             int sidebarW = 100;
+            if (this.panelTopRightHeader != null)
+            {
+                this.panelTopRightHeader.Bounds = new System.Drawing.Rectangle(0, 0, this.panelTopRight.Width, 35);
+                this.panelTopRightHeader.BringToFront();
+            }
             this.picPaperCanvas.Bounds = new System.Drawing.Rectangle(sidebarW, 35, Math.Max(10, this.panelTopRight.Width - sidebarW), Math.Max(10, this.panelTopRight.Height - 35));
             this.chkShowCurvePaper.BringToFront();
             this.chkShowDirectionPaper.BringToFront();
