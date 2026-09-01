@@ -172,6 +172,68 @@ namespace Site7DrawingEditor
             }
 
             StyleContainer(this);
+            InitButtonThemes();
+        }
+
+        private static readonly Color ColorAddActive = Color.FromArgb(30, 115, 210);      // 爽やかな青
+        private static readonly Color ColorUpdateActive = Color.FromArgb(38, 145, 75);    // 落ち着いた緑
+        private static readonly Color ColorDeleteActive = Color.FromArgb(195, 55, 55);    // 警告の赤
+        private static readonly Color ColorAuxActive = Color.FromArgb(65, 75, 100);       // 補助ボタン
+
+        private static readonly Color ColorDisabledBg = Color.FromArgb(232, 235, 240);    // 無効時の淡いグレー
+        private static readonly Color ColorDisabledText = Color.FromArgb(160, 165, 175);  // 無効時の薄い文字
+        private static readonly Color ColorDisabledBorder = Color.FromArgb(210, 215, 222);// 無効時の枠線
+
+        private void InitButtonThemes()
+        {
+            // 追加ボタン (青)
+            ApplyButtonTheme(btnAddDrawing, ColorAddActive);
+            ApplyButtonTheme(btnAddDrawingIkou, ColorAddActive);
+            ApplyButtonTheme(btnAddDanmen, ColorAddActive);
+
+            // 更新ボタン (緑)
+            ApplyButtonTheme(btnUpdateDrawingProps, ColorUpdateActive);
+            ApplyButtonTheme(btnUpdateIkouProps, ColorUpdateActive);
+            ApplyButtonTheme(btnUpdateDanmenName, ColorUpdateActive);
+
+            // 削除ボタン (赤)
+            ApplyButtonTheme(btnDeleteDrawing, ColorDeleteActive);
+            ApplyButtonTheme(btnDeleteDrawingIkou, ColorDeleteActive);
+            ApplyButtonTheme(btnDeleteDanmen, ColorDeleteActive);
+
+            // 補助ボタン
+            ApplyButtonTheme(btnPickCropBounds, ColorAuxActive);
+            ApplyButtonTheme(btnSetPaperPosition, ColorAuxActive);
+            ApplyButtonTheme(btnSetDirectionPosition, ColorAuxActive);
+            ApplyButtonTheme(btnSetDanmenPosition, ColorAuxActive);
+            ApplyButtonTheme(btnResetCropZoom, ColorAuxActive);
+            ApplyButtonTheme(btnResetPaperZoom, ColorAuxActive);
+        }
+
+        private static void ApplyButtonTheme(Button btn, Color activeColor)
+        {
+            if (btn == null) return;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 1;
+
+            void UpdateVisual()
+            {
+                if (btn.Enabled)
+                {
+                    btn.BackColor = activeColor;
+                    btn.ForeColor = Color.White;
+                    btn.FlatAppearance.BorderColor = activeColor;
+                }
+                else
+                {
+                    btn.BackColor = ColorDisabledBg;
+                    btn.ForeColor = ColorDisabledText;
+                    btn.FlatAppearance.BorderColor = ColorDisabledBorder;
+                }
+            }
+
+            btn.EnabledChanged += (s, e) => UpdateVisual();
+            UpdateVisual();
         }
 
         private void ConfigureDgvColumns(DataGridView dgv, string idPropName, string idHeaderText, string namePropName, string nameHeaderText, bool isNameReadOnly = false)
@@ -236,6 +298,14 @@ namespace Site7DrawingEditor
 
             this.btnUpdateDrawingProps.Click += btnUpdateDrawingProps_Click;
             this.btnUpdateIkouProps.Click += btnUpdateIkouProps_Click;
+
+            this.txtDrawingName.TextChanged += (s, e) => UpdateControlEnableStates();
+            this.cmbPaperSize.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
+            this.cmbScale.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
+            this.cmbOrientation.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
+            this.cmbFeatureSelect.TextChanged += (s, e) => UpdateControlEnableStates();
+            this.cmbFeatureSelect.SelectedIndexChanged += (s, e) => UpdateControlEnableStates();
+            this.txtDanmenName.TextChanged += (s, e) => UpdateControlEnableStates();
 
             this.btnPickCropBounds.Click += (s, e) => Start3PointPick();
             this.btnSetPaperPosition.Click += (s, e) => StartPaperPositionPick();
@@ -542,17 +612,25 @@ namespace Site7DrawingEditor
             bool hasIkou = hasDrawing && (curIkou != null);
             bool hasDanmen = hasIkou && (curDanmen != null);
 
-            // 1. 図面入力の重複・空白判定
+            // 1. 図面入力の重複・変更（ダーティ）判定
             string drawNameInput = txtDrawingName.Text.Trim();
             bool isDrawNameNotEmpty = !string.IsNullOrEmpty(drawNameInput);
             bool isDrawNameNotRegistered = isDrawNameNotEmpty && !_db.DrawingsList.Any(d => d.Name.Equals(drawNameInput, StringComparison.OrdinalIgnoreCase));
             bool isDrawNameNotOtherDuplicate = hasDrawing && isDrawNameNotEmpty && !_db.DrawingsList.Any(d => d != curDrawing && d.Name.Equals(drawNameInput, StringComparison.OrdinalIgnoreCase));
 
+            int selScale = cmbScale.SelectedIndex switch { 0 => 10, 1 => 20, 2 => 30, 3 => 50, 4 => 100, 5 => 200, _ => 20 };
+            bool isDrawDirty = curDrawing != null && (
+                !string.Equals(curDrawing.Name, drawNameInput, StringComparison.OrdinalIgnoreCase) ||
+                curDrawing.PaperSize != cmbPaperSize.SelectedIndex ||
+                curDrawing.Scale != selScale ||
+                curDrawing.Type != cmbOrientation.SelectedIndex
+            );
+
             btnAddDrawing.Enabled = isDbLoaded && isDrawNameNotRegistered;
             btnDeleteDrawing.Enabled = hasDrawing;
-            btnUpdateDrawingProps.Enabled = hasDrawing && isDrawNameNotOtherDuplicate;
+            btnUpdateDrawingProps.Enabled = hasDrawing && isDrawNameNotOtherDuplicate && isDrawDirty;
 
-            // 2. 対象遺構入力の重複・空白判定
+            // 2. 対象遺構入力の重複・変更判定 (同一図面内)
             string ikouNameInput = cmbFeatureSelect.Text.Trim();
             bool isIkouNameNotEmpty = !string.IsNullOrEmpty(ikouNameInput);
 
@@ -562,20 +640,24 @@ namespace Site7DrawingEditor
 
             bool isIkouNameNotRegistered = hasDrawing && isIkouNameNotEmpty && !currentDrawingIkous.Any(di => di.Name.Equals(ikouNameInput, StringComparison.OrdinalIgnoreCase));
             bool isIkouNameNotOtherDuplicate = hasIkou && isIkouNameNotEmpty && !currentDrawingIkous.Any(di => di != curIkou && di.Name.Equals(ikouNameInput, StringComparison.OrdinalIgnoreCase));
+            bool isIkouDirty = curIkou != null && !string.Equals(curIkou.Name, ikouNameInput, StringComparison.OrdinalIgnoreCase);
 
             btnAddDrawingIkou.Enabled = hasDrawing && isIkouNameNotRegistered;
             btnDeleteDrawingIkou.Enabled = hasIkou;
-            btnUpdateIkouProps.Enabled = hasIkou && isIkouNameNotOtherDuplicate;
+            btnUpdateIkouProps.Enabled = hasIkou && isIkouNameNotOtherDuplicate && isIkouDirty;
 
-            // 3. 断面入力の重複・空白判定
+            // 3. 断面入力の重複・変更判定 (同一遺構内)
             string danmenNameInput = txtDanmenName.Text.Trim();
             bool isDanmenNameNotEmpty = !string.IsNullOrEmpty(danmenNameInput);
 
             var currentDanmenList = hasIkou ? curIkou!.DmList : new List<DanmenRec>();
             bool isDanmenNameNotRegistered = hasIkou && isDanmenNameNotEmpty && !currentDanmenList.Any(d => d.Name.Equals(danmenNameInput, StringComparison.OrdinalIgnoreCase));
+            bool isDanmenNameNotOtherDuplicate = hasDanmen && isDanmenNameNotEmpty && !currentDanmenList.Any(d => d != curDanmen && d.Name.Equals(danmenNameInput, StringComparison.OrdinalIgnoreCase));
+            bool isDanmenDirty = curDanmen != null && !string.Equals(curDanmen.Name, danmenNameInput, StringComparison.OrdinalIgnoreCase);
 
             btnAddDanmen.Enabled = hasIkou && isDanmenNameNotRegistered;
             btnDeleteDanmen.Enabled = hasDanmen;
+            btnUpdateDanmenName.Enabled = hasDanmen && isDanmenNameNotOtherDuplicate && isDanmenDirty;
 
             // 4. 指示ボタン
             btnPickCropBounds.Enabled = hasIkou;
