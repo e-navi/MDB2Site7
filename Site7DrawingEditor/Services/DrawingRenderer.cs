@@ -627,10 +627,11 @@ namespace Site7DrawingEditor.Services
                     float renderLen = (float)(nSizeMm / pInfo.HeightMm * paperH);
                     float renderWidth = renderLen * 0.45f;
 
-                    // 遺構の向き (ux, uy) に合わせた北方向の回転角
-                    float needleRad = (float)Math.Atan2(ux, uy);
+                    // 画面上での北方向 (dx, dy) = (ux, -uy) に対する時計回り角度 (度)
+                    double angleRad = Math.Atan2(ux, uy);
+                    float angleDeg = (float)(angleRad * 180.0 / Math.PI);
 
-                    DrawNorthArrowCore(g, compassCenter, needleRad, renderLen, renderWidth, sheetSettings.NorthArrowType, false, 1.2f, Math.Max(7f, renderLen * 0.4f));
+                    DrawNorthArrowCore(g, compassCenter, angleDeg, renderLen, renderWidth, sheetSettings.NorthArrowType, false, 1.2f, Math.Max(7f, renderLen * 0.45f));
                 }
 
                 if (chkShowDanmenPaper)
@@ -773,7 +774,8 @@ namespace Site7DrawingEditor.Services
                 RenderUnifiedSection(g, dm, sp, ep, dp, pixelsPerMeter);
             }
 
-            if (chkShowDirection && curIkou.IsShowDirection == 1 && curDrawing != null)
+            var sheetSettings = DrawingSheetSettings.Instance;
+            if (sheetSettings.ShowNorthArrow && chkShowDirection && curIkou.IsShowDirection == 1 && curDrawing != null)
             {
                 double compLocalMx = curIkou.PDirection.X * (curDrawing.Scale / 1000.0);
                 double compLocalMy = curIkou.PDirection.Y * (curDrawing.Scale / 1000.0);
@@ -782,21 +784,15 @@ namespace Site7DrawingEditor.Services
                 float compassPy = (height / 2f) - (float)(compLocalMy * scale);
                 PointF compassCenter = new PointF(compassPx, compassPy);
 
-                double diagM = Math.Sqrt(widthM * widthM + heightM * heightM);
-                double diagPx = diagM * scale;
-                float arrowLen = Math.Max(8f, (float)(diagPx / 10.0));
+                double nSizeMm = sheetSettings.NorthArrowSizeMm;
+                double nSizeM = nSizeMm * (curDrawing.Scale / 1000.0);
+                float renderLen = Math.Max(10f, (float)(nSizeM * scale));
+                float renderWidth = renderLen * 0.45f;
 
-                float nX = compassCenter.X + arrowLen * (float)ux;
-                float nY = compassCenter.Y - arrowLen * (float)uy;
+                double angleRad = Math.Atan2(ux, uy);
+                float angleDeg = (float)(angleRad * 180.0 / Math.PI);
 
-                using (var arrowPen = new Pen(Color.FromArgb(56, 176, 0), 2.2f))
-                using (var font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
-                using (var brush = new SolidBrush(Color.FromArgb(56, 176, 0)))
-                {
-                    g.DrawLine(arrowPen, compassCenter.X, compassCenter.Y, nX, nY);
-                    g.DrawString("N", font, brush, nX - 5f, nY - 16f);
-                    g.FillEllipse(brush, compassCenter.X - 3f, compassCenter.Y - 3f, 6f, 6f);
-                }
+                DrawNorthArrowCore(g, compassCenter, angleDeg, renderLen, renderWidth, sheetSettings.NorthArrowType, false, 1.5f, Math.Max(7f, renderLen * 0.45f));
             }
 
             if (vc.IsPickingDirectionPosition)
@@ -920,89 +916,85 @@ namespace Site7DrawingEditor.Services
             }
         }
 
-        public static void DrawNorthArrowCore(Graphics g, PointF anchor, float needleRad, float length, float width, string style, bool isDarkBackground, float penWidth, float fontPt)
+        public static void DrawNorthArrowCore(Graphics g, PointF anchor, float needleAngleDeg, float length, float width, string style, bool isDarkBackground, float penWidth, float fontPt)
         {
-            float cos = (float)Math.Cos(needleRad);
-            float sin = (float)Math.Sin(needleRad);
-
             Color fg = isDarkBackground ? Color.White : Color.Black;
             Color bg = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.White;
+
+            var state = g.Save();
+            g.TranslateTransform(anchor.X, anchor.Y);
+            g.RotateTransform(needleAngleDeg);
 
             using (var blackBrush = new SolidBrush(fg))
             using (var whiteBrush = new SolidBrush(bg))
             using (var outlinePen = new Pen(fg, penWidth))
-            using (var font = new Font("Arial", fontPt, FontStyle.Bold, GraphicsUnit.Pixel))
+            using (var font = new Font("Yu Gothic UI", fontPt, FontStyle.Bold, GraphicsUnit.Pixel))
             {
                 string nStr = "N";
                 var nSz = g.MeasureString(nStr, font);
 
                 if (style == "シンプル")
                 {
-                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
-                    PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
-                    PointF headLeft = new PointF(tip.X + sin * (length * 0.45f) - cos * (width * 0.7f), tip.Y + cos * (length * 0.45f) + sin * (width * 0.7f));
-                    PointF headRight = new PointF(tip.X + sin * (length * 0.45f) + cos * (width * 0.7f), tip.Y + cos * (length * 0.45f) - sin * (width * 0.7f));
-                    PointF headCenter = new PointF(tip.X + sin * (length * 0.35f), tip.Y + cos * (length * 0.35f));
+                    PointF tip = new PointF(0, -length);
+                    PointF tail = new PointF(0, length * 0.35f);
+                    PointF headLeft = new PointF(-width * 0.7f, -length * 0.55f);
+                    PointF headRight = new PointF(width * 0.7f, -length * 0.55f);
+                    PointF headCenter = new PointF(0, -length * 0.65f);
 
                     g.DrawLine(outlinePen, tip, tail);
                     g.FillPolygon(blackBrush, new PointF[] { tip, headLeft, headCenter });
                     g.FillPolygon(whiteBrush, new PointF[] { tip, headRight, headCenter });
                     g.DrawPolygon(outlinePen, new PointF[] { tip, headLeft, headCenter, headRight });
 
-                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
-                    g.DrawString(nStr, font, blackBrush, nPos);
+                    g.DrawString(nStr, font, blackBrush, -nSz.Width / 2f, -length - nSz.Height - 1f);
                 }
                 else if (style == "円形コンパス")
                 {
                     float radius = length * 0.45f;
-                    g.DrawEllipse(outlinePen, anchor.X - radius, anchor.Y - radius, radius * 2f, radius * 2f);
+                    g.DrawEllipse(outlinePen, -radius, -radius, radius * 2f, radius * 2f);
 
-                    PointF east = new PointF(anchor.X + cos * radius, anchor.Y - sin * radius);
-                    PointF west = new PointF(anchor.X - cos * radius, anchor.Y + sin * radius);
-                    PointF south = new PointF(anchor.X + sin * radius, anchor.Y + cos * radius);
-                    g.DrawLine(outlinePen, east, west);
-                    g.DrawLine(outlinePen, anchor, south);
+                    g.DrawLine(outlinePen, -radius, 0, radius, 0);
+                    g.DrawLine(outlinePen, 0, 0, 0, radius);
 
-                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
-                    PointF leftWing = new PointF(anchor.X - cos * (width * 0.6f), anchor.Y + sin * (width * 0.6f));
-                    PointF rightWing = new PointF(anchor.X + cos * (width * 0.6f), anchor.Y - sin * (width * 0.6f));
+                    PointF tip = new PointF(0, -length);
+                    PointF leftWing = new PointF(-width * 0.6f, 0);
+                    PointF rightWing = new PointF(width * 0.6f, 0);
 
-                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, anchor });
-                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, anchor });
-                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, anchor, rightWing });
+                    g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, new PointF(0, 0) });
+                    g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, new PointF(0, 0) });
+                    g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, new PointF(0, 0), rightWing });
 
-                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
-                    g.DrawString(nStr, font, blackBrush, nPos);
+                    g.DrawString(nStr, font, blackBrush, -nSz.Width / 2f, -length - nSz.Height - 1f);
                 }
                 else if (style == "モダン")
                 {
-                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
-                    PointF tail = new PointF(anchor.X + sin * (length * 0.15f), anchor.Y + cos * (length * 0.15f));
-                    PointF leftWing = new PointF(anchor.X - cos * (width * 0.9f) + sin * (length * 0.35f), anchor.Y + sin * (width * 0.9f) + cos * (length * 0.35f));
-                    PointF rightWing = new PointF(anchor.X + cos * (width * 0.9f) + sin * (length * 0.35f), anchor.Y - sin * (width * 0.9f) + cos * (length * 0.35f));
+                    PointF tip = new PointF(0, -length);
+                    PointF tail = new PointF(0, length * 0.15f);
+                    PointF leftWing = new PointF(-width * 0.9f, -length * 0.35f);
+                    PointF rightWing = new PointF(width * 0.9f, -length * 0.35f);
 
                     g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
                     g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
                     g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
 
-                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
-                    g.DrawString(nStr, font, blackBrush, nPos);
+                    g.DrawString(nStr, font, blackBrush, -nSz.Width / 2f, -length - nSz.Height - 1f);
                 }
                 else // "標準矢印" (デフォルト)
                 {
-                    PointF tip = new PointF(anchor.X - sin * length, anchor.Y - cos * length);
-                    PointF tail = new PointF(anchor.X + sin * (length * 0.35f), anchor.Y + cos * (length * 0.35f));
-                    PointF leftWing = new PointF(anchor.X - cos * width + sin * (length * 0.1f), anchor.Y + sin * width + cos * (length * 0.1f));
-                    PointF rightWing = new PointF(anchor.X + cos * width + sin * (length * 0.1f), anchor.Y - sin * width + cos * (length * 0.1f));
+                    PointF tip = new PointF(0, -length);
+                    PointF tail = new PointF(0, length * 0.35f);
+                    PointF leftWing = new PointF(-width, -length * 0.1f);
+                    PointF rightWing = new PointF(width, -length * 0.1f);
 
                     g.FillPolygon(blackBrush, new PointF[] { tip, leftWing, tail });
                     g.FillPolygon(whiteBrush, new PointF[] { tip, rightWing, tail });
                     g.DrawPolygon(outlinePen, new PointF[] { tip, leftWing, tail, rightWing });
 
-                    PointF nPos = new PointF(tip.X - sin * (fontPt * 1.2f) - (nSz.Width / 2f), tip.Y - cos * (fontPt * 1.2f) - (nSz.Height / 2f));
-                    g.DrawString(nStr, font, blackBrush, nPos);
+                    g.DrawString(nStr, font, blackBrush, -nSz.Width / 2f, -length - nSz.Height - 1f);
                 }
             }
+
+            g.Restore(state);
         }
 
         #endregion
