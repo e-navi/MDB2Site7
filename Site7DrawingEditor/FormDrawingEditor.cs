@@ -245,6 +245,7 @@ namespace Site7DrawingEditor
             this.btnResetCropZoom.Click += (s, e) => { _vc.ResetCropZoom(); picCropCanvas.Invalidate(); };
             this.btnResetPaperZoom.Click += (s, e) => { _vc.ResetPaperZoom(); picPaperCanvas.Invalidate(); };
             this.chkAutoZoomIkou.CheckedChanged += (s, e) => { if (chkAutoZoomIkou.Checked) FocusSelectedFeature(); };
+            this.chkAutoZoomPaperIkou.CheckedChanged += (s, e) => { if (chkAutoZoomPaperIkou.Checked) FocusSelectedFeature(); };
 
             _chkLayers = new CheckBox[]
             {
@@ -635,8 +636,6 @@ namespace Site7DrawingEditor
 
         private void FocusSelectedFeature(bool force = false)
         {
-            if (!force && !chkAutoZoomIkou.Checked) return;
-
             DrawingIkouModel? curIkou = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
             string targetName = cmbFeatureSelect.Text.Trim();
             if (string.IsNullOrWhiteSpace(targetName) && curIkou != null)
@@ -644,9 +643,10 @@ namespace Site7DrawingEditor
                 targetName = curIkou.Name;
             }
 
+            DrawingModel? curDrawing = GetSelectedDataBoundItem<DrawingModel>(dgvDrawings);
             if (curIkou != null && !string.IsNullOrWhiteSpace(targetName) && !curIkou.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase))
             {
-                if (GetSelectedDataBoundItem<DrawingModel>(dgvDrawings) is DrawingModel curDrawing)
+                if (curDrawing != null)
                 {
                     var matched = _db.DrawingIkousList.FirstOrDefault(di => di.ZID == curDrawing.ZID && di.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
                     curIkou = matched; // 一致する図面遺構が無ければ null にして Master 実測線から検索
@@ -657,8 +657,19 @@ namespace Site7DrawingEditor
                 }
             }
 
-            _vc.FocusFeatureByNameOnFullMap(targetName, curIkou, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
-            picCropCanvas.Invalidate();
+            // 1. 全体遺構図の自動フォーカス
+            if (force || chkAutoZoomIkou.Checked)
+            {
+                _vc.FocusFeatureByNameOnFullMap(targetName, curIkou, picCropCanvas.Size, _db.MasterIkouList, _db.MasterIkouLList, _db.MasterIbutuList, _db.MasterKikaiList);
+                picCropCanvas.Invalidate();
+            }
+
+            // 2. 遺構図面 (用紙ビュー) の自動フォーカス
+            if ((force || chkAutoZoomPaperIkou.Checked) && curIkou != null && curDrawing != null)
+            {
+                _vc.FocusPaperFeature(curIkou, picPaperCanvas.Size, curDrawing.PaperInfo, curDrawing.Scale);
+                picPaperCanvas.Invalidate();
+            }
         }
 
         private void dgvDrawingIkous_SelectionChanged(object? sender, EventArgs e)

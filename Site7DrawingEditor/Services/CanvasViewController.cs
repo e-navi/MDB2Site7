@@ -296,5 +296,49 @@ namespace Site7DrawingEditor.Services
             CropZoom = targetZoom;
             CropPan = new PointF(-(featureBaseX - cx) * targetZoom, -(featureBaseY - cy) * targetZoom);
         }
+
+        /// <summary>
+        /// 遺構図面 (用紙ビュー) 上で指定された遺構配置位置 (PP.X, PP.Y) を中心に自動拡大フォーカスする
+        /// </summary>
+        public void FocusPaperFeature(DrawingIkouModel curIkou, Size canvasSize, PaperSizeInfo pInfo, int scale)
+        {
+            if (canvasSize.Width <= 0 || canvasSize.Height <= 0 || curIkou == null || pInfo == null) return;
+
+            int margin = 25;
+            double paperAspect = pInfo.WidthMm / pInfo.HeightMm;
+            double screenAspect = (double)(canvasSize.Width - margin * 2) / (canvasSize.Height - margin * 2);
+
+            double renderPaperWidth, renderPaperHeight;
+            if (screenAspect > paperAspect)
+            {
+                renderPaperHeight = canvasSize.Height - margin * 2;
+                renderPaperWidth = renderPaperHeight * paperAspect;
+            }
+            else
+            {
+                renderPaperWidth = canvasSize.Width - margin * 2;
+                renderPaperHeight = renderPaperWidth / paperAspect;
+            }
+
+            // 遺構枠サイズ (mm)
+            var (_, widthM, heightM, _, _, _, _, _) = GeometryMath.CalculateCropBox(curIkou.P1, curIkou.P2, curIkou.P3);
+            double scaleFactorMm = 1000.0 / Math.Max(1, scale);
+            double ikouWidthMm = Math.Max(10.0, widthM * scaleFactorMm);
+            double ikouHeightMm = Math.Max(10.0, heightM * scaleFactorMm);
+
+            double ikouBasePxW = (ikouWidthMm / pInfo.WidthMm) * renderPaperWidth;
+            double ikouBasePxH = (ikouHeightMm / pInfo.HeightMm) * renderPaperHeight;
+
+            double targetZoomX = (canvasSize.Width * 0.70) / Math.Max(1.0, ikouBasePxW);
+            double targetZoomY = (canvasSize.Height * 0.70) / Math.Max(1.0, ikouBasePxH);
+            float targetZoom = (float)Math.Clamp(Math.Min(targetZoomX, targetZoomY), 1.0f, 20.0f);
+
+            // PP.X, PP.Y (用紙中心 0,0 基準 mm)
+            float basePxFromCenter = (float)(curIkou.PP.X / pInfo.WidthMm * renderPaperWidth);
+            float basePyFromCenter = -(float)(curIkou.PP.Y / pInfo.HeightMm * renderPaperHeight);
+
+            PaperZoom = targetZoom;
+            PaperPan = new PointF(-basePxFromCenter * targetZoom, -basePyFromCenter * targetZoom);
+        }
     }
 }

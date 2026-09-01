@@ -375,28 +375,12 @@ namespace Site7DrawingEditor.Services
             float paperTop = paperCenterY - paperH / 2f;
 
             using (var paperBrush = new SolidBrush(Color.White))
-            using (var paperPen = new Pen(Color.FromArgb(160, 175, 195), 1.5f))
+            using (var paperShadowBrush = new SolidBrush(Color.FromArgb(40, 0, 0, 0)))
+            using (var paperPen = new Pen(Color.FromArgb(170, 180, 195), 1.0f))
             {
+                g.FillRectangle(paperShadowBrush, paperLeft + 4f, paperTop + 4f, paperW, paperH);
                 g.FillRectangle(paperBrush, paperLeft, paperTop, paperW, paperH);
                 g.DrawRectangle(paperPen, paperLeft, paperTop, paperW, paperH);
-            }
-
-            using (var centerPen = new Pen(Color.FromArgb(120, 255, 0, 128), 1f) { DashStyle = DashStyle.Dash })
-            {
-                g.DrawLine(centerPen, paperCenterX - 15f, paperCenterY, paperCenterX + 15f, paperCenterY);
-                g.DrawLine(centerPen, paperCenterX, paperCenterY - 15f, paperCenterX, paperCenterY + 15f);
-            }
-
-            using (var titleFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
-            using (var titleBrush = new SolidBrush(Color.Black))
-            using (var titlePen = new Pen(Color.Black, 1.2f))
-            {
-                float tbW = paperW * 0.30f;
-                float tbH = paperH * 0.12f;
-                float tbX = paperLeft + paperW - tbW - 8f;
-                float tbY = paperTop + paperH - tbH - 8f;
-                g.DrawRectangle(titlePen, tbX, tbY, tbW, tbH);
-                g.DrawString($"図面名: {curDrawing.Name}\n用紙: {pInfo.Name} | 縮尺: 1/{curDrawing.Scale}", titleFont, titleBrush, tbX + 4f, tbY + 4f);
             }
 
             PointF PaperMmToCanvas(double mmX, double mmY)
@@ -406,130 +390,117 @@ namespace Site7DrawingEditor.Services
                 return new PointF(px, py);
             }
 
-            var currentIkous = db.DrawingIkousList.Where(di => di.ZID == curDrawing.ZID).ToList();
-            var baseIkou = currentIkous.FirstOrDefault();
-            var spline = new Xross_Spline();
+            double halfW = pInfo.WidthMm / 2.0;
+            double halfH = pInfo.HeightMm / 2.0;
+            double marginMm = 10.0; // 外枠マージン 10mm
 
-            // 全体遺構図 (Type == 0) の場合、配置された「最初の遺構 (baseIkou)」を基準に傾き考慮のトンボ(+)・斜め外周座標を描画
-            if (curDrawing.Type == 0 && baseIkou != null)
+            // 1. 外枠 (Outer Frame) の描画
+            PointF pFrameBL = PaperMmToCanvas(-halfW + marginMm, -halfH + marginMm);
+            PointF pFrameTR = PaperMmToCanvas(halfW - marginMm, halfH - marginMm);
+            float frameX = Math.Min(pFrameBL.X, pFrameTR.X);
+            float frameY = Math.Min(pFrameBL.Y, pFrameTR.Y);
+            float frameW = Math.Abs(pFrameTR.X - pFrameBL.X);
+            float frameH = Math.Abs(pFrameBL.Y - pFrameTR.Y);
+
+            using (var framePen = new Pen(Color.Black, 1.5f))
             {
-                double paperStepMm = (pInfo.WidthMm >= 400 || pInfo.HeightMm >= 400 || curDrawing.PaperSize < 3) ? 100.0 : 50.0;
-                double scaleRatio = curDrawing.Scale / 1000.0;
-                double deltaSurvey = paperStepMm * scaleRatio;
-
-                double halfW = pInfo.WidthMm / 2.0;
-                double halfH = pInfo.HeightMm / 2.0;
-
-                var (_, _, _, ux, uy, vx, vy, center) = GeometryMath.CalculateCropBox(baseIkou.P1, baseIkou.P2, baseIkou.P3);
-
-                float angleSurX = (float)(Math.Atan2(-vx, ux) * 180.0 / Math.PI);
-                float angleSurY = (float)(Math.Atan2(-vy, uy) * 180.0 / Math.PI);
-
-                Point3D pBL = GeometryMath.PaperPointToSurvey(new PointF((float)-halfW, (float)-halfH), baseIkou.P1, baseIkou.P2, baseIkou.P3, baseIkou.PP, curDrawing.Scale);
-                Point3D pBR = GeometryMath.PaperPointToSurvey(new PointF((float)halfW, (float)-halfH), baseIkou.P1, baseIkou.P2, baseIkou.P3, baseIkou.PP, curDrawing.Scale);
-                Point3D pTR = GeometryMath.PaperPointToSurvey(new PointF((float)halfW, (float)halfH), baseIkou.P1, baseIkou.P2, baseIkou.P3, baseIkou.PP, curDrawing.Scale);
-                Point3D pTL = GeometryMath.PaperPointToSurvey(new PointF((float)-halfW, (float)halfH), baseIkou.P1, baseIkou.P2, baseIkou.P3, baseIkou.PP, curDrawing.Scale);
-
-                double minSurX = Math.Min(Math.Min(pBL.X, pBR.X), Math.Min(pTR.X, pTL.X));
-                double maxSurX = Math.Max(Math.Max(pBL.X, pBR.X), Math.Max(pTR.X, pTL.X));
-                double minSurY = Math.Min(Math.Min(pBL.Y, pBR.Y), Math.Min(pTR.Y, pTL.Y));
-                double maxSurY = Math.Max(Math.Max(pBL.Y, pBR.Y), Math.Max(pTR.Y, pTL.Y));
-
-                double startSurX = Math.Floor(minSurX / deltaSurvey) * deltaSurvey;
-                double endSurX = Math.Ceiling(maxSurX / deltaSurvey) * deltaSurvey;
-                double startSurY = Math.Floor(minSurY / deltaSurvey) * deltaSurvey;
-                double endSurY = Math.Ceiling(maxSurY / deltaSurvey) * deltaSurvey;
-
-                using (var tomboPen = new Pen(Color.FromArgb(160, 200, 30, 30), 1.2f))
-                using (var borderPen = new Pen(Color.FromArgb(180, 200, 30, 30), 1.2f))
-                using (var coordFont = new Font("Yu Gothic UI", 7.5F, FontStyle.Bold))
-                using (var coordBrush = new SolidBrush(Color.FromArgb(200, 30, 30)))
-                {
-                    // A. 傾き追従型格子交差トンボ (+) の描画
-                    for (double sx = startSurX; sx <= endSurX + 0.001; sx += deltaSurvey)
-                    {
-                        for (double sy = startSurY; sy <= endSurY + 0.001; sy += deltaSurvey)
-                        {
-                            var (xLocalM, yLocalM) = GeometryMath.SurveyToFeatureLocalCenter(sx, sy, baseIkou.P1, baseIkou.P2, baseIkou.P3);
-                            PointF paperMmPt = GeometryMath.LocalCenterToPaperPoint(xLocalM, yLocalM, baseIkou.PP, curDrawing.Scale);
-
-                            if (paperMmPt.X >= -halfW + 0.1 && paperMmPt.X <= halfW - 0.1 &&
-                                paperMmPt.Y >= -halfH + 0.1 && paperMmPt.Y <= halfH - 0.1)
-                            {
-                                PointF cvPt = PaperMmToCanvas(paperMmPt.X, paperMmPt.Y);
-
-                                float arm = 6f;
-                                float radX = angleSurX * (float)Math.PI / 180f;
-                                float radY = angleSurY * (float)Math.PI / 180f;
-
-                                g.DrawLine(tomboPen,
-                                    cvPt.X - arm * (float)Math.Cos(radX), cvPt.Y - arm * (float)Math.Sin(radX),
-                                    cvPt.X + arm * (float)Math.Cos(radX), cvPt.Y + arm * (float)Math.Sin(radX));
-
-                                g.DrawLine(tomboPen,
-                                    cvPt.X - arm * (float)Math.Cos(radY), cvPt.Y - arm * (float)Math.Sin(radY),
-                                    cvPt.X + arm * (float)Math.Cos(radY), cvPt.Y + arm * (float)Math.Sin(radY));
-                            }
-                        }
-                    }
-
-                    // B. 真世界測量 X 直線 (S_X = sx) と 用紙外枠の斜め交差 ＆ 回転座標表記
-                    for (double sx = startSurX; sx <= endSurX + 0.001; sx += deltaSurvey)
-                    {
-                        var (locM1, locM2) = GeometryMath.SurveyToFeatureLocalCenter(sx, minSurY, baseIkou.P1, baseIkou.P2, baseIkou.P3);
-                        var (locM3, locM4) = GeometryMath.SurveyToFeatureLocalCenter(sx, maxSurY, baseIkou.P1, baseIkou.P2, baseIkou.P3);
-                        PointF pt1 = GeometryMath.LocalCenterToPaperPoint(locM1, locM2, baseIkou.PP, curDrawing.Scale);
-                        PointF pt2 = GeometryMath.LocalCenterToPaperPoint(locM3, locM4, baseIkou.PP, curDrawing.Scale);
-
-                        var intersections = GeometryMath.FindGridLinePaperIntersections(pt1, pt2, halfW, halfH);
-                        foreach (var (paperMmPt, borderSide) in intersections)
-                        {
-                            PointF cvPt = PaperMmToCanvas(paperMmPt.X, paperMmPt.Y);
-
-                            float lineLen = 14f;
-                            float radY = angleSurY * (float)Math.PI / 180f;
-                            g.DrawLine(borderPen,
-                                cvPt.X - (lineLen / 2f) * (float)Math.Cos(radY), cvPt.Y - (lineLen / 2f) * (float)Math.Sin(radY),
-                                cvPt.X + (lineLen / 2f) * (float)Math.Cos(radY), cvPt.Y + (lineLen / 2f) * (float)Math.Sin(radY));
-
-                            float rotText = angleSurY;
-                            while (rotText > 90f) rotText -= 180f;
-                            while (rotText < -90f) rotText += 180f;
-
-                            string labelStr = $"X={sx:0}";
-                            DrawRotatedString(g, labelStr, coordFont, coordBrush, cvPt, rotText, StringAlignment.Center, StringAlignment.Center);
-                        }
-                    }
-
-                    // C. 真世界測量 Y 直線 (S_Y = sy) と 用紙外枠の斜め交差 ＆ 回転座標表記
-                    for (double sy = startSurY; sy <= endSurY + 0.001; sy += deltaSurvey)
-                    {
-                        var (locM1, locM2) = GeometryMath.SurveyToFeatureLocalCenter(minSurX, sy, baseIkou.P1, baseIkou.P2, baseIkou.P3);
-                        var (locM3, locM4) = GeometryMath.SurveyToFeatureLocalCenter(maxSurX, sy, baseIkou.P1, baseIkou.P2, baseIkou.P3);
-                        PointF pt1 = GeometryMath.LocalCenterToPaperPoint(locM1, locM2, baseIkou.PP, curDrawing.Scale);
-                        PointF pt2 = GeometryMath.LocalCenterToPaperPoint(locM3, locM4, baseIkou.PP, curDrawing.Scale);
-
-                        var intersections = GeometryMath.FindGridLinePaperIntersections(pt1, pt2, halfW, halfH);
-                        foreach (var (paperMmPt, borderSide) in intersections)
-                        {
-                            PointF cvPt = PaperMmToCanvas(paperMmPt.X, paperMmPt.Y);
-
-                            float lineLen = 14f;
-                            float radX = angleSurX * (float)Math.PI / 180f;
-                            g.DrawLine(borderPen,
-                                cvPt.X - (lineLen / 2f) * (float)Math.Cos(radX), cvPt.Y - (lineLen / 2f) * (float)Math.Sin(radX),
-                                cvPt.X + (lineLen / 2f) * (float)Math.Cos(radX), cvPt.Y + (lineLen / 2f) * (float)Math.Sin(radX));
-
-                            float rotText = angleSurX;
-                            while (rotText > 90f) rotText -= 180f;
-                            while (rotText < -90f) rotText += 180f;
-
-                            string labelStr = $"Y={sy:0}";
-                            DrawRotatedString(g, labelStr, coordFont, coordBrush, cvPt, rotText, StringAlignment.Center, StringAlignment.Center);
-                        }
-                    }
-                }
+                g.DrawRectangle(framePen, frameX, frameY, frameW, frameH);
             }
+
+            // 2. 表題欄 (Title Block) の描画 (外枠右下に配置)
+            double tbWidthMm = 65.0;
+            double tbHeightMm = 18.0;
+            PointF ptTbBL = PaperMmToCanvas(halfW - marginMm - tbWidthMm, -halfH + marginMm);
+            PointF ptTbTR = PaperMmToCanvas(halfW - marginMm, -halfH + marginMm + tbHeightMm);
+
+            float tbX = Math.Min(ptTbBL.X, ptTbTR.X);
+            float tbY = Math.Min(ptTbBL.Y, ptTbTR.Y);
+            float tbW = Math.Abs(ptTbTR.X - ptTbBL.X);
+            float tbH = Math.Abs(ptTbBL.Y - ptTbTR.Y);
+
+            using (var tbPen = new Pen(Color.Black, 1.2f))
+            using (var tbBgBrush = new SolidBrush(Color.White))
+            using (var headerBrush = new SolidBrush(Color.FromArgb(242, 244, 248)))
+            using (var textBrush = new SolidBrush(Color.Black))
+            using (var titleFont = new Font("Yu Gothic UI", Math.Max(7.0f, (float)(2.8 * (tbH / tbHeightMm))), FontStyle.Bold))
+            using (var subFont = new Font("Yu Gothic UI", Math.Max(6.0f, (float)(2.2 * (tbH / tbHeightMm))), FontStyle.Regular))
+            {
+                g.FillRectangle(tbBgBrush, tbX, tbY, tbW, tbH);
+                g.DrawRectangle(tbPen, tbX, tbY, tbW, tbH);
+
+                // 上段 (図面名ヘッダー)
+                float rowH = tbH / 2f;
+                g.FillRectangle(headerBrush, tbX + 1f, tbY + 1f, tbW - 2f, rowH);
+                g.DrawLine(tbPen, tbX, tbY + rowH, tbX + tbW, tbY + rowH);
+                g.DrawString($"図面名: {curDrawing.Name}", titleFont, textBrush, tbX + 4f, tbY + 2f);
+
+                // 下段 (縮尺 / 用紙)
+                float colW = tbW / 2f;
+                g.DrawLine(tbPen, tbX + colW, tbY + rowH, tbX + colW, tbY + tbH);
+                g.DrawString($"縮尺: 1/{curDrawing.Scale}", subFont, textBrush, tbX + 4f, tbY + rowH + 2f);
+                g.DrawString($"用紙: {pInfo.Name}", subFont, textBrush, tbX + colW + 4f, tbY + rowH + 2f);
+            }
+
+            // 3. スケールバー (Scale Bar) の描画 (外枠下部中央に精密線スタイルで配置)
+            double targetBarMm = 50.0;
+            double idealMeters = (targetBarMm / 1000.0) * curDrawing.Scale;
+            double barMeters;
+            if (idealMeters <= 1.5) barMeters = 1.0;
+            else if (idealMeters <= 3.0) barMeters = 2.0;
+            else if (idealMeters <= 7.5) barMeters = 5.0;
+            else if (idealMeters <= 15.0) barMeters = 10.0;
+            else if (idealMeters <= 35.0) barMeters = 20.0;
+            else if (idealMeters <= 75.0) barMeters = 50.0;
+            else if (idealMeters <= 150.0) barMeters = 100.0;
+            else barMeters = Math.Ceiling(idealMeters / 50.0) * 50.0;
+
+            double barMm = (barMeters / curDrawing.Scale) * 1000.0;
+            double scaleBarCenterYMm = -halfH + marginMm + 6.5; // 外枠下辺から6.5mm上
+            PointF sbStart = PaperMmToCanvas(-barMm / 2.0, scaleBarCenterYMm);
+            PointF sbEnd = PaperMmToCanvas(barMm / 2.0, scaleBarCenterYMm);
+            PointF sbMid = PaperMmToCanvas(0.0, scaleBarCenterYMm);
+
+            float sbLeftX = sbStart.X;
+            float sbRightX = sbEnd.X;
+            float sbMidX = sbMid.X;
+            float sbLineY = sbStart.Y;
+            float tickH = Math.Max(3.0f, (float)(2.5 * (paperH / pInfo.HeightMm)));
+
+            using (var sbPen = new Pen(Color.Black, 1.2f))
+            using (var sbBrush = new SolidBrush(Color.Black))
+            using (var sbFont = new Font("Yu Gothic UI", Math.Max(6.0f, (float)(2.2 * (paperH / pInfo.HeightMm))), FontStyle.Bold))
+            {
+                // 基準水平線
+                g.DrawLine(sbPen, sbLeftX, sbLineY, sbRightX, sbLineY);
+
+                // 左端 (0)、中央、右端 (barMeters) 目盛
+                g.DrawLine(sbPen, sbLeftX, sbLineY, sbLeftX, sbLineY - tickH);
+                g.DrawLine(sbPen, sbMidX, sbLineY, sbMidX, sbLineY - tickH);
+                g.DrawLine(sbPen, sbRightX, sbLineY, sbRightX, sbLineY - tickH);
+
+                // 左半分の5分割中間目盛
+                for (int i = 1; i <= 4; i++)
+                {
+                    float subX = sbLeftX + (sbMidX - sbLeftX) * (i / 5f);
+                    g.DrawLine(sbPen, subX, sbLineY, subX, sbLineY - (tickH * 0.5f));
+                }
+
+                // 上部数値テキスト
+                string l0 = "0";
+                string lEnd = (barMeters % 1 == 0) ? $"{barMeters:0}m" : $"{barMeters:0.#}m";
+                var sz0 = g.MeasureString(l0, sbFont);
+                var szEnd = g.MeasureString(lEnd, sbFont);
+                g.DrawString(l0, sbFont, sbBrush, sbLeftX - (sz0.Width / 2f), sbLineY - tickH - sz0.Height);
+                g.DrawString(lEnd, sbFont, sbBrush, sbRightX - (szEnd.Width / 2f), sbLineY - tickH - szEnd.Height);
+
+                // 下部縮尺表記
+                string scaleText = $"(S=1:{curDrawing.Scale})";
+                var szScale = g.MeasureString(scaleText, sbFont);
+                g.DrawString(scaleText, sbFont, sbBrush, sbMidX - (szScale.Width / 2f), sbLineY + 2f);
+            }
+
+            var currentIkous = db.DrawingIkousList.Where(di => di.ZID == curDrawing.ZID).ToList();
+            var spline = new Xross_Spline();
 
             foreach (var ikou in currentIkous)
             {

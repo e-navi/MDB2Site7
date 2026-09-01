@@ -75,6 +75,7 @@ namespace Site7DrawingEditor
             this.panelTopRightHeader = new System.Windows.Forms.Panel();
             this.lblPaperSheetTitle = new System.Windows.Forms.Label();
             this.btnResetPaperZoom = new System.Windows.Forms.Button();
+            this.chkAutoZoomPaperIkou = new System.Windows.Forms.CheckBox();
             this.chkShowCurvePaper = new System.Windows.Forms.CheckBox();
             this.chkShowDirectionPaper = new System.Windows.Forms.CheckBox();
             this.chkShowDanmenPaper = new System.Windows.Forms.CheckBox();
@@ -734,6 +735,7 @@ namespace Site7DrawingEditor
             // panelTopRightHeader
             this.panelTopRightHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.panelTopRightHeader.Controls.Add(this.lblPaperInfoBanner);
+            this.panelTopRightHeader.Controls.Add(this.chkAutoZoomPaperIkou);
             this.panelTopRightHeader.Controls.Add(this.btnResetPaperZoom);
             this.panelTopRightHeader.Controls.Add(this.lblPaperSheetTitle);
             this.panelTopRightHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -748,21 +750,34 @@ namespace Site7DrawingEditor
             this.lblPaperSheetTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.lblPaperSheetTitle.Location = new System.Drawing.Point(8, 8);
             this.lblPaperSheetTitle.Name = "lblPaperSheetTitle";
-            this.lblPaperSheetTitle.Size = new System.Drawing.Size(154, 17);
+            this.lblPaperSheetTitle.Size = new System.Drawing.Size(90, 17);
             this.lblPaperSheetTitle.TabIndex = 0;
-            this.lblPaperSheetTitle.Text = "📐 用紙レイアウトプレビュー";
+            this.lblPaperSheetTitle.Text = "📄 遺構図面";
 
             // btnResetPaperZoom
             this.btnResetPaperZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
             this.btnResetPaperZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetPaperZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnResetPaperZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnResetPaperZoom.Location = new System.Drawing.Point(170, 5);
+            this.btnResetPaperZoom.Location = new System.Drawing.Point(108, 5);
             this.btnResetPaperZoom.Name = "btnResetPaperZoom";
-            this.btnResetPaperZoom.Size = new System.Drawing.Size(85, 25);
+            this.btnResetPaperZoom.Size = new System.Drawing.Size(75, 25);
             this.btnResetPaperZoom.TabIndex = 1;
-            this.btnResetPaperZoom.Text = "リセット";
+            this.btnResetPaperZoom.Text = "全図表示";
             this.btnResetPaperZoom.UseVisualStyleBackColor = false;
+
+            // chkAutoZoomPaperIkou
+            this.chkAutoZoomPaperIkou.AutoSize = true;
+            this.chkAutoZoomPaperIkou.Checked = true;
+            this.chkAutoZoomPaperIkou.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoZoomPaperIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.chkAutoZoomPaperIkou.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.chkAutoZoomPaperIkou.Location = new System.Drawing.Point(195, 8);
+            this.chkAutoZoomPaperIkou.Name = "chkAutoZoomPaperIkou";
+            this.chkAutoZoomPaperIkou.Size = new System.Drawing.Size(111, 19);
+            this.chkAutoZoomPaperIkou.TabIndex = 2;
+            this.chkAutoZoomPaperIkou.Text = "選択遺構を拡大";
+            this.chkAutoZoomPaperIkou.UseVisualStyleBackColor = true;
 
             // chkShowCurvePaper
             this.chkShowCurvePaper.AutoSize = true;
@@ -1437,6 +1452,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Panel panelTopRightHeader;
         private System.Windows.Forms.Label lblPaperSheetTitle;
         private System.Windows.Forms.Button btnResetPaperZoom;
+        private System.Windows.Forms.CheckBox chkAutoZoomPaperIkou;
         private System.Windows.Forms.CheckBox chkShowCurvePaper;
         private System.Windows.Forms.CheckBox chkShowDirectionPaper;
         private System.Windows.Forms.CheckBox chkShowDanmenPaper;
