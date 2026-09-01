@@ -41,23 +41,7 @@ namespace Site7DrawingEditor.Services
         public static Color GetLayerColor(int layer, bool isDarkBackground = false)
         {
             if (layer <= 0) return isDarkBackground ? Color.White : Color.Black;
-
-            int idx = (layer - 1) % LayerTableColors.Length;
-            Color col = LayerTableColors[idx];
-
-            // CAD標準動作: 黒背景の時は「黒 (Layer 1: 0,0,0)」を「白 (255,255,255)」に自働反転表示
-            if (isDarkBackground && col.R == 0 && col.G == 0 && col.B == 0)
-            {
-                return Color.White;
-            }
-
-            // 白背景の時に「白 (Layer 8: 255,255,255)」なら視認性のため濃い灰色で表示
-            if (!isDarkBackground && col.R == 255 && col.G == 255 && col.B == 255)
-            {
-                return Color.FromArgb(40, 40, 40);
-            }
-
-            return col;
+            return LayerDefinitionService.Instance.GetColor(LayerGroup.Ikou, layer, isDarkBackground);
         }
 
         public static bool IsLayerCurve(DrawingDbManager db, int layer)

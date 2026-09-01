@@ -348,9 +348,24 @@ namespace Site7DrawingEditor
                 picCropCanvas.Invalidate();
             };
 
+            btnLayerSettings.Click += (s, e) =>
+            {
+                string? targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
+                using (var form = new FormLayerSettings(targetDb, LayerGroup.Ikou))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        LayerDefinitionService.Instance.LoadAll(targetDb);
+                        UpdateLayerCheckboxColors();
+                        RefreshAllCanvases();
+                    }
+                }
+            };
+
             chkShowWhiteBackground.CheckedChanged += (s, e) =>
             {
                 _isDarkCanvasBackground = !chkShowWhiteBackground.Checked;
+                UpdateLayerCheckboxColors();
                 picCropCanvas.Invalidate();
             };
 
@@ -517,6 +532,8 @@ namespace Site7DrawingEditor
             {
                 _db.LoadDatabase(dbPath);
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
+                LayerDefinitionService.Instance.LoadAll(dbPath);
+                UpdateLayerCheckboxColors();
 
                 cmbFeatureSelect.Items.Clear();
                 foreach (var ik in _db.MasterIkouList)
@@ -1110,6 +1127,15 @@ namespace Site7DrawingEditor
 
         private bool _isDarkCanvasBackground = false;
         private CheckBox[]? _chkLayers = null;
+
+        private void UpdateLayerCheckboxColors()
+        {
+            if (_chkLayers == null || _chkLayers.Length == 0) return;
+            for (int i = 0; i < _chkLayers.Length; i++)
+            {
+                _chkLayers[i].ForeColor = LayerManager.GetLayerColor(i + 1, _isDarkCanvasBackground);
+            }
+        }
 
         private bool IsLayerVisible(int layerId)
         {
