@@ -378,13 +378,13 @@ namespace Site7DrawingEditor
             this.btnCancel.UseVisualStyleBackColor = true;
 
             // btnDanmenSet
-            this.btnDanmenSet.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnDanmenSet.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnDanmenSet.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDanmenSet.Location = new System.Drawing.Point(120, 595);
             this.btnDanmenSet.Name = "btnDanmenSet";
             this.btnDanmenSet.Size = new System.Drawing.Size(110, 32);
             this.btnDanmenSet.TabIndex = 6;
-            this.btnDanmenSet.Text = "戻る";
+            this.btnDanmenSet.Text = "✔ 決定して戻る";
             this.btnDanmenSet.UseVisualStyleBackColor = true;
 
             // FormIkou3D

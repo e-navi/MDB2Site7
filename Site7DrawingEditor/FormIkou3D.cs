@@ -277,7 +277,7 @@ namespace Site7DrawingEditor
                 SwitchViewMode(false); // Force 2D view for picking section line
             };
 
-            btnDanmenSet.Click += (s, e) => { this.DialogResult = DialogResult.OK; this.Close(); };
+            btnDanmenSet.Click += btnDanmenSet_Click;
 
             picCanvas3D.Paint += picCanvas3D_Paint;
             picCanvas3D.MouseDown += picCanvas3D_MouseDown;
@@ -1035,29 +1035,49 @@ namespace Site7DrawingEditor
 
         private void btnDanmenSet_Click(object? sender, EventArgs e)
         {
-            if (_currentDanmen != null && _sectionStartPoint != null && _sectionEndPoint != null)
+            if (_sectionStartPoint == null && _tempSp != null) _sectionStartPoint = _tempSp;
+            if (_sectionEndPoint == null && _tempEp != null) _sectionEndPoint = _tempEp;
+            if (_sectionPlacementPoint == null && _tempDp != null) _sectionPlacementPoint = _tempDp;
+
+            if (_sectionStartPoint != null && _sectionEndPoint != null)
             {
-                int newDid = _targetDanmenRec?.DID ?? (_targetIkou.DmList.Count > 0 ? _targetIkou.DmList.Max(d => d.DID) + 1 : 1);
-                string dmName = !string.IsNullOrWhiteSpace(_targetDanmenRec?.Name) ? _targetDanmenRec.Name : ((char)('A' + (newDid - 1))).ToString();
-
-                // Convert Local Points (Sp, Ep, Dp) back to Survey space for global storage in DanmenRec
-                Point3D surSp = LocalToSurvey(_sectionStartPoint);
-                Point3D surEp = LocalToSurvey(_sectionEndPoint);
-                Point3D surDp = _sectionPlacementPoint != null ? LocalToSurvey(_sectionPlacementPoint) : new Point3D(surSp.X, surSp.Y - 1.0, 0);
-
-                var newDm = new DanmenRec(newDid, dmName,
-                    new XYZ(surSp.X, surSp.Y),
-                    new XYZ(surEp.X, surEp.Y),
-                    new XYZ(surDp.X, surDp.Y));
-
-                newDm.DmpList.Clear();
-                foreach (var p in _currentDanmen.danmen)
+                if (_sectionPlacementPoint == null)
                 {
-                    newDm.DmpList.Add(new DanmenPRec(p.Distance, p.Elevation));
+                    _sectionPlacementPoint = new Point3D(_sectionStartPoint.X, _sectionStartPoint.Y - 1.0, 0);
                 }
 
-                ResultDanmenRec = newDm;
+                if (_currentDanmen == null || _currentDanmen.danmen.Count == 0)
+                {
+                    UpdateSectionProfile();
+                }
+
+                if (_currentDanmen != null)
+                {
+                    int newDid = _targetDanmenRec?.DID ?? (_targetIkou.DmList.Count > 0 ? _targetIkou.DmList.Max(d => d.DID) + 1 : 1);
+                    string dmName = !string.IsNullOrWhiteSpace(_targetDanmenRec?.Name) ? _targetDanmenRec.Name : ((char)('A' + (newDid - 1))).ToString();
+
+                    // Convert Local Points (Sp, Ep, Dp) back to Survey space for global storage in DanmenRec
+                    Point3D surSp = LocalToSurvey(_sectionStartPoint);
+                    Point3D surEp = LocalToSurvey(_sectionEndPoint);
+                    Point3D surDp = LocalToSurvey(_sectionPlacementPoint);
+
+                    var newDm = new DanmenRec(newDid, dmName,
+                        new XYZ(surSp.X, surSp.Y),
+                        new XYZ(surEp.X, surEp.Y),
+                        new XYZ(surDp.X, surDp.Y));
+
+                    newDm.DmpList.Clear();
+                    foreach (var p in _currentDanmen.danmen)
+                    {
+                        newDm.DmpList.Add(new DanmenPRec(p.Distance, p.Elevation));
+                    }
+
+                    ResultDanmenRec = newDm;
+                }
             }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }
