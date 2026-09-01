@@ -27,8 +27,6 @@ namespace Site7DrawingEditor
             this.cmbOrientation = new System.Windows.Forms.ComboBox();
 
             // Top Left Panel (Full Survey Map)
-            this.panelTopLeftHeader = new System.Windows.Forms.Panel();
-            this.lblFullMapTitle = new System.Windows.Forms.Label();
             this.btnResetCropZoom = new System.Windows.Forms.Button();
             this.chkAutoZoomIkou = new System.Windows.Forms.CheckBox();
             this.panelHcLeftSidebar = new System.Windows.Forms.Panel();
@@ -146,14 +144,11 @@ namespace Site7DrawingEditor
 
             this.panelHeader.SuspendLayout();
 
-            this.panelTopLeftHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picCropCanvas)).BeginInit();
             this.panelTopRightHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPaperCanvas)).BeginInit();
 
             this.panelTopLeft.SuspendLayout();
-            this.panelTopLeftHeader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picCropCanvas)).BeginInit();
 
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopHorizontal)).BeginInit();
             this.splitContainerTopHorizontal.Panel1.SuspendLayout();
@@ -271,34 +266,12 @@ namespace Site7DrawingEditor
             // panelTopLeft
             this.panelTopLeft.Controls.Add(this.panelHcLeftSidebar);
             this.panelTopLeft.Controls.Add(this.picCropCanvas);
-            this.panelTopLeft.Controls.Add(this.panelTopLeftHeader);
             this.panelTopLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTopLeft.Location = new System.Drawing.Point(0, 0);
             this.panelTopLeft.Name = "panelTopLeft";
             this.panelTopLeft.Size = new System.Drawing.Size(740, 450);
             this.panelTopLeft.TabIndex = 0;
             this.splitContainerTopHorizontal.Panel1.Controls.Add(this.panelTopLeft);
-
-            // panelTopLeftHeader
-            this.panelTopLeftHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
-            this.panelTopLeftHeader.Controls.Add(this.chkAutoZoomIkou);
-            this.panelTopLeftHeader.Controls.Add(this.btnResetCropZoom);
-            this.panelTopLeftHeader.Controls.Add(this.lblFullMapTitle);
-            this.panelTopLeftHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTopLeftHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelTopLeftHeader.Name = "panelTopLeftHeader";
-            this.panelTopLeftHeader.Size = new System.Drawing.Size(740, 35);
-            this.panelTopLeftHeader.TabIndex = 2;
-
-            // lblFullMapTitle
-            this.lblFullMapTitle.AutoSize = true;
-            this.lblFullMapTitle.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblFullMapTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.lblFullMapTitle.Location = new System.Drawing.Point(8, 8);
-            this.lblFullMapTitle.Name = "lblFullMapTitle";
-            this.lblFullMapTitle.Size = new System.Drawing.Size(90, 17);
-            this.lblFullMapTitle.TabIndex = 0;
-            this.lblFullMapTitle.Text = "🗺 全体遺構図";
 
             // panelHcLeftSidebar
             this.panelHcLeftSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
@@ -333,9 +306,9 @@ namespace Site7DrawingEditor
             this.panelHcLeftSidebar.Controls.Add(this.chkShowKikai);
             this.panelHcLeftSidebar.Controls.Add(this.chkShowKikaiName);
             this.panelHcLeftSidebar.Controls.Add(this.chkShowWhiteBackground);
-            this.panelHcLeftSidebar.Location = new System.Drawing.Point(0, 35);
+            this.panelHcLeftSidebar.Location = new System.Drawing.Point(0, 0);
             this.panelHcLeftSidebar.Name = "panelHcLeftSidebar";
-            this.panelHcLeftSidebar.Size = new System.Drawing.Size(130, 425);
+            this.panelHcLeftSidebar.Size = new System.Drawing.Size(130, 450);
             this.panelHcLeftSidebar.TabIndex = 1;
 
             // btnResetCropZoom (全体遺構図の全図表示ボタン: Site7DbEditor仕様)
@@ -578,40 +551,40 @@ namespace Site7DrawingEditor
             this.chkLayer16.UseVisualStyleBackColor = true;
 
             // btnLayerAllOn
-            this.btnLayerAllOn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnLayerAllOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLayerAllOn.BackColor = System.Drawing.Color.White;
+            this.btnLayerAllOn.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.btnLayerAllOn.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnLayerAllOn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnLayerAllOn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.btnLayerAllOn.Location = new System.Drawing.Point(6, 263);
             this.btnLayerAllOn.Name = "btnLayerAllOn";
             this.btnLayerAllOn.Size = new System.Drawing.Size(57, 23);
             this.btnLayerAllOn.TabIndex = 21;
             this.btnLayerAllOn.Text = "全ON";
-            this.btnLayerAllOn.UseVisualStyleBackColor = false;
+            this.btnLayerAllOn.UseVisualStyleBackColor = true;
 
             // btnLayerAllOff
-            this.btnLayerAllOff.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnLayerAllOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLayerAllOff.BackColor = System.Drawing.Color.White;
+            this.btnLayerAllOff.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.btnLayerAllOff.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnLayerAllOff.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnLayerAllOff.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.btnLayerAllOff.Location = new System.Drawing.Point(67, 263);
             this.btnLayerAllOff.Name = "btnLayerAllOff";
             this.btnLayerAllOff.Size = new System.Drawing.Size(57, 23);
             this.btnLayerAllOff.TabIndex = 22;
             this.btnLayerAllOff.Text = "全OFF";
-            this.btnLayerAllOff.UseVisualStyleBackColor = false;
+            this.btnLayerAllOff.UseVisualStyleBackColor = true;
 
             // btnLayerSettings
-            this.btnLayerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnLayerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLayerSettings.BackColor = System.Drawing.Color.White;
+            this.btnLayerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.btnLayerSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnLayerSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnLayerSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.btnLayerSettings.Location = new System.Drawing.Point(6, 289);
             this.btnLayerSettings.Name = "btnLayerSettings";
             this.btnLayerSettings.Size = new System.Drawing.Size(118, 23);
             this.btnLayerSettings.TabIndex = 23;
             this.btnLayerSettings.Text = "レイヤ設定";
-            this.btnLayerSettings.UseVisualStyleBackColor = false;
+            this.btnLayerSettings.UseVisualStyleBackColor = true;
 
             // lblEntityNameHeader
             this.lblEntityNameHeader.AutoSize = true;
@@ -1346,8 +1319,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Panel panelTopLeft;
         private System.Windows.Forms.Panel panelTopRight;
 
-        private System.Windows.Forms.Panel panelTopLeftHeader;
-        private System.Windows.Forms.Label lblFullMapTitle;
         private System.Windows.Forms.Button btnResetCropZoom;
         private System.Windows.Forms.CheckBox chkAutoZoomIkou;
         private System.Windows.Forms.Panel panelHcLeftSidebar;

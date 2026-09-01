@@ -48,8 +48,6 @@ namespace Site7DrawingEditor
             this.BackColor = formBgColor;
 
             // 各ヘッダーバー
-            panelTopLeftHeader.BackColor = headerBgColor;
-            lblFullMapTitle.ForeColor = headerFgColor;
             panelTopRightHeader.BackColor = headerBgColor;
             lblPaperSheetTitle.ForeColor = headerFgColor;
 
@@ -80,7 +78,7 @@ namespace Site7DrawingEditor
                     if (c is Label lbl)
                     {
                         if (lbl != lblHeaderTitle && lbl != lblSubHeader &&
-                            lbl != lblFullMapTitle && lbl != lblPaperSheetTitle &&
+                            lbl != lblPaperSheetTitle &&
                             lbl != lblIkouLayerGrpHeader && lbl != lblEntityNameHeader)
                         {
                             if (lbl == lblPaperInfoBanner)
@@ -138,6 +136,12 @@ namespace Site7DrawingEditor
                             btn.BackColor = Color.FromArgb(70, 75, 95);
                             btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
+                        }
+                        else if (btn == btnResetCropZoom || btn == btnEnvSettings || btn == btnLayerAllOn || btn == btnLayerAllOff || btn == btnLayerSettings)
+                        {
+                            // Site7DbEditorと同じ標準角丸ボタン (Windowsビジュアルスタイル)
+                            btn.FlatStyle = FlatStyle.Standard;
+                            btn.UseVisualStyleBackColor = true;
                         }
                         else if (t.Contains("削除"))
                         {
@@ -428,8 +432,8 @@ namespace Site7DrawingEditor
         {
             if (this.panelTopLeft == null || this.picCropCanvas == null || this.panelHcLeftSidebar == null) return;
             int sidebarW = 130;
-            this.panelHcLeftSidebar.Bounds = new System.Drawing.Rectangle(0, 35, sidebarW, Math.Max(10, this.panelTopLeft.Height - 35));
-            this.picCropCanvas.Bounds = new System.Drawing.Rectangle(sidebarW, 35, Math.Max(10, this.panelTopLeft.Width - sidebarW), Math.Max(10, this.panelTopLeft.Height - 35));
+            this.panelHcLeftSidebar.Bounds = new System.Drawing.Rectangle(0, 0, sidebarW, this.panelTopLeft.Height);
+            this.picCropCanvas.Bounds = new System.Drawing.Rectangle(sidebarW, 0, Math.Max(10, this.panelTopLeft.Width - sidebarW), this.panelTopLeft.Height);
             this.panelHcLeftSidebar.BringToFront();
             this.picCropCanvas.Invalidate();
         }
