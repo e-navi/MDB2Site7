@@ -338,17 +338,17 @@ namespace Site7DrawingEditor
             this.panelHcLeftSidebar.Size = new System.Drawing.Size(130, 425);
             this.panelHcLeftSidebar.TabIndex = 1;
 
-            // btnResetCropZoom (全体遺構図の全図表示ボタン: 左サイドバー最上部に配置)
-            this.btnResetCropZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnResetCropZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            // btnResetCropZoom (全体遺構図の全図表示ボタン: Site7DbEditor仕様)
+            this.btnResetCropZoom.BackColor = System.Drawing.Color.White;
+            this.btnResetCropZoom.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.btnResetCropZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnResetCropZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnResetCropZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.btnResetCropZoom.Location = new System.Drawing.Point(6, 5);
             this.btnResetCropZoom.Name = "btnResetCropZoom";
-            this.btnResetCropZoom.Size = new System.Drawing.Size(118, 23);
+            this.btnResetCropZoom.Size = new System.Drawing.Size(118, 25);
             this.btnResetCropZoom.TabIndex = 0;
-            this.btnResetCropZoom.Text = "全図表示";
-            this.btnResetCropZoom.UseVisualStyleBackColor = false;
+            this.btnResetCropZoom.Text = "🔍 全図表示";
+            this.btnResetCropZoom.UseVisualStyleBackColor = true;
 
             // chkAutoZoomIkou (選択遺構を拡大: 環境設定の位置へ移動)
             this.chkAutoZoomIkou.AutoSize = true;
@@ -364,16 +364,16 @@ namespace Site7DrawingEditor
             this.chkAutoZoomIkou.UseVisualStyleBackColor = true;
 
             // btnEnvSettings (Undo/Redoの位置へ移動し、遺構図面設定に変更)
-            this.btnEnvSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnEnvSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEnvSettings.BackColor = System.Drawing.Color.White;
+            this.btnEnvSettings.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.btnEnvSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnEnvSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnEnvSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.btnEnvSettings.Location = new System.Drawing.Point(6, 55);
             this.btnEnvSettings.Name = "btnEnvSettings";
-            this.btnEnvSettings.Size = new System.Drawing.Size(118, 23);
+            this.btnEnvSettings.Size = new System.Drawing.Size(118, 25);
             this.btnEnvSettings.TabIndex = 2;
             this.btnEnvSettings.Text = "遺構図面設定";
-            this.btnEnvSettings.UseVisualStyleBackColor = false;
+            this.btnEnvSettings.UseVisualStyleBackColor = true;
 
             // lblIkouLayerGrpHeader
             this.lblIkouLayerGrpHeader.AutoSize = true;
@@ -381,9 +381,9 @@ namespace Site7DrawingEditor
             this.lblIkouLayerGrpHeader.ForeColor = System.Drawing.Color.Red;
             this.lblIkouLayerGrpHeader.Location = new System.Drawing.Point(6, 83);
             this.lblIkouLayerGrpHeader.Name = "lblIkouLayerGrpHeader";
-            this.lblIkouLayerGrpHeader.Size = new System.Drawing.Size(76, 15);
+            this.lblIkouLayerGrpHeader.Size = new System.Drawing.Size(56, 15);
             this.lblIkouLayerGrpHeader.TabIndex = 3;
-            this.lblIkouLayerGrpHeader.Text = "遺構レイヤGRP";
+            this.lblIkouLayerGrpHeader.Text = "遺構レイヤ";
 
             // chkLayer01
             this.chkLayer01.AutoSize = true;

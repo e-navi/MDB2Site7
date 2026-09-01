@@ -95,9 +95,9 @@ namespace Site7DrawingEditor
                     }
                     else if (c is CheckBox chk)
                     {
-                        if (chk == chkShowIbutu || chk == chkShowIkou || chk == chkShowKikai)
+                        if (chk == chkShowIbutu || chk == chkShowIkou || chk == chkShowKikai || chk.Name.StartsWith("chkLayer"))
                         {
-                            // レイヤ色を保持
+                            // レイヤ色および種別色を保持
                         }
                         else
                         {
@@ -201,13 +201,11 @@ namespace Site7DrawingEditor
             ApplyButtonTheme(btnDeleteDrawingIkou, ColorDeleteActive);
             ApplyButtonTheme(btnDeleteDanmen, ColorDeleteActive);
 
-            // 補助ボタン
+            // 補助指示ボタン
             ApplyButtonTheme(btnPickCropBounds, ColorAuxActive);
             ApplyButtonTheme(btnSetPaperPosition, ColorAuxActive);
             ApplyButtonTheme(btnSetDirectionPosition, ColorAuxActive);
             ApplyButtonTheme(btnSetDanmenPosition, ColorAuxActive);
-            ApplyButtonTheme(btnResetCropZoom, ColorAuxActive);
-            ApplyButtonTheme(btnResetPaperZoom, ColorAuxActive);
         }
 
         private static void ApplyButtonTheme(Button btn, Color activeColor)
@@ -327,8 +325,10 @@ namespace Site7DrawingEditor
                 chkLayer13, chkLayer14, chkLayer15, chkLayer16
             };
 
-            foreach (var chk in _chkLayers)
+            for (int i = 0; i < _chkLayers.Length; i++)
             {
+                var chk = _chkLayers[i];
+                chk.ForeColor = LayerManager.GetLayerColor(i + 1, isDarkBackground: false);
                 chk.CheckedChanged += (s, e) => picCropCanvas.Invalidate();
             }
 
