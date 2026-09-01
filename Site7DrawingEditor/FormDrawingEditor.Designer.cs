@@ -901,7 +901,6 @@ namespace Site7DrawingEditor
             this.grpDrawings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpDrawings.Controls.Add(this.dgvDrawings);
             this.grpDrawings.Controls.Add(this.btnDeleteDrawing);
-            this.grpDrawings.Controls.Add(this.btnUpdateDrawingProps);
             this.grpDrawings.Controls.Add(this.btnAddDrawing);
             this.grpDrawings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpDrawings.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
@@ -928,34 +927,22 @@ namespace Site7DrawingEditor
             this.btnDeleteDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnDeleteDrawing.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteDrawing.Location = new System.Drawing.Point(8, 320);
+            this.btnDeleteDrawing.Location = new System.Drawing.Point(12, 320);
             this.btnDeleteDrawing.Name = "btnDeleteDrawing";
-            this.btnDeleteDrawing.Size = new System.Drawing.Size(54, 26);
+            this.btnDeleteDrawing.Size = new System.Drawing.Size(75, 26);
             this.btnDeleteDrawing.TabIndex = 1;
             this.btnDeleteDrawing.Text = "削除";
             this.btnDeleteDrawing.UseVisualStyleBackColor = false;
-
-            // btnUpdateDrawingProps (図面更新)
-            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
-            this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.White;
-            this.btnUpdateDrawingProps.Location = new System.Drawing.Point(66, 320);
-            this.btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
-            this.btnUpdateDrawingProps.Size = new System.Drawing.Size(54, 26);
-            this.btnUpdateDrawingProps.TabIndex = 2;
-            this.btnUpdateDrawingProps.Text = "更新";
-            this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
 
             // btnAddDrawing
             this.btnAddDrawing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(115)))), ((int)(((byte)(210)))));
             this.btnAddDrawing.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddDrawing.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
             this.btnAddDrawing.ForeColor = System.Drawing.Color.White;
-            this.btnAddDrawing.Location = new System.Drawing.Point(124, 320);
+            this.btnAddDrawing.Location = new System.Drawing.Point(98, 320);
             this.btnAddDrawing.Name = "btnAddDrawing";
-            this.btnAddDrawing.Size = new System.Drawing.Size(54, 26);
-            this.btnAddDrawing.TabIndex = 3;
+            this.btnAddDrawing.Size = new System.Drawing.Size(75, 26);
+            this.btnAddDrawing.TabIndex = 2;
             this.btnAddDrawing.Text = "追加";
             this.btnAddDrawing.UseVisualStyleBackColor = false;
 
@@ -1097,7 +1084,6 @@ namespace Site7DrawingEditor
 
             // grpDrawingProps (図面)
             this.grpDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
-            this.grpDrawingProps.Controls.Add(this.btnUpdateDrawingProps);
             this.grpDrawingProps.Controls.Add(this.cmbOrientation);
             this.grpDrawingProps.Controls.Add(this.lblOrientation);
             this.grpDrawingProps.Controls.Add(this.cmbScale);
@@ -1149,7 +1135,7 @@ namespace Site7DrawingEditor
             this.cmbPaperSize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.cmbPaperSize.Location = new System.Drawing.Point(174, 19);
             this.cmbPaperSize.Name = "cmbPaperSize";
-            this.cmbPaperSize.Size = new System.Drawing.Size(140, 23);
+            this.cmbPaperSize.Size = new System.Drawing.Size(160, 23);
             this.cmbPaperSize.TabIndex = 3;
 
             // lblScale
@@ -1190,25 +1176,13 @@ namespace Site7DrawingEditor
             this.cmbOrientation.Size = new System.Drawing.Size(65, 23);
             this.cmbOrientation.TabIndex = 7;
 
-            // btnUpdateDrawingProps (図面プロパティの更新ボタン)
-            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
-            this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.White;
-            this.btnUpdateDrawingProps.Location = new System.Drawing.Point(320, 19);
-            this.btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
-            this.btnUpdateDrawingProps.Size = new System.Drawing.Size(74, 51);
-            this.btnUpdateDrawingProps.TabIndex = 8;
-            this.btnUpdateDrawingProps.Text = "更新";
-            this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
-
             // grpIkouProps (遺構 GroupBox: 内側に方位マーク・断面 GroupBox を内包)
             this.grpIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.grpIkouProps.Controls.Add(this.grpDanmenProps);
             this.grpIkouProps.Controls.Add(this.grpCompassProps);
             this.grpIkouProps.Controls.Add(this.btnSetPaperPosition);
             this.grpIkouProps.Controls.Add(this.btnPickCropBounds);
-            this.grpIkouProps.Controls.Add(this.btnUpdateIkouProps);
+            this.grpIkouProps.Controls.Add(this.btnUpdateDrawingProps);
             this.grpIkouProps.Controls.Add(this.cmbFeatureSelect);
             this.grpIkouProps.Controls.Add(this.lblTargetIkou);
             this.grpIkouProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
@@ -1239,17 +1213,17 @@ namespace Site7DrawingEditor
             this.cmbFeatureSelect.Size = new System.Drawing.Size(180, 23);
             this.cmbFeatureSelect.TabIndex = 1;
 
-            // btnUpdateIkouProps (遺構プロパティの更新ボタン)
-            this.btnUpdateIkouProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
-            this.btnUpdateIkouProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdateIkouProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnUpdateIkouProps.ForeColor = System.Drawing.Color.White;
-            this.btnUpdateIkouProps.Location = new System.Drawing.Point(252, 17);
-            this.btnUpdateIkouProps.Name = "btnUpdateIkouProps";
-            this.btnUpdateIkouProps.Size = new System.Drawing.Size(83, 26);
-            this.btnUpdateIkouProps.TabIndex = 2;
-            this.btnUpdateIkouProps.Text = "更新";
-            this.btnUpdateIkouProps.UseVisualStyleBackColor = false;
+            // btnUpdateDrawingProps (図面更新ボタン -> 遺構タブ内へ配置)
+            this.btnUpdateDrawingProps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(145)))), ((int)(((byte)(75)))));
+            this.btnUpdateDrawingProps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdateDrawingProps.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnUpdateDrawingProps.ForeColor = System.Drawing.Color.White;
+            this.btnUpdateDrawingProps.Location = new System.Drawing.Point(252, 17);
+            this.btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
+            this.btnUpdateDrawingProps.Size = new System.Drawing.Size(83, 26);
+            this.btnUpdateDrawingProps.TabIndex = 2;
+            this.btnUpdateDrawingProps.Text = "更新";
+            this.btnUpdateDrawingProps.UseVisualStyleBackColor = false;
 
             // btnPickCropBounds
             this.btnPickCropBounds.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
