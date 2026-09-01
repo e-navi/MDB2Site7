@@ -550,17 +550,6 @@ namespace Site7DrawingEditor.Services
                 }
             }
 
-            // 4. 方位記号 (North Arrow) の描画
-            if (sheetSettings.ShowNorthArrow)
-            {
-                double nSizeMm = sheetSettings.NorthArrowSizeMm;
-                PointF ptNorthCenter = PaperMmToCanvas(halfW - marginOtherMm - (nSizeMm / 2.0) - 5.0, halfH - marginOtherMm - (nSizeMm / 2.0) - 5.0);
-
-                float renderLen = (float)(nSizeMm / pInfo.HeightMm * paperH);
-                float renderWidth = renderLen * 0.45f;
-                DrawNorthArrowCore(g, ptNorthCenter, 0f, renderLen, renderWidth, sheetSettings.NorthArrowType, false, 1.2f, Math.Max(7f, renderLen * 0.4f));
-            }
-
             var currentIkous = db.DrawingIkousList.Where(di => di.ZID == curDrawing.ZID).ToList();
             var spline = new Xross_Spline();
 
@@ -629,27 +618,19 @@ namespace Site7DrawingEditor.Services
                     g.DrawString(ikou.Name, nameFont, nameBrush, ptBL.X + 2f, ptBL.Y + 2f);
                 }
 
-                // 正確な方位マーク (対角線長さの1/10のサイズで描画)
-                if (chkShowDirectionPaper && ikou.IsShowDirection == 1)
+                // 各遺構図の方位記号 (遺構図面設定の種類・寸法を適用)
+                if (sheetSettings.ShowNorthArrow && chkShowDirectionPaper && ikou.IsShowDirection == 1)
                 {
                     PointF compassCenter = PaperMmToCanvas(ikou.PP.X + ikou.PDirection.X, ikou.PP.Y + ikou.PDirection.Y);
 
-                    double diagM = Math.Sqrt(widthM * widthM + heightM * heightM);
-                    double diagMm = diagM * scaleFactorMm;
-                    double diagPx = diagMm * (paperW / pInfo.WidthMm);
-                    float arrowLen = Math.Max(6f, (float)(diagPx / 10.0));
+                    double nSizeMm = sheetSettings.NorthArrowSizeMm;
+                    float renderLen = (float)(nSizeMm / pInfo.HeightMm * paperH);
+                    float renderWidth = renderLen * 0.45f;
 
-                    float nX = compassCenter.X + arrowLen * (float)ux;
-                    float nY = compassCenter.Y - arrowLen * (float)uy;
+                    // 遺構の向き (ux, uy) に合わせた北方向の回転角
+                    float needleRad = (float)Math.Atan2(ux, uy);
 
-                    using (var arrowPen = new Pen(Color.FromArgb(56, 176, 0), 2.2f))
-                    using (var font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
-                    using (var brush = new SolidBrush(Color.FromArgb(56, 176, 0)))
-                    {
-                        g.DrawLine(arrowPen, compassCenter.X, compassCenter.Y, nX, nY);
-                        g.DrawString("N", font, brush, nX - 5f, nY - 16f);
-                        g.FillEllipse(brush, compassCenter.X - 3f, compassCenter.Y - 3f, 6f, 6f);
-                    }
+                    DrawNorthArrowCore(g, compassCenter, needleRad, renderLen, renderWidth, sheetSettings.NorthArrowType, false, 1.2f, Math.Max(7f, renderLen * 0.4f));
                 }
 
                 if (chkShowDanmenPaper)

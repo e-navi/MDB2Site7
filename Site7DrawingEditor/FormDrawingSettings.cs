@@ -70,17 +70,17 @@ namespace Site7DrawingEditor
             grpMargin.Controls.AddRange(new Control[] { lblMarginLeft, numMarginLeft, lblMm1, lblMarginOther, numMarginOther, lblMm2 });
             curY += 82;
 
-            // 2. 方位記号 (北矢印)
+            // 2. 各遺構図の方位記号 (北矢印)
             var grpNorth = new GroupBox
             {
-                Text = "方位記号（北矢印）",
+                Text = "各遺構図の方位記号（北矢印）",
                 Location = new Point(8, curY),
                 Size = new Size(278, 76),
                 Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(25, 45, 80)
             };
 
-            chkShowNorthArrow = new CheckBox { Text = "方位記号を表示", Location = new Point(10, 18), AutoSize = true, Checked = true, ForeColor = Color.Black };
+            chkShowNorthArrow = new CheckBox { Text = "各遺構図の方位を表示", Location = new Point(10, 18), AutoSize = true, Checked = true, ForeColor = Color.Black };
             var lblNorthType = new Label { Text = "種類:", Location = new Point(10, 45), AutoSize = true, ForeColor = Color.Black };
             cmbNorthType = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(48, 42), Size = new Size(100, 23) };
             cmbNorthType.Items.AddRange(new object[] { "モダン", "標準矢印", "シンプル", "円形コンパス" });
