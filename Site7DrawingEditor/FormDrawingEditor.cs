@@ -344,9 +344,9 @@ namespace Site7DrawingEditor
                 picCropCanvas.Invalidate();
             };
 
-            btnBgSettings.Click += (s, e) =>
+            chkShowWhiteBackground.CheckedChanged += (s, e) =>
             {
-                _isDarkCanvasBackground = !_isDarkCanvasBackground;
+                _isDarkCanvasBackground = !chkShowWhiteBackground.Checked;
                 picCropCanvas.Invalidate();
             };
 
@@ -356,10 +356,6 @@ namespace Site7DrawingEditor
             chkShowIkouName.CheckedChanged += (s, e) => picCropCanvas.Invalidate();
             chkShowKikai.CheckedChanged += (s, e) => picCropCanvas.Invalidate();
             chkShowKikaiName.CheckedChanged += (s, e) => picCropCanvas.Invalidate();
-
-            this.chkShowCurvePaper.CheckedChanged += (s, e) => picPaperCanvas.Invalidate();
-            this.chkShowDirectionPaper.CheckedChanged += (s, e) => picPaperCanvas.Invalidate();
-            this.chkShowDanmenPaper.CheckedChanged += (s, e) => picPaperCanvas.Invalidate();
 
             // リアルタイムに入力テキストが変更された際のボタン有効化更新ハンドラー
             this.txtDrawingName.TextChanged += (s, e) => UpdateControlEnableStates();
@@ -384,19 +380,6 @@ namespace Site7DrawingEditor
 
             this.chkColorByIkouFull.CheckedChanged += (s, e) =>
             {
-                if (_isUpdatingSelection) return;
-                _isUpdatingSelection = true;
-                this.chkColorByIkouPaper.Checked = this.chkColorByIkouFull.Checked;
-                _isUpdatingSelection = false;
-                RefreshAllCanvases();
-            };
-
-            this.chkColorByIkouPaper.CheckedChanged += (s, e) =>
-            {
-                if (_isUpdatingSelection) return;
-                _isUpdatingSelection = true;
-                this.chkColorByIkouFull.Checked = this.chkColorByIkouPaper.Checked;
-                _isUpdatingSelection = false;
                 RefreshAllCanvases();
             };
 
@@ -454,17 +437,12 @@ namespace Site7DrawingEditor
         private void PerformTopRightLayout()
         {
             if (this.panelTopRight == null || this.picPaperCanvas == null) return;
-            int sidebarW = 100;
             if (this.panelTopRightHeader != null)
             {
                 this.panelTopRightHeader.Bounds = new System.Drawing.Rectangle(0, 0, this.panelTopRight.Width, 35);
                 this.panelTopRightHeader.BringToFront();
             }
-            this.picPaperCanvas.Bounds = new System.Drawing.Rectangle(sidebarW, 35, Math.Max(10, this.panelTopRight.Width - sidebarW), Math.Max(10, this.panelTopRight.Height - 35));
-            this.chkShowCurvePaper.BringToFront();
-            this.chkShowDirectionPaper.BringToFront();
-            this.chkShowDanmenPaper.BringToFront();
-            this.chkColorByIkouPaper.BringToFront();
+            this.picPaperCanvas.Bounds = new System.Drawing.Rectangle(0, 35, this.panelTopRight.Width, Math.Max(10, this.panelTopRight.Height - 35));
             this.picPaperCanvas.Invalidate();
         }
 
@@ -1273,10 +1251,10 @@ namespace Site7DrawingEditor
                 _db,
                 curDrawing,
                 curSelectedIkou,
-                chkShowCurvePaper.Checked,
-                chkColorByIkouPaper.Checked,
-                chkShowDirectionPaper.Checked,
-                chkShowDanmenPaper.Checked);
+                true,
+                false,
+                true,
+                true);
         }
 
         private void picPaperCanvas_MouseDown(object? sender, MouseEventArgs e)

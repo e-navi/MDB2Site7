@@ -32,7 +32,6 @@ namespace Site7DrawingEditor
             this.btnResetCropZoom = new System.Windows.Forms.Button();
             this.chkAutoZoomIkou = new System.Windows.Forms.CheckBox();
             this.panelHcLeftSidebar = new System.Windows.Forms.Panel();
-            this.btnBgSettings = new System.Windows.Forms.Button();
             this.btnEnvSettings = new System.Windows.Forms.Button();
             this.btnUndo = new System.Windows.Forms.Button();
             this.btnRedo = new System.Windows.Forms.Button();
@@ -63,6 +62,7 @@ namespace Site7DrawingEditor
             this.chkShowIkouName = new System.Windows.Forms.CheckBox();
             this.chkShowKikai = new System.Windows.Forms.CheckBox();
             this.chkShowKikaiName = new System.Windows.Forms.CheckBox();
+            this.chkShowWhiteBackground = new System.Windows.Forms.CheckBox();
             this.chkShowIkouFull = new System.Windows.Forms.CheckBox();
             this.chkShowIbutuFull = new System.Windows.Forms.CheckBox();
             this.chkShowKikaiFull = new System.Windows.Forms.CheckBox();
@@ -76,10 +76,6 @@ namespace Site7DrawingEditor
             this.lblPaperSheetTitle = new System.Windows.Forms.Label();
             this.btnResetPaperZoom = new System.Windows.Forms.Button();
             this.chkAutoZoomPaperIkou = new System.Windows.Forms.CheckBox();
-            this.chkShowCurvePaper = new System.Windows.Forms.CheckBox();
-            this.chkShowDirectionPaper = new System.Windows.Forms.CheckBox();
-            this.chkShowDanmenPaper = new System.Windows.Forms.CheckBox();
-            this.chkColorByIkouPaper = new System.Windows.Forms.CheckBox();
             this.lblPaperInfoBanner = new System.Windows.Forms.Label();
             this.picPaperCanvas = new System.Windows.Forms.PictureBox();
 
@@ -306,34 +302,22 @@ namespace Site7DrawingEditor
             this.lblFullMapTitle.TabIndex = 0;
             this.lblFullMapTitle.Text = "🗺 全体遺構図";
 
-            // btnResetCropZoom
-            this.btnResetCropZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(222)))), ((int)(((byte)(235)))));
-            this.btnResetCropZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetCropZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnResetCropZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnResetCropZoom.Location = new System.Drawing.Point(108, 5);
-            this.btnResetCropZoom.Name = "btnResetCropZoom";
-            this.btnResetCropZoom.Size = new System.Drawing.Size(75, 25);
-            this.btnResetCropZoom.TabIndex = 1;
-            this.btnResetCropZoom.Text = "全図表示";
-            this.btnResetCropZoom.UseVisualStyleBackColor = false;
-
             // chkAutoZoomIkou
             this.chkAutoZoomIkou.AutoSize = true;
             this.chkAutoZoomIkou.Checked = true;
             this.chkAutoZoomIkou.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAutoZoomIkou.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.chkAutoZoomIkou.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.chkAutoZoomIkou.Location = new System.Drawing.Point(195, 8);
+            this.chkAutoZoomIkou.Location = new System.Drawing.Point(115, 8);
             this.chkAutoZoomIkou.Name = "chkAutoZoomIkou";
             this.chkAutoZoomIkou.Size = new System.Drawing.Size(110, 19);
-            this.chkAutoZoomIkou.TabIndex = 2;
+            this.chkAutoZoomIkou.TabIndex = 1;
             this.chkAutoZoomIkou.Text = "選択遺構を拡大";
             this.chkAutoZoomIkou.UseVisualStyleBackColor = true;
 
             // panelHcLeftSidebar
             this.panelHcLeftSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.panelHcLeftSidebar.Controls.Add(this.btnBgSettings);
+            this.panelHcLeftSidebar.Controls.Add(this.btnResetCropZoom);
             this.panelHcLeftSidebar.Controls.Add(this.btnEnvSettings);
             this.panelHcLeftSidebar.Controls.Add(this.btnUndo);
             this.panelHcLeftSidebar.Controls.Add(this.btnRedo);
@@ -364,22 +348,23 @@ namespace Site7DrawingEditor
             this.panelHcLeftSidebar.Controls.Add(this.chkShowIkouName);
             this.panelHcLeftSidebar.Controls.Add(this.chkShowKikai);
             this.panelHcLeftSidebar.Controls.Add(this.chkShowKikaiName);
+            this.panelHcLeftSidebar.Controls.Add(this.chkShowWhiteBackground);
             this.panelHcLeftSidebar.Location = new System.Drawing.Point(0, 35);
             this.panelHcLeftSidebar.Name = "panelHcLeftSidebar";
-            this.panelHcLeftSidebar.Size = new System.Drawing.Size(130, 415);
+            this.panelHcLeftSidebar.Size = new System.Drawing.Size(130, 425);
             this.panelHcLeftSidebar.TabIndex = 1;
 
-            // btnBgSettings
-            this.btnBgSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
-            this.btnBgSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBgSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnBgSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnBgSettings.Location = new System.Drawing.Point(6, 5);
-            this.btnBgSettings.Name = "btnBgSettings";
-            this.btnBgSettings.Size = new System.Drawing.Size(118, 23);
-            this.btnBgSettings.TabIndex = 0;
-            this.btnBgSettings.Text = "背景設定";
-            this.btnBgSettings.UseVisualStyleBackColor = false;
+            // btnResetCropZoom (全体遺構図の全図表示ボタン: 左サイドバー最上部に配置)
+            this.btnResetCropZoom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
+            this.btnResetCropZoom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetCropZoom.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold);
+            this.btnResetCropZoom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
+            this.btnResetCropZoom.Location = new System.Drawing.Point(6, 5);
+            this.btnResetCropZoom.Name = "btnResetCropZoom";
+            this.btnResetCropZoom.Size = new System.Drawing.Size(118, 23);
+            this.btnResetCropZoom.TabIndex = 0;
+            this.btnResetCropZoom.Text = "全図表示";
+            this.btnResetCropZoom.UseVisualStyleBackColor = false;
 
             // btnEnvSettings
             this.btnEnvSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(232)))), ((int)(((byte)(242)))));
@@ -726,6 +711,18 @@ namespace Site7DrawingEditor
             this.chkShowKikaiName.TabIndex = 30;
             this.chkShowKikaiName.UseVisualStyleBackColor = true;
 
+            // chkShowWhiteBackground (基準点の下に配置: 背景白色チェックボックス)
+            this.chkShowWhiteBackground.AutoSize = true;
+            this.chkShowWhiteBackground.Checked = false;
+            this.chkShowWhiteBackground.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.chkShowWhiteBackground.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
+            this.chkShowWhiteBackground.Location = new System.Drawing.Point(6, 400);
+            this.chkShowWhiteBackground.Name = "chkShowWhiteBackground";
+            this.chkShowWhiteBackground.Size = new System.Drawing.Size(75, 19);
+            this.chkShowWhiteBackground.TabIndex = 31;
+            this.chkShowWhiteBackground.Text = "背景白色";
+            this.chkShowWhiteBackground.UseVisualStyleBackColor = true;
+
             // picCropCanvas
             this.picCropCanvas.Location = new System.Drawing.Point(130, 35);
             this.picCropCanvas.Name = "picCropCanvas";
@@ -780,61 +777,6 @@ namespace Site7DrawingEditor
             this.chkAutoZoomPaperIkou.Text = "選択遺構を拡大";
             this.chkAutoZoomPaperIkou.UseVisualStyleBackColor = true;
 
-            // chkShowCurvePaper
-            this.chkShowCurvePaper.AutoSize = true;
-            this.chkShowCurvePaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.chkShowCurvePaper.Checked = true;
-            this.chkShowCurvePaper.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowCurvePaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkShowCurvePaper.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.chkShowCurvePaper.Location = new System.Drawing.Point(6, 42);
-            this.chkShowCurvePaper.Name = "chkShowCurvePaper";
-            this.chkShowCurvePaper.Size = new System.Drawing.Size(50, 19);
-            this.chkShowCurvePaper.TabIndex = 0;
-            this.chkShowCurvePaper.Text = "曲線";
-            this.chkShowCurvePaper.UseVisualStyleBackColor = true;
-
-            // chkShowDirectionPaper
-            this.chkShowDirectionPaper.AutoSize = true;
-            this.chkShowDirectionPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.chkShowDirectionPaper.Checked = true;
-            this.chkShowDirectionPaper.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowDirectionPaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkShowDirectionPaper.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.chkShowDirectionPaper.Location = new System.Drawing.Point(6, 64);
-            this.chkShowDirectionPaper.Name = "chkShowDirectionPaper";
-            this.chkShowDirectionPaper.Size = new System.Drawing.Size(50, 19);
-            this.chkShowDirectionPaper.TabIndex = 1;
-            this.chkShowDirectionPaper.Text = "方位";
-            this.chkShowDirectionPaper.UseVisualStyleBackColor = true;
-
-            // chkShowDanmenPaper
-            this.chkShowDanmenPaper.AutoSize = true;
-            this.chkShowDanmenPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.chkShowDanmenPaper.Checked = true;
-            this.chkShowDanmenPaper.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowDanmenPaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkShowDanmenPaper.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.chkShowDanmenPaper.Location = new System.Drawing.Point(6, 86);
-            this.chkShowDanmenPaper.Name = "chkShowDanmenPaper";
-            this.chkShowDanmenPaper.Size = new System.Drawing.Size(50, 19);
-            this.chkShowDanmenPaper.TabIndex = 2;
-            this.chkShowDanmenPaper.Text = "断面";
-            this.chkShowDanmenPaper.UseVisualStyleBackColor = true;
-
-            // chkColorByIkouPaper
-            this.chkColorByIkouPaper.AutoSize = true;
-            this.chkColorByIkouPaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(28)))));
-            this.chkColorByIkouPaper.Checked = false;
-            this.chkColorByIkouPaper.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkColorByIkouPaper.ForeColor = System.Drawing.Color.White;
-            this.chkColorByIkouPaper.Location = new System.Drawing.Point(6, 108);
-            this.chkColorByIkouPaper.Name = "chkColorByIkouPaper";
-            this.chkColorByIkouPaper.Size = new System.Drawing.Size(95, 19);
-            this.chkColorByIkouPaper.TabIndex = 3;
-            this.chkColorByIkouPaper.Text = "遺構別色分け";
-            this.chkColorByIkouPaper.UseVisualStyleBackColor = true;
-
             // lblPaperInfoBanner
             this.lblPaperInfoBanner.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblPaperInfoBanner.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(191)))), ((int)(((byte)(0)))));
@@ -846,17 +788,13 @@ namespace Site7DrawingEditor
             this.lblPaperInfoBanner.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 
             // picPaperCanvas
-            this.picPaperCanvas.Location = new System.Drawing.Point(100, 35);
+            this.picPaperCanvas.Location = new System.Drawing.Point(0, 35);
             this.picPaperCanvas.Name = "picPaperCanvas";
-            this.picPaperCanvas.Size = new System.Drawing.Size(636, 415);
+            this.picPaperCanvas.Size = new System.Drawing.Size(736, 415);
             this.picPaperCanvas.TabIndex = 1;
             this.picPaperCanvas.TabStop = false;
 
             // panelTopRight
-            this.panelTopRight.Controls.Add(this.chkShowCurvePaper);
-            this.panelTopRight.Controls.Add(this.chkShowDirectionPaper);
-            this.panelTopRight.Controls.Add(this.chkShowDanmenPaper);
-            this.panelTopRight.Controls.Add(this.chkColorByIkouPaper);
             this.panelTopRight.Controls.Add(this.picPaperCanvas);
             this.panelTopRight.Controls.Add(this.panelTopRightHeader);
             this.panelTopRight.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1439,7 +1377,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Button btnResetCropZoom;
         private System.Windows.Forms.CheckBox chkAutoZoomIkou;
         private System.Windows.Forms.Panel panelHcLeftSidebar;
-        private System.Windows.Forms.Button btnBgSettings;
         private System.Windows.Forms.Button btnEnvSettings;
         private System.Windows.Forms.Button btnUndo;
         private System.Windows.Forms.Button btnRedo;
@@ -1470,6 +1407,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.CheckBox chkShowIkouName;
         private System.Windows.Forms.CheckBox chkShowKikai;
         private System.Windows.Forms.CheckBox chkShowKikaiName;
+        private System.Windows.Forms.CheckBox chkShowWhiteBackground;
         private System.Windows.Forms.CheckBox chkShowIkouFull;
         private System.Windows.Forms.CheckBox chkShowIbutuFull;
         private System.Windows.Forms.CheckBox chkShowKikaiFull;
@@ -1481,9 +1419,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Label lblPaperSheetTitle;
         private System.Windows.Forms.Button btnResetPaperZoom;
         private System.Windows.Forms.CheckBox chkAutoZoomPaperIkou;
-        private System.Windows.Forms.CheckBox chkShowCurvePaper;
-        private System.Windows.Forms.CheckBox chkShowDirectionPaper;
-        private System.Windows.Forms.CheckBox chkShowDanmenPaper;
         private System.Windows.Forms.Label lblPaperInfoBanner;
         private System.Windows.Forms.PictureBox picPaperCanvas;
 
@@ -1539,7 +1474,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.PictureBox picFeatureDetailCanvas;
 
         private System.Windows.Forms.CheckBox chkColorByIkouFull;
-        private System.Windows.Forms.CheckBox chkColorByIkouPaper;
 
         private System.Windows.Forms.StatusStrip statusStripBar;
         private System.Windows.Forms.ToolStripStatusLabel lblStatusCoords;
