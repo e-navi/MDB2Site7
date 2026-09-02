@@ -1422,8 +1422,15 @@ namespace Site7DrawingEditor.Services
                                             g.TranslateTransform(pt1.X, pt1.Y);
                                             g.RotateTransform(angleDeg);
 
-                                            var sz = g.MeasureString(ikou.Name, nameFont);
-                                            g.DrawString(ikou.Name, nameFont, nameBrush, 3f * (float)zoom, -sz.Height - (0.5f * (float)zoom));
+                                            using (var sf = new StringFormat(StringFormat.GenericTypographic)
+                                            {
+                                                FormatFlags = StringFormatFlags.NoWrap,
+                                                Alignment = StringAlignment.Near,
+                                                LineAlignment = StringAlignment.Far
+                                            })
+                                            {
+                                                g.DrawString(ikou.Name, nameFont, nameBrush, new PointF(1.5f * (float)zoom, -1.0f * (float)zoom), sf);
+                                            }
 
                                             g.Restore(state);
                                         }
