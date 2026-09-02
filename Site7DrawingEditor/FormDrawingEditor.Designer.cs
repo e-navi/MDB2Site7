@@ -262,7 +262,7 @@ namespace Site7DrawingEditor
             panelHcLeftSidebar.BackColor = Color.FromArgb(240, 242, 245);
             panelHcLeftSidebar.Controls.Add(btnResetCropZoom);
             panelHcLeftSidebar.Controls.Add(chkAutoZoomIkou);
-            panelHcLeftSidebar.Controls.Add(btnEnvSettings);
+            panelHcLeftSidebar.Controls.Add(btnDrawingFrame);
             panelHcLeftSidebar.Controls.Add(lblIkouLayerGrpHeader);
             panelHcLeftSidebar.Controls.Add(chkLayer01);
             panelHcLeftSidebar.Controls.Add(chkLayer02);
