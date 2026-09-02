@@ -4947,7 +4947,13 @@ namespace Site7DbEditor {
                 _formDrawingFrame.SetRotationRequested += (sender, ev) => StartSetFrameRotationMode();
                 _formDrawingFrame.PickNorthPosRequested += (sender, ev) => StartPickNorthPosMode();
                 _formDrawingFrame.PrintRequested += (sender, ev) => ExecutePrintDrawing();
+                _formDrawingFrame.FormClosed += (sender, ev) => {
+                    DrawingFrameService.Instance.IsDrawingPreviewEnabled = false;
+                    UpdateDrawingPreviewState();
+                    picMapCanvas.Invalidate();
+                };
             }
+            DrawingFrameService.Instance.IsDrawingPreviewEnabled = true;
             _formDrawingFrame.SyncFromService();
             UpdateDrawingPreviewState();
             if (!_formDrawingFrame.Visible) {

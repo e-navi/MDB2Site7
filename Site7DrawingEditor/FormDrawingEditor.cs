@@ -1289,9 +1289,17 @@ namespace Site7DrawingEditor
                         false
                     );
                 };
+                _formDrawingFrame.FormClosed += (s, e) =>
+                {
+                    DrawingFrameService.Instance.IsDrawingPreviewEnabled = false;
+                    UpdateDrawingPreviewState();
+                    picCropCanvas.Invalidate();
+                };
             }
 
+            DrawingFrameService.Instance.IsDrawingPreviewEnabled = true;
             _formDrawingFrame.SyncFromService();
+            UpdateDrawingPreviewState();
             if (!_formDrawingFrame.Visible)
             {
                 _formDrawingFrame.StartPosition = FormStartPosition.CenterParent;
@@ -1301,7 +1309,6 @@ namespace Site7DrawingEditor
             {
                 _formDrawingFrame.BringToFront();
             }
-            UpdateDrawingPreviewState();
         }
 
         #region Canvas Event Delegates
