@@ -38,6 +38,17 @@ namespace Site7DrawingEditor.Services
             PaperPan = PointF.Empty;
         }
 
+        public Func<double, double, PointF>? CustomSurveyToScreen { get; set; }
+
+        public PointF ToCanvasPoint(double surveyX, double surveyY, Size canvasSize)
+        {
+            if (CustomSurveyToScreen != null)
+            {
+                return CustomSurveyToScreen(surveyX, surveyY);
+            }
+            return new PointF((float)surveyY, (float)surveyX);
+        }
+
         /// <summary>
         /// 測量座標 (X: North, Y: East) ➔ Cropキャンバス画面ピクセル座標へ変換
         /// </summary>

@@ -26,7 +26,8 @@ namespace Site7DrawingEditor.Services
             bool showIkouName = false,
             bool showIbutuName = false,
             bool showKikaiName = true,
-            bool isDarkBackground = false)
+            bool isDarkBackground = false,
+            bool chkShowDrawingFrame = true)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -115,6 +116,8 @@ namespace Site7DrawingEditor.Services
                 float py = cy + (by - cy) * vc.CropZoom + vc.CropPan.Y;
                 return new PointF(px, py);
             }
+
+            vc.CustomSurveyToScreen = (sx, sy) => ToCanvasPoint(sx, sy);
 
             if (chkShowGridFull)
             {
@@ -317,6 +320,12 @@ namespace Site7DrawingEditor.Services
                         g.DrawString("p3 (高さプレビュー)", font, textBrush, vc.CropLastMousePos.X + 8f, vc.CropLastMousePos.Y - 8f);
                     }
                 }
+            }
+
+            // 図枠の描画
+            if (chkShowDrawingFrame && DrawingFrameService.Instance.IsVisible)
+            {
+                DrawingFrameService.Instance.DrawFrame(g, vc, canvasSize, isDarkBackground);
             }
         }
 

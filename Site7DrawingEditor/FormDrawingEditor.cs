@@ -349,6 +349,8 @@ namespace Site7DrawingEditor
                 picCropCanvas.Invalidate();
             };
 
+            btnDrawingFrame.Click += (s, e) => OpenDrawingFrameDialog();
+
             btnEnvSettings.Click += (s, e) =>
             {
                 using (var form = new FormDrawingSettings())
@@ -373,6 +375,8 @@ namespace Site7DrawingEditor
                     }
                 }
             };
+
+            chkShowDrawingFrame.CheckedChanged += (s, e) => picCropCanvas.Invalidate();
 
             chkShowWhiteBackground.CheckedChanged += (s, e) =>
             {
@@ -1215,6 +1219,31 @@ namespace Site7DrawingEditor
             }
         }
 
+        private FormDrawingFrame? _formDrawingFrame = null;
+
+        private void OpenDrawingFrameDialog()
+        {
+            if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed)
+            {
+                _formDrawingFrame = new FormDrawingFrame(_db);
+                _formDrawingFrame.FrameChanged += (s, e) =>
+                {
+                    picCropCanvas.Invalidate();
+                };
+            }
+
+            _formDrawingFrame.SyncFromService();
+            if (!_formDrawingFrame.Visible)
+            {
+                _formDrawingFrame.StartPosition = FormStartPosition.CenterParent;
+                _formDrawingFrame.Show(this);
+            }
+            else
+            {
+                _formDrawingFrame.BringToFront();
+            }
+        }
+
         #region Canvas Event Delegates
 
         private bool _isDarkCanvasBackground = false;
@@ -1256,7 +1285,8 @@ namespace Site7DrawingEditor
                 showIkouName: chkShowIkouName.Checked,
                 showIbutuName: chkShowIbutuName.Checked,
                 showKikaiName: chkShowKikaiName.Checked,
-                isDarkBackground: _isDarkCanvasBackground);
+                isDarkBackground: _isDarkCanvasBackground,
+                chkShowDrawingFrame: chkShowDrawingFrame.Checked);
         }
 
         private void picCropCanvas_MouseDown(object? sender, MouseEventArgs e)
