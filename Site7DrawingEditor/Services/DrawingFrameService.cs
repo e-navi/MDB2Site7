@@ -1342,8 +1342,8 @@ namespace Site7DrawingEditor.Services
                         if (!showIkou) continue;
 
                         var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
-                        bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
-                        bool drawAsCurve = showCurve && isLayerCurve && pts.Count >= 3;
+                        bool isLayerCurve = LayerManager.IsLayerCurve(db, line.Layer);
+                        bool drawAsCurve = isLayerCurve && pts.Count >= 3;
 
                         PointF[] screenPts;
                         if (drawAsCurve)
@@ -1384,6 +1384,33 @@ namespace Site7DrawingEditor.Services
                                 var sz = g.MeasureString(line.Name, lFont);
                                 g.FillRectangle(bgBrush, labelPt.X - 1f, labelPt.Y - 1f, sz.Width + 2f, sz.Height + 2f);
                                 g.DrawString(line.Name, lFont, lBrush, labelPt.X, labelPt.Y);
+                            }
+                        }
+                    }
+
+                    // 遺構図枠（各遺構のクロップ枠）の描画
+                    if (db.DrawingIkousList != null && db.DrawingIkousList.Count > 0)
+                    {
+                        using (var framePen = new Pen(Color.FromArgb(140, 150, 160), Math.Max(0.5f, (float)(0.4 * zoom))) { DashStyle = DashStyle.Dash })
+                        {
+                            float fFontPx = Math.Max(3.5f, (float)(2.8 * zoom));
+                            using (var nameFont = new Font("Yu Gothic UI", fFontPx, FontStyle.Bold, GraphicsUnit.Pixel))
+                            using (var nameBrush = new SolidBrush(Color.FromArgb(90, 100, 110)))
+                            {
+                                foreach (var ikou in db.DrawingIkousList)
+                                {
+                                    if (ikou.P1 == null || ikou.P2 == null || ikou.P3 == null) continue;
+                                    if (ikou.P1.X == 0 && ikou.P1.Y == 0 && ikou.P2.X == 0 && ikou.P2.Y == 0) continue;
+
+                                    var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(ikou.P1, ikou.P2, ikou.P3);
+                                    PointF pt1 = SurveyToPaperScreen(v1.X, v1.Y);
+                                    PointF pt2 = SurveyToPaperScreen(v2.X, v2.Y);
+                                    PointF pt3 = SurveyToPaperScreen(v3.X, v3.Y);
+                                    PointF pt4 = SurveyToPaperScreen(v4.X, v4.Y);
+
+                                    g.DrawPolygon(framePen, new[] { pt1, pt2, pt3, pt4 });
+                                    g.DrawString(ikou.Name, nameFont, nameBrush, pt1.X + 2f, pt1.Y + 2f);
+                                }
                             }
                         }
                     }
