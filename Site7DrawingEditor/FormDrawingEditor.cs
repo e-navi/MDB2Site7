@@ -499,6 +499,8 @@ namespace Site7DrawingEditor
                 lblDbStatus.Text = "現場未選択 (現場管理ランチャで現場を選択して起動してください)";
                 lblDbStatus.ForeColor = Color.FromArgb(255, 193, 7);
             }
+
+            UpdateDrawingPreviewState();
         }
 
         private string? ResolveDbPath(string? inputPath)
@@ -1231,11 +1233,18 @@ namespace Site7DrawingEditor
         private void UpdateDrawingPreviewState()
         {
             bool isPreview = DrawingFrameService.Instance.IsDrawingPreviewEnabled;
+
+            // プレビュー表示時は遺構図面用操作ボタン類を非表示化
+            btnEnvSettings.Visible = !isPreview;
+            btnResetPaperZoom.Visible = !isPreview;
+            chkAutoZoomPaperIkou.Visible = !isPreview;
+            btnPrintPaper.Visible = !isPreview;
+
             if (isPreview)
             {
                 var f = DrawingFrameService.Instance;
-                lblPaperSheetTitle.Text = "📄 図面出力イメージ";
-                lblPaperInfoBanner.Text = $"{f.PaperSizeName} ({(f.IsLandscape ? "横" : "縦")}) | 1/{f.Scale:0} | 回転 {f.RotationAngleDeg:0.0}°";
+                lblPaperSheetTitle.Text = $"📄 図面出力イメージ [{f.PaperSizeName} {(f.IsLandscape ? "横" : "縦")} 1/{f.Scale:0} (回転 {f.RotationAngleDeg:0.0}°)]";
+                lblPaperInfoBanner.Text = "";
             }
             else
             {
@@ -1244,6 +1253,10 @@ namespace Site7DrawingEditor
                 if (curDrawing != null)
                 {
                     lblPaperInfoBanner.Text = $"{curDrawing.PaperInfo.Name} ({curDrawing.PaperInfo.WidthMm}×{curDrawing.PaperInfo.HeightMm}mm) | 1/{curDrawing.Scale}";
+                }
+                else
+                {
+                    lblPaperInfoBanner.Text = "";
                 }
             }
             picPaperCanvas.Invalidate();

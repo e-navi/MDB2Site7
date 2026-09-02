@@ -1871,7 +1871,7 @@ namespace Site7DrawingEditor.Services
             try
             {
                 IsVisible = Def.GetIniInt("DRAWING_FRAME", "Visible", 1) == 1;
-                IsDrawingPreviewEnabled = Def.GetIniInt("DRAWING_FRAME", "IsDrawingPreviewEnabled", 0) == 1;
+                IsDrawingPreviewEnabled = false; // 起動・再読み込み時は常にOFF（ユーザー操作で明示的にONにする）
                 PaperSizeName = Def.GetIniStr("DRAWING_FRAME", "PaperSizeName");
                 if (string.IsNullOrEmpty(PaperSizeName)) PaperSizeName = "A3";
                 IsLandscape = Def.GetIniInt("DRAWING_FRAME", "IsLandscape", 1) == 1;
