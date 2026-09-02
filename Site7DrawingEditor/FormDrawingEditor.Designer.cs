@@ -591,6 +591,31 @@ namespace Site7DrawingEditor
             lblEntityNameHeader.TabIndex = 24;
             lblEntityNameHeader.Text = "名称";
             // 
+            // chkShowKikai
+            // 
+            chkShowKikai.AutoSize = true;
+            chkShowKikai.Checked = true;
+            chkShowKikai.CheckState = CheckState.Checked;
+            chkShowKikai.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkShowKikai.ForeColor = Color.Blue;
+            chkShowKikai.Location = new Point(6, 333);
+            chkShowKikai.Name = "chkShowKikai";
+            chkShowKikai.Size = new Size(62, 19);
+            chkShowKikai.TabIndex = 25;
+            chkShowKikai.Text = "基準点";
+            chkShowKikai.UseVisualStyleBackColor = true;
+            // 
+            // chkShowKikaiName
+            // 
+            chkShowKikaiName.AutoSize = true;
+            chkShowKikaiName.Checked = true;
+            chkShowKikaiName.CheckState = CheckState.Checked;
+            chkShowKikaiName.Location = new Point(90, 336);
+            chkShowKikaiName.Name = "chkShowKikaiName";
+            chkShowKikaiName.Size = new Size(15, 14);
+            chkShowKikaiName.TabIndex = 26;
+            chkShowKikaiName.UseVisualStyleBackColor = true;
+            // 
             // chkShowIbutu
             // 
             chkShowIbutu.AutoSize = true;
@@ -598,20 +623,20 @@ namespace Site7DrawingEditor
             chkShowIbutu.CheckState = CheckState.Checked;
             chkShowIbutu.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowIbutu.ForeColor = Color.Red;
-            chkShowIbutu.Location = new Point(6, 333);
+            chkShowIbutu.Location = new Point(6, 355);
             chkShowIbutu.Name = "chkShowIbutu";
             chkShowIbutu.Size = new Size(50, 19);
-            chkShowIbutu.TabIndex = 25;
+            chkShowIbutu.TabIndex = 27;
             chkShowIbutu.Text = "遺物";
             chkShowIbutu.UseVisualStyleBackColor = true;
             // 
             // chkShowIbutuName
             // 
             chkShowIbutuName.AutoSize = true;
-            chkShowIbutuName.Location = new Point(90, 336);
+            chkShowIbutuName.Location = new Point(90, 358);
             chkShowIbutuName.Name = "chkShowIbutuName";
             chkShowIbutuName.Size = new Size(15, 14);
-            chkShowIbutuName.TabIndex = 26;
+            chkShowIbutuName.TabIndex = 28;
             chkShowIbutuName.UseVisualStyleBackColor = true;
             // 
             // chkShowIkou
@@ -621,52 +646,27 @@ namespace Site7DrawingEditor
             chkShowIkou.CheckState = CheckState.Checked;
             chkShowIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowIkou.ForeColor = Color.Blue;
-            chkShowIkou.Location = new Point(6, 355);
+            chkShowIkou.Location = new Point(6, 377);
             chkShowIkou.Name = "chkShowIkou";
             chkShowIkou.Size = new Size(50, 19);
-            chkShowIkou.TabIndex = 27;
+            chkShowIkou.TabIndex = 29;
             chkShowIkou.Text = "遺構";
             chkShowIkou.UseVisualStyleBackColor = true;
             // 
             // chkShowIkouName
             // 
             chkShowIkouName.AutoSize = true;
-            chkShowIkouName.Location = new Point(90, 358);
+            chkShowIkouName.Location = new Point(90, 380);
             chkShowIkouName.Name = "chkShowIkouName";
             chkShowIkouName.Size = new Size(15, 14);
-            chkShowIkouName.TabIndex = 28;
+            chkShowIkouName.TabIndex = 30;
             chkShowIkouName.UseVisualStyleBackColor = true;
-            // 
-            // chkShowKikai
-            // 
-            chkShowKikai.AutoSize = true;
-            chkShowKikai.Checked = true;
-            chkShowKikai.CheckState = CheckState.Checked;
-            chkShowKikai.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkShowKikai.ForeColor = Color.Blue;
-            chkShowKikai.Location = new Point(6, 377);
-            chkShowKikai.Name = "chkShowKikai";
-            chkShowKikai.Size = new Size(62, 19);
-            chkShowKikai.TabIndex = 29;
-            chkShowKikai.Text = "基準点";
-            chkShowKikai.UseVisualStyleBackColor = true;
-            // 
-            // chkShowKikaiName
-            // 
-            chkShowKikaiName.AutoSize = true;
-            chkShowKikaiName.Checked = true;
-            chkShowKikaiName.CheckState = CheckState.Checked;
-            chkShowKikaiName.Location = new Point(90, 380);
-            chkShowKikaiName.Name = "chkShowKikaiName";
-            chkShowKikaiName.Size = new Size(15, 14);
-            chkShowKikaiName.TabIndex = 30;
-            chkShowKikaiName.UseVisualStyleBackColor = true;
             // 
             // chkShowDrawingFrame
             // 
             chkShowDrawingFrame.AutoSize = true;
-            chkShowDrawingFrame.Checked = true;
-            chkShowDrawingFrame.CheckState = CheckState.Checked;
+            chkShowDrawingFrame.Checked = false;
+            chkShowDrawingFrame.CheckState = CheckState.Unchecked;
             chkShowDrawingFrame.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowDrawingFrame.ForeColor = Color.FromArgb(30, 40, 60);
             chkShowDrawingFrame.Location = new Point(6, 400);

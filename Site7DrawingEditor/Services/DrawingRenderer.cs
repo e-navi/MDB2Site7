@@ -224,21 +224,31 @@ namespace Site7DrawingEditor.Services
                 }
             }
 
-            if (chkShowKikaiFull)
+            if (chkShowKikaiFull && db.MasterKikaiList != null)
             {
-                using (var kikaiBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
-                using (var kikaiPen = new Pen(Color.Yellow, 1.5f))
-                using (var font = new Font("Yu Gothic UI", 8F, FontStyle.Bold))
+                using (var font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
                 using (var textBrush = new SolidBrush(isDarkBackground ? Color.White : Color.DarkBlue))
+                using (var borderPen = new Pen(Color.Black, 1.2f))
                 {
                     foreach (var k in db.MasterKikaiList)
                     {
                         PointF pt = ToCanvasPoint(k.X, k.Y);
-                        g.FillEllipse(kikaiBrush, pt.X - 5f, pt.Y - 5f, 10f, 10f);
-                        g.DrawEllipse(kikaiPen, pt.X - 5f, pt.Y - 5f, 10f, 10f);
+                        int kLayer = k.Syubetu > 0 ? k.Syubetu : 1;
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Kikai, kLayer);
+                        Color kikaiColor = LayerDefinitionService.Instance.GetColor(LayerGroup.Kikai, kLayer, isDarkBackground);
+                        float baseRadius = (float)Math.Clamp(layerItem.Size * 3.5, 3.0, 25.0);
+
+                        using (var kikaiBrush = new SolidBrush(kikaiColor))
+                        using (var kikaiPen = new Pen(kikaiColor, 1.5f))
+                        {
+                            var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? kikaiPen : borderPen;
+                            LayerDefinitionService.DrawPointMark(g, pt, layerItem.Mark, baseRadius, kikaiBrush, penToUse);
+                        }
+
                         if (showKikaiName)
                         {
-                            g.DrawString(k.Name, font, textBrush, pt.X + 6f, pt.Y - 6f);
+                            string nameText = string.IsNullOrEmpty(k.Name) ? $"K{k.Id}" : k.Name;
+                            g.DrawString(nameText, font, textBrush, pt.X + baseRadius + 3f, pt.Y - baseRadius);
                         }
                     }
                 }
@@ -363,7 +373,7 @@ namespace Site7DrawingEditor.Services
                     }
                     else if (vc.CropStep == 3)
                     {
-                        var (msx, msy) = vc.CanvasToSurveyCrop(vc.CropLastMousePos, canvasSize, db.MasterIkouList, db.MasterIkouLList ?? Enumerable.Empty<MasterIkouLModel>(), db.MasterIbutuList, db.MasterKikaiList);
+                        var (msx, msy) = vc.CanvasToSurveyCrop(vc.CropLastMousePos, canvasSize, db.MasterIkouList ?? Enumerable.Empty<MasterIkouModel>(), db.MasterIkouLList ?? Enumerable.Empty<MasterIkouLModel>(), db.MasterIbutuList ?? Enumerable.Empty<MasterIbutuModel>(), db.MasterKikaiList ?? Enumerable.Empty<MasterKikaiModel>());
                         XYZ p3Temp = GeometryMath.ProjectToPerpendicular(curSelectedIkou.P1, curSelectedIkou.P2, msx, msy);
                         var (v1, v2, v3, v4) = GeometryMath.GetCropBoxVertices(curSelectedIkou.P1, curSelectedIkou.P2, p3Temp);
 
