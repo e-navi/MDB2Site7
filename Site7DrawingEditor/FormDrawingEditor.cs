@@ -1221,6 +1221,27 @@ namespace Site7DrawingEditor
 
         private FormDrawingFrame? _formDrawingFrame = null;
 
+        private void UpdateDrawingPreviewState()
+        {
+            bool isPreview = DrawingFrameService.Instance.IsDrawingPreviewEnabled;
+            if (isPreview)
+            {
+                var f = DrawingFrameService.Instance;
+                lblPaperSheetTitle.Text = "📄 図面出力イメージ";
+                lblPaperInfoBanner.Text = $"{f.PaperSizeName} ({(f.IsLandscape ? "横" : "縦")}) | 1/{f.Scale:0} | 回転 {f.RotationAngleDeg:0.0}°";
+            }
+            else
+            {
+                lblPaperSheetTitle.Text = "📄 遺構図面";
+                DrawingModel? curDrawing = GetSelectedDataBoundItem<DrawingModel>(dgvDrawings);
+                if (curDrawing != null)
+                {
+                    lblPaperInfoBanner.Text = $"{curDrawing.PaperInfo.Name} ({curDrawing.PaperInfo.WidthMm}×{curDrawing.PaperInfo.HeightMm}mm) | 1/{curDrawing.Scale}";
+                }
+            }
+            picPaperCanvas.Invalidate();
+        }
+
         private void OpenDrawingFrameDialog()
         {
             if (_formDrawingFrame == null || _formDrawingFrame.IsDisposed)
@@ -1229,6 +1250,7 @@ namespace Site7DrawingEditor
                 _formDrawingFrame.FrameChanged += (s, e) =>
                 {
                     picCropCanvas.Invalidate();
+                    UpdateDrawingPreviewState();
                 };
             }
 
@@ -1242,6 +1264,7 @@ namespace Site7DrawingEditor
             {
                 _formDrawingFrame.BringToFront();
             }
+            UpdateDrawingPreviewState();
         }
 
         #region Canvas Event Delegates
@@ -1394,19 +1417,39 @@ namespace Site7DrawingEditor
 
         private void picPaperCanvas_Paint(object? sender, PaintEventArgs e)
         {
-            DrawingModel? curDrawing = GetSelectedDataBoundItem<DrawingModel>(dgvDrawings);
-            DrawingIkouModel? curSelectedIkou = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
-            DrawingRenderer.DrawPaperCanvas(
-                e.Graphics,
-                picPaperCanvas.Size,
-                _vc,
-                _db,
-                curDrawing,
-                curSelectedIkou,
-                true,
-                false,
-                true,
-                true);
+            if (DrawingFrameService.Instance.IsDrawingPreviewEnabled)
+            {
+                DrawingFrameService.Instance.DrawPaperPreview(
+                    e.Graphics,
+                    picPaperCanvas.Size,
+                    _db,
+                    IsLayerVisible,
+                    chkShowCurveFull.Checked,
+                    chkColorByIkouFull.Checked,
+                    chkShowIkou.Checked,
+                    chkShowIkouName.Checked,
+                    chkShowIbutu.Checked,
+                    chkShowIbutuName.Checked,
+                    chkShowKikai.Checked,
+                    chkShowKikaiName.Checked,
+                    false);
+            }
+            else
+            {
+                DrawingModel? curDrawing = GetSelectedDataBoundItem<DrawingModel>(dgvDrawings);
+                DrawingIkouModel? curSelectedIkou = GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous);
+                DrawingRenderer.DrawPaperCanvas(
+                    e.Graphics,
+                    picPaperCanvas.Size,
+                    _vc,
+                    _db,
+                    curDrawing,
+                    curSelectedIkou,
+                    true,
+                    false,
+                    true,
+                    true);
+            }
         }
 
         private void picPaperCanvas_MouseDown(object? sender, MouseEventArgs e)
