@@ -1409,7 +1409,25 @@ namespace Site7DrawingEditor.Services
                                     PointF pt4 = SurveyToPaperScreen(v4.X, v4.Y);
 
                                     g.DrawPolygon(framePen, new[] { pt1, pt2, pt3, pt4 });
-                                    g.DrawString(ikou.Name, nameFont, nameBrush, pt1.X + 2f, pt1.Y + 2f);
+
+                                    if (!string.IsNullOrEmpty(ikou.Name))
+                                    {
+                                        float dx = pt2.X - pt1.X;
+                                        float dy = pt2.Y - pt1.Y;
+                                        float len = (float)Math.Sqrt(dx * dx + dy * dy);
+                                        if (len > 0.001f)
+                                        {
+                                            float angleDeg = (float)(Math.Atan2(dy, dx) * 180.0 / Math.PI);
+                                            var state = g.Save();
+                                            g.TranslateTransform(pt1.X, pt1.Y);
+                                            g.RotateTransform(angleDeg);
+
+                                            var sz = g.MeasureString(ikou.Name, nameFont);
+                                            g.DrawString(ikou.Name, nameFont, nameBrush, 3f * (float)zoom, -sz.Height - (0.5f * (float)zoom));
+
+                                            g.Restore(state);
+                                        }
+                                    }
                                 }
                             }
                         }

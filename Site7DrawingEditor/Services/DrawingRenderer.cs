@@ -264,7 +264,25 @@ namespace Site7DrawingEditor.Services
                 using (var brush = new SolidBrush(boxCol))
                 {
                     g.DrawPolygon(boxPen, new[] { pt1, pt2, pt3, pt4 });
-                    g.DrawString(ikou.Name, font, brush, pt1.X, pt1.Y - 15);
+
+                    if (!string.IsNullOrEmpty(ikou.Name))
+                    {
+                        float dx = pt2.X - pt1.X;
+                        float dy = pt2.Y - pt1.Y;
+                        float len = (float)Math.Sqrt(dx * dx + dy * dy);
+                        if (len > 0.001f)
+                        {
+                            float angleDeg = (float)(Math.Atan2(dy, dx) * 180.0 / Math.PI);
+                            var state = g.Save();
+                            g.TranslateTransform(pt1.X, pt1.Y);
+                            g.RotateTransform(angleDeg);
+
+                            var sz = g.MeasureString(ikou.Name, font);
+                            g.DrawString(ikou.Name, font, brush, 4f, -sz.Height - 1f);
+
+                            g.Restore(state);
+                        }
+                    }
                 }
 
                 if (isSelected)
