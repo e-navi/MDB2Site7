@@ -205,20 +205,32 @@ namespace Site7DrawingEditor.Services
                 }
             }
 
-            if (chkShowIbutuFull)
+            if (chkShowIbutuFull && db.MasterIbutuList != null)
             {
-                using (var ibutuBrush = new SolidBrush(Color.FromArgb(255, 191, 0)))
-                using (var font = new Font("Yu Gothic UI", 8F, FontStyle.Bold))
-                using (var textBrush = new SolidBrush(isDarkBackground ? Color.Yellow : Color.FromArgb(180, 100, 0)))
+                using (var font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
+                using (var textBrush = new SolidBrush(isDarkBackground ? Color.White : Color.FromArgb(180, 50, 0)))
+                using (var borderPen = new Pen(Color.Black, 1.2f))
                 {
                     foreach (var ib in db.MasterIbutuList)
                     {
                         PointF pt = ToCanvasPoint(ib.X, ib.Y);
-                        g.FillEllipse(ibutuBrush, pt.X - 3.5f, pt.Y - 3.5f, 7f, 7f);
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ibutu, ib.Layer);
+                        Color ibColor = LayerDefinitionService.Instance.GetColor(LayerGroup.Ibutu, ib.Layer, isDarkBackground);
+                        float baseRadius = (float)Math.Clamp(layerItem.Size * 3.5, 3.0, 25.0);
+
+                        using (var ibBrush = new SolidBrush(ibColor))
+                        using (var ibPen = new Pen(ibColor, 1.5f))
+                        {
+                            var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? ibPen : borderPen;
+                            LayerDefinitionService.DrawPointMark(g, pt, layerItem.Mark, baseRadius, ibBrush, penToUse);
+                        }
+
                         if (showIbutuName)
                         {
-                            string label = string.IsNullOrWhiteSpace(ib.Syubetu) ? $"遺物{ib.Id}" : ib.Syubetu;
-                            g.DrawString(label, font, textBrush, pt.X + 5f, pt.Y - 5f);
+                            string label = !string.IsNullOrEmpty(ib.Syubetu)
+                                ? (ib.No > 0 ? $"{ib.Syubetu}{ib.No}" : ib.Syubetu)
+                                : (ib.No > 0 ? $"No.{ib.No}" : $"遺物{ib.Id}");
+                            g.DrawString(label, font, textBrush, pt.X + baseRadius + 3f, pt.Y - baseRadius);
                         }
                     }
                 }
@@ -229,11 +241,13 @@ namespace Site7DrawingEditor.Services
                 using (var font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
                 using (var textBrush = new SolidBrush(isDarkBackground ? Color.White : Color.DarkBlue))
                 using (var borderPen = new Pen(Color.Black, 1.2f))
+                using (var kpTextBrush = new SolidBrush(Color.FromArgb(239, 35, 60)))
+                using (var bpTextBrush = new SolidBrush(Color.FromArgb(0, 119, 182)))
                 {
                     foreach (var k in db.MasterKikaiList)
                     {
                         PointF pt = ToCanvasPoint(k.X, k.Y);
-                        int kLayer = k.Syubetu > 0 ? k.Syubetu : 1;
+                        int kLayer = k.Layer > 0 ? k.Layer : 1;
                         var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Kikai, kLayer);
                         Color kikaiColor = LayerDefinitionService.Instance.GetColor(LayerGroup.Kikai, kLayer, isDarkBackground);
                         float baseRadius = (float)Math.Clamp(layerItem.Size * 3.5, 3.0, 25.0);
@@ -243,6 +257,15 @@ namespace Site7DrawingEditor.Services
                         {
                             var penToUse = (layerItem.Mark == 5 || layerItem.Mark == 6) ? kikaiPen : borderPen;
                             LayerDefinitionService.DrawPointMark(g, pt, layerItem.Mark, baseRadius, kikaiBrush, penToUse);
+                        }
+
+                        if (!string.IsNullOrEmpty(k.KPName))
+                        {
+                            g.DrawString("器", font, kpTextBrush, pt.X - baseRadius - 14f, pt.Y - baseRadius);
+                        }
+                        else if (!string.IsNullOrEmpty(k.BPName))
+                        {
+                            g.DrawString("後", font, bpTextBrush, pt.X - baseRadius - 14f, pt.Y - baseRadius);
                         }
 
                         if (showKikaiName)

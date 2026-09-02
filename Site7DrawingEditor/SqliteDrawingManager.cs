@@ -186,20 +186,39 @@ CREATE TABLE IF NOT EXISTS '図面遺構' (
                 // Read 基準点
                 try
                 {
-                    using (var cmd = new SqliteCommand("SELECT ID, NAME, X, Y, Z, SYUBETU FROM '基準点' ORDER BY ID;", conn))
+                    using (var cmd = new SqliteCommand("SELECT * FROM '基準点' ORDER BY ID;", conn))
                     using (var reader = cmd.ExecuteReader())
                     {
+                        int idIdx = reader.GetOrdinal("ID");
+                        int nameIdx = reader.GetOrdinal("NAME");
+                        int xIdx = reader.GetOrdinal("X");
+                        int yIdx = reader.GetOrdinal("Y");
+                        int zIdx = reader.GetOrdinal("Z");
+
+                        int layerIdx = -1;
+                        try { layerIdx = reader.GetOrdinal("LAYER"); } catch { }
+                        if (layerIdx < 0) { try { layerIdx = reader.GetOrdinal("SYUBETU"); } catch { } }
+
+                        int kpIdx = -1;
+                        try { kpIdx = reader.GetOrdinal("KPNAME"); } catch { }
+
+                        int bpIdx = -1;
+                        try { bpIdx = reader.GetOrdinal("BPNAME"); } catch { }
+
                         while (reader.Read())
                         {
-                            kikaiList.Add(new MasterKikaiModel
+                            var model = new MasterKikaiModel
                             {
-                                Id = reader.GetInt64(0),
-                                Name = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                X = reader.IsDBNull(2) ? 0 : reader.GetDouble(2),
-                                Y = reader.IsDBNull(3) ? 0 : reader.GetDouble(3),
-                                Z = reader.IsDBNull(4) ? 0 : reader.GetDouble(4),
-                                Syubetu = reader.IsDBNull(5) ? 0 : reader.GetInt32(5)
-                            });
+                                Id = reader.GetInt64(idIdx),
+                                Name = reader.IsDBNull(nameIdx) ? "" : reader.GetString(nameIdx),
+                                X = reader.IsDBNull(xIdx) ? 0 : reader.GetDouble(xIdx),
+                                Y = reader.IsDBNull(yIdx) ? 0 : reader.GetDouble(yIdx),
+                                Z = reader.IsDBNull(zIdx) ? 0 : reader.GetDouble(zIdx),
+                                Layer = (layerIdx >= 0 && !reader.IsDBNull(layerIdx)) ? reader.GetInt32(layerIdx) : 1,
+                                KPName = (kpIdx >= 0 && !reader.IsDBNull(kpIdx)) ? reader.GetString(kpIdx) : "",
+                                BPName = (bpIdx >= 0 && !reader.IsDBNull(bpIdx)) ? reader.GetString(bpIdx) : ""
+                            };
+                            kikaiList.Add(model);
                         }
                     }
                 }

@@ -389,6 +389,9 @@ namespace Site7DrawingEditor
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
-        public int Syubetu { get; set; }
+        public int Layer { get; set; } = 1;
+        public int Syubetu { get => Layer; set => Layer = value; }
+        public string KPName { get; set; } = "";
+        public string BPName { get; set; } = "";
     }
 }
