@@ -1272,6 +1272,23 @@ namespace Site7DrawingEditor
                     picCropCanvas.Invalidate();
                     UpdateDrawingPreviewState();
                 };
+                _formDrawingFrame.PrintRequested += (sender, ev) =>
+                {
+                    DrawingFrameService.Instance.Print(
+                        this,
+                        _db,
+                        IsLayerVisible,
+                        true,
+                        false,
+                        chkShowIkou.Checked,
+                        chkShowIkouName.Checked,
+                        chkShowIbutu.Checked,
+                        chkShowIbutuName.Checked,
+                        chkShowKikai.Checked,
+                        chkShowKikaiName.Checked,
+                        false
+                    );
+                };
             }
 
             _formDrawingFrame.SyncFromService();
