@@ -270,7 +270,12 @@ namespace Site7DrawingEditor.Services
                         float dx = pt2.X - pt1.X;
                         float dy = pt2.Y - pt1.Y;
                         float len = (float)Math.Sqrt(dx * dx + dy * dy);
-                        if (len > 0.001f)
+
+                        float vdx = pt4.X - pt1.X;
+                        float vdy = pt4.Y - pt1.Y;
+                        float vlen = (float)Math.Sqrt(vdx * vdx + vdy * vdy);
+
+                        if (len > 3.0f && vlen > 3.0f)
                         {
                             float angleDeg = (float)(Math.Atan2(dy, dx) * 180.0 / Math.PI);
                             var state = g.Save();
@@ -284,7 +289,29 @@ namespace Site7DrawingEditor.Services
                                 LineAlignment = StringAlignment.Far
                             })
                             {
-                                g.DrawString(ikou.Name, font, brush, new PointF(2.0f, -1.5f), sf);
+                                float fontSize = 8.5f;
+                                float maxW = len * 0.82f;
+                                float maxH = vlen * 0.38f;
+
+                                using (var tempFont = new Font("Yu Gothic UI", fontSize, FontStyle.Bold))
+                                {
+                                    var sz = g.MeasureString(ikou.Name, tempFont, PointF.Empty, sf);
+                                    if (sz.Width > maxW && sz.Width > 0.001f)
+                                    {
+                                        fontSize = Math.Max(4.5f, fontSize * (maxW / sz.Width));
+                                    }
+                                    if (sz.Height > maxH && sz.Height > 0.001f)
+                                    {
+                                        fontSize = Math.Max(4.5f, Math.Min(fontSize, fontSize * (maxH / sz.Height)));
+                                    }
+                                }
+
+                                using (var curFont = new Font("Yu Gothic UI", fontSize, FontStyle.Bold))
+                                {
+                                    float lblOffX = Math.Max(1.0f, Math.Min(2.5f, len * 0.04f));
+                                    float lblOffY = -Math.Max(1.0f, Math.Min(2.0f, vlen * 0.04f));
+                                    g.DrawString(ikou.Name, curFont, brush, new PointF(lblOffX, lblOffY), sf);
+                                }
                             }
 
                             g.Restore(state);

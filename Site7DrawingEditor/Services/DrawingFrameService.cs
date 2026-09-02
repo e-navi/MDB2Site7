@@ -1415,7 +1415,12 @@ namespace Site7DrawingEditor.Services
                                         float dx = pt2.X - pt1.X;
                                         float dy = pt2.Y - pt1.Y;
                                         float len = (float)Math.Sqrt(dx * dx + dy * dy);
-                                        if (len > 0.001f)
+
+                                        float vdx = pt4.X - pt1.X;
+                                        float vdy = pt4.Y - pt1.Y;
+                                        float vlen = (float)Math.Sqrt(vdx * vdx + vdy * vdy);
+
+                                        if (len > 3.0f && vlen > 3.0f)
                                         {
                                             float angleDeg = (float)(Math.Atan2(dy, dx) * 180.0 / Math.PI);
                                             var state = g.Save();
@@ -1429,7 +1434,29 @@ namespace Site7DrawingEditor.Services
                                                 LineAlignment = StringAlignment.Far
                                             })
                                             {
-                                                g.DrawString(ikou.Name, nameFont, nameBrush, new PointF(1.5f * (float)zoom, -1.0f * (float)zoom), sf);
+                                                float fontPx = Math.Max(3.5f, (float)(2.8 * zoom));
+                                                float maxW = len * 0.82f;
+                                                float maxH = vlen * 0.38f;
+
+                                                using (var tempFont = new Font("Yu Gothic UI", fontPx, FontStyle.Bold, GraphicsUnit.Pixel))
+                                                {
+                                                    var sz = g.MeasureString(ikou.Name, tempFont, PointF.Empty, sf);
+                                                    if (sz.Width > maxW && sz.Width > 0.001f)
+                                                    {
+                                                        fontPx = Math.Max(2.5f, fontPx * (maxW / sz.Width));
+                                                    }
+                                                    if (sz.Height > maxH && sz.Height > 0.001f)
+                                                    {
+                                                        fontPx = Math.Max(2.5f, Math.Min(fontPx, fontPx * (maxH / sz.Height)));
+                                                    }
+                                                }
+
+                                                using (var curFont = new Font("Yu Gothic UI", fontPx, FontStyle.Bold, GraphicsUnit.Pixel))
+                                                {
+                                                    float offsetX = Math.Max(0.8f, Math.Min(2.0f * (float)zoom, len * 0.04f));
+                                                    float offsetY = -Math.Max(0.8f, Math.Min(1.5f * (float)zoom, vlen * 0.04f));
+                                                    g.DrawString(ikou.Name, curFont, nameBrush, new PointF(offsetX, offsetY), sf);
+                                                }
                                             }
 
                                             g.Restore(state);
