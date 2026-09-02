@@ -1429,14 +1429,12 @@ namespace Site7DrawingEditor.Services
 
                                             using (var sf = new StringFormat(StringFormat.GenericTypographic)
                                             {
-                                                FormatFlags = StringFormatFlags.NoWrap,
-                                                Alignment = StringAlignment.Near,
-                                                LineAlignment = StringAlignment.Far
+                                                FormatFlags = StringFormatFlags.NoWrap
                                             })
                                             {
                                                 float fontPx = Math.Max(3.5f, (float)(2.8 * zoom));
-                                                float maxW = len * 0.82f;
-                                                float maxH = vlen * 0.38f;
+                                                float maxW = len * 0.85f;
+                                                float maxH = vlen * 0.45f;
 
                                                 using (var tempFont = new Font("Yu Gothic UI", fontPx, FontStyle.Bold, GraphicsUnit.Pixel))
                                                 {
@@ -1453,9 +1451,15 @@ namespace Site7DrawingEditor.Services
 
                                                 using (var curFont = new Font("Yu Gothic UI", fontPx, FontStyle.Bold, GraphicsUnit.Pixel))
                                                 {
-                                                    float offsetX = Math.Max(0.8f, Math.Min(2.0f * (float)zoom, len * 0.04f));
-                                                    float offsetY = -Math.Max(0.8f, Math.Min(1.5f * (float)zoom, vlen * 0.04f));
-                                                    g.DrawString(ikou.Name, curFont, nameBrush, new PointF(offsetX, offsetY), sf);
+                                                    var ff = curFont.FontFamily;
+                                                    float emH = ff.GetEmHeight(curFont.Style);
+                                                    float ascent = ff.GetCellAscent(curFont.Style);
+                                                    float descent = ff.GetCellDescent(curFont.Style);
+                                                    float fontHeightPx = curFont.GetHeight(g);
+                                                    float ascentPx = fontHeightPx * (ascent / (ascent + descent));
+
+                                                    float offsetX = Math.Max(0.5f, Math.Min(1.5f * (float)zoom, len * 0.03f));
+                                                    g.DrawString(ikou.Name, curFont, nameBrush, new PointF(offsetX, -ascentPx), sf);
                                                 }
                                             }
 

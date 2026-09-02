@@ -284,14 +284,12 @@ namespace Site7DrawingEditor.Services
 
                             using (var sf = new StringFormat(StringFormat.GenericTypographic)
                             {
-                                FormatFlags = StringFormatFlags.NoWrap,
-                                Alignment = StringAlignment.Near,
-                                LineAlignment = StringAlignment.Far
+                                FormatFlags = StringFormatFlags.NoWrap
                             })
                             {
                                 float fontSize = 8.5f;
-                                float maxW = len * 0.82f;
-                                float maxH = vlen * 0.38f;
+                                float maxW = len * 0.85f;
+                                float maxH = vlen * 0.45f;
 
                                 using (var tempFont = new Font("Yu Gothic UI", fontSize, FontStyle.Bold))
                                 {
@@ -308,9 +306,15 @@ namespace Site7DrawingEditor.Services
 
                                 using (var curFont = new Font("Yu Gothic UI", fontSize, FontStyle.Bold))
                                 {
-                                    float lblOffX = Math.Max(1.0f, Math.Min(2.5f, len * 0.04f));
-                                    float lblOffY = -Math.Max(1.0f, Math.Min(2.0f, vlen * 0.04f));
-                                    g.DrawString(ikou.Name, curFont, brush, new PointF(lblOffX, lblOffY), sf);
+                                    var ff = curFont.FontFamily;
+                                    float emH = ff.GetEmHeight(curFont.Style);
+                                    float ascent = ff.GetCellAscent(curFont.Style);
+                                    float descent = ff.GetCellDescent(curFont.Style);
+                                    float fontHeightPx = curFont.GetHeight(g);
+                                    float ascentPx = fontHeightPx * (ascent / (ascent + descent));
+
+                                    float lblOffX = Math.Max(1.0f, Math.Min(2.0f, len * 0.03f));
+                                    g.DrawString(ikou.Name, curFont, brush, new PointF(lblOffX, -ascentPx), sf);
                                 }
                             }
 
