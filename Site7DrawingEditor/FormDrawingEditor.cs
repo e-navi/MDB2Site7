@@ -546,6 +546,13 @@ namespace Site7DrawingEditor
         {
             try
             {
+                string? genbaDir = Path.GetDirectoryName(dbPath);
+                if (!string.IsNullOrEmpty(genbaDir))
+                {
+                    Def.iniFileName = Path.Combine(genbaDir, "SITE7.ini");
+                    DrawingFrameService.Instance.LoadFromIni();
+                }
+
                 _db.LoadDatabase(dbPath);
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
                 LayerDefinitionService.Instance.LoadAll(dbPath);
