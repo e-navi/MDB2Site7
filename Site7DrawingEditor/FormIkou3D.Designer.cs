@@ -174,7 +174,7 @@ namespace Site7DrawingEditor
             this.txtWeightPower.Name = "txtWeightPower";
             this.txtWeightPower.Size = new System.Drawing.Size(97, 23);
             this.txtWeightPower.TabIndex = 3;
-            this.txtWeightPower.Text = "2.0";
+            this.txtWeightPower.Text = "5.0";
 
             // chkIkouHeight
             this.chkIkouHeight.AutoSize = true;

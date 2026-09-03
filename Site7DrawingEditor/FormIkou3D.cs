@@ -68,7 +68,7 @@ namespace Site7DrawingEditor
 
         public static class GridAlgorithm
         {
-            public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 50, int resolutionY = 50, double power = 2.0)
+            public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 50, int resolutionY = 50, double power = 5.0)
             {
                 var mesh = new GridMesh();
                 mesh.ResolutionX = resolutionX;
@@ -117,12 +117,25 @@ namespace Site7DrawingEditor
                 return mesh;
             }
 
-            public static double CalculateIdw(Point3D target, List<Point3D> points, double power = 2.0, double smoothing = 0.0)
+            public static double CalculateIdw(Point3D target, List<Point3D> points, double power = 5.0, double smoothing = 0.0, int maxNeighbors = 16)
             {
+                if (points.Count == 0) return 0;
+
+                // k-NN: 距離順に近傍 maxNeighbors 点のみを対象にして上部点の影響を遮断 (Pit底の盛り上がり防止)
+                IEnumerable<Point3D> targetPoints = points;
+                if (points.Count > maxNeighbors)
+                {
+                    targetPoints = points
+                        .Select(p => new { Pt = p, DistSq = (target.X - p.X) * (target.X - p.X) + (target.Y - p.Y) * (target.Y - p.Y) })
+                        .OrderBy(p => p.DistSq)
+                        .Take(maxNeighbors)
+                        .Select(p => p.Pt);
+                }
+
                 double sumWeights = 0;
                 double sumWeightedValues = 0;
 
-                foreach (var p in points)
+                foreach (var p in targetPoints)
                 {
                     double dx = target.X - p.X;
                     double dy = target.Y - p.Y;
@@ -136,10 +149,10 @@ namespace Site7DrawingEditor
                     sumWeightedValues += weight * p.Z;
                 }
 
-                return sumWeightedValues / (sumWeights + 1e-12);
+                return sumWeights > 0 ? sumWeightedValues / sumWeights : 0;
             }
 
-            public static Danmen CalcDanmen(Point3D start, Point3D end, Point3D dp, List<Point3D> sourcePoints, int cnt = 100, double power = 2.0)
+            public static Danmen CalcDanmen(Point3D start, Point3D end, Point3D dp, List<Point3D> sourcePoints, int cnt = 100, double power = 5.0)
             {
                 var danmen = new Danmen();
                 if (sourcePoints.Count == 0) return danmen;
@@ -202,7 +215,7 @@ namespace Site7DrawingEditor
         public DanmenRec? ResultDanmenRec { get; private set; }
 
         private int SplineDivisions => int.TryParse(cmbSplineDiv.SelectedItem?.ToString(), out int div) ? div : 5;
-        private double WeightPower => double.TryParse(txtWeightPower.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) ? Math.Max(0.1, w) : 2.0;
+        private double WeightPower => double.TryParse(txtWeightPower.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) ? Math.Max(0.1, w) : 5.0;
 
         public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null)
         {
@@ -215,7 +228,7 @@ namespace Site7DrawingEditor
 
             cmbSplineDiv.SelectedItem = "5";
             cmbGridResolution.SelectedIndex = 1; // 中 (50分割)
-            txtWeightPower.Text = "2.0";
+            txtWeightPower.Text = "5.0";
 
             RebuildLocalPoints();
 
