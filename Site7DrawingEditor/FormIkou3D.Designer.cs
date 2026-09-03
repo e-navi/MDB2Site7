@@ -28,6 +28,8 @@ namespace Site7DrawingEditor
             this.cmbSplineDiv = new System.Windows.Forms.ComboBox();
             this.lblWeightPower = new System.Windows.Forms.Label();
             this.txtWeightPower = new System.Windows.Forms.TextBox();
+            this.lblNeighborCount = new System.Windows.Forms.Label();
+            this.txtNeighborCount = new System.Windows.Forms.TextBox();
             this.chkIkouHeight = new System.Windows.Forms.CheckBox();
             this.btnGridCalc = new System.Windows.Forms.Button();
 
@@ -110,6 +112,8 @@ namespace Site7DrawingEditor
             this.grpGridSettings.Controls.Add(this.cmbSplineDiv);
             this.grpGridSettings.Controls.Add(this.lblWeightPower);
             this.grpGridSettings.Controls.Add(this.txtWeightPower);
+            this.grpGridSettings.Controls.Add(this.lblNeighborCount);
+            this.grpGridSettings.Controls.Add(this.txtNeighborCount);
             this.grpGridSettings.Controls.Add(this.chkIkouHeight);
             this.grpGridSettings.Controls.Add(this.btnGridCalc);
             this.grpGridSettings.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -143,8 +147,8 @@ namespace Site7DrawingEditor
             this.lblSplineDiv.AutoSize = true;
             this.lblSplineDiv.Location = new System.Drawing.Point(8, 62);
             this.lblSplineDiv.Name = "lblSplineDiv";
-            this.lblSplineDiv.Size = new System.Drawing.Size(67, 15);
-            this.lblSplineDiv.Text = "曲線分割数";
+            this.lblSplineDiv.Size = new System.Drawing.Size(55, 15);
+            this.lblSplineDiv.Text = "曲線分割";
 
             // cmbSplineDiv
             this.cmbSplineDiv.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -159,22 +163,36 @@ namespace Site7DrawingEditor
             "20"});
             this.cmbSplineDiv.Location = new System.Drawing.Point(8, 79);
             this.cmbSplineDiv.Name = "cmbSplineDiv";
-            this.cmbSplineDiv.Size = new System.Drawing.Size(95, 23);
+            this.cmbSplineDiv.Size = new System.Drawing.Size(60, 23);
             this.cmbSplineDiv.TabIndex = 2;
 
             // lblWeightPower
             this.lblWeightPower.AutoSize = true;
-            this.lblWeightPower.Location = new System.Drawing.Point(115, 62);
+            this.lblWeightPower.Location = new System.Drawing.Point(74, 62);
             this.lblWeightPower.Name = "lblWeightPower";
             this.lblWeightPower.Size = new System.Drawing.Size(55, 15);
             this.lblWeightPower.Text = "重み係数";
 
             // txtWeightPower
-            this.txtWeightPower.Location = new System.Drawing.Point(115, 79);
+            this.txtWeightPower.Location = new System.Drawing.Point(74, 79);
             this.txtWeightPower.Name = "txtWeightPower";
-            this.txtWeightPower.Size = new System.Drawing.Size(97, 23);
+            this.txtWeightPower.Size = new System.Drawing.Size(62, 23);
             this.txtWeightPower.TabIndex = 3;
             this.txtWeightPower.Text = "5.0";
+
+            // lblNeighborCount
+            this.lblNeighborCount.AutoSize = true;
+            this.lblNeighborCount.Location = new System.Drawing.Point(144, 62);
+            this.lblNeighborCount.Name = "lblNeighborCount";
+            this.lblNeighborCount.Size = new System.Drawing.Size(55, 15);
+            this.lblNeighborCount.Text = "近傍点数";
+
+            // txtNeighborCount
+            this.txtNeighborCount.Location = new System.Drawing.Point(144, 79);
+            this.txtNeighborCount.Name = "txtNeighborCount";
+            this.txtNeighborCount.Size = new System.Drawing.Size(68, 23);
+            this.txtNeighborCount.TabIndex = 4;
+            this.txtNeighborCount.Text = "4";
 
             // chkIkouHeight
             this.chkIkouHeight.AutoSize = true;
@@ -471,6 +489,8 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.ComboBox cmbSplineDiv;
         private System.Windows.Forms.Label lblWeightPower;
         private System.Windows.Forms.TextBox txtWeightPower;
+        private System.Windows.Forms.Label lblNeighborCount;
+        private System.Windows.Forms.TextBox txtNeighborCount;
         private System.Windows.Forms.CheckBox chkIkouHeight;
         private System.Windows.Forms.Button btnGridCalc;
         private System.Windows.Forms.Panel panelViewToggle;

@@ -68,7 +68,7 @@ namespace Site7DrawingEditor
 
         public static class GridAlgorithm
         {
-            public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 50, int resolutionY = 50, double power = 5.0)
+            public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 50, int resolutionY = 50, double power = 5.0, int maxNeighbors = 4)
             {
                 var mesh = new GridMesh();
                 mesh.ResolutionX = resolutionX;
@@ -90,7 +90,7 @@ namespace Site7DrawingEditor
                     {
                         double x = minX + i * stepX;
                         double y = minY + j * stepY;
-                        double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing);
+                        double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing, maxNeighbors);
                         mesh.Positions.Add(new Point3D(x, y, z));
                     }
                 }
@@ -117,7 +117,7 @@ namespace Site7DrawingEditor
                 return mesh;
             }
 
-            public static double CalculateIdw(Point3D target, List<Point3D> points, double power = 5.0, double smoothing = 0.0, int maxNeighbors = 16)
+            public static double CalculateIdw(Point3D target, List<Point3D> points, double power = 5.0, double smoothing = 0.0, int maxNeighbors = 4)
             {
                 if (points.Count == 0) return 0;
 
@@ -152,7 +152,7 @@ namespace Site7DrawingEditor
                 return sumWeights > 0 ? sumWeightedValues / sumWeights : 0;
             }
 
-            public static Danmen CalcDanmen(Point3D start, Point3D end, Point3D dp, List<Point3D> sourcePoints, int cnt = 100, double power = 5.0)
+            public static Danmen CalcDanmen(Point3D start, Point3D end, Point3D dp, List<Point3D> sourcePoints, int cnt = 100, double power = 5.0, int maxNeighbors = 4)
             {
                 var danmen = new Danmen();
                 if (sourcePoints.Count == 0) return danmen;
@@ -167,7 +167,7 @@ namespace Site7DrawingEditor
                     double t = (double)i / Math.Max(1, cnt - 1);
                     double x = start.X + dx * t;
                     double y = start.Y + dy * t;
-                    double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing);
+                    double z = CalculateIdw(new Point3D(x, y, 0), sourcePoints, power, smoothing, maxNeighbors);
                     danmen.danmen.Add((t * totalDist, z));
                 }
 
@@ -216,6 +216,7 @@ namespace Site7DrawingEditor
 
         private int SplineDivisions => int.TryParse(cmbSplineDiv.SelectedItem?.ToString(), out int div) ? div : 5;
         private double WeightPower => double.TryParse(txtWeightPower.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) ? Math.Max(0.1, w) : 5.0;
+        private int NeighborCount => int.TryParse(txtNeighborCount.Text, out int cnt) ? Math.Max(1, cnt) : 4;
 
         public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null)
         {
@@ -229,6 +230,7 @@ namespace Site7DrawingEditor
             cmbSplineDiv.SelectedItem = "5";
             cmbGridResolution.SelectedIndex = 1; // 中 (50分割)
             txtWeightPower.Text = "5.0";
+            txtNeighborCount.Text = "4";
 
             RebuildLocalPoints();
 
@@ -298,6 +300,7 @@ namespace Site7DrawingEditor
                 CalculateGridMesh();
             };
             txtWeightPower.TextChanged += (s, e) => CalculateGridMesh();
+            txtNeighborCount.TextChanged += (s, e) => CalculateGridMesh();
             btnGridCalc.Click += (s, e) =>
             {
                 RebuildLocalPoints();
@@ -384,7 +387,7 @@ namespace Site7DrawingEditor
                 _ => 50
             };
 
-            _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, res, res, WeightPower);
+            _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, res, res, WeightPower, NeighborCount);
 
             // Create default section line if none specified yet
             if (_sectionStartPoint == null || _sectionEndPoint == null)
@@ -403,7 +406,7 @@ namespace Site7DrawingEditor
             if (_sectionStartPoint == null || _sectionEndPoint == null || _allLocalPoints.Count == 0) return;
 
             Point3D dp = _sectionPlacementPoint ?? new Point3D(_sectionStartPoint.X, _sectionStartPoint.Y - 1.0, 0);
-            _currentDanmen = GridAlgorithm.CalcDanmen(_sectionStartPoint, _sectionEndPoint, dp, _allLocalPoints, 100, WeightPower);
+            _currentDanmen = GridAlgorithm.CalcDanmen(_sectionStartPoint, _sectionEndPoint, dp, _allLocalPoints, 100, WeightPower, NeighborCount);
         }
 
         private void picCanvas3D_Paint(object? sender, PaintEventArgs e)
