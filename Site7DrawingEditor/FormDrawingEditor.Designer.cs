@@ -754,13 +754,6 @@ namespace Site7DrawingEditor
             chkShowGridFull.Size = new Size(104, 24);
             chkShowGridFull.TabIndex = 0;
             // 
-            // chkColorByIkouFull
-            // 
-            chkColorByIkouFull.Location = new Point(0, 0);
-            chkColorByIkouFull.Name = "chkColorByIkouFull";
-            chkColorByIkouFull.Size = new Size(104, 24);
-            chkColorByIkouFull.TabIndex = 0;
-            // 
             // picCropCanvas
             // 
             picCropCanvas.Location = new Point(130, 35);
