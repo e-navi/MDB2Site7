@@ -711,11 +711,51 @@ namespace Site7DrawingEditor.Services
                 }
 
                 using (var framePen = new Pen(Color.FromArgb(170, 180, 185), 1.2f) { DashStyle = DashStyle.Dash })
-                using (var nameFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
                 using (var nameBrush = new SolidBrush(Color.FromArgb(120, 120, 130)))
                 {
                     g.DrawPolygon(framePen, new[] { ptBL, ptBR, ptTR, ptTL });
-                    g.DrawString(ikou.Name, nameFont, nameBrush, ptBL.X + 2f, ptBL.Y + 2f);
+
+                    float boxWPx = Math.Abs(ptBR.X - ptBL.X);
+                    float boxHPx = Math.Abs(ptBL.Y - ptTL.Y);
+
+                    if (boxWPx > 5f && boxHPx > 5f && !string.IsNullOrEmpty(ikou.Name))
+                    {
+                        using (var sf = new StringFormat(StringFormat.GenericTypographic)
+                        {
+                            FormatFlags = StringFormatFlags.NoWrap
+                        })
+                        {
+                            float fontPx = 11f;
+                            float maxW = boxWPx * 0.85f;
+                            float maxH = boxHPx * 0.45f;
+
+                            using (var tempFont = new Font("Yu Gothic UI", fontPx, FontStyle.Bold, GraphicsUnit.Pixel))
+                            {
+                                var sz = g.MeasureString(ikou.Name, tempFont, PointF.Empty, sf);
+                                if (sz.Width > maxW && sz.Width > 0.001f)
+                                {
+                                    fontPx = Math.Max(4.5f, fontPx * (maxW / sz.Width));
+                                }
+                                if (sz.Height > maxH && sz.Height > 0.001f)
+                                {
+                                    fontPx = Math.Max(4.5f, Math.Min(fontPx, fontPx * (maxH / sz.Height)));
+                                }
+                            }
+
+                            using (var curFont = new Font("Yu Gothic UI", fontPx, FontStyle.Bold, GraphicsUnit.Pixel))
+                            {
+                                var ff = curFont.FontFamily;
+                                float emH = ff.GetEmHeight(curFont.Style);
+                                float ascent = ff.GetCellAscent(curFont.Style);
+                                float descent = ff.GetCellDescent(curFont.Style);
+                                float fontHeightPx = curFont.GetHeight(g);
+                                float ascentPx = fontHeightPx * (ascent / (ascent + descent));
+
+                                float lblOffX = Math.Max(1.0f, Math.Min(2.5f, boxWPx * 0.03f));
+                                g.DrawString(ikou.Name, curFont, nameBrush, new PointF(ptBL.X + lblOffX, ptBL.Y - ascentPx), sf);
+                            }
+                        }
+                    }
                 }
 
                 // 各遺構図の方位記号 (遺構図面設定の種類・寸法を適用)
