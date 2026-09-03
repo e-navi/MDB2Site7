@@ -330,23 +330,30 @@ namespace Site7DrawingEditor
                 chkLayer13, chkLayer14, chkLayer15, chkLayer16
             };
 
+            void InvalidateAllCanvases()
+            {
+                picCropCanvas.Invalidate();
+                picPaperCanvas.Invalidate();
+                picFeatureDetailCanvas.Invalidate();
+            }
+
             for (int i = 0; i < _chkLayers.Length; i++)
             {
                 var chk = _chkLayers[i];
                 chk.ForeColor = LayerManager.GetLayerColor(i + 1, isDarkBackground: false);
-                chk.CheckedChanged += (s, e) => picCropCanvas.Invalidate();
+                chk.CheckedChanged += (s, e) => InvalidateAllCanvases();
             }
 
             btnLayerAllOn.Click += (s, e) =>
             {
                 foreach (var chk in _chkLayers) chk.Checked = true;
-                picCropCanvas.Invalidate();
+                InvalidateAllCanvases();
             };
 
             btnLayerAllOff.Click += (s, e) =>
             {
                 foreach (var chk in _chkLayers) chk.Checked = false;
-                picCropCanvas.Invalidate();
+                InvalidateAllCanvases();
             };
 
             btnDrawingFrame.Click += (s, e) => OpenDrawingFrameDialog();

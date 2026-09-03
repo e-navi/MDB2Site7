@@ -198,6 +198,11 @@ namespace Site7DrawingEditor
         /// </summary>
         public static Point3D CalculateEffectivePaperPosition(DrawingIkouModel ikou, List<DrawingIkouModel> allDrawingIkous, int scale)
         {
+            if (ikou.PP != null && (Math.Abs(ikou.PP.X) > 0.001 || Math.Abs(ikou.PP.Y) > 0.001))
+            {
+                return ikou.PP;
+            }
+
             if (scale <= 0) scale = 20;
 
             var validIkous = allDrawingIkous.Where(ik => ik.P1 != null && ik.P2 != null && ik.P3 != null &&
