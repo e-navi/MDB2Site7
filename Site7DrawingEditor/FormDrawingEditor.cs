@@ -955,7 +955,7 @@ namespace Site7DrawingEditor
                     }
                 }
 
-                using (var dlg = new FormIkou3D(curIkou, selectedDm))
+                using (var dlg = new FormIkou3D(curIkou, selectedDm, _db, chkColorByIkouFull.Checked))
                 {
                     if (dlg.ShowDialog(this) == DialogResult.OK && dlg.ResultDanmenRec != null)
                     {

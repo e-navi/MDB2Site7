@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Site7DrawingEditor.Services;
 
 namespace Site7DrawingEditor
 {
@@ -167,6 +168,8 @@ namespace Site7DrawingEditor
 
         private readonly DrawingIkouModel _targetIkou;
         private readonly DanmenRec? _targetDanmenRec;
+        private readonly DrawingDbManager? _db;
+        private readonly bool _chkColorByIkou;
         private readonly List<Point3D> _allLocalPoints = new List<Point3D>();
         private GridMesh? _currentMesh;
         private Danmen? _currentDanmen;
@@ -197,11 +200,13 @@ namespace Site7DrawingEditor
 
         public DanmenRec? ResultDanmenRec { get; private set; }
 
-        public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null)
+        public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true)
         {
             InitializeComponent();
             _targetIkou = ikou;
             _targetDanmenRec = targetDanmen;
+            _db = db;
+            _chkColorByIkou = chkColorByIkou;
 
             // Transform all 3D points from Survey space into Crop Box Local Center Space (補間ポイントも含めて全3D点群をメッシュ生成用に登録)
             var spline = new Xross_Spline();
@@ -479,15 +484,33 @@ namespace Site7DrawingEditor
                         return new Point3D(lx, ly, p.Z);
                     }).ToList();
 
-                    List<Point3D> renderPnts = (localPnts.Count >= 3)
+                    bool isLayerCurve = (_db != null) ? LayerManager.IsLayerCurve(_db, line.Layer) : true;
+                    bool shouldDrawCurve = isLayerCurve && localPnts.Count >= 3;
+
+                    List<Point3D> renderPnts = shouldDrawCurve
                         ? (line.Flag == 1 ? spline.Calc3DCloseCurvePoints(localPnts, 5) : spline.Calc3DCurvePoints(localPnts, 5))
                         : localPnts;
 
                     var pts = renderPnts.Select(p => LocalTo2D(p.X, p.Y)).ToArray();
                     if (pts.Length > 1)
                     {
-                        Color col = (line.Flag == 1 && _targetIkou.LList.IndexOf(line) > 0) ? Color.Red : Color.Black;
-                        using (var pen = new Pen(col, 1.8f))
+                        Color col;
+                        float penW = 1.8f;
+
+                        if (_chkColorByIkou)
+                        {
+                            string ikouName = ResolveParentIkouName(line, _targetIkou.Name);
+                            var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                            int toneLevel = layerDef != null ? layerDef.Mark : 1;
+                            float baseWidth = (layerDef != null && layerDef.Width > 0) ? (float)layerDef.Width : 1.8f;
+                            (col, penW) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, baseWidth);
+                        }
+                        else
+                        {
+                            col = LayerManager.GetLayerColor(line.Layer);
+                        }
+
+                        using (var pen = new Pen(col, penW))
                         {
                             g.DrawLines(pen, pts);
                         }
@@ -1078,6 +1101,41 @@ namespace Site7DrawingEditor
 
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private string ResolveParentIkouName(ZIkouLRec line, string fallbackName)
+        {
+            if (_db == null || line == null) return fallbackName;
+
+            if (line.Id > 0 && _db.MasterIkouList != null)
+            {
+                var ik = _db.MasterIkouList.FirstOrDefault(m => m.Id == line.Id);
+                if (ik != null && !string.IsNullOrEmpty(ik.Name))
+                {
+                    return ik.Name;
+                }
+            }
+
+            if (line.Pnts != null && line.Pnts.Count > 0 && _db.MasterIkouLList != null && _db.MasterIkouList != null)
+            {
+                var p0 = line.Pnts[0];
+                foreach (var ml in _db.MasterIkouLList)
+                {
+                    if (ml.Layer != line.Layer) continue;
+                    var pts = SqliteDrawingManager.ParsePrecsText(ml.Precs);
+                    if (pts.Count > 0 && Math.Abs(pts[0].X - p0.X) < 0.005 && Math.Abs(pts[0].Y - p0.Y) < 0.005)
+                    {
+                        var parentIkou = _db.MasterIkouList.FirstOrDefault(ik => ik.Id == ml.Id);
+                        if (parentIkou != null && !string.IsNullOrEmpty(parentIkou.Name))
+                        {
+                            line.Id = ml.Id; // キャッシュ
+                            return parentIkou.Name;
+                        }
+                    }
+                }
+            }
+
+            return fallbackName;
         }
     }
 }
