@@ -1302,7 +1302,19 @@ namespace Site7DrawingEditor
             UpdateDrawingPreviewState();
             if (!_formDrawingFrame.Visible)
             {
-                _formDrawingFrame.StartPosition = FormStartPosition.CenterParent;
+                Point targetPos = this.PointToScreen(new Point(0, panelHeader.Height));
+                var screen = Screen.FromControl(this);
+                if (targetPos.X + _formDrawingFrame.Width > screen.WorkingArea.Right)
+                    targetPos.X = screen.WorkingArea.Right - _formDrawingFrame.Width - 10;
+                if (targetPos.X < screen.WorkingArea.Left)
+                    targetPos.X = screen.WorkingArea.Left;
+                if (targetPos.Y + _formDrawingFrame.Height > screen.WorkingArea.Bottom)
+                    targetPos.Y = screen.WorkingArea.Bottom - _formDrawingFrame.Height - 10;
+                if (targetPos.Y < screen.WorkingArea.Top)
+                    targetPos.Y = screen.WorkingArea.Top;
+
+                _formDrawingFrame.StartPosition = FormStartPosition.Manual;
+                _formDrawingFrame.Location = targetPos;
                 _formDrawingFrame.Show(this);
             }
             else
