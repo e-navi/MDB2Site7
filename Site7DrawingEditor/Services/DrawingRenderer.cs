@@ -912,10 +912,21 @@ namespace Site7DrawingEditor.Services
 
                 if (pts.Length > 1)
                 {
-                    Color col = chkColorByIkouFull
-                        ? LayerManager.PaletteColors[(int)(curIkou.IID % LayerManager.PaletteColors.Length)]
-                        : LayerManager.GetLayerColor(line.Layer);
-                    using (var pen = new Pen(col, 1.5f))
+                    Color col;
+                    float penW = 1.5f;
+
+                    if (chkColorByIkouFull)
+                    {
+                        var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                        int toneLevel = layerDef != null ? layerDef.Mark : 1;
+                        (col, penW) = IkouNameColorService.Instance.GetIkouRenderStyle(curIkou.Name, toneLevel, 1.5f);
+                    }
+                    else
+                    {
+                        col = LayerManager.GetLayerColor(line.Layer);
+                    }
+
+                    using (var pen = new Pen(col, penW))
                     {
                         g.DrawLines(pen, pts);
                     }

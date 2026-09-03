@@ -1516,7 +1516,7 @@ namespace Site7DrawingEditor
                     curDrawing,
                     curSelectedIkou,
                     true,
-                    false,
+                    chkColorByIkouFull.Checked,
                     true,
                     true);
             }
