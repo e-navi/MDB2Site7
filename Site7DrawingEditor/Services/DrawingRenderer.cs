@@ -167,15 +167,16 @@ namespace Site7DrawingEditor.Services
                     }
 
                     Color color;
-                    float penWidth = 1.5f;
+                    var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                    float basePenWidth = (layerDef != null && layerDef.Width > 0) ? (float)layerDef.Width : 1.5f;
+                    float penWidth = basePenWidth;
 
                     if (chkColorByIkouFull)
                     {
                         var parentIkou = db.MasterIkouList.FirstOrDefault(ik => ik.Id == line.Id);
                         string ikouName = parentIkou?.Name ?? "";
-                        var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                         int toneLevel = layerDef != null ? layerDef.Mark : 1;
-                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, 1.6f);
+                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenWidth);
                     }
                     else
                     {
@@ -188,7 +189,9 @@ namespace Site7DrawingEditor.Services
                     {
                         if (isSelectedFeature)
                         {
-                            using (var linePen = new Pen(Color.FromArgb(255, color.R, color.G, color.B), Math.Max(2.5f, penWidth + 1.2f)))
+                            float multiplier = (basePenWidth <= 1.1f || penWidth <= 1.1f) ? 2.0f : 1.5f;
+                            float selectedPenWidth = penWidth * multiplier;
+                            using (var linePen = new Pen(color, selectedPenWidth))
                                 g.DrawLines(linePen, screenPts);
                         }
                         else

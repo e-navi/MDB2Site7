@@ -238,7 +238,9 @@ namespace Site7DbEditor.Services
                         bool isClosed = (line.Mode == 1 && screenPts.Length >= 3);
                         if (isSelectedFeature)
                         {
-                            using (var linePen = new Pen(Color.FromArgb(255, color.R, color.G, color.B), Math.Max(2.8f, penWidth + 1.2f)))
+                            float multiplier = (basePenWidth <= 1.1f || penWidth <= 1.1f) ? 2.0f : 1.5f;
+                            float selectedPenWidth = penWidth * multiplier;
+                            using (var linePen = new Pen(color, selectedPenWidth))
                             {
                                 g.DrawLines(linePen, screenPts);
                                 if (isClosed)
