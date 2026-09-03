@@ -768,29 +768,23 @@ namespace Site7DrawingEditor
             // 
             // btnEnvSettings
             // 
-            btnEnvSettings.BackColor = Color.FromArgb(215, 222, 235);
-            btnEnvSettings.FlatStyle = FlatStyle.Flat;
             btnEnvSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            btnEnvSettings.ForeColor = Color.FromArgb(30, 40, 60);
-            btnEnvSettings.Location = new Point(92, 4);
+            btnEnvSettings.Location = new Point(90, 4);
             btnEnvSettings.Name = "btnEnvSettings";
-            btnEnvSettings.Size = new Size(100, 26);
+            btnEnvSettings.Size = new Size(88, 26);
             btnEnvSettings.TabIndex = 1;
-            btnEnvSettings.Text = "⚙ 遺構図面設定";
-            btnEnvSettings.UseVisualStyleBackColor = false;
+            btnEnvSettings.Text = "遺構図面設定";
+            btnEnvSettings.UseVisualStyleBackColor = true;
             // 
             // btnResetPaperZoom
             // 
-            btnResetPaperZoom.BackColor = Color.FromArgb(215, 222, 235);
-            btnResetPaperZoom.FlatStyle = FlatStyle.Flat;
             btnResetPaperZoom.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            btnResetPaperZoom.ForeColor = Color.FromArgb(30, 40, 60);
-            btnResetPaperZoom.Location = new Point(198, 4);
+            btnResetPaperZoom.Location = new Point(184, 4);
             btnResetPaperZoom.Name = "btnResetPaperZoom";
             btnResetPaperZoom.Size = new Size(75, 26);
             btnResetPaperZoom.TabIndex = 2;
             btnResetPaperZoom.Text = "全図表示";
-            btnResetPaperZoom.UseVisualStyleBackColor = false;
+            btnResetPaperZoom.UseVisualStyleBackColor = true;
             // 
             // chkAutoZoomPaperIkou
             // 
@@ -799,7 +793,7 @@ namespace Site7DrawingEditor
             chkAutoZoomPaperIkou.CheckState = CheckState.Checked;
             chkAutoZoomPaperIkou.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             chkAutoZoomPaperIkou.ForeColor = Color.FromArgb(30, 40, 60);
-            chkAutoZoomPaperIkou.Location = new Point(280, 8);
+            chkAutoZoomPaperIkou.Location = new Point(266, 8);
             chkAutoZoomPaperIkou.Name = "chkAutoZoomPaperIkou";
             chkAutoZoomPaperIkou.Size = new Size(111, 19);
             chkAutoZoomPaperIkou.TabIndex = 3;

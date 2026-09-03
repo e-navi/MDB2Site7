@@ -137,7 +137,7 @@ namespace Site7DrawingEditor
                             btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
                         }
-                        else if (btn == btnResetCropZoom || btn == btnEnvSettings || btn == btnLayerAllOn || btn == btnLayerAllOff || btn == btnLayerSettings)
+                        else if (btn == btnResetCropZoom || btn == btnDrawingFrame || btn == btnEnvSettings || btn == btnResetPaperZoom || btn == btnLayerAllOn || btn == btnLayerAllOff || btn == btnLayerSettings || btn == btnPrintPaper)
                         {
                             // Site7DbEditorと同じ標準角丸ボタン (Windowsビジュアルスタイル)
                             btn.FlatStyle = FlatStyle.Standard;
