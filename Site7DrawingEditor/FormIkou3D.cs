@@ -423,7 +423,7 @@ namespace Site7DrawingEditor
             };
             int resY = resX;
 
-            // 1. 縦線 X = xi との交点を求め、上下端 (xi, minY) / (xi, maxY) に交点標高を設定
+            // 1. 縦線 X = xi との交点を求め、上下端 (xi, minY) / (xi, maxY) および中間点に交点標高を設定
             for (int i = 0; i < resX; i++)
             {
                 double xi = minX + i * (maxX - minX) / Math.Max(1, resX - 1);
@@ -438,19 +438,28 @@ namespace Site7DrawingEditor
 
                 if (intersections.Count > 0)
                 {
-                    double topZ = intersections.OrderByDescending(p => p.Y).First().Z;
-                    double botZ = intersections.OrderBy(p => p.Y).First().Z;
+                    var topCross = intersections.OrderByDescending(p => p.Y).First();
+                    var botCross = intersections.OrderBy(p => p.Y).First();
 
-                    var ptTop = new Point3D(xi, maxY, topZ);
-                    var ptBot = new Point3D(xi, minY, botZ);
+                    // 外周端点
+                    var ptTop = new Point3D(xi, maxY, topCross.Z);
+                    var ptBot = new Point3D(xi, minY, botCross.Z);
                     _allLocalPoints.Add(ptTop);
                     _allLocalPoints.Add(ptBot);
                     _virtualBoundaryPoints.Add(ptTop);
                     _virtualBoundaryPoints.Add(ptBot);
+
+                    // 外周端点と曲線交点との中間点
+                    var ptTopMid = new Point3D(xi, (topCross.Y + maxY) / 2.0, topCross.Z);
+                    var ptBotMid = new Point3D(xi, (botCross.Y + minY) / 2.0, botCross.Z);
+                    _allLocalPoints.Add(ptTopMid);
+                    _allLocalPoints.Add(ptBotMid);
+                    _virtualBoundaryPoints.Add(ptTopMid);
+                    _virtualBoundaryPoints.Add(ptBotMid);
                 }
             }
 
-            // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) に交点標高を設定
+            // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) および中間点に交点標高を設定
             for (int j = 0; j < resY; j++)
             {
                 double yj = minY + j * (maxY - minY) / Math.Max(1, resY - 1);
@@ -465,15 +474,24 @@ namespace Site7DrawingEditor
 
                 if (intersections.Count > 0)
                 {
-                    double rightZ = intersections.OrderByDescending(p => p.X).First().Z;
-                    double leftZ = intersections.OrderBy(p => p.X).First().Z;
+                    var rightCross = intersections.OrderByDescending(p => p.X).First();
+                    var leftCross = intersections.OrderBy(p => p.X).First();
 
-                    var ptRight = new Point3D(maxX, yj, rightZ);
-                    var ptLeft = new Point3D(minX, yj, leftZ);
+                    // 外周端点
+                    var ptRight = new Point3D(maxX, yj, rightCross.Z);
+                    var ptLeft = new Point3D(minX, yj, leftCross.Z);
                     _allLocalPoints.Add(ptRight);
                     _allLocalPoints.Add(ptLeft);
                     _virtualBoundaryPoints.Add(ptRight);
                     _virtualBoundaryPoints.Add(ptLeft);
+
+                    // 外周端点と曲線交点との中間点
+                    var ptRightMid = new Point3D((rightCross.X + maxX) / 2.0, yj, rightCross.Z);
+                    var ptLeftMid = new Point3D((leftCross.X + minX) / 2.0, yj, leftCross.Z);
+                    _allLocalPoints.Add(ptRightMid);
+                    _allLocalPoints.Add(ptLeftMid);
+                    _virtualBoundaryPoints.Add(ptRightMid);
+                    _virtualBoundaryPoints.Add(ptLeftMid);
                 }
             }
         }
