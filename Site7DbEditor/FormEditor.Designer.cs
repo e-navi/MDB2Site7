@@ -71,6 +71,7 @@ namespace Site7DbEditor
             btnLayerAllOn = new Button();
             btnLayerAllOff = new Button();
             btnLayerSettings = new Button();
+            btnIkouNameColorSettings = new Button();
             grpDspTarget = new GroupBox();
             chkShowKikai = new CheckBox();
             chkShowKikaiName = new CheckBox();
@@ -631,6 +632,7 @@ namespace Site7DbEditor
             panelLeftContent.Controls.Add(btnLayerAllOn);
             panelLeftContent.Controls.Add(btnLayerAllOff);
             panelLeftContent.Controls.Add(btnLayerSettings);
+            panelLeftContent.Controls.Add(btnIkouNameColorSettings);
             panelLeftContent.Controls.Add(grpDspTarget);
             panelLeftContent.Controls.Add(grpDisplayOptions);
             panelLeftContent.Dock = DockStyle.Fill;
@@ -954,6 +956,16 @@ namespace Site7DbEditor
             btnLayerSettings.Text = "レイヤ設定";
             btnLayerSettings.UseVisualStyleBackColor = true;
             // 
+            // btnIkouNameColorSettings
+            // 
+            btnIkouNameColorSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnIkouNameColorSettings.Location = new Point(6, 347);
+            btnIkouNameColorSettings.Name = "btnIkouNameColorSettings";
+            btnIkouNameColorSettings.Size = new Size(118, 23);
+            btnIkouNameColorSettings.TabIndex = 25;
+            btnIkouNameColorSettings.Text = "遺構名色設定";
+            btnIkouNameColorSettings.UseVisualStyleBackColor = true;
+            // 
             // grpDspTarget
             // 
             grpDspTarget.Controls.Add(chkShowKikai);
@@ -970,7 +982,7 @@ namespace Site7DbEditor
             grpDspTarget.Controls.Add(chkShowGrid);
             grpDspTarget.Controls.Add(chkShowScale);
             grpDspTarget.Controls.Add(chkShowDrawingFrame);
-            grpDspTarget.Location = new Point(4, 351);
+            grpDspTarget.Location = new Point(4, 373);
             grpDspTarget.Name = "grpDspTarget";
             grpDspTarget.Size = new Size(124, 248);
             grpDspTarget.TabIndex = 37;
@@ -2832,6 +2844,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.Button btnLayerAllOn;
         private System.Windows.Forms.Button btnLayerAllOff;
         private System.Windows.Forms.Button btnLayerSettings;
+        private System.Windows.Forms.Button btnIkouNameColorSettings;
         private System.Windows.Forms.GroupBox grpDisplayOptions;
         private System.Windows.Forms.Label lblEntityNameHeader;
         private System.Windows.Forms.CheckBox chkShowIbutuName;

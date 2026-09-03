@@ -137,7 +137,7 @@ namespace Site7DrawingEditor
                             btn.ForeColor = Color.White;
                             btn.FlatStyle = FlatStyle.Flat;
                         }
-                        else if (btn == btnResetCropZoom || btn == btnDrawingFrame || btn == btnEnvSettings || btn == btnResetPaperZoom || btn == btnLayerAllOn || btn == btnLayerAllOff || btn == btnLayerSettings || btn == btnPrintPaper)
+                        else if (btn == btnResetCropZoom || btn == btnDrawingFrame || btn == btnEnvSettings || btn == btnResetPaperZoom || btn == btnLayerAllOn || btn == btnLayerAllOff || btn == btnLayerSettings || btn == btnIkouNameColorSettings || btn == btnPrintPaper)
                         {
                             // Site7DbEditorと同じ標準角丸ボタン (Windowsビジュアルスタイル)
                             btn.FlatStyle = FlatStyle.Standard;
@@ -371,6 +371,19 @@ namespace Site7DrawingEditor
                     {
                         LayerDefinitionService.Instance.LoadAll(targetDb);
                         UpdateLayerCheckboxColors();
+                        RefreshAllCanvases();
+                    }
+                }
+            };
+
+            btnIkouNameColorSettings.Click += (s, e) =>
+            {
+                string? targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
+                using (var form = new FormIkouNameColorSettings(targetDb))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        IkouNameColorService.Instance.Load(targetDb);
                         RefreshAllCanvases();
                     }
                 }

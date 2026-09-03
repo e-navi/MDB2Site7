@@ -25,6 +25,56 @@ namespace Site7DrawingEditor.Services
 
         public List<IkouNameColorItem> Items { get; } = new();
 
+        public void SaveToFile(string filePath)
+        {
+            try
+            {
+                string? dir = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                var sb = new StringBuilder();
+                sb.AppendLine("# 遺構名(プレフィックス)\tR,G,B,A");
+                foreach (var item in Items)
+                {
+                    if (string.IsNullOrWhiteSpace(item.NamePattern)) continue;
+                    sb.AppendLine($"{item.NamePattern}\t{item.Color.R},{item.Color.G},{item.Color.B},{item.Color.A}");
+                }
+
+                try
+                {
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                    File.WriteAllText(filePath, sb.ToString(), Encoding.GetEncoding(932));
+                }
+                catch
+                {
+                    File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+                }
+            }
+            catch { }
+        }
+
+        public void SaveToGenbaOrSystem(string? genbaDbPath)
+        {
+            string? genbaDir = !string.IsNullOrEmpty(genbaDbPath) ? Path.GetDirectoryName(genbaDbPath) : null;
+            if (!string.IsNullOrEmpty(genbaDir))
+            {
+                string genbaDefDir = Path.Combine(genbaDir, "Def");
+                if (Directory.Exists(genbaDefDir))
+                {
+                    SaveToFile(Path.Combine(genbaDefDir, FileName));
+                    return;
+                }
+                SaveToFile(Path.Combine(genbaDir, FileName));
+                return;
+            }
+
+            string sysDef = Directory.Exists(DefaultSystemDefDir) ? DefaultSystemDefDir : FallbackSystemDefDir;
+            SaveToFile(Path.Combine(sysDef, FileName));
+        }
+
         public void Load(string? genbaDbPath)
         {
             Items.Clear();

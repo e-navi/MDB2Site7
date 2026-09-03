@@ -733,6 +733,16 @@ namespace Site7DbEditor {
                 }
             };
 
+            btnIkouNameColorSettings.Click += (s, e) => {
+                using (var form = new FormIkouNameColorSettings(_db)) {
+                    if (form.ShowDialog(this) == DialogResult.OK) {
+                        IkouNameColorService.Instance.Load(_db.CurrentDbPath);
+                        picMapCanvas.Invalidate();
+                        picDrawingPreview.Invalidate();
+                    }
+                }
+            };
+
             btnDrawingFrame.Click += (s, e) => OpenDrawingFrameDialog();
 
             this.chkShowIkou.CheckedChanged += (s, e) => {

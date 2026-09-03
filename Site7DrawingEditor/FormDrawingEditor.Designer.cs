@@ -47,6 +47,7 @@ namespace Site7DrawingEditor
             btnLayerAllOn = new Button();
             btnLayerAllOff = new Button();
             btnLayerSettings = new Button();
+            btnIkouNameColorSettings = new Button();
             lblEntityNameHeader = new Label();
             chkShowIbutu = new CheckBox();
             chkShowIbutuName = new CheckBox();
@@ -283,19 +284,20 @@ namespace Site7DrawingEditor
             panelHcLeftSidebar.Controls.Add(btnLayerAllOn);
             panelHcLeftSidebar.Controls.Add(btnLayerAllOff);
             panelHcLeftSidebar.Controls.Add(btnLayerSettings);
+            panelHcLeftSidebar.Controls.Add(btnIkouNameColorSettings);
             panelHcLeftSidebar.Controls.Add(lblEntityNameHeader);
+            panelHcLeftSidebar.Controls.Add(chkShowKikai);
+            panelHcLeftSidebar.Controls.Add(chkShowKikaiName);
             panelHcLeftSidebar.Controls.Add(chkShowIbutu);
             panelHcLeftSidebar.Controls.Add(chkShowIbutuName);
             panelHcLeftSidebar.Controls.Add(chkShowIkou);
             panelHcLeftSidebar.Controls.Add(chkShowIkouName);
-            panelHcLeftSidebar.Controls.Add(chkShowKikai);
-            panelHcLeftSidebar.Controls.Add(chkShowKikaiName);
             panelHcLeftSidebar.Controls.Add(chkShowDrawingFrame);
             panelHcLeftSidebar.Controls.Add(chkColorByIkouFull);
             panelHcLeftSidebar.Controls.Add(chkShowWhiteBackground);
             panelHcLeftSidebar.Location = new Point(0, 0);
             panelHcLeftSidebar.Name = "panelHcLeftSidebar";
-            panelHcLeftSidebar.Size = new Size(130, 480);
+            panelHcLeftSidebar.Size = new Size(130, 505);
             panelHcLeftSidebar.TabIndex = 1;
             // 
             // btnDrawingFrame
@@ -581,15 +583,27 @@ namespace Site7DrawingEditor
             btnLayerSettings.Text = "レイヤ設定";
             btnLayerSettings.UseVisualStyleBackColor = true;
             // 
+            // btnIkouNameColorSettings
+            // 
+            btnIkouNameColorSettings.BackColor = Color.White;
+            btnIkouNameColorSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnIkouNameColorSettings.ForeColor = Color.FromArgb(20, 20, 20);
+            btnIkouNameColorSettings.Location = new Point(6, 314);
+            btnIkouNameColorSettings.Name = "btnIkouNameColorSettings";
+            btnIkouNameColorSettings.Size = new Size(118, 23);
+            btnIkouNameColorSettings.TabIndex = 24;
+            btnIkouNameColorSettings.Text = "遺構名色設定";
+            btnIkouNameColorSettings.UseVisualStyleBackColor = true;
+            // 
             // lblEntityNameHeader
             // 
             lblEntityNameHeader.AutoSize = true;
             lblEntityNameHeader.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblEntityNameHeader.ForeColor = Color.Red;
-            lblEntityNameHeader.Location = new Point(82, 316);
+            lblEntityNameHeader.Location = new Point(82, 341);
             lblEntityNameHeader.Name = "lblEntityNameHeader";
             lblEntityNameHeader.Size = new Size(31, 15);
-            lblEntityNameHeader.TabIndex = 24;
+            lblEntityNameHeader.TabIndex = 25;
             lblEntityNameHeader.Text = "名称";
             // 
             // chkShowKikai
@@ -599,10 +613,10 @@ namespace Site7DrawingEditor
             chkShowKikai.CheckState = CheckState.Checked;
             chkShowKikai.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowKikai.ForeColor = Color.Blue;
-            chkShowKikai.Location = new Point(6, 333);
+            chkShowKikai.Location = new Point(6, 358);
             chkShowKikai.Name = "chkShowKikai";
             chkShowKikai.Size = new Size(62, 19);
-            chkShowKikai.TabIndex = 25;
+            chkShowKikai.TabIndex = 26;
             chkShowKikai.Text = "基準点";
             chkShowKikai.UseVisualStyleBackColor = true;
             // 
@@ -611,10 +625,10 @@ namespace Site7DrawingEditor
             chkShowKikaiName.AutoSize = true;
             chkShowKikaiName.Checked = true;
             chkShowKikaiName.CheckState = CheckState.Checked;
-            chkShowKikaiName.Location = new Point(90, 336);
+            chkShowKikaiName.Location = new Point(90, 361);
             chkShowKikaiName.Name = "chkShowKikaiName";
             chkShowKikaiName.Size = new Size(15, 14);
-            chkShowKikaiName.TabIndex = 26;
+            chkShowKikaiName.TabIndex = 27;
             chkShowKikaiName.UseVisualStyleBackColor = true;
             // 
             // chkShowIbutu
@@ -624,20 +638,20 @@ namespace Site7DrawingEditor
             chkShowIbutu.CheckState = CheckState.Checked;
             chkShowIbutu.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowIbutu.ForeColor = Color.Red;
-            chkShowIbutu.Location = new Point(6, 355);
+            chkShowIbutu.Location = new Point(6, 380);
             chkShowIbutu.Name = "chkShowIbutu";
             chkShowIbutu.Size = new Size(50, 19);
-            chkShowIbutu.TabIndex = 27;
+            chkShowIbutu.TabIndex = 28;
             chkShowIbutu.Text = "遺物";
             chkShowIbutu.UseVisualStyleBackColor = true;
             // 
             // chkShowIbutuName
             // 
             chkShowIbutuName.AutoSize = true;
-            chkShowIbutuName.Location = new Point(90, 358);
+            chkShowIbutuName.Location = new Point(90, 383);
             chkShowIbutuName.Name = "chkShowIbutuName";
             chkShowIbutuName.Size = new Size(15, 14);
-            chkShowIbutuName.TabIndex = 28;
+            chkShowIbutuName.TabIndex = 29;
             chkShowIbutuName.UseVisualStyleBackColor = true;
             // 
             // chkShowIkou
@@ -647,20 +661,20 @@ namespace Site7DrawingEditor
             chkShowIkou.CheckState = CheckState.Checked;
             chkShowIkou.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowIkou.ForeColor = Color.Blue;
-            chkShowIkou.Location = new Point(6, 377);
+            chkShowIkou.Location = new Point(6, 402);
             chkShowIkou.Name = "chkShowIkou";
             chkShowIkou.Size = new Size(50, 19);
-            chkShowIkou.TabIndex = 29;
+            chkShowIkou.TabIndex = 30;
             chkShowIkou.Text = "遺構";
             chkShowIkou.UseVisualStyleBackColor = true;
             // 
             // chkShowIkouName
             // 
             chkShowIkouName.AutoSize = true;
-            chkShowIkouName.Location = new Point(90, 380);
+            chkShowIkouName.Location = new Point(90, 405);
             chkShowIkouName.Name = "chkShowIkouName";
             chkShowIkouName.Size = new Size(15, 14);
-            chkShowIkouName.TabIndex = 30;
+            chkShowIkouName.TabIndex = 31;
             chkShowIkouName.UseVisualStyleBackColor = true;
             // 
             // chkShowDrawingFrame
@@ -670,10 +684,10 @@ namespace Site7DrawingEditor
             chkShowDrawingFrame.CheckState = CheckState.Unchecked;
             chkShowDrawingFrame.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowDrawingFrame.ForeColor = Color.FromArgb(30, 40, 60);
-            chkShowDrawingFrame.Location = new Point(6, 400);
+            chkShowDrawingFrame.Location = new Point(6, 424);
             chkShowDrawingFrame.Name = "chkShowDrawingFrame";
             chkShowDrawingFrame.Size = new Size(50, 19);
-            chkShowDrawingFrame.TabIndex = 31;
+            chkShowDrawingFrame.TabIndex = 32;
             chkShowDrawingFrame.Text = "図枠";
             chkShowDrawingFrame.UseVisualStyleBackColor = true;
             // 
@@ -684,10 +698,10 @@ namespace Site7DrawingEditor
             chkColorByIkouFull.CheckState = CheckState.Unchecked;
             chkColorByIkouFull.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkColorByIkouFull.ForeColor = Color.FromArgb(30, 40, 60);
-            chkColorByIkouFull.Location = new Point(6, 420);
+            chkColorByIkouFull.Location = new Point(6, 444);
             chkColorByIkouFull.Name = "chkColorByIkouFull";
             chkColorByIkouFull.Size = new Size(98, 19);
-            chkColorByIkouFull.TabIndex = 32;
+            chkColorByIkouFull.TabIndex = 33;
             chkColorByIkouFull.Text = "遺構名色優先";
             chkColorByIkouFull.UseVisualStyleBackColor = true;
             // 
@@ -698,10 +712,10 @@ namespace Site7DrawingEditor
             chkShowWhiteBackground.CheckState = CheckState.Checked;
             chkShowWhiteBackground.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowWhiteBackground.ForeColor = Color.FromArgb(30, 40, 60);
-            chkShowWhiteBackground.Location = new Point(6, 442);
+            chkShowWhiteBackground.Location = new Point(6, 466);
             chkShowWhiteBackground.Name = "chkShowWhiteBackground";
             chkShowWhiteBackground.Size = new Size(74, 19);
-            chkShowWhiteBackground.TabIndex = 33;
+            chkShowWhiteBackground.TabIndex = 34;
             chkShowWhiteBackground.Text = "背景白色";
             chkShowWhiteBackground.UseVisualStyleBackColor = true;
             // 
@@ -1571,6 +1585,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.GroupBox grpFeatureDetailPreview;
         private System.Windows.Forms.PictureBox picFeatureDetailCanvas;
 
+        private System.Windows.Forms.Button btnIkouNameColorSettings;
         private System.Windows.Forms.CheckBox chkColorByIkouFull;
 
         private System.Windows.Forms.StatusStrip statusStripBar;
