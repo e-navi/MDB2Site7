@@ -21,6 +21,12 @@ namespace Site7DbEditor
         private ComboBox CBoxSize = null!;
         private ComboBox CBoxWidth = null!;
         private ComboBox CBoxLineStyle = null!;
+        private Label lblLayerName = null!;
+        private Label lblColor = null!;
+        private Label lblMark = null!;
+        private Label lblSize = null!;
+        private Label lblWidth = null!;
+        private Label lblLineStyle = null!;
         private Button button1 = null!;
         private Button btnExportToMaster = null!;
         private Button btnImportFromMaster = null!;
@@ -91,12 +97,12 @@ namespace Site7DbEditor
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
 
             // Labels
-            var lblLayerName = CreateLabel("レイヤ名", new Point(245, 45));
-            var lblColor = CreateLabel("表示色", new Point(245, 82));
-            var lblMark = CreateLabel("マーク", new Point(245, 119));
-            var lblSize = CreateLabel("サイズ", new Point(245, 156));
-            var lblWidth = CreateLabel("線幅", new Point(245, 193));
-            var lblLineStyle = CreateLabel("線種", new Point(245, 230));
+            lblLayerName = CreateLabel("レイヤ名", new Point(245, 45));
+            lblColor = CreateLabel("表示色", new Point(245, 82));
+            lblMark = CreateLabel("マーク", new Point(245, 119));
+            lblSize = CreateLabel("サイズ", new Point(245, 156));
+            lblWidth = CreateLabel("線幅", new Point(245, 193));
+            lblLineStyle = CreateLabel("線種", new Point(245, 230));
 
             // Edit controls
             textBox1 = new TextBox
@@ -124,7 +130,7 @@ namespace Site7DbEditor
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Location = new Point(320, 116),
-                Size = new Size(80, 26),
+                Size = new Size(95, 26),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
             };
             CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
@@ -278,6 +284,70 @@ namespace Site7DbEditor
             };
         }
 
+        private void UpdateVisibilityByGroup(LayerGroup group)
+        {
+            if (group == LayerGroup.Ikou)
+            {
+                lblMark.Text = "濃淡";
+                lblMark.Visible = true;
+                CBoxMark.Visible = true;
+                CBoxMark.Size = new Size(95, 26);
+                SetCBoxMarkItems(new[] { "1 濃い", "2 中間", "3 薄い" });
+
+                lblSize.Visible = false;
+                CBoxSize.Visible = false;
+
+                lblWidth.Visible = true;
+                CBoxWidth.Visible = true;
+
+                lblLineStyle.Visible = true;
+                CBoxLineStyle.Visible = true;
+            }
+            else if (group == LayerGroup.Ibutu || group == LayerGroup.Kikai)
+            {
+                lblMark.Text = "マーク";
+                lblMark.Visible = true;
+                CBoxMark.Visible = true;
+                CBoxMark.Size = new Size(80, 26);
+                SetCBoxMarkItems(new[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
+
+                lblSize.Visible = true;
+                CBoxSize.Visible = true;
+
+                lblWidth.Visible = false;
+                CBoxWidth.Visible = false;
+
+                lblLineStyle.Visible = false;
+                CBoxLineStyle.Visible = false;
+            }
+            else if (group == LayerGroup.Sakuzu)
+            {
+                lblMark.Visible = false;
+                CBoxMark.Visible = false;
+
+                lblSize.Visible = false;
+                CBoxSize.Visible = false;
+
+                lblWidth.Visible = true;
+                CBoxWidth.Visible = true;
+
+                lblLineStyle.Visible = true;
+                CBoxLineStyle.Visible = true;
+            }
+        }
+
+        private void SetCBoxMarkItems(string[] items)
+        {
+            if (CBoxMark.Items.Count == items.Length && CBoxMark.Items.Cast<string>().SequenceEqual(items))
+                return;
+
+            int curSel = CBoxMark.SelectedIndex;
+            CBoxMark.Items.Clear();
+            CBoxMark.Items.AddRange(items);
+            if (curSel >= 0 && curSel < CBoxMark.Items.Count)
+                CBoxMark.SelectedIndex = curSel;
+        }
+
         private void ComboBoxLayerG_SelectedIndexChanged(object? sender, EventArgs e)
         {
             var group = GetSelectedGroup();
@@ -321,6 +391,8 @@ namespace Site7DbEditor
             _isUpdatingUi = true;
             try
             {
+                UpdateVisibilityByGroup(group);
+
                 textBox1.Text = item.Name;
                 if (group == LayerGroup.Sakuzu)
                 {
@@ -336,7 +408,16 @@ namespace Site7DbEditor
                 }
 
                 CBoxColor.SelectedIndex = Math.Clamp(item.Color - 1, 0, CBoxColor.Items.Count - 1);
-                CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, CBoxMark.Items.Count - 1);
+
+                if (group == LayerGroup.Ikou)
+                {
+                    CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, 2);
+                }
+                else
+                {
+                    CBoxMark.SelectedIndex = Math.Clamp(item.Mark - 1, 0, 7);
+                }
+
                 CBoxSize.Text = item.Size.ToString("F1");
                 CBoxWidth.SelectedIndex = Math.Clamp(item.Width - 1, 0, CBoxWidth.Items.Count - 1);
                 CBoxLineStyle.SelectedIndex = (item.LType == 2) ? 1 : 0;
@@ -357,7 +438,16 @@ namespace Site7DbEditor
 
             item.Name = textBox1.Text.Trim();
             item.Color = Math.Clamp(CBoxColor.SelectedIndex + 1, 1, 16);
-            item.Mark = Math.Clamp(CBoxMark.SelectedIndex + 1, 1, 8);
+
+            if (group == LayerGroup.Ikou)
+            {
+                item.Mark = Math.Clamp(CBoxMark.SelectedIndex + 1, 1, 3);
+            }
+            else
+            {
+                item.Mark = Math.Clamp(CBoxMark.SelectedIndex + 1, 1, 8);
+            }
+
             item.Size = double.TryParse(CBoxSize.Text, out double sizeVal) ? sizeVal : 1.0;
             item.Width = Math.Clamp(CBoxWidth.SelectedIndex + 1, 1, 10);
             item.LType = (CBoxLineStyle.SelectedIndex == 1) ? 2 : 1;
