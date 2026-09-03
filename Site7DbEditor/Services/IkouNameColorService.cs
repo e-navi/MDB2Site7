@@ -12,7 +12,9 @@ namespace Site7DbEditor.Services
         public string NamePattern { get; set; } = "";
         public int ColorIndex { get; set; } = 4; // 1..16 (デフォルト青)
 
-        public Color Color => EditorLayerService.PaletteColors[Math.Clamp(ColorIndex - 1, 0, 15)];
+        public Color Color => (ColorIndex >= 1 && ColorIndex < EditorLayerService.LayerTableColors.Length)
+            ? EditorLayerService.LayerTableColors[ColorIndex]
+            : Color.FromArgb(0, 0, 0);
     }
 
     public class IkouNameColorService

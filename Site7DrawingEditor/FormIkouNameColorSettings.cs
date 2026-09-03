@@ -291,22 +291,40 @@ namespace Site7DrawingEditor
 
         private void CBoxColor_DrawItem(object? sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0) return;
+            if (sender is not ComboBox cmb || e.Index < 0) return;
             e.DrawBackground();
 
-            Color c = LayerManager.GetLayerColor(e.Index + 1, false);
-            var rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top + 3, 20, e.Bounds.Height - 6);
-            using (var brush = new SolidBrush(c))
-            {
-                e.Graphics.FillRectangle(brush, rect);
-            }
-            e.Graphics.DrawRectangle(Pens.Black, rect);
+            string txt = cmb.Items[e.Index]?.ToString() ?? "";
+            Color col = (e.Index < LayerManager.LayerTableColors.Length)
+                ? LayerManager.LayerTableColors[e.Index]
+                : e.ForeColor;
 
-            string name = IkouNameColorService.ColorNames[e.Index];
-            using (var textBrush = new SolidBrush(e.ForeColor))
+            int boxSize = 14;
+            int boxX = e.Bounds.X + 4;
+            int boxY = e.Bounds.Y + (e.Bounds.Height - boxSize) / 2;
+
+            using (var b = new SolidBrush(col))
             {
-                e.Graphics.DrawString(name, e.Font ?? this.Font, textBrush, e.Bounds.Left + 30, e.Bounds.Top + 3);
+                e.Graphics.FillRectangle(b, boxX, boxY, boxSize, boxSize);
             }
+            using (var borderPen = new Pen(Color.FromArgb(120, 120, 120)))
+            {
+                e.Graphics.DrawRectangle(borderPen, boxX, boxY, boxSize, boxSize);
+            }
+
+            Color textColor = col;
+            if (col.R > 220 && col.G > 220 && col.B > 220)
+            {
+                textColor = Color.FromArgb(60, 60, 60);
+            }
+
+            using (var textBrush = new SolidBrush(textColor))
+            using (var font = new Font("Yu Gothic UI", 10F, FontStyle.Bold))
+            {
+                float ym = (e.Bounds.Height - e.Graphics.MeasureString(txt, font).Height) / 2;
+                e.Graphics.DrawString(txt, font, textBrush, boxX + boxSize + 6, e.Bounds.Y + ym);
+            }
+
             e.DrawFocusRectangle();
         }
 
