@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,9 @@ namespace Site7DrawingEditor.Services
     public class IkouNameColorItem
     {
         public string NamePattern { get; set; } = "";
-        public Color Color { get; set; } = Color.FromArgb(255, 30, 115, 210);
+        public int ColorIndex { get; set; } = 4; // 1..16 (デフォルト青)
+
+        public Color Color => LayerManager.GetLayerColor(ColorIndex, false);
     }
 
     public class IkouNameColorService
@@ -22,6 +23,12 @@ namespace Site7DrawingEditor.Services
         public const string FileName = "遺構名色.txt";
         public const string DefaultSystemDefDir = @"C:\SITE7\GENBA\NEW\Def";
         public const string FallbackSystemDefDir = @"C:\SITE7\DEF";
+
+        public static readonly string[] ColorNames = new[]
+        {
+            "黒", "赤", "緑", "青", "黄", "マゼンタ", "シアン", "白",
+            "牡丹", "茶", "橙", "薄緑", "明青", "青紫", "明灰", "暗灰"
+        };
 
         public List<IkouNameColorItem> Items { get; } = new();
 
@@ -36,11 +43,11 @@ namespace Site7DrawingEditor.Services
                 }
 
                 var sb = new StringBuilder();
-                sb.AppendLine("# 遺構名(プレフィックス)\tR,G,B,A");
+                sb.AppendLine("# 遺構名(プレフィックス)\t色番号(1-16)");
                 foreach (var item in Items)
                 {
                     if (string.IsNullOrWhiteSpace(item.NamePattern)) continue;
-                    sb.AppendLine($"{item.NamePattern}\t{item.Color.R},{item.Color.G},{item.Color.B},{item.Color.A}");
+                    sb.AppendLine($"{item.NamePattern}\t{item.ColorIndex}");
                 }
 
                 try
@@ -85,7 +92,7 @@ namespace Site7DrawingEditor.Services
                 ReadFromFile(filePath);
             }
 
-            // デフォルトの基本パターン登録（未定義時のフォールバック）
+            // 未定義時のフォールバック
             if (Items.Count == 0)
             {
                 RegisterDefaultPatterns();
@@ -94,14 +101,17 @@ namespace Site7DrawingEditor.Services
 
         private void RegisterDefaultPatterns()
         {
-            Items.Add(new IkouNameColorItem { NamePattern = "SB", Color = Color.FromArgb(255, 220, 38, 38) });    // 竪穴建物 (赤)
-            Items.Add(new IkouNameColorItem { NamePattern = "SD", Color = Color.FromArgb(255, 37, 99, 235) });    // 溝 (青)
-            Items.Add(new IkouNameColorItem { NamePattern = "SK", Color = Color.FromArgb(255, 22, 163, 74) });    // 土坑 (緑)
-            Items.Add(new IkouNameColorItem { NamePattern = "Pit", Color = Color.FromArgb(255, 217, 119, 6) });   // ピット (橙/黄)
-            Items.Add(new IkouNameColorItem { NamePattern = "P", Color = Color.FromArgb(255, 217, 119, 6) });     // P (橙/黄)
-            Items.Add(new IkouNameColorItem { NamePattern = "SX", Color = Color.FromArgb(255, 147, 51, 234) });   // その他遺構 (紫)
-            Items.Add(new IkouNameColorItem { NamePattern = "SI", Color = Color.FromArgb(255, 13, 148, 136) });   // 掘立柱 (青緑)
-            Items.Add(new IkouNameColorItem { NamePattern = "ST", Color = Color.FromArgb(255, 180, 83, 9) });     // 包含層/集石 (茶)
+            Items.Add(new IkouNameColorItem { NamePattern = "Pit", ColorIndex = 8 }); // 白/灰
+            Items.Add(new IkouNameColorItem { NamePattern = "SA", ColorIndex = 2 });  // 赤
+            Items.Add(new IkouNameColorItem { NamePattern = "SB", ColorIndex = 3 });  // 緑
+            Items.Add(new IkouNameColorItem { NamePattern = "SD", ColorIndex = 8 });  // 白
+            Items.Add(new IkouNameColorItem { NamePattern = "SE", ColorIndex = 2 });  // 赤
+            Items.Add(new IkouNameColorItem { NamePattern = "SF", ColorIndex = 3 });  // 緑
+            Items.Add(new IkouNameColorItem { NamePattern = "SH", ColorIndex = 7 });  // シアン
+            Items.Add(new IkouNameColorItem { NamePattern = "SK", ColorIndex = 8 });  // 白
+            Items.Add(new IkouNameColorItem { NamePattern = "SR", ColorIndex = 9 });  // 牡丹
+            Items.Add(new IkouNameColorItem { NamePattern = "SX", ColorIndex = 10 }); // 茶
+            Items.Add(new IkouNameColorItem { NamePattern = "その他", ColorIndex = 4 }); // 最終行: その他(青)
         }
 
         private string? ResolveFilePath(string? genbaDbPath)
@@ -142,10 +152,20 @@ namespace Site7DrawingEditor.Services
                     lines = File.ReadAllLines(path, Encoding.UTF8);
                 }
 
+                bool isFirstLine = true;
                 foreach (var line in lines)
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
                     var trimmed = line.Trim();
+
+                    // 1行目は説明行としてスキップ (または # // で始まる行)
+                    if (isFirstLine)
+                    {
+                        isFirstLine = false;
+                        if (trimmed.StartsWith("#") || trimmed.StartsWith("//") || trimmed.Contains("遺構名") || trimmed.Contains("色"))
+                            continue;
+                    }
+
                     if (trimmed.StartsWith("#") || trimmed.StartsWith("//")) continue;
 
                     string[] parts = trimmed.Contains('\t') ? trimmed.Split('\t') : trimmed.Split(',');
@@ -154,67 +174,49 @@ namespace Site7DrawingEditor.Services
                     string pattern = parts[0].Trim();
                     if (string.IsNullOrEmpty(pattern)) continue;
 
-                    string colorStr = string.Join(",", parts.Skip(1)).Trim();
-                    Color color = ParseColor(colorStr);
+                    string colorStr = parts[1].Trim();
+                    int colorIdx = 1;
 
-                    Items.Add(new IkouNameColorItem { NamePattern = pattern, Color = color });
+                    if (int.TryParse(colorStr, out int parsedIdx))
+                    {
+                        colorIdx = Math.Clamp(parsedIdx, 1, 16);
+                    }
+                    else
+                    {
+                        // 色名からの変換 (例: "赤", "青")
+                        int nameIdx = Array.IndexOf(ColorNames, colorStr);
+                        if (nameIdx >= 0)
+                        {
+                            colorIdx = nameIdx + 1;
+                        }
+                    }
+
+                    Items.Add(new IkouNameColorItem { NamePattern = pattern, ColorIndex = colorIdx });
                 }
             }
             catch { }
         }
 
-        public static Color ParseColor(string colorStr)
+        /// <summary>
+        /// 遺構名に対する基本色 (Color, ColorIndex) を取得。
+        /// 一致しない場合は「最終行の色」を使用。
+        /// </summary>
+        public (Color Color, int ColorIndex) GetIkouBaseColor(string ikouName)
         {
-            if (string.IsNullOrWhiteSpace(colorStr)) return Color.FromArgb(255, 40, 110, 210);
+            if (Items.Count == 0)
+                RegisterDefaultPatterns();
 
-            var parts = colorStr.Split(new[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length >= 4 &&
-                int.TryParse(parts[0], out int r) &&
-                int.TryParse(parts[1], out int g) &&
-                int.TryParse(parts[2], out int b) &&
-                int.TryParse(parts[3], out int a))
-            {
-                return Color.FromArgb(Math.Clamp(a, 0, 255), Math.Clamp(r, 0, 255), Math.Clamp(g, 0, 255), Math.Clamp(b, 0, 255));
-            }
-            if (parts.Length == 3 &&
-                int.TryParse(parts[0], out int r3) &&
-                int.TryParse(parts[1], out int g3) &&
-                int.TryParse(parts[2], out int b3))
-            {
-                return Color.FromArgb(255, Math.Clamp(r3, 0, 255), Math.Clamp(g3, 0, 255), Math.Clamp(b3, 0, 255));
-            }
+            // 最終行の色 (対象外のフォールバック)
+            var lastItem = Items.LastOrDefault() ?? new IkouNameColorItem { NamePattern = "その他", ColorIndex = 4 };
 
-            if (colorStr.StartsWith("#"))
-            {
-                string hex = colorStr.Substring(1).Trim();
-                if (hex.Length == 8 && uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint argb))
-                {
-                    return Color.FromArgb((int)argb);
-                }
-                if (hex.Length == 6 && int.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int rgb))
-                {
-                    return Color.FromArgb(255, (rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
-                }
-            }
-
-            if (int.TryParse(colorStr, out int paletteIdx))
-            {
-                return LayerManager.GetLayerColor(paletteIdx);
-            }
-
-            return Color.FromArgb(255, 40, 110, 210);
-        }
-
-        public Color GetIkouBaseColor(string ikouName)
-        {
             if (string.IsNullOrWhiteSpace(ikouName))
-                return Color.FromArgb(255, 30, 115, 210);
+                return (lastItem.Color, lastItem.ColorIndex);
 
             string name = ikouName.Trim();
 
             // 1. 完全一致
             var exact = Items.FirstOrDefault(x => x.NamePattern.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (exact != null) return exact.Color;
+            if (exact != null) return (exact.Color, exact.ColorIndex);
 
             // 2. 最長前方一致 (例: "Pit17" -> "Pit", "SB01" -> "SB")
             var match = Items
@@ -222,10 +224,10 @@ namespace Site7DrawingEditor.Services
                 .OrderByDescending(x => x.NamePattern.Length)
                 .FirstOrDefault();
 
-            if (match != null) return match.Color;
+            if (match != null) return (match.Color, match.ColorIndex);
 
-            // 3. デフォルト
-            return Color.FromArgb(255, 40, 110, 210);
+            // 3. 対象とならない遺構名は「最終行の色」を使用
+            return (lastItem.Color, lastItem.ColorIndex);
         }
 
         /// <summary>
@@ -233,31 +235,31 @@ namespace Site7DrawingEditor.Services
         /// </summary>
         public (Color Color, float PenWidth) GetIkouRenderStyle(string ikouName, int toneLevel, float basePenWidth = 1.6f)
         {
-            Color baseColor = GetIkouBaseColor(ikouName);
+            var (baseColor, _) = GetIkouBaseColor(ikouName);
 
-            int alpha = baseColor.A;
+            int alpha;
             float penWidth = basePenWidth;
 
             switch (toneLevel)
             {
                 case 1: // 濃い (上端)
-                    alpha = baseColor.A; // 100%
+                    alpha = 255; // 100%
                     penWidth = Math.Max(1.6f, basePenWidth * 1.15f);
                     break;
                 case 2: // 中間 (中)
-                    alpha = (int)(baseColor.A * 0.60f); // 60%
-                    penWidth = Math.Max(1.2f, basePenWidth * 0.85f);
+                    alpha = 160; // 約60%
+                    penWidth = Math.Max(1.3f, basePenWidth * 0.85f);
                     break;
                 case 3: // 薄い (下端)
-                    alpha = (int)(baseColor.A * 0.35f); // 35%
+                    alpha = 85;  // 約33%
                     penWidth = Math.Max(1.0f, basePenWidth * 0.65f);
                     break;
                 default:
-                    alpha = baseColor.A;
+                    alpha = 255;
                     break;
             }
 
-            Color renderColor = Color.FromArgb(Math.Clamp(alpha, 25, 255), baseColor.R, baseColor.G, baseColor.B);
+            Color renderColor = Color.FromArgb(alpha, baseColor.R, baseColor.G, baseColor.B);
             return (renderColor, penWidth);
         }
     }

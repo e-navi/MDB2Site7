@@ -15,10 +15,8 @@ namespace Site7DrawingEditor
 
         private ListBox listBox1 = null!;
         private TextBox txtPattern = null!;
-        private Panel pnlColorPreview = null!;
-        private Button btnPickColor = null!;
-        private NumericUpDown numAlpha = null!;
-        private Label lblColorInfo = null!;
+        private ComboBox CBoxColor = null!;
+        private Label lblColorSample = null!;
         private Button btnAdd = null!;
         private Button btnDelete = null!;
         private Button btnMoveUp = null!;
@@ -42,11 +40,10 @@ namespace Site7DrawingEditor
             _dbPath = dbPath;
             IkouNameColorService.Instance.Load(_dbPath);
 
-            // コピーを保持して編集
             _items.Clear();
             foreach (var it in IkouNameColorService.Instance.Items)
             {
-                _items.Add(new IkouNameColorItem { NamePattern = it.NamePattern, Color = it.Color });
+                _items.Add(new IkouNameColorItem { NamePattern = it.NamePattern, ColorIndex = it.ColorIndex });
             }
 
             InitializeComponent();
@@ -93,16 +90,16 @@ namespace Site7DrawingEditor
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
 
             // List action buttons
-            btnAdd = CreateSmallButton("➕ 追加", new Point(16, 335), new Size(50, 26));
+            btnAdd = CreateSmallButton("➕ 追加", new Point(16, 335), new Size(62, 28));
             btnAdd.Click += BtnAdd_Click;
 
-            btnDelete = CreateSmallButton("➖ 削除", new Point(70, 335), new Size(50, 26));
+            btnDelete = CreateSmallButton("➖ 削除", new Point(82, 335), new Size(62, 28));
             btnDelete.Click += BtnDelete_Click;
 
-            btnMoveUp = CreateSmallButton("▲", new Point(125, 335), new Size(35, 26));
+            btnMoveUp = CreateSmallButton("▲", new Point(148, 335), new Size(40, 28));
             btnMoveUp.Click += BtnMoveUp_Click;
 
-            btnMoveDown = CreateSmallButton("▼", new Point(164, 335), new Size(35, 26));
+            btnMoveDown = CreateSmallButton("▼", new Point(192, 335), new Size(40, 28));
             btnMoveDown.Click += BtnMoveDown_Click;
 
             // Right edit group
@@ -115,65 +112,52 @@ namespace Site7DrawingEditor
                 ForeColor = Color.FromArgb(30, 40, 60)
             };
 
-            var lblPattern = new Label { Text = "遺構名 / プレフィックス:", Location = new Point(15, 28), AutoSize = true };
+            var lblPattern = new Label { Text = "遺構名 / プレフィックス:", Location = new Point(18, 30), AutoSize = true };
             txtPattern = new TextBox
             {
-                Location = new Point(18, 50),
-                Size = new Size(220, 26),
+                Location = new Point(18, 54),
+                Size = new Size(215, 26),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
             };
             txtPattern.TextChanged += (s, e) => AutoApplyCurrentItem();
 
-            var lblColor = new Label { Text = "表示色:", Location = new Point(15, 88), AutoSize = true };
+            var lblColor = new Label { Text = "表示色:", Location = new Point(18, 96), AutoSize = true };
 
-            pnlColorPreview = new Panel
+            CBoxColor = new ComboBox
             {
-                Location = new Point(18, 110),
-                Size = new Size(60, 30),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                DrawMode = DrawMode.OwnerDrawFixed,
+                Location = new Point(18, 120),
+                Size = new Size(160, 26),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+            };
+            CBoxColor.Items.AddRange(IkouNameColorService.ColorNames.Cast<object>().ToArray());
+            CBoxColor.DrawItem += CBoxColor_DrawItem;
+            CBoxColor.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
+
+            lblColorSample = new Label
+            {
+                Location = new Point(185, 120),
+                Size = new Size(48, 26),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.Red
             };
 
-            btnPickColor = new Button
+            var lblNotice = new Label
             {
-                Text = "🎨 色を選択...",
-                Location = new Point(88, 110),
-                Size = new Size(150, 30),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-                BackColor = Color.White,
-                UseVisualStyleBackColor = true
-            };
-            btnPickColor.Click += BtnPickColor_Click;
-
-            var lblAlpha = new Label { Text = "不透明度 (Alpha 0-255):", Location = new Point(15, 155), AutoSize = true };
-            numAlpha = new NumericUpDown
-            {
-                Location = new Point(18, 178),
-                Size = new Size(90, 26),
-                Minimum = 10,
-                Maximum = 255,
-                Value = 255,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
-            };
-            numAlpha.ValueChanged += (s, e) => AutoApplyCurrentItem();
-
-            lblColorInfo = new Label
-            {
-                Text = "RGBA: (255, 0, 0, 255)",
-                Location = new Point(18, 220),
-                Size = new Size(220, 45),
+                Text = "※ 該当しない遺構名は「最終行」の色が自動適用されます。\n※ 上端・中・下端の濃淡はレイヤ設定の指定値で自動反映されます。",
+                Location = new Point(18, 175),
+                Size = new Size(220, 95),
                 Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(80, 80, 90)
+                ForeColor = Color.FromArgb(80, 90, 110)
             };
 
             grpEdit.Controls.Add(lblPattern);
             grpEdit.Controls.Add(txtPattern);
             grpEdit.Controls.Add(lblColor);
-            grpEdit.Controls.Add(pnlColorPreview);
-            grpEdit.Controls.Add(btnPickColor);
-            grpEdit.Controls.Add(lblAlpha);
-            grpEdit.Controls.Add(numAlpha);
-            grpEdit.Controls.Add(lblColorInfo);
+            grpEdit.Controls.Add(CBoxColor);
+            grpEdit.Controls.Add(lblColorSample);
+            grpEdit.Controls.Add(lblNotice);
 
             // Bottom Buttons
             btnExportToMaster = new Button
@@ -292,12 +276,37 @@ namespace Site7DrawingEditor
             e.Graphics.DrawRectangle(Pens.Gray, colorRect);
 
             // Text
-            string text = $"{item.NamePattern}  ({item.Color.R},{item.Color.G},{item.Color.B})";
+            string colorName = (item.ColorIndex >= 1 && item.ColorIndex <= IkouNameColorService.ColorNames.Length)
+                ? IkouNameColorService.ColorNames[item.ColorIndex - 1]
+                : item.ColorIndex.ToString();
+
+            string text = $"{item.NamePattern}  ({colorName})";
             using (var textBrush = new SolidBrush(isSelected ? Color.White : Color.Black))
             {
                 e.Graphics.DrawString(text, e.Font ?? this.Font, textBrush, e.Bounds.Left + 28, e.Bounds.Top + 4);
             }
 
+            e.DrawFocusRectangle();
+        }
+
+        private void CBoxColor_DrawItem(object? sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+            e.DrawBackground();
+
+            Color c = LayerManager.GetLayerColor(e.Index + 1, false);
+            var rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top + 3, 20, e.Bounds.Height - 6);
+            using (var brush = new SolidBrush(c))
+            {
+                e.Graphics.FillRectangle(brush, rect);
+            }
+            e.Graphics.DrawRectangle(Pens.Black, rect);
+
+            string name = IkouNameColorService.ColorNames[e.Index];
+            using (var textBrush = new SolidBrush(e.ForeColor))
+            {
+                e.Graphics.DrawString(name, e.Font ?? this.Font, textBrush, e.Bounds.Left + 30, e.Bounds.Top + 3);
+            }
             e.DrawFocusRectangle();
         }
 
@@ -310,9 +319,8 @@ namespace Site7DrawingEditor
             try
             {
                 txtPattern.Text = item.NamePattern;
-                pnlColorPreview.BackColor = item.Color;
-                numAlpha.Value = Math.Clamp((int)item.Color.A, 10, 255);
-                lblColorInfo.Text = $"RGBA: ({item.Color.R}, {item.Color.G}, {item.Color.B}, {item.Color.A})\nHEX: #{item.Color.R:X2}{item.Color.G:X2}{item.Color.B:X2}";
+                CBoxColor.SelectedIndex = Math.Clamp(item.ColorIndex - 1, 0, CBoxColor.Items.Count - 1);
+                lblColorSample.BackColor = item.Color;
             }
             finally
             {
@@ -326,31 +334,10 @@ namespace Site7DrawingEditor
 
             var item = _items[listBox1.SelectedIndex];
             item.NamePattern = txtPattern.Text.Trim();
-            int a = (int)numAlpha.Value;
-            Color curC = pnlColorPreview.BackColor;
-            item.Color = Color.FromArgb(a, curC.R, curC.G, curC.B);
+            item.ColorIndex = Math.Clamp(CBoxColor.SelectedIndex + 1, 1, 16);
+            lblColorSample.BackColor = item.Color;
 
-            lblColorInfo.Text = $"RGBA: ({item.Color.R}, {item.Color.G}, {item.Color.B}, {item.Color.A})\nHEX: #{item.Color.R:X2}{item.Color.G:X2}{item.Color.B:X2}";
             listBox1.Invalidate();
-        }
-
-        private void BtnPickColor_Click(object? sender, EventArgs e)
-        {
-            if (listBox1.SelectedIndex < 0 || listBox1.SelectedIndex >= _items.Count) return;
-
-            var item = _items[listBox1.SelectedIndex];
-            using (var cd = new ColorDialog())
-            {
-                cd.Color = item.Color;
-                cd.FullOpen = true;
-                if (cd.ShowDialog(this) == DialogResult.OK)
-                {
-                    int a = (int)numAlpha.Value;
-                    item.Color = Color.FromArgb(a, cd.Color.R, cd.Color.G, cd.Color.B);
-                    pnlColorPreview.BackColor = item.Color;
-                    AutoApplyCurrentItem();
-                }
-            }
         }
 
         private void BtnAdd_Click(object? sender, EventArgs e)
@@ -358,7 +345,7 @@ namespace Site7DrawingEditor
             var newItem = new IkouNameColorItem
             {
                 NamePattern = "NEW",
-                Color = Color.FromArgb(255, 30, 115, 210)
+                ColorIndex = 4
             };
             _items.Add(newItem);
             PopulateList();
@@ -406,14 +393,13 @@ namespace Site7DrawingEditor
         {
             AutoApplyCurrentItem();
 
-            // IkouNameColorService に反映して保存
             IkouNameColorService.Instance.Items.Clear();
             foreach (var it in _items)
             {
                 IkouNameColorService.Instance.Items.Add(new IkouNameColorItem
                 {
                     NamePattern = it.NamePattern,
-                    Color = it.Color
+                    ColorIndex = it.ColorIndex
                 });
             }
 
@@ -432,7 +418,6 @@ namespace Site7DrawingEditor
             string sysDef = Directory.Exists(IkouNameColorService.DefaultSystemDefDir) ? IkouNameColorService.DefaultSystemDefDir : IkouNameColorService.FallbackSystemDefDir;
             string filePath = Path.Combine(sysDef, IkouNameColorService.FileName);
             
-            // サービスを一時更新して保存
             var temp = new IkouNameColorService();
             temp.Items.Clear();
             foreach (var it in _items) temp.Items.Add(it);
@@ -447,12 +432,12 @@ namespace Site7DrawingEditor
                 return;
 
             var masterService = new IkouNameColorService();
-            masterService.Load(null); // マスターから読み込み
+            masterService.Load(null);
 
             _items.Clear();
             foreach (var it in masterService.Items)
             {
-                _items.Add(new IkouNameColorItem { NamePattern = it.NamePattern, Color = it.Color });
+                _items.Add(new IkouNameColorItem { NamePattern = it.NamePattern, ColorIndex = it.ColorIndex });
             }
 
             PopulateList();
