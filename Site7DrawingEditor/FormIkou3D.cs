@@ -186,6 +186,7 @@ namespace Site7DrawingEditor
         private readonly Func<int, bool>? _isLayerVisible;
         private readonly List<Point3D> _allLocalPoints = new List<Point3D>();
         private readonly List<Point3D> _virtualBottomPoints = new List<Point3D>();
+        private readonly List<Point3D> _virtualBoundaryPoints = new List<Point3D>();
         private GridMesh? _currentMesh;
         private Danmen? _currentDanmen;
 
@@ -259,6 +260,7 @@ namespace Site7DrawingEditor
         {
             _allLocalPoints.Clear();
             _virtualBottomPoints.Clear();
+            _virtualBoundaryPoints.Clear();
             var spline = new Xross_Spline();
             int splineDiv = SplineDivisions;
 
@@ -411,6 +413,8 @@ namespace Site7DrawingEditor
             var targetSegments = topSegments.Count > 0 ? topSegments : allSegments;
             if (targetSegments.Count == 0) return;
 
+            var targetPoints = targetSegments.SelectMany(s => new[] { s.P1, s.P2 }).Distinct().ToList();
+
             int resX = cmbGridResolution.SelectedIndex switch
             {
                 0 => 25,
@@ -432,14 +436,25 @@ namespace Site7DrawingEditor
                     }
                 }
 
+                double topZ, botZ;
                 if (intersections.Count > 0)
                 {
-                    var topCross = intersections.OrderByDescending(p => p.Y).First();
-                    var botCross = intersections.OrderBy(p => p.Y).First();
-
-                    _allLocalPoints.Add(new Point3D(xi, maxY, topCross.Z));
-                    _allLocalPoints.Add(new Point3D(xi, minY, botCross.Z));
+                    topZ = intersections.OrderByDescending(p => p.Y).First().Z;
+                    botZ = intersections.OrderBy(p => p.Y).First().Z;
                 }
+                else
+                {
+                    // 交差しないエリア (左右両脇) は最も近い上部曲線の標高を水平延長
+                    topZ = targetPoints.OrderBy(p => Math.Pow(p.X - xi, 2) + Math.Pow(p.Y - maxY, 2)).First().Z;
+                    botZ = targetPoints.OrderBy(p => Math.Pow(p.X - xi, 2) + Math.Pow(p.Y - minY, 2)).First().Z;
+                }
+
+                var ptTop = new Point3D(xi, maxY, topZ);
+                var ptBot = new Point3D(xi, minY, botZ);
+                _allLocalPoints.Add(ptTop);
+                _allLocalPoints.Add(ptBot);
+                _virtualBoundaryPoints.Add(ptTop);
+                _virtualBoundaryPoints.Add(ptBot);
             }
 
             // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) に交点標高を設定
@@ -455,14 +470,25 @@ namespace Site7DrawingEditor
                     }
                 }
 
+                double rightZ, leftZ;
                 if (intersections.Count > 0)
                 {
-                    var rightCross = intersections.OrderByDescending(p => p.X).First();
-                    var leftCross = intersections.OrderBy(p => p.X).First();
-
-                    _allLocalPoints.Add(new Point3D(maxX, yj, rightCross.Z));
-                    _allLocalPoints.Add(new Point3D(minX, yj, leftCross.Z));
+                    rightZ = intersections.OrderByDescending(p => p.X).First().Z;
+                    leftZ = intersections.OrderBy(p => p.X).First().Z;
                 }
+                else
+                {
+                    // 交差しないエリア (上下両脇) は最も近い上部曲線の標高を水平延長
+                    rightZ = targetPoints.OrderBy(p => Math.Pow(p.X - maxX, 2) + Math.Pow(p.Y - yj, 2)).First().Z;
+                    leftZ = targetPoints.OrderBy(p => Math.Pow(p.X - minX, 2) + Math.Pow(p.Y - yj, 2)).First().Z;
+                }
+
+                var ptRight = new Point3D(maxX, yj, rightZ);
+                var ptLeft = new Point3D(minX, yj, leftZ);
+                _allLocalPoints.Add(ptRight);
+                _allLocalPoints.Add(ptLeft);
+                _virtualBoundaryPoints.Add(ptRight);
+                _virtualBoundaryPoints.Add(ptLeft);
             }
         }
 
@@ -802,6 +828,21 @@ namespace Site7DrawingEditor
                     }
                 }
 
+                // Grid枠端の外周設定点 (Virtual Boundary Points) の表示 (シアン色 直径5px)
+                if (_virtualBoundaryPoints.Count > 0)
+                {
+                    using (var bBrush = new SolidBrush(Color.FromArgb(0, 220, 255)))
+                    using (var bPen = new Pen(Color.FromArgb(0, 100, 200), 1.0f))
+                    {
+                        foreach (var bp in _virtualBoundaryPoints)
+                        {
+                            PointF p = LocalTo2D(bp.X, bp.Y);
+                            g.FillEllipse(bBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                            g.DrawEllipse(bPen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                        }
+                    }
+                }
+
                 g.Clip = oldClip;
             }
 
@@ -1134,6 +1175,21 @@ namespace Site7DrawingEditor
                             PointF p = Project3D(vp);
                             g.FillEllipse(vBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
                             g.DrawEllipse(vPen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                        }
+                    }
+                }
+
+                // 4. Grid枠端の外周設定点 (Virtual Boundary Points) の表示 (シアン色 直径5px)
+                if (_virtualBoundaryPoints.Count > 0)
+                {
+                    using (var bBrush = new SolidBrush(Color.FromArgb(0, 220, 255)))
+                    using (var bPen = new Pen(Color.FromArgb(0, 100, 200), 1.0f))
+                    {
+                        foreach (var bp in _virtualBoundaryPoints)
+                        {
+                            PointF p = Project3D(bp);
+                            g.FillEllipse(bBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                            g.DrawEllipse(bPen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
                         }
                     }
                 }
