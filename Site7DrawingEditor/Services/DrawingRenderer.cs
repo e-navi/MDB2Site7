@@ -718,9 +718,12 @@ namespace Site7DrawingEditor.Services
 
                             if (chkColorByIkouPaper)
                             {
+                                var masterLine = db.MasterIkouLList.FirstOrDefault(l => l.Lid == line.LID);
+                                var parentIkou = masterLine != null ? db.MasterIkouList.FirstOrDefault(ik => ik.Id == masterLine.Id) : null;
+                                string ikouName = parentIkou?.Name ?? ikou.Name;
                                 var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                                 int toneLevel = layerDef != null ? layerDef.Mark : 1;
-                                (col, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikou.Name, toneLevel, 1.8f);
+                                (col, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, 1.8f);
                             }
                             else
                             {
@@ -917,9 +920,12 @@ namespace Site7DrawingEditor.Services
 
                     if (chkColorByIkouFull)
                     {
+                        var masterLine = db.MasterIkouLList.FirstOrDefault(l => l.Lid == line.LID);
+                        var parentIkou = masterLine != null ? db.MasterIkouList.FirstOrDefault(ik => ik.Id == masterLine.Id) : null;
+                        string ikouName = parentIkou?.Name ?? curIkou.Name;
                         var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                         int toneLevel = layerDef != null ? layerDef.Mark : 1;
-                        (col, penW) = IkouNameColorService.Instance.GetIkouRenderStyle(curIkou.Name, toneLevel, 1.5f);
+                        (col, penW) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, 1.5f);
                     }
                     else
                     {
