@@ -1182,9 +1182,9 @@ namespace Site7DbEditor
             chkColorByIkou.ForeColor = Color.Black;
             chkColorByIkou.Location = new Point(6, 43);
             chkColorByIkou.Name = "chkColorByIkou";
-            chkColorByIkou.Size = new Size(86, 19);
+            chkColorByIkou.Size = new Size(98, 19);
             chkColorByIkou.TabIndex = 33;
-            chkColorByIkou.Text = "遺構識別色";
+            chkColorByIkou.Text = "遺構名色優先";
             chkColorByIkou.UseVisualStyleBackColor = true;
             // 
             // chkWhiteBg

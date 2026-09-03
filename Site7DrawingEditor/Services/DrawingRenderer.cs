@@ -166,21 +166,34 @@ namespace Site7DrawingEditor.Services
                         screenPts = pts.Select(p => ToCanvasPoint(p.X, p.Y)).ToArray();
                     }
 
-                    Color color = chkColorByIkouFull
-                        ? LayerManager.PaletteColors[(int)(line.Id % LayerManager.PaletteColors.Length)]
-                        : LayerManager.GetLayerColor(line.Layer, isDarkBackground: isDarkBackground);
+                    Color color;
+                    float penWidth = 1.5f;
+
+                    if (chkColorByIkouFull)
+                    {
+                        var parentIkou = db.MasterIkouList.FirstOrDefault(ik => ik.Id == line.Id);
+                        string ikouName = parentIkou?.Name ?? "";
+                        var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                        int toneLevel = layerDef != null ? layerDef.Mark : 1;
+                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, 1.6f);
+                    }
+                    else
+                    {
+                        color = LayerManager.GetLayerColor(line.Layer, isDarkBackground: isDarkBackground);
+                    }
+
                     bool isSelectedFeature = (selectedMasterId > 0 && line.Id == selectedMasterId);
 
                     if (screenPts.Length > 1)
                     {
                         if (isSelectedFeature)
                         {
-                            using (var linePen = new Pen(Color.FromArgb(255, color.R, color.G, color.B), 3.0f))
+                            using (var linePen = new Pen(Color.FromArgb(255, color.R, color.G, color.B), Math.Max(2.5f, penWidth + 1.2f)))
                                 g.DrawLines(linePen, screenPts);
                         }
                         else
                         {
-                            using (var linePen = new Pen(Color.FromArgb(180, color.R, color.G, color.B), 1.5f))
+                            using (var linePen = new Pen(color, penWidth))
                                 g.DrawLines(linePen, screenPts);
                         }
                     }
@@ -697,10 +710,21 @@ namespace Site7DrawingEditor.Services
 
                         if (paperScreenPts.Count > 1)
                         {
-                            Color col = chkColorByIkouPaper
-                                ? LayerManager.PaletteColors[(int)(ikou.IID % LayerManager.PaletteColors.Length)]
-                                : LayerManager.GetLayerColor(line.Layer);
-                            using (var linePen = new Pen(col, 1.8f))
+                            Color col;
+                            float penWidth = 1.8f;
+
+                            if (chkColorByIkouPaper)
+                            {
+                                var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                                int toneLevel = layerDef != null ? layerDef.Mark : 1;
+                                (col, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikou.Name, toneLevel, 1.8f);
+                            }
+                            else
+                            {
+                                col = LayerManager.GetLayerColor(line.Layer);
+                            }
+
+                            using (var linePen = new Pen(col, penWidth))
                             {
                                 g.DrawLines(linePen, paperScreenPts.ToArray());
                             }

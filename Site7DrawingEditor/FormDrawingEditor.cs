@@ -558,6 +558,7 @@ namespace Site7DrawingEditor
                 _db.LoadDatabase(dbPath);
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
                 LayerDefinitionService.Instance.LoadAll(dbPath);
+                IkouNameColorService.Instance.Load(dbPath);
                 UpdateLayerCheckboxColors();
 
                 cmbFeatureSelect.Items.Clear();

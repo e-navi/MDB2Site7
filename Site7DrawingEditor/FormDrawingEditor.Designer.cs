@@ -291,10 +291,11 @@ namespace Site7DrawingEditor
             panelHcLeftSidebar.Controls.Add(chkShowKikai);
             panelHcLeftSidebar.Controls.Add(chkShowKikaiName);
             panelHcLeftSidebar.Controls.Add(chkShowDrawingFrame);
+            panelHcLeftSidebar.Controls.Add(chkColorByIkouFull);
             panelHcLeftSidebar.Controls.Add(chkShowWhiteBackground);
             panelHcLeftSidebar.Location = new Point(0, 0);
             panelHcLeftSidebar.Name = "panelHcLeftSidebar";
-            panelHcLeftSidebar.Size = new Size(130, 450);
+            panelHcLeftSidebar.Size = new Size(130, 480);
             panelHcLeftSidebar.TabIndex = 1;
             // 
             // btnDrawingFrame
@@ -676,6 +677,20 @@ namespace Site7DrawingEditor
             chkShowDrawingFrame.Text = "図枠";
             chkShowDrawingFrame.UseVisualStyleBackColor = true;
             // 
+            // chkColorByIkouFull
+            // 
+            chkColorByIkouFull.AutoSize = true;
+            chkColorByIkouFull.Checked = false;
+            chkColorByIkouFull.CheckState = CheckState.Unchecked;
+            chkColorByIkouFull.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            chkColorByIkouFull.ForeColor = Color.FromArgb(30, 40, 60);
+            chkColorByIkouFull.Location = new Point(6, 420);
+            chkColorByIkouFull.Name = "chkColorByIkouFull";
+            chkColorByIkouFull.Size = new Size(98, 19);
+            chkColorByIkouFull.TabIndex = 32;
+            chkColorByIkouFull.Text = "遺構名色優先";
+            chkColorByIkouFull.UseVisualStyleBackColor = true;
+            // 
             // chkShowWhiteBackground
             // 
             chkShowWhiteBackground.AutoSize = true;
@@ -683,10 +698,10 @@ namespace Site7DrawingEditor
             chkShowWhiteBackground.CheckState = CheckState.Checked;
             chkShowWhiteBackground.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
             chkShowWhiteBackground.ForeColor = Color.FromArgb(30, 40, 60);
-            chkShowWhiteBackground.Location = new Point(6, 420);
+            chkShowWhiteBackground.Location = new Point(6, 442);
             chkShowWhiteBackground.Name = "chkShowWhiteBackground";
             chkShowWhiteBackground.Size = new Size(74, 19);
-            chkShowWhiteBackground.TabIndex = 32;
+            chkShowWhiteBackground.TabIndex = 33;
             chkShowWhiteBackground.Text = "背景白色";
             chkShowWhiteBackground.UseVisualStyleBackColor = true;
             // 

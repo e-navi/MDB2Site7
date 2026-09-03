@@ -428,6 +428,7 @@ namespace Site7DbEditor {
             PopulateIbutuCombos();
 
             LayerDefinitionService.Instance.LoadAll(_db.CurrentDbPath);
+            IkouNameColorService.Instance.Load(_db.CurrentDbPath);
             PopulateIkouLineLayerCombo();
             PopulateIbutuLayerCombo();
             PopulateKikaiLayerCombo();
@@ -722,6 +723,7 @@ namespace Site7DbEditor {
                 using (var form = new FormLayerSettings(_db, initialGroup)) {
                     if (form.ShowDialog(this) == DialogResult.OK) {
                         LayerDefinitionService.Instance.LoadAll(_db.CurrentDbPath);
+                        IkouNameColorService.Instance.Load(_db.CurrentDbPath);
                         PopulateIkouLineLayerCombo();
                         PopulateIbutuLayerCombo();
                         PopulateKikaiLayerCombo();

@@ -161,9 +161,23 @@ namespace Site7DbEditor.Services
                     if (pts.Count == 0) continue;
 
                     int lineDbLayerId = line.Layer >= 49 ? line.Layer : (line.Layer + 48);
-                    Color color = chkColorByIkou
-                        ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
-                        : EditorLayerService.GetIkouLineColor(line.Layer, isDarkBackground);
+                    var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+
+                    Color color;
+                    float basePenWidth = (layerItem != null && layerItem.Width > 0) ? (float)layerItem.Width : 1.5f;
+                    float penWidth = basePenWidth;
+
+                    if (chkColorByIkou)
+                    {
+                        var parentIkou = db.IkouList.FirstOrDefault(ik => ik.Id == line.Id);
+                        string ikouName = parentIkou?.Name ?? "";
+                        int toneLevel = layerItem != null ? layerItem.Mark : 1;
+                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenWidth);
+                    }
+                    else
+                    {
+                        color = EditorLayerService.GetIkouLineColor(line.Layer, isDarkBackground);
+                    }
 
                     bool isSelectedFeature = (activeTabIndex == 0 && line.Id == selectedIkouId);
 
@@ -203,7 +217,6 @@ namespace Site7DbEditor.Services
                     // ★ Mode != 2 (通常の折線・曲線): chkShowIkou が ON の時のみ描画
                     if (!chkShowIkou) continue;
 
-                    var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                     bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                     bool drawAsCurve = chkShowCurve && isLayerCurve && pts.Count >= 3;
 
@@ -225,7 +238,7 @@ namespace Site7DbEditor.Services
                         bool isClosed = (line.Mode == 1 && screenPts.Length >= 3);
                         if (isSelectedFeature)
                         {
-                            using (var linePen = new Pen(color, 2.8f))
+                            using (var linePen = new Pen(Color.FromArgb(255, color.R, color.G, color.B), Math.Max(2.8f, penWidth + 1.2f)))
                             {
                                 g.DrawLines(linePen, screenPts);
                                 if (isClosed)
@@ -234,7 +247,6 @@ namespace Site7DbEditor.Services
                         }
                         else
                         {
-                            float penWidth = (layerItem != null && layerItem.Width > 0) ? (float)layerItem.Width : 1.5f;
                             using (var linePen = new Pen(color, penWidth))
                             {
                                 g.DrawLines(linePen, screenPts);

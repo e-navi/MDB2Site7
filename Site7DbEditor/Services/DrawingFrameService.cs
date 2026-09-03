@@ -1303,9 +1303,22 @@ namespace Site7DbEditor.Services
                         var pts = SqliteManager.ParsePrecsText(line.Precs);
                         if (pts.Count == 0) continue;
 
-                        Color rawColor = colorByIkou
-                            ? EditorLayerService.PaletteColors[(int)(line.Id % EditorLayerService.PaletteColors.Length)]
-                            : EditorLayerService.GetIkouLineColor(line.Layer, false);
+                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                        Color rawColor;
+                        float basePenW = (layerItem != null && layerItem.Width > 0) ? (float)(layerItem.Width * 0.3 * zoom) : Math.Max(0.4f, (float)(0.35 * zoom));
+                        float lWidth = basePenW;
+
+                        if (colorByIkou)
+                        {
+                            var parentIkou = db?.IkouList?.FirstOrDefault(ik => ik.Id == line.Id);
+                            string ikouName = parentIkou?.Name ?? "";
+                            int toneLevel = layerItem != null ? layerItem.Mark : 1;
+                            (rawColor, lWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenW);
+                        }
+                        else
+                        {
+                            rawColor = LayerDefinitionService.Instance.GetColor(LayerGroup.Ikou, line.Layer, false);
+                        }
                         Color color = AdaptColor(rawColor);
 
                         if (line.Mode == 2)
@@ -1341,7 +1354,6 @@ namespace Site7DbEditor.Services
 
                         if (!showIkou) continue;
 
-                        var layerItem = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                         bool isLayerCurve = (layerItem != null) ? (layerItem.LType == 2) : true;
                         bool drawAsCurve = showCurve && isLayerCurve && pts.Count >= 3;
 
@@ -1360,7 +1372,6 @@ namespace Site7DbEditor.Services
 
                         if (screenPts.Length > 1)
                         {
-                            float lWidth = (layerItem != null && layerItem.Width > 0) ? (float)(layerItem.Width * 0.3 * zoom) : Math.Max(0.4f, (float)(0.35 * zoom));
                             using (var linePen = new Pen(color, lWidth))
                             {
                                 g.DrawLines(linePen, screenPts);
