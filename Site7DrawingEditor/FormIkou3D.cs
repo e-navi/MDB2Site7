@@ -68,7 +68,7 @@ namespace Site7DrawingEditor
 
         public static class GridAlgorithm
         {
-            public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 50, int resolutionY = 50, double power = 5.0)
+            public static GridMesh CreateGridMesh(Point3D minp, Point3D maxp, List<Point3D> sourcePoints, int resolutionX = 50, int resolutionY = 50, double power = 2.0)
             {
                 var mesh = new GridMesh();
                 mesh.ResolutionX = resolutionX;
@@ -139,7 +139,7 @@ namespace Site7DrawingEditor
                 return sumWeightedValues / (sumWeights + 1e-12);
             }
 
-            public static Danmen CalcDanmen(Point3D start, Point3D end, Point3D dp, List<Point3D> sourcePoints, int cnt = 100, double power = 5.0)
+            public static Danmen CalcDanmen(Point3D start, Point3D end, Point3D dp, List<Point3D> sourcePoints, int cnt = 100, double power = 2.0)
             {
                 var danmen = new Danmen();
                 if (sourcePoints.Count == 0) return danmen;
@@ -201,6 +201,9 @@ namespace Site7DrawingEditor
 
         public DanmenRec? ResultDanmenRec { get; private set; }
 
+        private int SplineDivisions => int.TryParse(cmbSplineDiv.SelectedItem?.ToString(), out int div) ? div : 5;
+        private double WeightPower => double.TryParse(txtWeightPower.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) ? Math.Max(0.1, w) : 2.0;
+
         public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null)
         {
             InitializeComponent();
@@ -210,8 +213,38 @@ namespace Site7DrawingEditor
             _chkColorByIkou = chkColorByIkou;
             _isLayerVisible = isLayerVisible;
 
-            // Transform all 3D points from Survey space into Crop Box Local Center Space (補間ポイントも含めて全3D点群をメッシュ生成用に登録)
+            cmbSplineDiv.SelectedItem = "5";
+            cmbGridResolution.SelectedIndex = 1; // 中 (50分割)
+            txtWeightPower.Text = "2.0";
+
+            RebuildLocalPoints();
+
+            // Initialize section points from targetDanmen if specified
+            if (_targetDanmenRec != null && _targetDanmenRec.Sp != null && _targetDanmenRec.Ep != null)
+            {
+                var (spLx, spLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Sp.X, _targetDanmenRec.Sp.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
+                var (epLx, epLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Ep.X, _targetDanmenRec.Ep.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
+                _sectionStartPoint = new Point3D(spLx, spLy, 0);
+                _sectionEndPoint = new Point3D(epLx, epLy, 0);
+
+                if (_targetDanmenRec.Dp != null)
+                {
+                    var (dpLx, dpLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Dp.X, _targetDanmenRec.Dp.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
+                    _sectionPlacementPoint = new Point3D(dpLx, dpLy, 0);
+                }
+            }
+
+            WireEventHandlers();
+            PopulateSummaryInfo();
+            CalculateGridMesh();
+        }
+
+        private void RebuildLocalPoints()
+        {
+            _allLocalPoints.Clear();
             var spline = new Xross_Spline();
+            int splineDiv = SplineDivisions;
+
             foreach (var line in _targetIkou.LList)
             {
                 if (line.Pnts.Count == 0) continue;
@@ -232,7 +265,7 @@ namespace Site7DrawingEditor
                 }
 
                 List<Point3D> effectiveLocalPnts = (isLayerCurve && localPnts.Count >= 3)
-                    ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, 5) : spline.Calc3DCurvePoints(localPnts, 5))
+                    ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, splineDiv) : spline.Calc3DCurvePoints(localPnts, splineDiv))
                     : localPnts;
 
                 foreach (var pt in effectiveLocalPnts)
@@ -240,33 +273,24 @@ namespace Site7DrawingEditor
                     _allLocalPoints.Add(pt);
                 }
             }
-
-            // Initialize section points from targetDanmen if specified
-            if (_targetDanmenRec != null && _targetDanmenRec.Sp != null && _targetDanmenRec.Ep != null)
-            {
-                var (spLx, spLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Sp.X, _targetDanmenRec.Sp.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
-                var (epLx, epLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Ep.X, _targetDanmenRec.Ep.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
-                _sectionStartPoint = new Point3D(spLx, spLy, 0);
-                _sectionEndPoint = new Point3D(epLx, epLy, 0);
-
-                if (_targetDanmenRec.Dp != null)
-                {
-                    var (dpLx, dpLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Dp.X, _targetDanmenRec.Dp.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
-                    _sectionPlacementPoint = new Point3D(dpLx, dpLy, 0);
-                }
-            }
-
-            cmbGridResolution.SelectedIndex = 1; // 中 (50分割)
-
-            WireEventHandlers();
-            PopulateSummaryInfo();
-            CalculateGridMesh();
         }
 
         private void WireEventHandlers()
         {
             cmbGridResolution.SelectedIndexChanged += (s, e) => CalculateGridMesh();
-            btnGridCalc.Click += (s, e) => CalculateGridMesh();
+            cmbSplineDiv.SelectedIndexChanged += (s, e) =>
+            {
+                RebuildLocalPoints();
+                PopulateSummaryInfo();
+                CalculateGridMesh();
+            };
+            txtWeightPower.TextChanged += (s, e) => CalculateGridMesh();
+            btnGridCalc.Click += (s, e) =>
+            {
+                RebuildLocalPoints();
+                PopulateSummaryInfo();
+                CalculateGridMesh();
+            };
             chkIkouHeight.CheckedChanged += (s, e) => picCanvas3D.Invalidate();
             chkShowElevation.CheckedChanged += (s, e) => picCanvas3D.Invalidate();
 
@@ -347,7 +371,7 @@ namespace Site7DrawingEditor
                 _ => 50
             };
 
-            _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, res, res);
+            _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, res, res, WeightPower);
 
             // Create default section line if none specified yet
             if (_sectionStartPoint == null || _sectionEndPoint == null)
@@ -366,7 +390,7 @@ namespace Site7DrawingEditor
             if (_sectionStartPoint == null || _sectionEndPoint == null || _allLocalPoints.Count == 0) return;
 
             Point3D dp = _sectionPlacementPoint ?? new Point3D(_sectionStartPoint.X, _sectionStartPoint.Y - 1.0, 0);
-            _currentDanmen = GridAlgorithm.CalcDanmen(_sectionStartPoint, _sectionEndPoint, dp, _allLocalPoints, 100);
+            _currentDanmen = GridAlgorithm.CalcDanmen(_sectionStartPoint, _sectionEndPoint, dp, _allLocalPoints, 100, WeightPower);
         }
 
         private void picCanvas3D_Paint(object? sender, PaintEventArgs e)
@@ -492,7 +516,7 @@ namespace Site7DrawingEditor
                     bool shouldDrawCurve = isLayerCurve && localPnts.Count >= 3;
 
                     List<Point3D> renderPnts = shouldDrawCurve
-                        ? (line.Flag == 1 ? spline.Calc3DCloseCurvePoints(localPnts, 5) : spline.Calc3DCurvePoints(localPnts, 5))
+                        ? (line.Flag == 1 ? spline.Calc3DCloseCurvePoints(localPnts, SplineDivisions) : spline.Calc3DCurvePoints(localPnts, SplineDivisions))
                         : localPnts;
 
                     var pts = renderPnts.Select(p => LocalTo2D(p.X, p.Y)).ToArray();
@@ -796,7 +820,7 @@ namespace Site7DrawingEditor
 
                     bool shouldDrawCurve = isLayerCurve && localPnts.Count >= 3;
                     List<Point3D> renderPnts = shouldDrawCurve
-                        ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, 5) : spline.Calc3DCurvePoints(localPnts, 5))
+                        ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, SplineDivisions) : spline.Calc3DCurvePoints(localPnts, SplineDivisions))
                         : localPnts;
 
                     var pts = renderPnts.Select(p => Project3D(p)).ToArray();

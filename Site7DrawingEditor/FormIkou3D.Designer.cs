@@ -24,6 +24,10 @@ namespace Site7DrawingEditor
             this.grpGridSettings = new System.Windows.Forms.GroupBox();
             this.lblGridRes = new System.Windows.Forms.Label();
             this.cmbGridResolution = new System.Windows.Forms.ComboBox();
+            this.lblSplineDiv = new System.Windows.Forms.Label();
+            this.cmbSplineDiv = new System.Windows.Forms.ComboBox();
+            this.lblWeightPower = new System.Windows.Forms.Label();
+            this.txtWeightPower = new System.Windows.Forms.TextBox();
             this.chkIkouHeight = new System.Windows.Forms.CheckBox();
             this.btnGridCalc = new System.Windows.Forms.Button();
 
@@ -102,19 +106,23 @@ namespace Site7DrawingEditor
             // grpGridSettings
             this.grpGridSettings.Controls.Add(this.lblGridRes);
             this.grpGridSettings.Controls.Add(this.cmbGridResolution);
+            this.grpGridSettings.Controls.Add(this.lblSplineDiv);
+            this.grpGridSettings.Controls.Add(this.cmbSplineDiv);
+            this.grpGridSettings.Controls.Add(this.lblWeightPower);
+            this.grpGridSettings.Controls.Add(this.txtWeightPower);
             this.grpGridSettings.Controls.Add(this.chkIkouHeight);
             this.grpGridSettings.Controls.Add(this.btnGridCalc);
             this.grpGridSettings.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.grpGridSettings.Location = new System.Drawing.Point(10, 10);
             this.grpGridSettings.Name = "grpGridSettings";
-            this.grpGridSettings.Size = new System.Drawing.Size(220, 115);
+            this.grpGridSettings.Size = new System.Drawing.Size(220, 148);
             this.grpGridSettings.TabIndex = 0;
             this.grpGridSettings.TabStop = false;
             this.grpGridSettings.Text = "グリッド設定";
 
             // lblGridRes
             this.lblGridRes.AutoSize = true;
-            this.lblGridRes.Location = new System.Drawing.Point(8, 20);
+            this.lblGridRes.Location = new System.Drawing.Point(8, 18);
             this.lblGridRes.Name = "lblGridRes";
             this.lblGridRes.Size = new System.Drawing.Size(31, 15);
             this.lblGridRes.Text = "間隔";
@@ -126,32 +134,69 @@ namespace Site7DrawingEditor
             "大(縦横 25分割)",
             "中(縦横 50分割)",
             "小(縦横 100分割)"});
-            this.cmbGridResolution.Location = new System.Drawing.Point(8, 38);
+            this.cmbGridResolution.Location = new System.Drawing.Point(8, 34);
             this.cmbGridResolution.Name = "cmbGridResolution";
             this.cmbGridResolution.Size = new System.Drawing.Size(204, 23);
             this.cmbGridResolution.TabIndex = 1;
+
+            // lblSplineDiv
+            this.lblSplineDiv.AutoSize = true;
+            this.lblSplineDiv.Location = new System.Drawing.Point(8, 62);
+            this.lblSplineDiv.Name = "lblSplineDiv";
+            this.lblSplineDiv.Size = new System.Drawing.Size(67, 15);
+            this.lblSplineDiv.Text = "曲線分割数";
+
+            // cmbSplineDiv
+            this.cmbSplineDiv.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSplineDiv.FormattingEnabled = true;
+            this.cmbSplineDiv.Items.AddRange(new object[] {
+            "2",
+            "3",
+            "5",
+            "8",
+            "10",
+            "15",
+            "20"});
+            this.cmbSplineDiv.Location = new System.Drawing.Point(8, 79);
+            this.cmbSplineDiv.Name = "cmbSplineDiv";
+            this.cmbSplineDiv.Size = new System.Drawing.Size(95, 23);
+            this.cmbSplineDiv.TabIndex = 2;
+
+            // lblWeightPower
+            this.lblWeightPower.AutoSize = true;
+            this.lblWeightPower.Location = new System.Drawing.Point(115, 62);
+            this.lblWeightPower.Name = "lblWeightPower";
+            this.lblWeightPower.Size = new System.Drawing.Size(55, 15);
+            this.lblWeightPower.Text = "重み係数";
+
+            // txtWeightPower
+            this.txtWeightPower.Location = new System.Drawing.Point(115, 79);
+            this.txtWeightPower.Name = "txtWeightPower";
+            this.txtWeightPower.Size = new System.Drawing.Size(97, 23);
+            this.txtWeightPower.TabIndex = 3;
+            this.txtWeightPower.Text = "2.0";
 
             // chkIkouHeight
             this.chkIkouHeight.AutoSize = true;
             this.chkIkouHeight.Checked = true;
             this.chkIkouHeight.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkIkouHeight.Location = new System.Drawing.Point(8, 68);
+            this.chkIkouHeight.Location = new System.Drawing.Point(8, 115);
             this.chkIkouHeight.Name = "chkIkouHeight";
             this.chkIkouHeight.Size = new System.Drawing.Size(86, 19);
-            this.chkIkouHeight.TabIndex = 2;
+            this.chkIkouHeight.TabIndex = 4;
             this.chkIkouHeight.Text = "遺構線高さ";
 
             // btnGridCalc
-            this.btnGridCalc.Location = new System.Drawing.Point(100, 65);
+            this.btnGridCalc.Location = new System.Drawing.Point(100, 111);
             this.btnGridCalc.Name = "btnGridCalc";
             this.btnGridCalc.Size = new System.Drawing.Size(112, 26);
-            this.btnGridCalc.TabIndex = 3;
+            this.btnGridCalc.TabIndex = 5;
             this.btnGridCalc.Text = "グリッド計算";
 
             // panelViewToggle
             this.panelViewToggle.Controls.Add(this.btnView2D);
             this.panelViewToggle.Controls.Add(this.btnView3D);
-            this.panelViewToggle.Location = new System.Drawing.Point(10, 130);
+            this.panelViewToggle.Location = new System.Drawing.Point(10, 166);
             this.panelViewToggle.Name = "panelViewToggle";
             this.panelViewToggle.Size = new System.Drawing.Size(220, 32);
             this.panelViewToggle.TabIndex = 1;
@@ -176,7 +221,7 @@ namespace Site7DrawingEditor
             this.grpRotationControls.Controls.Add(this.lblRotateH);
             this.grpRotationControls.Controls.Add(this.tbRotateH);
             this.grpRotationControls.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.grpRotationControls.Location = new System.Drawing.Point(10, 165);
+            this.grpRotationControls.Location = new System.Drawing.Point(10, 204);
             this.grpRotationControls.Name = "grpRotationControls";
             this.grpRotationControls.Size = new System.Drawing.Size(220, 110);
             this.grpRotationControls.TabIndex = 2;
@@ -219,7 +264,7 @@ namespace Site7DrawingEditor
             this.grpDanmenControls.Controls.Add(this.btnSectionPick);
             this.grpDanmenControls.Controls.Add(this.chkShowElevation);
             this.grpDanmenControls.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.grpDanmenControls.Location = new System.Drawing.Point(10, 165);
+            this.grpDanmenControls.Location = new System.Drawing.Point(10, 204);
             this.grpDanmenControls.Name = "grpDanmenControls";
             this.grpDanmenControls.Size = new System.Drawing.Size(220, 80);
             this.grpDanmenControls.TabIndex = 3;
@@ -255,8 +300,8 @@ namespace Site7DrawingEditor
             this.grpIkouSummary.Controls.Add(this.txtMaxX);
             this.grpIkouSummary.Controls.Add(this.lblMaxY);
             this.grpIkouSummary.Controls.Add(this.txtMaxY);
-            this.grpIkouSummary.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.grpIkouSummary.Location = new System.Drawing.Point(10, 280);
+            this.grpIkouSummary.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.grpIkouSummary.Location = new System.Drawing.Point(10, 290);
             this.grpIkouSummary.Name = "grpIkouSummary";
             this.grpIkouSummary.Size = new System.Drawing.Size(220, 260);
             this.grpIkouSummary.TabIndex = 4;
@@ -422,6 +467,10 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.GroupBox grpGridSettings;
         private System.Windows.Forms.Label lblGridRes;
         private System.Windows.Forms.ComboBox cmbGridResolution;
+        private System.Windows.Forms.Label lblSplineDiv;
+        private System.Windows.Forms.ComboBox cmbSplineDiv;
+        private System.Windows.Forms.Label lblWeightPower;
+        private System.Windows.Forms.TextBox txtWeightPower;
         private System.Windows.Forms.CheckBox chkIkouHeight;
         private System.Windows.Forms.Button btnGridCalc;
         private System.Windows.Forms.Panel panelViewToggle;
