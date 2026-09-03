@@ -185,6 +185,7 @@ namespace Site7DrawingEditor
         private readonly bool _chkColorByIkou;
         private readonly Func<int, bool>? _isLayerVisible;
         private readonly List<Point3D> _allLocalPoints = new List<Point3D>();
+        private readonly List<Point3D> _virtualBottomPoints = new List<Point3D>();
         private GridMesh? _currentMesh;
         private Danmen? _currentDanmen;
 
@@ -257,6 +258,7 @@ namespace Site7DrawingEditor
         private void RebuildLocalPoints()
         {
             _allLocalPoints.Clear();
+            _virtualBottomPoints.Clear();
             var spline = new Xross_Spline();
             int splineDiv = SplineDivisions;
 
@@ -276,7 +278,7 @@ namespace Site7DrawingEditor
                     var pFirst = localPnts[0];
                     var pLast = localPnts[^1];
                     double dist = Math.Sqrt(Math.Pow(pFirst.X - pLast.X, 2) + Math.Pow(pFirst.Y - pLast.Y, 2));
-                    if (dist < 0.05) isClosed = true;
+                    if (dist < 0.25) isClosed = true;
                 }
 
                 List<Point3D> effectiveLocalPnts = (isLayerCurve && localPnts.Count >= 3)
@@ -288,7 +290,7 @@ namespace Site7DrawingEditor
                     _allLocalPoints.Add(pt);
                 }
 
-                // Pit底（レイヤ名に「下」が含まれる閉曲線）の場合、内部の重心に最深点（仮想中心点）を自動生成
+                // Pit底（レイヤ名に「下」または「底」が含まれる閉曲線）の場合、内部の重心に最深点（仮想中心点）と中点群を自動生成
                 string layerName = "";
                 if (_db?.MasterLayerList != null && _db.MasterLayerList.Count > 0)
                 {
@@ -309,12 +311,15 @@ namespace Site7DrawingEditor
                     if (layerDef != null && !string.IsNullOrEmpty(layerDef.Name)) layerName = layerDef.Name;
                 }
 
-                if (isClosed && layerName.Contains("下") && localPnts.Count >= 3)
+                bool isBottomLayer = layerName.Contains("下") || layerName.Contains("底");
+                if (isClosed && isBottomLayer && localPnts.Count >= 3)
                 {
                     double avgX = localPnts.Average(p => p.X);
                     double avgY = localPnts.Average(p => p.Y);
                     double minZ = localPnts.Min(p => p.Z);
-                    _allLocalPoints.Add(new Point3D(avgX, avgY, minZ));
+                    var centerPt = new Point3D(avgX, avgY, minZ);
+                    _allLocalPoints.Add(centerPt);
+                    _virtualBottomPoints.Add(centerPt);
 
                     // 仮想中心点と底面曲線の各構成点との中点群を自動生成して底面全体を補強
                     foreach (var pt in effectiveLocalPnts)
@@ -322,7 +327,9 @@ namespace Site7DrawingEditor
                         double midX = (pt.X + avgX) / 2.0;
                         double midY = (pt.Y + avgY) / 2.0;
                         double midZ = (pt.Z + minZ) / 2.0;
-                        _allLocalPoints.Add(new Point3D(midX, midY, midZ));
+                        var midPt = new Point3D(midX, midY, midZ);
+                        _allLocalPoints.Add(midPt);
+                        _virtualBottomPoints.Add(midPt);
                     }
                 }
             }
@@ -595,6 +602,21 @@ namespace Site7DrawingEditor
                         using (var pen = new Pen(col, penW))
                         {
                             g.DrawLines(pen, pts);
+                        }
+                    }
+                }
+
+                // 仮想中心点・中点群 (Virtual Bottom Points) の表示 (マゼンタ色 直径5px)
+                if (_virtualBottomPoints.Count > 0)
+                {
+                    using (var vBrush = new SolidBrush(Color.Magenta))
+                    using (var vPen = new Pen(Color.Purple, 1.0f))
+                    {
+                        foreach (var vp in _virtualBottomPoints)
+                        {
+                            PointF p = LocalTo2D(vp.X, vp.Y);
+                            g.FillEllipse(vBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                            g.DrawEllipse(vPen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
                         }
                     }
                 }
@@ -917,6 +939,21 @@ namespace Site7DrawingEditor
                         PointF p = Project3D(cp);
                         g.FillEllipse(ctrlBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
                         g.DrawEllipse(ctrlOutlinePen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                    }
+                }
+
+                // 3. 仮想中心点・中点群 (Virtual Bottom Points) の表示 (マゼンタ色 直径5px)
+                if (_virtualBottomPoints.Count > 0)
+                {
+                    using (var vBrush = new SolidBrush(Color.Magenta))
+                    using (var vPen = new Pen(Color.Purple, 1.0f))
+                    {
+                        foreach (var vp in _virtualBottomPoints)
+                        {
+                            PointF p = Project3D(vp);
+                            g.FillEllipse(vBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                            g.DrawEllipse(vPen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                        }
                     }
                 }
             }
