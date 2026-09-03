@@ -316,8 +316,8 @@ namespace Site7DrawingEditor
                 {
                     double avgX = localPnts.Average(p => p.X);
                     double avgY = localPnts.Average(p => p.Y);
-                    double minZ = localPnts.Min(p => p.Z);
-                    var centerPt = new Point3D(avgX, avgY, minZ);
+                    double avgZ = localPnts.Average(p => p.Z);
+                    var centerPt = new Point3D(avgX, avgY, avgZ);
                     _allLocalPoints.Add(centerPt);
                     _virtualBottomPoints.Add(centerPt);
 
@@ -326,7 +326,7 @@ namespace Site7DrawingEditor
                     {
                         double midX = (pt.X + avgX) / 2.0;
                         double midY = (pt.Y + avgY) / 2.0;
-                        double midZ = (pt.Z + minZ) / 2.0;
+                        double midZ = (pt.Z + avgZ) / 2.0;
                         var midPt = new Point3D(midX, midY, midZ);
                         _allLocalPoints.Add(midPt);
                         _virtualBottomPoints.Add(midPt);
