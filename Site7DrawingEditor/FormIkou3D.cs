@@ -436,25 +436,18 @@ namespace Site7DrawingEditor
                     }
                 }
 
-                double topZ, botZ;
                 if (intersections.Count > 0)
                 {
-                    topZ = intersections.OrderByDescending(p => p.Y).First().Z;
-                    botZ = intersections.OrderBy(p => p.Y).First().Z;
-                }
-                else
-                {
-                    // 交差しないエリア (左右両脇) は最も近い上部曲線の標高を水平延長
-                    topZ = targetPoints.OrderBy(p => Math.Pow(p.X - xi, 2) + Math.Pow(p.Y - maxY, 2)).First().Z;
-                    botZ = targetPoints.OrderBy(p => Math.Pow(p.X - xi, 2) + Math.Pow(p.Y - minY, 2)).First().Z;
-                }
+                    double topZ = intersections.OrderByDescending(p => p.Y).First().Z;
+                    double botZ = intersections.OrderBy(p => p.Y).First().Z;
 
-                var ptTop = new Point3D(xi, maxY, topZ);
-                var ptBot = new Point3D(xi, minY, botZ);
-                _allLocalPoints.Add(ptTop);
-                _allLocalPoints.Add(ptBot);
-                _virtualBoundaryPoints.Add(ptTop);
-                _virtualBoundaryPoints.Add(ptBot);
+                    var ptTop = new Point3D(xi, maxY, topZ);
+                    var ptBot = new Point3D(xi, minY, botZ);
+                    _allLocalPoints.Add(ptTop);
+                    _allLocalPoints.Add(ptBot);
+                    _virtualBoundaryPoints.Add(ptTop);
+                    _virtualBoundaryPoints.Add(ptBot);
+                }
             }
 
             // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) に交点標高を設定
@@ -470,25 +463,18 @@ namespace Site7DrawingEditor
                     }
                 }
 
-                double rightZ, leftZ;
                 if (intersections.Count > 0)
                 {
-                    rightZ = intersections.OrderByDescending(p => p.X).First().Z;
-                    leftZ = intersections.OrderBy(p => p.X).First().Z;
-                }
-                else
-                {
-                    // 交差しないエリア (上下両脇) は最も近い上部曲線の標高を水平延長
-                    rightZ = targetPoints.OrderBy(p => Math.Pow(p.X - maxX, 2) + Math.Pow(p.Y - yj, 2)).First().Z;
-                    leftZ = targetPoints.OrderBy(p => Math.Pow(p.X - minX, 2) + Math.Pow(p.Y - yj, 2)).First().Z;
-                }
+                    double rightZ = intersections.OrderByDescending(p => p.X).First().Z;
+                    double leftZ = intersections.OrderBy(p => p.X).First().Z;
 
-                var ptRight = new Point3D(maxX, yj, rightZ);
-                var ptLeft = new Point3D(minX, yj, leftZ);
-                _allLocalPoints.Add(ptRight);
-                _allLocalPoints.Add(ptLeft);
-                _virtualBoundaryPoints.Add(ptRight);
-                _virtualBoundaryPoints.Add(ptLeft);
+                    var ptRight = new Point3D(maxX, yj, rightZ);
+                    var ptLeft = new Point3D(minX, yj, leftZ);
+                    _allLocalPoints.Add(ptRight);
+                    _allLocalPoints.Add(ptLeft);
+                    _virtualBoundaryPoints.Add(ptRight);
+                    _virtualBoundaryPoints.Add(ptLeft);
+                }
             }
         }
 
