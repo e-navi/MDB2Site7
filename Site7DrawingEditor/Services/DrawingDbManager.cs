@@ -113,7 +113,7 @@ namespace Site7DrawingEditor.Services
                     var pts = SqliteDrawingManager.ParsePrecsText(line.Precs);
                     if (pts.Count == 0) continue;
                     int flag = line.Mode == 1 ? 1 : 0;
-                    item.LList.Add(new ZIkouLRec((int)line.Lid, line.Layer, flag, pts));
+                    item.LList.Add(new ZIkouLRec(line.Id, (int)line.Lid, line.Layer, flag, pts));
                     allExtractedPts.AddRange(pts);
                 }
 
@@ -156,7 +156,7 @@ namespace Site7DrawingEditor.Services
                     if (isInsideCropBox)
                     {
                         int flag = line.Mode == 1 ? 1 : 0;
-                        item.LList.Add(new ZIkouLRec((int)line.Lid, line.Layer, flag, pts));
+                        item.LList.Add(new ZIkouLRec(line.Id, (int)line.Lid, line.Layer, flag, pts));
                         extractedCount++;
                     }
                 }

@@ -718,9 +718,7 @@ namespace Site7DrawingEditor.Services
 
                             if (chkColorByIkouPaper)
                             {
-                                var masterLine = db.MasterIkouLList.FirstOrDefault(l => l.Lid == line.LID);
-                                var parentIkou = masterLine != null ? db.MasterIkouList.FirstOrDefault(ik => ik.Id == masterLine.Id) : null;
-                                string ikouName = parentIkou?.Name ?? ikou.Name;
+                                string ikouName = ResolveParentIkouName(db, line, ikou.Name);
                                 var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                                 int toneLevel = layerDef != null ? layerDef.Mark : 1;
                                 (col, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, 1.8f);
@@ -920,9 +918,7 @@ namespace Site7DrawingEditor.Services
 
                     if (chkColorByIkouFull)
                     {
-                        var masterLine = db.MasterIkouLList.FirstOrDefault(l => l.Lid == line.LID);
-                        var parentIkou = masterLine != null ? db.MasterIkouList.FirstOrDefault(ik => ik.Id == masterLine.Id) : null;
-                        string ikouName = parentIkou?.Name ?? curIkou.Name;
+                        string ikouName = ResolveParentIkouName(db, line, curIkou.Name);
                         var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
                         int toneLevel = layerDef != null ? layerDef.Mark : 1;
                         (col, penW) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, 1.5f);
@@ -1180,6 +1176,43 @@ namespace Site7DrawingEditor.Services
             }
 
             g.Restore(state);
+        }
+
+        private static string ResolveParentIkouName(DrawingDbManager db, ZIkouLRec line, string fallbackName)
+        {
+            if (db == null || line == null) return fallbackName;
+
+            // 1. 新フォーマット (line.Id > 0) の場合、親遺構マスターから直接特定
+            if (line.Id > 0 && db.MasterIkouList != null)
+            {
+                var ik = db.MasterIkouList.FirstOrDefault(m => m.Id == line.Id);
+                if (ik != null && !string.IsNullOrEmpty(ik.Name))
+                {
+                    return ik.Name;
+                }
+            }
+
+            // 2. 旧データ (line.Id == 0) の場合、線の始点座標から MasterIkouLList -> MasterIkou を照合
+            if (line.Pnts != null && line.Pnts.Count > 0 && db.MasterIkouLList != null && db.MasterIkouList != null)
+            {
+                var p0 = line.Pnts[0];
+                foreach (var ml in db.MasterIkouLList)
+                {
+                    if (ml.Layer != line.Layer) continue;
+                    var pts = SqliteDrawingManager.ParsePrecsText(ml.Precs);
+                    if (pts.Count > 0 && Math.Abs(pts[0].X - p0.X) < 0.005 && Math.Abs(pts[0].Y - p0.Y) < 0.005)
+                    {
+                        var parentIkou = db.MasterIkouList.FirstOrDefault(ik => ik.Id == ml.Id);
+                        if (parentIkou != null && !string.IsNullOrEmpty(parentIkou.Name))
+                        {
+                            line.Id = ml.Id; // キャッシュ
+                            return parentIkou.Name;
+                        }
+                    }
+                }
+            }
+
+            return fallbackName;
         }
 
         #endregion

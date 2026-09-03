@@ -209,40 +209,63 @@ namespace Site7DrawingEditor
 
     public class ZIkouLRec
     {
+        public long Id { get; set; } // 親遺構ID (MasterIkou.Id)
         public int LID { get; set; }
         public int Layer { get; set; }
         public int Flag { get; set; } // 0:直線 1:曲線 2:点
         public List<Point3D> Pnts { get; set; } = new List<Point3D>();
 
-        public ZIkouLRec(int lid, int layer, int flag, List<Point3D> pnts)
+        public ZIkouLRec(long id, int lid, int layer, int flag, List<Point3D> pnts)
         {
+            Id = id;
             LID = lid;
             Layer = layer;
             Flag = flag;
             Pnts = pnts;
         }
 
+        public ZIkouLRec(int lid, int layer, int flag, List<Point3D> pnts)
+            : this(0, lid, layer, flag, pnts)
+        {
+        }
+
         public ZIkouLRec(string strs)
         {
             string[] items = strs.Split('\t');
-            LID = int.Parse(items[0]);
-            Layer = int.Parse(items[1]);
-            Flag = int.Parse(items[2]);
             Pnts = new List<Point3D>();
 
-            int count = (items.Length - 3) / 3;
+            // 新形式 (Id, LID, Layer, Flag, Points...) => items.Length % 3 == 1 (ヘッダ4項目)
+            // 旧形式 (LID, Layer, Flag, Points...) => items.Length % 3 == 0 (ヘッダ3項目)
+            int headerCount = (items.Length % 3 == 1) ? 4 : 3;
+
+            if (headerCount == 4)
+            {
+                Id = long.Parse(items[0]);
+                LID = int.Parse(items[1]);
+                Layer = int.Parse(items[2]);
+                Flag = int.Parse(items[3]);
+            }
+            else
+            {
+                Id = 0;
+                LID = int.Parse(items[0]);
+                Layer = int.Parse(items[1]);
+                Flag = int.Parse(items[2]);
+            }
+
+            int count = (items.Length - headerCount) / 3;
             for (int i = 0; i < count; i++)
             {
-                double x = double.Parse(items[3 + i * 3 + 0], CultureInfo.InvariantCulture);
-                double y = double.Parse(items[3 + i * 3 + 1], CultureInfo.InvariantCulture);
-                double z = double.Parse(items[3 + i * 3 + 2], CultureInfo.InvariantCulture);
+                double x = double.Parse(items[headerCount + i * 3 + 0], CultureInfo.InvariantCulture);
+                double y = double.Parse(items[headerCount + i * 3 + 1], CultureInfo.InvariantCulture);
+                double z = double.Parse(items[headerCount + i * 3 + 2], CultureInfo.InvariantCulture);
                 Pnts.Add(new Point3D(x, y, z));
             }
         }
 
         public string ToStrs()
         {
-            string str = $"{LID}\t{Layer}\t{Flag}";
+            string str = $"{Id}\t{LID}\t{Layer}\t{Flag}";
             foreach (var p in Pnts)
             {
                 str += $"\t{p.X:0.000}\t{p.Y:0.000}\t{p.Z:0.000}";
