@@ -266,7 +266,7 @@ namespace Site7DrawingEditor
 
             foreach (var line in _targetIkou.LList)
             {
-                if (line.Pnts.Count == 0) continue;
+                if (line.Pnts.Count == 0 || (_isLayerVisible != null && !_isLayerVisible(line.Layer))) continue;
                 var localPnts = line.Pnts.Select(pt =>
                 {
                     var (lx, ly) = GeometryMath.SurveyToFeatureLocalCenter(pt.X, pt.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
@@ -357,7 +357,7 @@ namespace Site7DrawingEditor
 
             foreach (var line in _targetIkou.LList)
             {
-                if (line.Pnts.Count < 2) continue;
+                if (line.Pnts.Count < 2 || (_isLayerVisible != null && !_isLayerVisible(line.Layer))) continue;
                 var localPnts = line.Pnts.Select(pt =>
                 {
                     var (lx, ly) = GeometryMath.SurveyToFeatureLocalCenter(pt.X, pt.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);

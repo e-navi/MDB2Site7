@@ -341,18 +341,24 @@ namespace Site7DrawingEditor
             {
                 var chk = _chkLayers[i];
                 chk.ForeColor = LayerManager.GetLayerColor(i + 1, isDarkBackground: false);
-                chk.CheckedChanged += (s, e) => InvalidateAllCanvases();
+                chk.CheckedChanged += (s, e) =>
+                {
+                    SaveLayerVisibilityToIni();
+                    InvalidateAllCanvases();
+                };
             }
 
             btnLayerAllOn.Click += (s, e) =>
             {
                 foreach (var chk in _chkLayers) chk.Checked = true;
+                SaveLayerVisibilityToIni();
                 InvalidateAllCanvases();
             };
 
             btnLayerAllOff.Click += (s, e) =>
             {
                 foreach (var chk in _chkLayers) chk.Checked = false;
+                SaveLayerVisibilityToIni();
                 InvalidateAllCanvases();
             };
 
@@ -579,6 +585,7 @@ namespace Site7DrawingEditor
                 Def.SetIniStr("Site7DbEditor", "LastOpenedDb", dbPath);
                 LayerDefinitionService.Instance.LoadAll(dbPath);
                 IkouNameColorService.Instance.Load(dbPath);
+                LoadLayerVisibilityFromIni();
                 UpdateLayerCheckboxColors();
 
                 cmbFeatureSelect.Items.Clear();
@@ -1348,6 +1355,7 @@ namespace Site7DrawingEditor
 
         private bool _isDarkCanvasBackground = false;
         private CheckBox[]? _chkLayers = null;
+        private bool _isLoadingLayerVisibility = false;
 
         private void UpdateLayerCheckboxColors()
         {
@@ -1356,6 +1364,47 @@ namespace Site7DrawingEditor
             {
                 _chkLayers[i].ForeColor = LayerManager.GetLayerColor(i + 1, _isDarkCanvasBackground);
             }
+        }
+
+        private void LoadLayerVisibilityFromIni()
+        {
+            if (_chkLayers == null || _chkLayers.Length == 0) return;
+            string val = Def.GetIniStr("DrawingEditor", "LayerVisible", "");
+            if (string.IsNullOrWhiteSpace(val)) return;
+
+            _isLoadingLayerVisibility = true;
+            try
+            {
+                if (val.Contains(','))
+                {
+                    var parts = val.Split(',');
+                    for (int i = 0; i < Math.Min(_chkLayers.Length, parts.Length); i++)
+                    {
+                        if (int.TryParse(parts[i].Trim(), out int flag))
+                        {
+                            _chkLayers[i].Checked = (flag != 0);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < Math.Min(_chkLayers.Length, val.Length); i++)
+                    {
+                        _chkLayers[i].Checked = (val[i] != '0');
+                    }
+                }
+            }
+            finally
+            {
+                _isLoadingLayerVisibility = false;
+            }
+        }
+
+        private void SaveLayerVisibilityToIni()
+        {
+            if (_isLoadingLayerVisibility || _chkLayers == null || _chkLayers.Length == 0) return;
+            string val = string.Join(",", _chkLayers.Select(c => c.Checked ? "1" : "0"));
+            Def.SetIniStr("DrawingEditor", "LayerVisible", val);
         }
 
         private bool IsLayerVisible(int layerId)
