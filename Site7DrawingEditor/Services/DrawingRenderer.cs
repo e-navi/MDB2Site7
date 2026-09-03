@@ -448,7 +448,8 @@ namespace Site7DrawingEditor.Services
             bool chkShowCurvePaper,
             bool chkColorByIkouPaper,
             bool chkShowDirectionPaper,
-            bool chkShowDanmenPaper)
+            bool chkShowDanmenPaper,
+            Func<int, bool>? isLayerVisible = null)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -690,6 +691,7 @@ namespace Site7DrawingEditor.Services
                     foreach (var line in ikou.LList)
                     {
                         if (line.Pnts.Count == 0) continue;
+                        if (isLayerVisible != null && !isLayerVisible(line.Layer)) continue;
 
                         bool isLayerCurve = LayerManager.IsLayerCurve(db, line.Layer);
                         bool shouldDrawCurve = isLayerCurve && line.Pnts.Count >= 3;
@@ -852,7 +854,8 @@ namespace Site7DrawingEditor.Services
             DrawingModel? curDrawing,
             DrawingIkouModel? curIkou,
             bool chkColorByIkouFull,
-            bool chkShowDirection)
+            bool chkShowDirection,
+            Func<int, bool>? isLayerVisible = null)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -895,6 +898,7 @@ namespace Site7DrawingEditor.Services
             foreach (var line in curIkou.LList)
             {
                 if (line.Pnts.Count == 0) continue;
+                if (isLayerVisible != null && !isLayerVisible(line.Layer)) continue;
 
                 bool isLayerCurve = LayerManager.IsLayerCurve(db, line.Layer);
                 List<Point3D> renderPnts;

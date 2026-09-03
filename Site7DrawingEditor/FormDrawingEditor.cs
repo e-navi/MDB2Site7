@@ -955,7 +955,7 @@ namespace Site7DrawingEditor
                     }
                 }
 
-                using (var dlg = new FormIkou3D(curIkou, selectedDm, _db, chkColorByIkouFull.Checked))
+                using (var dlg = new FormIkou3D(curIkou, selectedDm, _db, chkColorByIkouFull.Checked, isLayerVisible: IsLayerVisible))
                 {
                     if (dlg.ShowDialog(this) == DialogResult.OK && dlg.ResultDanmenRec != null)
                     {
@@ -1518,7 +1518,8 @@ namespace Site7DrawingEditor
                     true,
                     chkColorByIkouFull.Checked,
                     true,
-                    true);
+                    true,
+                    isLayerVisible: IsLayerVisible);
             }
         }
 
@@ -1664,7 +1665,8 @@ namespace Site7DrawingEditor
                 curDrawing,
                 curIkou,
                 chkColorByIkouFull.Checked,
-                chkShowDirection.Checked);
+                chkShowDirection.Checked,
+                isLayerVisible: IsLayerVisible);
         }
 
         private void picFeatureDetailCanvas_MouseDown(object? sender, MouseEventArgs e)

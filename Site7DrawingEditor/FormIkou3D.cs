@@ -170,6 +170,7 @@ namespace Site7DrawingEditor
         private readonly DanmenRec? _targetDanmenRec;
         private readonly DrawingDbManager? _db;
         private readonly bool _chkColorByIkou;
+        private readonly Func<int, bool>? _isLayerVisible;
         private readonly List<Point3D> _allLocalPoints = new List<Point3D>();
         private GridMesh? _currentMesh;
         private Danmen? _currentDanmen;
@@ -200,13 +201,14 @@ namespace Site7DrawingEditor
 
         public DanmenRec? ResultDanmenRec { get; private set; }
 
-        public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true)
+        public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null)
         {
             InitializeComponent();
             _targetIkou = ikou;
             _targetDanmenRec = targetDanmen;
             _db = db;
             _chkColorByIkou = chkColorByIkou;
+            _isLayerVisible = isLayerVisible;
 
             // Transform all 3D points from Survey space into Crop Box Local Center Space (補間ポイントも含めて全3D点群をメッシュ生成用に登録)
             var spline = new Xross_Spline();
@@ -478,6 +480,7 @@ namespace Site7DrawingEditor
                 foreach (var line in _targetIkou.LList)
                 {
                     if (line.Pnts.Count == 0) continue;
+                    if (_isLayerVisible != null && !_isLayerVisible(line.Layer)) continue;
                     var localPnts = line.Pnts.Select(p =>
                     {
                         var (lx, ly) = GeometryMath.SurveyToFeatureLocalCenter(p.X, p.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
@@ -771,6 +774,7 @@ namespace Site7DrawingEditor
                 foreach (var line in _targetIkou.LList)
                 {
                     if (line.Pnts.Count == 0) continue;
+                    if (_isLayerVisible != null && !_isLayerVisible(line.Layer)) continue;
                     var localPnts = line.Pnts.Select(p =>
                     {
                         var (lx, ly) = GeometryMath.SurveyToFeatureLocalCenter(p.X, p.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
