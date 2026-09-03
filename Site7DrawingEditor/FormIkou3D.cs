@@ -315,6 +315,15 @@ namespace Site7DrawingEditor
                     double avgY = localPnts.Average(p => p.Y);
                     double minZ = localPnts.Min(p => p.Z);
                     _allLocalPoints.Add(new Point3D(avgX, avgY, minZ));
+
+                    // 仮想中心点と底面曲線の各構成点との中点群を自動生成して底面全体を補強
+                    foreach (var pt in effectiveLocalPnts)
+                    {
+                        double midX = (pt.X + avgX) / 2.0;
+                        double midY = (pt.Y + avgY) / 2.0;
+                        double midZ = (pt.Z + minZ) / 2.0;
+                        _allLocalPoints.Add(new Point3D(midX, midY, midZ));
+                    }
                 }
             }
         }
