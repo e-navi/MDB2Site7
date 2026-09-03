@@ -333,6 +333,187 @@ namespace Site7DrawingEditor
                     }
                 }
             }
+
+            // Pit上部（外側曲線）とGrid線の上下左右の交点標高をGrid枠端に設定
+            GenerateOuterBoundaryGridPoints();
+        }
+
+        private void GenerateOuterBoundaryGridPoints()
+        {
+            var (_, widthM, heightM, _, _, _, _, _) = GeometryMath.CalculateCropBox(_targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
+            double minX = -widthM / 2.0;
+            double maxX = +widthM / 2.0;
+            double minY = -heightM / 2.0;
+            double maxY = +heightM / 2.0;
+
+            // Pit上部（レイヤ名に「上」が含まれる曲線、または外側曲線）のセグメントを収集
+            var topSegments = new List<(Point3D P1, Point3D P2)>();
+            var allSegments = new List<(Point3D P1, Point3D P2)>();
+
+            var spline = new Xross_Spline();
+            int splineDiv = SplineDivisions;
+
+            foreach (var line in _targetIkou.LList)
+            {
+                if (line.Pnts.Count < 2) continue;
+                var localPnts = line.Pnts.Select(pt =>
+                {
+                    var (lx, ly) = GeometryMath.SurveyToFeatureLocalCenter(pt.X, pt.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
+                    return new Point3D(lx, ly, pt.Z);
+                }).ToList();
+
+                bool isLayerCurve = (_db != null) ? LayerManager.IsLayerCurve(_db, line.Layer) : true;
+                bool isClosed = (line.Flag == 1);
+                if (!isClosed && localPnts.Count >= 3)
+                {
+                    var pFirst = localPnts[0];
+                    var pLast = localPnts[^1];
+                    double dist = Math.Sqrt(Math.Pow(pFirst.X - pLast.X, 2) + Math.Pow(pFirst.Y - pLast.Y, 2));
+                    if (dist < 0.25) isClosed = true;
+                }
+
+                List<Point3D> pnts = (isLayerCurve && localPnts.Count >= 3)
+                    ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, splineDiv) : spline.Calc3DCurvePoints(localPnts, splineDiv))
+                    : localPnts;
+
+                string layerName = "";
+                if (_db?.MasterLayerList != null && _db.MasterLayerList.Count > 0)
+                {
+                    int normIdx = line.Layer;
+                    if (normIdx >= 49 && normIdx <= 64) normIdx -= 48;
+                    if (normIdx > 16) normIdx = ((normIdx - 1) % 16) + 1;
+                    var ly = _db.MasterLayerList.FirstOrDefault(l =>
+                        l.Id == line.Layer || l.Id == normIdx || l.Id == normIdx + 48 || l.Id == (line.Layer % 100));
+                    if (ly != null && !string.IsNullOrEmpty(ly.Name)) layerName = ly.Name;
+                }
+                if (string.IsNullOrEmpty(layerName))
+                {
+                    var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                    if (layerDef != null && !string.IsNullOrEmpty(layerDef.Name)) layerName = layerDef.Name;
+                }
+
+                bool isTopLayer = layerName.Contains("上") || (!layerName.Contains("下") && !layerName.Contains("底"));
+
+                for (int i = 0; i < pnts.Count - 1; i++)
+                {
+                    var seg = (pnts[i], pnts[i + 1]);
+                    allSegments.Add(seg);
+                    if (isTopLayer) topSegments.Add(seg);
+                }
+                if (isClosed && pnts.Count >= 3)
+                {
+                    var seg = (pnts[^1], pnts[0]);
+                    allSegments.Add(seg);
+                    if (isTopLayer) topSegments.Add(seg);
+                }
+            }
+
+            var targetSegments = topSegments.Count > 0 ? topSegments : allSegments;
+            if (targetSegments.Count == 0) return;
+
+            int resX = cmbGridResolution.SelectedIndex switch
+            {
+                0 => 25,
+                2 => 100,
+                _ => 50
+            };
+            int resY = resX;
+
+            // 1. 縦線 X = xi との交点を求め、上下端 (xi, minY) / (xi, maxY) に交点標高を設定
+            for (int i = 0; i < resX; i++)
+            {
+                double xi = minX + i * (maxX - minX) / Math.Max(1, resX - 1);
+                var intersections = new List<Point3D>();
+                foreach (var seg in targetSegments)
+                {
+                    if (TryIntersectVertical(seg.P1, seg.P2, xi, out Point3D cross))
+                    {
+                        intersections.Add(cross);
+                    }
+                }
+
+                if (intersections.Count > 0)
+                {
+                    var topCross = intersections.OrderByDescending(p => p.Y).First();
+                    var botCross = intersections.OrderBy(p => p.Y).First();
+
+                    _allLocalPoints.Add(new Point3D(xi, maxY, topCross.Z));
+                    _allLocalPoints.Add(new Point3D(xi, minY, botCross.Z));
+                }
+            }
+
+            // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) に交点標高を設定
+            for (int j = 0; j < resY; j++)
+            {
+                double yj = minY + j * (maxY - minY) / Math.Max(1, resY - 1);
+                var intersections = new List<Point3D>();
+                foreach (var seg in targetSegments)
+                {
+                    if (TryIntersectHorizontal(seg.P1, seg.P2, yj, out Point3D cross))
+                    {
+                        intersections.Add(cross);
+                    }
+                }
+
+                if (intersections.Count > 0)
+                {
+                    var rightCross = intersections.OrderByDescending(p => p.X).First();
+                    var leftCross = intersections.OrderBy(p => p.X).First();
+
+                    _allLocalPoints.Add(new Point3D(maxX, yj, rightCross.Z));
+                    _allLocalPoints.Add(new Point3D(minX, yj, leftCross.Z));
+                }
+            }
+        }
+
+        private static bool TryIntersectVertical(Point3D p1, Point3D p2, double targetX, out Point3D intersection)
+        {
+            intersection = default;
+            double minX = Math.Min(p1.X, p2.X);
+            double maxX = Math.Max(p1.X, p2.X);
+            if (targetX < minX - 1e-9 || targetX > maxX + 1e-9) return false;
+            double dx = p2.X - p1.X;
+            if (Math.Abs(dx) < 1e-9)
+            {
+                if (Math.Abs(p1.X - targetX) < 1e-5)
+                {
+                    intersection = new Point3D(targetX, (p1.Y + p2.Y) / 2.0, (p1.Z + p2.Z) / 2.0);
+                    return true;
+                }
+                return false;
+            }
+            double t = (targetX - p1.X) / dx;
+            if (t < -1e-5 || t > 1.0 + 1e-5) return false;
+            t = Math.Clamp(t, 0.0, 1.0);
+            double y = p1.Y + t * (p2.Y - p1.Y);
+            double z = p1.Z + t * (p2.Z - p1.Z);
+            intersection = new Point3D(targetX, y, z);
+            return true;
+        }
+
+        private static bool TryIntersectHorizontal(Point3D p1, Point3D p2, double targetY, out Point3D intersection)
+        {
+            intersection = default;
+            double minY = Math.Min(p1.Y, p2.Y);
+            double maxY = Math.Max(p1.Y, p2.Y);
+            if (targetY < minY - 1e-9 || targetY > maxY + 1e-9) return false;
+            double dy = p2.Y - p1.Y;
+            if (Math.Abs(dy) < 1e-9)
+            {
+                if (Math.Abs(p1.Y - targetY) < 1e-5)
+                {
+                    intersection = new Point3D((p1.X + p2.X) / 2.0, targetY, (p1.Z + p2.Z) / 2.0);
+                    return true;
+                }
+                return false;
+            }
+            double t = (targetY - p1.Y) / dy;
+            if (t < -1e-5 || t > 1.0 + 1e-5) return false;
+            t = Math.Clamp(t, 0.0, 1.0);
+            double x = p1.X + t * (p2.X - p1.X);
+            double z = p1.Z + t * (p2.Z - p1.Z);
+            intersection = new Point3D(x, targetY, z);
+            return true;
         }
 
         private void WireEventHandlers()
