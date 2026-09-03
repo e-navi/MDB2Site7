@@ -287,6 +287,35 @@ namespace Site7DrawingEditor
                 {
                     _allLocalPoints.Add(pt);
                 }
+
+                // Pit底（レイヤ名に「下」が含まれる閉曲線）の場合、内部の重心に最深点（仮想中心点）を自動生成
+                string layerName = "";
+                if (_db?.MasterLayerList != null && _db.MasterLayerList.Count > 0)
+                {
+                    int normIdx = line.Layer;
+                    if (normIdx >= 49 && normIdx <= 64) normIdx -= 48;
+                    if (normIdx > 16) normIdx = ((normIdx - 1) % 16) + 1;
+
+                    var ly = _db.MasterLayerList.FirstOrDefault(l =>
+                        l.Id == line.Layer ||
+                        l.Id == normIdx ||
+                        l.Id == normIdx + 48 ||
+                        l.Id == (line.Layer % 100));
+                    if (ly != null && !string.IsNullOrEmpty(ly.Name)) layerName = ly.Name;
+                }
+                if (string.IsNullOrEmpty(layerName))
+                {
+                    var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                    if (layerDef != null && !string.IsNullOrEmpty(layerDef.Name)) layerName = layerDef.Name;
+                }
+
+                if (isClosed && layerName.Contains("下") && localPnts.Count >= 3)
+                {
+                    double avgX = localPnts.Average(p => p.X);
+                    double avgY = localPnts.Average(p => p.Y);
+                    double minZ = localPnts.Min(p => p.Z);
+                    _allLocalPoints.Add(new Point3D(avgX, avgY, minZ));
+                }
             }
         }
 
