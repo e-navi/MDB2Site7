@@ -221,6 +221,7 @@ namespace Site7DrawingEditor
                     return new Point3D(lx, ly, pt.Z);
                 }).ToList();
 
+                bool isLayerCurve = (_db != null) ? LayerManager.IsLayerCurve(_db, line.Layer) : true;
                 bool isClosed = (line.Flag == 1);
                 if (!isClosed && localPnts.Count >= 3)
                 {
@@ -230,7 +231,7 @@ namespace Site7DrawingEditor
                     if (dist < 0.05) isClosed = true;
                 }
 
-                List<Point3D> effectiveLocalPnts = (localPnts.Count >= 3)
+                List<Point3D> effectiveLocalPnts = (isLayerCurve && localPnts.Count >= 3)
                     ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, 5) : spline.Calc3DCurvePoints(localPnts, 5))
                     : localPnts;
 
@@ -769,7 +770,7 @@ namespace Site7DrawingEditor
             int lineIdx = 0;
             using (var interpBrush = new SolidBrush(Color.FromArgb(0, 180, 255)))
             using (var ctrlBrush = new SolidBrush(Color.FromArgb(255, 215, 0)))
-            using (var ctrlOutlinePen = new Pen(Color.FromArgb(220, 20, 20), 1.8f))
+            using (var ctrlOutlinePen = new Pen(Color.FromArgb(200, 30, 30), 1.0f))
             {
                 foreach (var line in _targetIkou.LList)
                 {
@@ -783,6 +784,7 @@ namespace Site7DrawingEditor
 
                     if (localPnts.Count == 0) continue;
 
+                    bool isLayerCurve = (_db != null) ? LayerManager.IsLayerCurve(_db, line.Layer) : true;
                     bool isClosed = (line.Flag == 1);
                     if (!isClosed && localPnts.Count >= 3)
                     {
@@ -792,35 +794,52 @@ namespace Site7DrawingEditor
                         if (dist < 0.05) isClosed = true;
                     }
 
-                    List<Point3D> renderPnts = (localPnts.Count >= 3)
+                    bool shouldDrawCurve = isLayerCurve && localPnts.Count >= 3;
+                    List<Point3D> renderPnts = shouldDrawCurve
                         ? (isClosed ? spline.Calc3DCloseCurvePoints(localPnts, 5) : spline.Calc3DCurvePoints(localPnts, 5))
                         : localPnts;
 
                     var pts = renderPnts.Select(p => Project3D(p)).ToArray();
                     if (pts.Length > 1)
                     {
-                        Color col = (lineIdx == 0) ? Color.FromArgb(220, 30, 60) : Color.FromArgb(0, 140, 240);
-                        using (var pen = new Pen(col, 2.5f))
+                        Color col;
+                        float penW = 1.8f;
+
+                        if (_chkColorByIkou)
+                        {
+                            string ikouName = ResolveParentIkouName(line, _targetIkou.Name);
+                            var layerDef = LayerDefinitionService.Instance.GetLayer(LayerGroup.Ikou, line.Layer);
+                            int toneLevel = layerDef != null ? layerDef.Mark : 1;
+                            float baseWidth = (layerDef != null && layerDef.Width > 0) ? (float)layerDef.Width : 1.8f;
+                            (col, penW) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, baseWidth);
+                        }
+                        else
+                        {
+                            col = LayerManager.GetLayerColor(line.Layer);
+                        }
+
+                        using (var pen = new Pen(col, penW))
                         {
                             g.DrawLines(pen, pts);
                         }
                     }
 
-                    // 1. 補間されたポイント (Interpolated Points) の表示
-                    foreach (var p in pts)
+                    // 1. 補間されたポイント (曲線レイヤの場合のみ小さく表示)
+                    if (shouldDrawCurve)
                     {
-                        g.FillEllipse(interpBrush, p.X - 3.5f, p.Y - 3.5f, 7f, 7f);
+                        foreach (var p in pts)
+                        {
+                            g.FillEllipse(interpBrush, p.X - 1.25f, p.Y - 1.25f, 2.5f, 2.5f);
+                        }
                     }
 
-                    // 2. 元の制御点・測量点 (Original Control Points) の強調表示
+                    // 2. 元の制御点・測量点 (Original Control Points) の表示 (直径5px)
                     foreach (var cp in localPnts)
                     {
                         PointF p = Project3D(cp);
-                        g.FillEllipse(ctrlBrush, p.X - 5.5f, p.Y - 5.5f, 11f, 11f);
-                        g.DrawEllipse(ctrlOutlinePen, p.X - 5.5f, p.Y - 5.5f, 11f, 11f);
+                        g.FillEllipse(ctrlBrush, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
+                        g.DrawEllipse(ctrlOutlinePen, p.X - 2.5f, p.Y - 2.5f, 5f, 5f);
                     }
-
-                    lineIdx++;
                 }
             }
         }
