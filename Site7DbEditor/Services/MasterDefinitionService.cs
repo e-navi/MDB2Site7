@@ -343,9 +343,12 @@ namespace Site7DbEditor.Services
 
         public static void SelectCode(ComboBox cmb, string code)
         {
+            // 必ず一旦未選択(-1)およびテキストクリアを行い、同一インデックスへの再選択でも確実にテキスト更新を発火させる
+            cmb.SelectedIndex = -1;
+            cmb.Text = string.Empty;
+
             if (string.IsNullOrEmpty(code))
             {
-                cmb.SelectedIndex = -1;
                 return;
             }
 
