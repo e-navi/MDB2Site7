@@ -135,9 +135,9 @@ namespace Site7DrawingEditor
             this.cmbGridResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbGridResolution.FormattingEnabled = true;
             this.cmbGridResolution.Items.AddRange(new object[] {
-            "大(縦横 25分割)",
-            "中(縦横 50分割)",
-            "小(縦横 100分割)"});
+            "大(長辺50分割)",
+            "中(長辺100分割)",
+            "小(長辺200分割)"});
             this.cmbGridResolution.Location = new System.Drawing.Point(8, 34);
             this.cmbGridResolution.Name = "cmbGridResolution";
             this.cmbGridResolution.Size = new System.Drawing.Size(204, 23);
@@ -192,7 +192,7 @@ namespace Site7DrawingEditor
             this.txtNeighborCount.Name = "txtNeighborCount";
             this.txtNeighborCount.Size = new System.Drawing.Size(68, 23);
             this.txtNeighborCount.TabIndex = 4;
-            this.txtNeighborCount.Text = "4";
+            this.txtNeighborCount.Text = "32";
 
             // chkIkouHeight
             this.chkIkouHeight.AutoSize = true;

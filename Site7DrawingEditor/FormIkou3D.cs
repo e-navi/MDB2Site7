@@ -216,9 +216,9 @@ namespace Site7DrawingEditor
 
         public DanmenRec? ResultDanmenRec { get; private set; }
 
-        private int SplineDivisions => int.TryParse(cmbSplineDiv.SelectedItem?.ToString(), out int div) ? div : 5;
+        private int SplineDivisions => int.TryParse(cmbSplineDiv.SelectedItem?.ToString(), out int div) ? div : 10;
         private double WeightPower => double.TryParse(txtWeightPower.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) ? Math.Max(0.1, w) : 5.0;
-        private int NeighborCount => int.TryParse(txtNeighborCount.Text, out int cnt) ? Math.Max(1, cnt) : 4;
+        private int NeighborCount => int.TryParse(txtNeighborCount.Text, out int cnt) ? Math.Max(1, cnt) : 32;
 
         public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null)
         {
@@ -229,10 +229,10 @@ namespace Site7DrawingEditor
             _chkColorByIkou = chkColorByIkou;
             _isLayerVisible = isLayerVisible;
 
-            cmbSplineDiv.SelectedItem = "5";
-            cmbGridResolution.SelectedIndex = 1; // 中 (50分割)
+            cmbSplineDiv.SelectedItem = "10";
+            cmbGridResolution.SelectedIndex = 1; // 中 (長辺100分割)
             txtWeightPower.Text = "5.0";
-            txtNeighborCount.Text = "4";
+            txtNeighborCount.Text = "32";
 
             RebuildLocalPoints();
 
@@ -605,14 +605,19 @@ namespace Site7DrawingEditor
             Point3D minp = new Point3D(-widthM / 2.0, -heightM / 2.0, 0);
             Point3D maxp = new Point3D(+widthM / 2.0, +heightM / 2.0, 0);
 
-            int res = cmbGridResolution.SelectedIndex switch
+            int longDiv = cmbGridResolution.SelectedIndex switch
             {
-                0 => 25,
-                2 => 100,
-                _ => 50
+                0 => 50,
+                2 => 200,
+                _ => 100
             };
 
-            _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, res, res, WeightPower, NeighborCount);
+            double longSide = Math.Max(widthM, heightM);
+            double cellSize = longSide / Math.Max(1, longDiv);
+            int resX = Math.Max(2, (int)Math.Round(widthM / cellSize));
+            int resY = Math.Max(2, (int)Math.Round(heightM / cellSize));
+
+            _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, resX, resY, WeightPower, NeighborCount);
 
             // Create default section line if none specified yet
             if (_sectionStartPoint == null || _sectionEndPoint == null)
