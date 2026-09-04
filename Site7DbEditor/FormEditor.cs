@@ -2387,8 +2387,7 @@ namespace Site7DbEditor {
                 Name = targetIkou.Name ?? $"Ikou{targetIkou.Id}"
             };
 
-            double minX = double.MaxValue, minY = double.MaxValue, minZ = double.MaxValue;
-            double maxX = double.MinValue, maxY = double.MinValue, maxZ = double.MinValue;
+            var allPoints = new List<Site7DrawingEditor.Point3D>();
 
             foreach (var line in matchingLines) {
                 var pts = SqliteManager.ParsePrecsText(line.Precs);
@@ -2397,45 +2396,44 @@ namespace Site7DbEditor {
 
                 var zPnts = new List<Site7DrawingEditor.Point3D>();
                 foreach (var p in pts) {
-                    zPnts.Add(new Site7DrawingEditor.Point3D(p.X, p.Y, p.Z));
-
-                    if (p.X < minX)
-                        minX = p.X;
-                    if (p.Y < minY)
-                        minY = p.Y;
-                    if (p.Z < minZ)
-                        minZ = p.Z;
-                    if (p.X > maxX)
-                        maxX = p.X;
-                    if (p.Y > maxY)
-                        maxY = p.Y;
-                    if (p.Z > maxZ)
-                        maxZ = p.Z;
+                    var pt3D = new Site7DrawingEditor.Point3D(p.X, p.Y, p.Z);
+                    zPnts.Add(pt3D);
+                    if (IsMapLayerVisible(line.Layer)) {
+                        allPoints.Add(pt3D);
+                    }
                 }
 
                 var zRec = new Site7DrawingEditor.ZIkouLRec((int)line.Lid, line.Layer, line.Mode == 1 ? 1 : 0, zPnts);
                 drawingIkou.LList.Add(zRec);
             }
 
-            if (minX == double.MaxValue) {
-                minX = 0;
-                minY = 0;
-                minZ = 0;
-                maxX = 100;
-                maxY = 100;
-                maxZ = 10;
+            if (allPoints.Count == 0) {
+                // 表示レイヤの点がない場合は全点から枠を計算
+                foreach (var line in drawingIkou.LList) {
+                    allPoints.AddRange(line.Pnts);
+                }
             }
 
-            double rangeX = Math.Max(0.5, maxX - minX);
-            double rangeY = Math.Max(0.5, maxY - minY);
-            double padX = rangeX * 0.125;
-            double padY = rangeY * 0.125;
+            var (p1, p2, p3) = Site7DrawingEditor.GeometryMath.ComputeDefaultCropBox(allPoints);
+            drawingIkou.P1 = p1;
+            drawingIkou.P2 = p2;
+            drawingIkou.P3 = p3;
 
-            drawingIkou.P1 = new Site7DrawingEditor.XYZ { X = minX - padX, Y = minY - padY, Z = minZ };
-            drawingIkou.P2 = new Site7DrawingEditor.XYZ { X = maxX + padX, Y = minY - padY, Z = minZ };
-            drawingIkou.P3 = new Site7DrawingEditor.XYZ { X = maxX + padX, Y = maxY + padY, Z = maxZ };
+            // DrawingDbManager をロードしてレイヤ定義・線種設定を連携
+            Site7DrawingEditor.Services.DrawingDbManager? drawingDb = null;
+            if (!string.IsNullOrEmpty(_db.CurrentDbPath) && File.Exists(_db.CurrentDbPath)) {
+                try {
+                    drawingDb = new Site7DrawingEditor.Services.DrawingDbManager();
+                    drawingDb.LoadDatabase(_db.CurrentDbPath);
+                } catch { }
+            }
 
-            using (var dlg3D = new Site7DrawingEditor.FormIkou3D(drawingIkou)) {
+            using (var dlg3D = new Site7DrawingEditor.FormIkou3D(
+                drawingIkou,
+                targetDanmen: null,
+                db: drawingDb,
+                chkColorByIkou: chkColorByIkou.Checked,
+                isLayerVisible: IsMapLayerVisible)) {
                 dlg3D.SwitchViewMode(true);
                 dlg3D.ShowDialog(this);
             }
