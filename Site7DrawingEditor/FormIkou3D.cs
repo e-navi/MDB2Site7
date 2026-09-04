@@ -471,8 +471,8 @@ namespace Site7DrawingEditor
                     double distTotal = Math.Sqrt(bp.X * bp.X + bp.Y * bp.Y);
                     double distEdge = Math.Sqrt(Math.Pow(bp.X - nearestCross.X, 2) + Math.Pow(bp.Y - nearestCross.Y, 2));
 
-                    // 外周端点から交点までの距離が中心からの全距離の 1/3 以下の場合のみ有効
-                    if (distTotal > 1e-4 && (distEdge / distTotal) <= (1.0 / 3.0 + 1e-5))
+                    // 外周端点から交点までの距離が中心からの全距離の 2/3 以下の場合のみ有効
+                    if (distTotal > 1e-4 && (distEdge / distTotal) <= (2.0 / 3.0 + 1e-5))
                     {
                         // 1. 8角形外周点
                         var ptBound = new Point3D(bp.X, bp.Y, nearestCross.Z);
