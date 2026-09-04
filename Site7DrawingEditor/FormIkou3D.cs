@@ -413,194 +413,106 @@ namespace Site7DrawingEditor
             var targetSegments = topSegments.Count > 0 ? topSegments : allSegments;
             if (targetSegments.Count == 0) return;
 
-            var targetPoints = targetSegments.SelectMany(s => new[] { s.P1, s.P2 }).Distinct().ToList();
+            // 隅切り8角形の8頂点 (各辺の中央1/2と両端1/4を結んだ8角形)
+            double halfW = widthM / 2.0;
+            double halfH = heightM / 2.0;
+            double qW = widthM / 4.0;
+            double qH = heightM / 4.0;
 
-            int resX = cmbGridResolution.SelectedIndex switch
+            Point3D[] octVertices = new Point3D[]
             {
-                0 => 25,
-                2 => 100,
-                _ => 50
+                new Point3D(-qW, +halfH, 0), // 0: 上辺左
+                new Point3D(+qW, +halfH, 0), // 1: 上辺右
+                new Point3D(+halfW, +qH, 0), // 2: 右辺上
+                new Point3D(+halfW, -qH, 0), // 3: 右辺下
+                new Point3D(+qW, -halfH, 0), // 4: 下辺右
+                new Point3D(-qW, -halfH, 0), // 5: 下辺左
+                new Point3D(-halfW, -qH, 0), // 6: 左辺下
+                new Point3D(-halfW, +qH, 0)  // 7: 左辺上
             };
-            int resY = resX;
 
-            double maxDistY = (maxY - minY) / 3.0;
-            double maxDistX = (maxX - minX) / 3.0;
-
-            // 1. 縦線 X = xi との交点を求め、上下端 (xi, minY) / (xi, maxY) および中央1/2の中間点に交点標高を設定
-            var verticalCrossData = new List<(double Xi, Point3D TopCross, Point3D BotCross, bool IsTopValid, bool IsBotValid)>();
-            for (int i = 0; i < resX; i++)
+            // 8角形の外周をサンプリング (各辺 8分割 => 計64点)
+            int samplesPerEdge = 8;
+            var boundarySamplePoints = new List<Point3D>();
+            for (int e = 0; e < 8; e++)
             {
-                double xi = minX + i * (maxX - minX) / Math.Max(1, resX - 1);
-                var intersections = new List<Point3D>();
+                var vStart = octVertices[e];
+                var vEnd = octVertices[(e + 1) % 8];
+                for (int s = 0; s < samplesPerEdge; s++)
+                {
+                    double t = (double)s / samplesPerEdge;
+                    double sx = vStart.X + t * (vEnd.X - vStart.X);
+                    double sy = vStart.Y + t * (vEnd.Y - vStart.Y);
+                    boundarySamplePoints.Add(new Point3D(sx, sy, 0));
+                }
+            }
+
+            var center = new Point3D(0, 0, 0);
+
+            // 中心から各8角形外周点への放射線分と、Pit上部曲線との交点を算出
+            foreach (var bp in boundarySamplePoints)
+            {
+                var rayIntersections = new List<Point3D>();
                 foreach (var seg in targetSegments)
                 {
-                    if (TryIntersectVertical(seg.P1, seg.P2, xi, out Point3D cross))
+                    if (TryIntersectSegments2D(center, bp, seg.P1, seg.P2, out Point3D cross))
                     {
-                        intersections.Add(cross);
+                        rayIntersections.Add(cross);
                     }
                 }
 
-                if (intersections.Count > 0)
+                if (rayIntersections.Count > 0)
                 {
-                    var topCross = intersections.OrderByDescending(p => p.Y).First();
-                    var botCross = intersections.OrderBy(p => p.Y).First();
+                    // 中心から外側に向かって最も外側（bpに一番近い）の交点を採用
+                    var nearestCross = rayIntersections
+                        .OrderBy(p => Math.Pow(p.X - bp.X, 2) + Math.Pow(p.Y - bp.Y, 2))
+                        .First();
 
-                    bool isTopValid = (maxY - topCross.Y) <= maxDistY + 1e-5;
-                    bool isBotValid = (botCross.Y - minY) <= maxDistY + 1e-5;
-                    verticalCrossData.Add((xi, topCross, botCross, isTopValid, isBotValid));
+                    double distTotal = Math.Sqrt(bp.X * bp.X + bp.Y * bp.Y);
+                    double distEdge = Math.Sqrt(Math.Pow(bp.X - nearestCross.X, 2) + Math.Pow(bp.Y - nearestCross.Y, 2));
 
-                    // 外周端点 (端点から交点までの距離が範囲の1/3以下の時のみ有効)
-                    if (isTopValid)
+                    // 外周端点から交点までの距離が中心からの全距離の 1/3 以下の場合のみ有効
+                    if (distTotal > 1e-4 && (distEdge / distTotal) <= (1.0 / 3.0 + 1e-5))
                     {
-                        var ptTop = new Point3D(xi, maxY, topCross.Z);
-                        _allLocalPoints.Add(ptTop);
-                        _virtualBoundaryPoints.Add(ptTop);
-                    }
-                    if (isBotValid)
-                    {
-                        var ptBot = new Point3D(xi, minY, botCross.Z);
-                        _allLocalPoints.Add(ptBot);
-                        _virtualBoundaryPoints.Add(ptBot);
-                    }
-                }
-            }
+                        // 1. 8角形外周点
+                        var ptBound = new Point3D(bp.X, bp.Y, nearestCross.Z);
+                        _allLocalPoints.Add(ptBound);
+                        _virtualBoundaryPoints.Add(ptBound);
 
-            // 中間点は交差スパンの中央1/2（両端1/4を除外）かつ距離1/3以下の時のみ生成
-            if (verticalCrossData.Count > 0)
-            {
-                int count = verticalCrossData.Count;
-                int startIdx = (int)Math.Round(count * 0.25);
-                int endIdx = (int)Math.Round(count * 0.75);
-                for (int k = startIdx; k < endIdx && k < count; k++)
-                {
-                    var (xi, topCross, botCross, isTopValid, isBotValid) = verticalCrossData[k];
-                    if (isTopValid)
-                    {
-                        var ptTopMid = new Point3D(xi, (topCross.Y + maxY) / 2.0, topCross.Z);
-                        _allLocalPoints.Add(ptTopMid);
-                        _virtualBoundaryPoints.Add(ptTopMid);
-                    }
-                    if (isBotValid)
-                    {
-                        var ptBotMid = new Point3D(xi, (botCross.Y + minY) / 2.0, botCross.Z);
-                        _allLocalPoints.Add(ptBotMid);
-                        _virtualBoundaryPoints.Add(ptBotMid);
-                    }
-                }
-            }
-
-            // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) および中央1/2の中間点に交点標高を設定
-            var horizontalCrossData = new List<(double Yj, Point3D RightCross, Point3D LeftCross, bool IsRightValid, bool IsLeftValid)>();
-            for (int j = 0; j < resY; j++)
-            {
-                double yj = minY + j * (maxY - minY) / Math.Max(1, resY - 1);
-                var intersections = new List<Point3D>();
-                foreach (var seg in targetSegments)
-                {
-                    if (TryIntersectHorizontal(seg.P1, seg.P2, yj, out Point3D cross))
-                    {
-                        intersections.Add(cross);
-                    }
-                }
-
-                if (intersections.Count > 0)
-                {
-                    var rightCross = intersections.OrderByDescending(p => p.X).First();
-                    var leftCross = intersections.OrderBy(p => p.X).First();
-
-                    bool isRightValid = (maxX - rightCross.X) <= maxDistX + 1e-5;
-                    bool isLeftValid = (leftCross.X - minX) <= maxDistX + 1e-5;
-                    horizontalCrossData.Add((yj, rightCross, leftCross, isRightValid, isLeftValid));
-
-                    // 外周端点 (端点から交点までの距離が範囲の1/3以下の時のみ有効)
-                    if (isRightValid)
-                    {
-                        var ptRight = new Point3D(maxX, yj, rightCross.Z);
-                        _allLocalPoints.Add(ptRight);
-                        _virtualBoundaryPoints.Add(ptRight);
-                    }
-                    if (isLeftValid)
-                    {
-                        var ptLeft = new Point3D(minX, yj, leftCross.Z);
-                        _allLocalPoints.Add(ptLeft);
-                        _virtualBoundaryPoints.Add(ptLeft);
-                    }
-                }
-            }
-
-            // 中間点は交差スパンの中央1/2（両端1/4を除外）かつ距離1/3以下の時のみ生成
-            if (horizontalCrossData.Count > 0)
-            {
-                int count = horizontalCrossData.Count;
-                int startIdx = (int)Math.Round(count * 0.25);
-                int endIdx = (int)Math.Round(count * 0.75);
-                for (int k = startIdx; k < endIdx && k < count; k++)
-                {
-                    var (yj, rightCross, leftCross, isRightValid, isLeftValid) = horizontalCrossData[k];
-                    if (isRightValid)
-                    {
-                        var ptRightMid = new Point3D((rightCross.X + maxX) / 2.0, yj, rightCross.Z);
-                        _allLocalPoints.Add(ptRightMid);
-                        _virtualBoundaryPoints.Add(ptRightMid);
-                    }
-                    if (isLeftValid)
-                    {
-                        var ptLeftMid = new Point3D((leftCross.X + minX) / 2.0, yj, leftCross.Z);
-                        _allLocalPoints.Add(ptLeftMid);
-                        _virtualBoundaryPoints.Add(ptLeftMid);
+                        // 2. 外周点と曲線交点との中間点
+                        var ptMid = new Point3D((bp.X + nearestCross.X) / 2.0, (bp.Y + nearestCross.Y) / 2.0, nearestCross.Z);
+                        _allLocalPoints.Add(ptMid);
+                        _virtualBoundaryPoints.Add(ptMid);
                     }
                 }
             }
         }
 
-        private static bool TryIntersectVertical(Point3D p1, Point3D p2, double targetX, out Point3D intersection)
+        private static bool TryIntersectSegments2D(Point3D a1, Point3D a2, Point3D b1, Point3D b2, out Point3D cross)
         {
-            intersection = default;
-            double minX = Math.Min(p1.X, p2.X);
-            double maxX = Math.Max(p1.X, p2.X);
-            if (targetX < minX - 1e-9 || targetX > maxX + 1e-9) return false;
-            double dx = p2.X - p1.X;
-            if (Math.Abs(dx) < 1e-9)
-            {
-                if (Math.Abs(p1.X - targetX) < 1e-5)
-                {
-                    intersection = new Point3D(targetX, (p1.Y + p2.Y) / 2.0, (p1.Z + p2.Z) / 2.0);
-                    return true;
-                }
-                return false;
-            }
-            double t = (targetX - p1.X) / dx;
-            if (t < -1e-5 || t > 1.0 + 1e-5) return false;
-            t = Math.Clamp(t, 0.0, 1.0);
-            double y = p1.Y + t * (p2.Y - p1.Y);
-            double z = p1.Z + t * (p2.Z - p1.Z);
-            intersection = new Point3D(targetX, y, z);
-            return true;
-        }
+            cross = default;
+            double dax = a2.X - a1.X;
+            double day = a2.Y - a1.Y;
+            double dbx = b2.X - b1.X;
+            double dby = b2.Y - b1.Y;
 
-        private static bool TryIntersectHorizontal(Point3D p1, Point3D p2, double targetY, out Point3D intersection)
-        {
-            intersection = default;
-            double minY = Math.Min(p1.Y, p2.Y);
-            double maxY = Math.Max(p1.Y, p2.Y);
-            if (targetY < minY - 1e-9 || targetY > maxY + 1e-9) return false;
-            double dy = p2.Y - p1.Y;
-            if (Math.Abs(dy) < 1e-9)
+            double denom = dax * dby - day * dbx;
+            if (Math.Abs(denom) < 1e-9) return false;
+
+            double t = ((b1.X - a1.X) * dby - (b1.Y - a1.Y) * dbx) / denom;
+            double u = ((b1.X - a1.X) * day - (b1.Y - a1.Y) * dax) / denom;
+
+            if (t >= -1e-5 && t <= 1.0 + 1e-5 && u >= -1e-5 && u <= 1.0 + 1e-5)
             {
-                if (Math.Abs(p1.Y - targetY) < 1e-5)
-                {
-                    intersection = new Point3D((p1.X + p2.X) / 2.0, targetY, (p1.Z + p2.Z) / 2.0);
-                    return true;
-                }
-                return false;
+                t = Math.Clamp(t, 0.0, 1.0);
+                u = Math.Clamp(u, 0.0, 1.0);
+                double cx = a1.X + t * dax;
+                double cy = a1.Y + t * day;
+                double cz = b1.Z + u * (b2.Z - b1.Z);
+                cross = new Point3D(cx, cy, cz);
+                return true;
             }
-            double t = (targetY - p1.Y) / dy;
-            if (t < -1e-5 || t > 1.0 + 1e-5) return false;
-            t = Math.Clamp(t, 0.0, 1.0);
-            double x = p1.X + t * (p2.X - p1.X);
-            double z = p1.Z + t * (p2.Z - p1.Z);
-            intersection = new Point3D(x, targetY, z);
-            return true;
+            return false;
         }
 
         private void WireEventHandlers()
