@@ -58,7 +58,7 @@ namespace Site7DbEditor.Services
                 {
                     while (reader.Read())
                     {
-                        IkouLList.Add(new IkouLModel
+                        var ikouL = new IkouLModel
                         {
                             Id = reader.GetInt64(0),
                             Lid = reader.GetInt64(1),
@@ -70,7 +70,26 @@ namespace Site7DbEditor.Services
                             Layer = reader.IsDBNull(7) ? 1 : reader.GetInt32(7),
                             Date = reader.IsDBNull(8) ? "" : reader.GetString(8),
                             Precs = reader.IsDBNull(9) ? "" : reader.GetString(9)
-                        });
+                        };
+
+                        // 始点・終点が同一座標で開放(Mode == 0)の場合、終点を削除して閉合(Mode = 1)に補正
+                        if (ikouL.Mode == 0 && !string.IsNullOrWhiteSpace(ikouL.Precs))
+                        {
+                            var pts = SqliteManager.ParsePrecsText(ikouL.Precs);
+                            if (pts.Count >= 3)
+                            {
+                                var pFirst = pts[0];
+                                var pLast = pts[pts.Count - 1];
+                                if (Math.Abs(pFirst.X - pLast.X) < 0.001 && Math.Abs(pFirst.Y - pLast.Y) < 0.001)
+                                {
+                                    pts.RemoveAt(pts.Count - 1);
+                                    ikouL.Precs = SqliteManager.FormatPrecsText(pts);
+                                    ikouL.Mode = 1; // 閉合に変更
+                                }
+                            }
+                        }
+
+                        IkouLList.Add(ikouL);
                     }
                 }
 
