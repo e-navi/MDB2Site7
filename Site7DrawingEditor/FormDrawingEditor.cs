@@ -1369,7 +1369,11 @@ namespace Site7DrawingEditor
         private void LoadLayerVisibilityFromIni()
         {
             if (_chkLayers == null || _chkLayers.Length == 0) return;
-            string val = Def.GetIniStr("DrawingEditor", "LayerVisible", "");
+            string val = Def.GetIniStr(Def.iniFileName, "DrawingEditor", "LayerVisible");
+            if (string.IsNullOrWhiteSpace(val))
+            {
+                val = Def.GetIniStr("DrawingEditor", "LayerVisible");
+            }
             if (string.IsNullOrWhiteSpace(val)) return;
 
             _isLoadingLayerVisibility = true;
@@ -1404,6 +1408,10 @@ namespace Site7DrawingEditor
         {
             if (_isLoadingLayerVisibility || _chkLayers == null || _chkLayers.Length == 0) return;
             string val = string.Join(",", _chkLayers.Select(c => c.Checked ? "1" : "0"));
+            if (!string.IsNullOrEmpty(Def.iniFileName))
+            {
+                Def.SetIniStr(Def.iniFileName, "DrawingEditor", "LayerVisible", val);
+            }
             Def.SetIniStr("DrawingEditor", "LayerVisible", val);
         }
 
