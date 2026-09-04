@@ -423,8 +423,11 @@ namespace Site7DrawingEditor
             };
             int resY = resX;
 
+            double maxDistY = (maxY - minY) / 3.0;
+            double maxDistX = (maxX - minX) / 3.0;
+
             // 1. 縦線 X = xi との交点を求め、上下端 (xi, minY) / (xi, maxY) および中央1/2の中間点に交点標高を設定
-            var verticalCrossData = new List<(double Xi, Point3D TopCross, Point3D BotCross)>();
+            var verticalCrossData = new List<(double Xi, Point3D TopCross, Point3D BotCross, bool IsTopValid, bool IsBotValid)>();
             for (int i = 0; i < resX; i++)
             {
                 double xi = minX + i * (maxX - minX) / Math.Max(1, resX - 1);
@@ -441,19 +444,28 @@ namespace Site7DrawingEditor
                 {
                     var topCross = intersections.OrderByDescending(p => p.Y).First();
                     var botCross = intersections.OrderBy(p => p.Y).First();
-                    verticalCrossData.Add((xi, topCross, botCross));
 
-                    // 外周端点 (全交差Grid線に登録)
-                    var ptTop = new Point3D(xi, maxY, topCross.Z);
-                    var ptBot = new Point3D(xi, minY, botCross.Z);
-                    _allLocalPoints.Add(ptTop);
-                    _allLocalPoints.Add(ptBot);
-                    _virtualBoundaryPoints.Add(ptTop);
-                    _virtualBoundaryPoints.Add(ptBot);
+                    bool isTopValid = (maxY - topCross.Y) <= maxDistY + 1e-5;
+                    bool isBotValid = (botCross.Y - minY) <= maxDistY + 1e-5;
+                    verticalCrossData.Add((xi, topCross, botCross, isTopValid, isBotValid));
+
+                    // 外周端点 (端点から交点までの距離が範囲の1/3以下の時のみ有効)
+                    if (isTopValid)
+                    {
+                        var ptTop = new Point3D(xi, maxY, topCross.Z);
+                        _allLocalPoints.Add(ptTop);
+                        _virtualBoundaryPoints.Add(ptTop);
+                    }
+                    if (isBotValid)
+                    {
+                        var ptBot = new Point3D(xi, minY, botCross.Z);
+                        _allLocalPoints.Add(ptBot);
+                        _virtualBoundaryPoints.Add(ptBot);
+                    }
                 }
             }
 
-            // 中間点は交差スパンの中央1/2（両端1/4を除外）のみ生成
+            // 中間点は交差スパンの中央1/2（両端1/4を除外）かつ距離1/3以下の時のみ生成
             if (verticalCrossData.Count > 0)
             {
                 int count = verticalCrossData.Count;
@@ -461,18 +473,24 @@ namespace Site7DrawingEditor
                 int endIdx = (int)Math.Round(count * 0.75);
                 for (int k = startIdx; k < endIdx && k < count; k++)
                 {
-                    var (xi, topCross, botCross) = verticalCrossData[k];
-                    var ptTopMid = new Point3D(xi, (topCross.Y + maxY) / 2.0, topCross.Z);
-                    var ptBotMid = new Point3D(xi, (botCross.Y + minY) / 2.0, botCross.Z);
-                    _allLocalPoints.Add(ptTopMid);
-                    _allLocalPoints.Add(ptBotMid);
-                    _virtualBoundaryPoints.Add(ptTopMid);
-                    _virtualBoundaryPoints.Add(ptBotMid);
+                    var (xi, topCross, botCross, isTopValid, isBotValid) = verticalCrossData[k];
+                    if (isTopValid)
+                    {
+                        var ptTopMid = new Point3D(xi, (topCross.Y + maxY) / 2.0, topCross.Z);
+                        _allLocalPoints.Add(ptTopMid);
+                        _virtualBoundaryPoints.Add(ptTopMid);
+                    }
+                    if (isBotValid)
+                    {
+                        var ptBotMid = new Point3D(xi, (botCross.Y + minY) / 2.0, botCross.Z);
+                        _allLocalPoints.Add(ptBotMid);
+                        _virtualBoundaryPoints.Add(ptBotMid);
+                    }
                 }
             }
 
             // 2. 横線 Y = yj との交点を求め、左右端 (minX, yj) / (maxX, yj) および中央1/2の中間点に交点標高を設定
-            var horizontalCrossData = new List<(double Yj, Point3D RightCross, Point3D LeftCross)>();
+            var horizontalCrossData = new List<(double Yj, Point3D RightCross, Point3D LeftCross, bool IsRightValid, bool IsLeftValid)>();
             for (int j = 0; j < resY; j++)
             {
                 double yj = minY + j * (maxY - minY) / Math.Max(1, resY - 1);
@@ -489,19 +507,28 @@ namespace Site7DrawingEditor
                 {
                     var rightCross = intersections.OrderByDescending(p => p.X).First();
                     var leftCross = intersections.OrderBy(p => p.X).First();
-                    horizontalCrossData.Add((yj, rightCross, leftCross));
 
-                    // 外周端点 (全交差Grid線に登録)
-                    var ptRight = new Point3D(maxX, yj, rightCross.Z);
-                    var ptLeft = new Point3D(minX, yj, leftCross.Z);
-                    _allLocalPoints.Add(ptRight);
-                    _allLocalPoints.Add(ptLeft);
-                    _virtualBoundaryPoints.Add(ptRight);
-                    _virtualBoundaryPoints.Add(ptLeft);
+                    bool isRightValid = (maxX - rightCross.X) <= maxDistX + 1e-5;
+                    bool isLeftValid = (leftCross.X - minX) <= maxDistX + 1e-5;
+                    horizontalCrossData.Add((yj, rightCross, leftCross, isRightValid, isLeftValid));
+
+                    // 外周端点 (端点から交点までの距離が範囲の1/3以下の時のみ有効)
+                    if (isRightValid)
+                    {
+                        var ptRight = new Point3D(maxX, yj, rightCross.Z);
+                        _allLocalPoints.Add(ptRight);
+                        _virtualBoundaryPoints.Add(ptRight);
+                    }
+                    if (isLeftValid)
+                    {
+                        var ptLeft = new Point3D(minX, yj, leftCross.Z);
+                        _allLocalPoints.Add(ptLeft);
+                        _virtualBoundaryPoints.Add(ptLeft);
+                    }
                 }
             }
 
-            // 中間点は交差スパンの中央1/2（両端1/4を除外）のみ生成
+            // 中間点は交差スパンの中央1/2（両端1/4を除外）かつ距離1/3以下の時のみ生成
             if (horizontalCrossData.Count > 0)
             {
                 int count = horizontalCrossData.Count;
@@ -509,13 +536,19 @@ namespace Site7DrawingEditor
                 int endIdx = (int)Math.Round(count * 0.75);
                 for (int k = startIdx; k < endIdx && k < count; k++)
                 {
-                    var (yj, rightCross, leftCross) = horizontalCrossData[k];
-                    var ptRightMid = new Point3D((rightCross.X + maxX) / 2.0, yj, rightCross.Z);
-                    var ptLeftMid = new Point3D((leftCross.X + minX) / 2.0, yj, leftCross.Z);
-                    _allLocalPoints.Add(ptRightMid);
-                    _allLocalPoints.Add(ptLeftMid);
-                    _virtualBoundaryPoints.Add(ptRightMid);
-                    _virtualBoundaryPoints.Add(ptLeftMid);
+                    var (yj, rightCross, leftCross, isRightValid, isLeftValid) = horizontalCrossData[k];
+                    if (isRightValid)
+                    {
+                        var ptRightMid = new Point3D((rightCross.X + maxX) / 2.0, yj, rightCross.Z);
+                        _allLocalPoints.Add(ptRightMid);
+                        _virtualBoundaryPoints.Add(ptRightMid);
+                    }
+                    if (isLeftValid)
+                    {
+                        var ptLeftMid = new Point3D((leftCross.X + minX) / 2.0, yj, leftCross.Z);
+                        _allLocalPoints.Add(ptLeftMid);
+                        _virtualBoundaryPoints.Add(ptLeftMid);
+                    }
                 }
             }
         }
