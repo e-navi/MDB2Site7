@@ -88,6 +88,7 @@ namespace Site7DrawingEditor
             btnSetDirectionPosition = new Button();
             chkShowDirection = new CheckBox();
             btnSetPaperPosition = new Button();
+            btnRecalcIkouDrawing = new Button();
             btnPickCropBounds = new Button();
             cmbFeatureSelect = new ComboBox();
             lblTargetIkou = new Label();
@@ -939,6 +940,7 @@ namespace Site7DrawingEditor
             grpIkouProps.Controls.Add(grpDanmenProps);
             grpIkouProps.Controls.Add(grpCompassProps);
             grpIkouProps.Controls.Add(btnSetPaperPosition);
+            grpIkouProps.Controls.Add(btnRecalcIkouDrawing);
             grpIkouProps.Controls.Add(btnPickCropBounds);
             grpIkouProps.Controls.Add(cmbFeatureSelect);
             grpIkouProps.Controls.Add(lblTargetIkou);
@@ -1065,6 +1067,19 @@ namespace Site7DrawingEditor
             btnPickCropBounds.TabIndex = 3;
             btnPickCropBounds.Text = "遺構枠指示 (3点)";
             btnPickCropBounds.UseVisualStyleBackColor = false;
+            // 
+            // btnRecalcIkouDrawing
+            // 
+            btnRecalcIkouDrawing.BackColor = Color.FromArgb(225, 232, 242);
+            btnRecalcIkouDrawing.FlatStyle = FlatStyle.Flat;
+            btnRecalcIkouDrawing.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnRecalcIkouDrawing.ForeColor = Color.FromArgb(25, 45, 80);
+            btnRecalcIkouDrawing.Location = new Point(192, 48);
+            btnRecalcIkouDrawing.Name = "btnRecalcIkouDrawing";
+            btnRecalcIkouDrawing.Size = new Size(95, 26);
+            btnRecalcIkouDrawing.TabIndex = 5;
+            btnRecalcIkouDrawing.Text = "遺構図再計算";
+            btnRecalcIkouDrawing.UseVisualStyleBackColor = false;
             // 
             // cmbFeatureSelect
             // 
@@ -1560,6 +1575,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.ComboBox cmbFeatureSelect;
         private System.Windows.Forms.Button btnUpdateIkouProps;
         private System.Windows.Forms.Button btnPickCropBounds;
+        private System.Windows.Forms.Button btnRecalcIkouDrawing;
         private System.Windows.Forms.Button btnSetPaperPosition;
 
         private System.Windows.Forms.GroupBox grpCompassProps;

@@ -207,6 +207,7 @@ namespace Site7DrawingEditor
 
             // 補助指示ボタン
             ApplyButtonTheme(btnPickCropBounds, ColorAuxActive);
+            ApplyButtonTheme(btnRecalcIkouDrawing, ColorAuxActive);
             ApplyButtonTheme(btnSetPaperPosition, ColorAuxActive);
             ApplyButtonTheme(btnSetDirectionPosition, ColorAuxActive);
             ApplyButtonTheme(btnSetDanmenPosition, ColorAuxActive);
@@ -310,6 +311,7 @@ namespace Site7DrawingEditor
             this.txtDanmenName.TextChanged += (s, e) => UpdateControlEnableStates();
 
             this.btnPickCropBounds.Click += (s, e) => Start3PointPick();
+            this.btnRecalcIkouDrawing.Click += (s, e) => RecalculateSelectedIkouDrawing();
             this.btnSetPaperPosition.Click += (s, e) => StartPaperPositionPick();
 
             this.chkShowDirection.CheckedChanged += chkShowDirection_CheckedChanged;
@@ -713,6 +715,7 @@ namespace Site7DrawingEditor
 
             // 4. 指示ボタン
             btnPickCropBounds.Enabled = hasIkou;
+            btnRecalcIkouDrawing.Enabled = hasIkou && curIkou?.P1 != null && curIkou?.P2 != null && curIkou?.P3 != null;
             btnSetPaperPosition.Enabled = hasIkou;
             btnSetDirectionPosition.Enabled = hasIkou;
             btnSetDanmenPosition.Enabled = hasDanmen;
@@ -937,6 +940,25 @@ namespace Site7DrawingEditor
             _vc.CropStep = 1;
             lblStatusMessage.Text = "指示手順: 全体図(測量座標系)上で 1.左下(p1) をクリックしてください";
             lblStatusMessage.ForeColor = Color.FromArgb(255, 191, 0);
+        }
+
+        private void RecalculateSelectedIkouDrawing()
+        {
+            if (GetSelectedDataBoundItem<DrawingIkouModel>(dgvDrawingIkous) is DrawingIkouModel curIkou)
+            {
+                if (curIkou.P1 != null && curIkou.P2 != null && curIkou.P3 != null)
+                {
+                    var (msg, isSuccess) = _db.AutoExtractFeatureLines(curIkou, cmbFeatureSelect.Text.Trim());
+                    lblStatusMessage.Text = isSuccess ? "✔ 遺構図の再計算が完了しました" : $"⚠ 再計算: {msg}";
+                    lblStatusMessage.ForeColor = isSuccess ? Color.FromArgb(56, 176, 0) : Color.FromArgb(239, 35, 60);
+                    RefreshAllCanvases();
+                }
+                else
+                {
+                    lblStatusMessage.Text = "⚠ 遺構枠 (3点) が未指示です。先に「遺構枠指示 (3点)」を行ってください。";
+                    lblStatusMessage.ForeColor = Color.FromArgb(255, 191, 0);
+                }
+            }
         }
 
         private void StartPaperPositionPick()
