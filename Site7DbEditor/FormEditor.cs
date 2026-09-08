@@ -2433,7 +2433,8 @@ namespace Site7DbEditor {
                 targetDanmen: null,
                 db: drawingDb,
                 chkColorByIkou: chkColorByIkou.Checked,
-                isLayerVisible: IsMapLayerVisible)) {
+                isLayerVisible: IsMapLayerVisible,
+                allowDanmen: false)) {
                 dlg3D.SwitchViewMode(true);
                 dlg3D.ShowDialog(this);
             }

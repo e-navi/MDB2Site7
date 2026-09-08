@@ -215,12 +215,13 @@ namespace Site7DrawingEditor
         private double _pan3DY = 0.0;
 
         public DanmenRec? ResultDanmenRec { get; private set; }
+        private readonly bool _allowDanmen = true;
 
         private int SplineDivisions => int.TryParse(cmbSplineDiv.SelectedItem?.ToString(), out int div) ? div : 10;
         private double WeightPower => double.TryParse(txtWeightPower.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) ? Math.Max(0.1, w) : 5.0;
         private int NeighborCount => int.TryParse(txtNeighborCount.Text, out int cnt) ? Math.Max(1, cnt) : 32;
 
-        public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null)
+        public FormIkou3D(DrawingIkouModel ikou, DanmenRec? targetDanmen = null, DrawingDbManager? db = null, bool chkColorByIkou = true, Func<int, bool>? isLayerVisible = null, bool allowDanmen = true)
         {
             InitializeComponent();
             _targetIkou = ikou;
@@ -228,6 +229,16 @@ namespace Site7DrawingEditor
             _db = db;
             _chkColorByIkou = chkColorByIkou;
             _isLayerVisible = isLayerVisible;
+            _allowDanmen = allowDanmen;
+
+            if (!_allowDanmen)
+            {
+                grpDanmenControls.Visible = false;
+                btnCancel.Visible = false;
+                btnDanmenSet.Text = "戻る";
+                btnDanmenSet.Location = new Point(10, 595);
+                btnDanmenSet.Size = new Size(220, 32);
+            }
 
             cmbSplineDiv.SelectedItem = "10";
             cmbGridResolution.SelectedIndex = 1; // 中 (長辺100分割)
@@ -237,7 +248,7 @@ namespace Site7DrawingEditor
             RebuildLocalPoints();
 
             // Initialize section points from targetDanmen if specified
-            if (_targetDanmenRec != null && _targetDanmenRec.Sp != null && _targetDanmenRec.Ep != null)
+            if (_allowDanmen && _targetDanmenRec != null && _targetDanmenRec.Sp != null && _targetDanmenRec.Ep != null)
             {
                 var (spLx, spLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Sp.X, _targetDanmenRec.Sp.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
                 var (epLx, epLy) = GeometryMath.SurveyToFeatureLocalCenter(_targetDanmenRec.Ep.X, _targetDanmenRec.Ep.Y, _targetIkou.P1, _targetIkou.P2, _targetIkou.P3);
@@ -564,7 +575,7 @@ namespace Site7DrawingEditor
         {
             _is3DViewMode = is3D;
             grpRotationControls.Visible = is3D;
-            grpDanmenControls.Visible = !is3D;
+            grpDanmenControls.Visible = !is3D && _allowDanmen;
 
             btnView2D.BackColor = !is3D ? Color.FromArgb(0, 180, 216) : SystemColors.Control;
             btnView2D.ForeColor = !is3D ? Color.White : Color.Black;
@@ -619,15 +630,19 @@ namespace Site7DrawingEditor
 
             _currentMesh = GridAlgorithm.CreateGridMesh(minp, maxp, _allLocalPoints, resX, resY, WeightPower, NeighborCount);
 
-            // Create default section line if none specified yet
-            if (_sectionStartPoint == null || _sectionEndPoint == null)
+            if (_allowDanmen)
             {
-                _sectionStartPoint = new Point3D(-widthM / 3.0, 0, 0);
-                _sectionEndPoint = new Point3D(+widthM / 3.0, 0, 0);
-                _sectionPlacementPoint = new Point3D(-widthM / 3.0, -heightM / 2.0 + 0.2, 0);
+                // Create default section line if none specified yet
+                if (_sectionStartPoint == null || _sectionEndPoint == null)
+                {
+                    _sectionStartPoint = new Point3D(-widthM / 3.0, 0, 0);
+                    _sectionEndPoint = new Point3D(+widthM / 3.0, 0, 0);
+                    _sectionPlacementPoint = new Point3D(-widthM / 3.0, -heightM / 2.0 + 0.2, 0);
+                }
+
+                UpdateSectionProfile();
             }
 
-            UpdateSectionProfile();
             picCanvas3D.Invalidate();
         }
 
@@ -913,7 +928,7 @@ namespace Site7DrawingEditor
         // Draw Confirmed Section Cut Line (Red) & Section Profile Curve (Red) below Opposite Parallel Side (Blue)
         private void RenderSectionDrawing2D(Graphics g, double scale, Func<double, double, PointF> LocalTo2D)
         {
-            if (_sectionStartPoint == null || _sectionEndPoint == null) return;
+            if (!_allowDanmen || _sectionStartPoint == null || _sectionEndPoint == null) return;
 
             PointF sp = LocalTo2D(_sectionStartPoint.X, _sectionStartPoint.Y);
             PointF ep = LocalTo2D(_sectionEndPoint.X, _sectionEndPoint.Y);
@@ -1411,6 +1426,13 @@ namespace Site7DrawingEditor
 
         private void btnDanmenSet_Click(object? sender, EventArgs e)
         {
+            if (!_allowDanmen)
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+                return;
+            }
+
             if (_sectionStartPoint == null && _tempSp != null) _sectionStartPoint = _tempSp;
             if (_sectionEndPoint == null && _tempEp != null) _sectionEndPoint = _tempEp;
             if (_sectionPlacementPoint == null && _tempDp != null) _sectionPlacementPoint = _tempDp;
