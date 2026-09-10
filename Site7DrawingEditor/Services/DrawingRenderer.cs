@@ -176,7 +176,7 @@ namespace Site7DrawingEditor.Services
                         var parentIkou = db.MasterIkouList.FirstOrDefault(ik => ik.Id == line.Id);
                         string ikouName = parentIkou?.Name ?? "";
                         int toneLevel = layerDef != null ? layerDef.Mark : 1;
-                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenWidth);
+                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenWidth, isDarkBackground);
                     }
                     else
                     {

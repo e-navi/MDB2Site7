@@ -172,7 +172,7 @@ namespace Site7DbEditor.Services
                         var parentIkou = db.IkouList.FirstOrDefault(ik => ik.Id == line.Id);
                         string ikouName = parentIkou?.Name ?? "";
                         int toneLevel = layerItem != null ? layerItem.Mark : 1;
-                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenWidth);
+                        (color, penWidth) = IkouNameColorService.Instance.GetIkouRenderStyle(ikouName, toneLevel, basePenWidth, isDarkBackground);
                     }
                     else
                     {

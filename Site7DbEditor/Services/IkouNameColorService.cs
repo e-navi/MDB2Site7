@@ -12,9 +12,23 @@ namespace Site7DbEditor.Services
         public string NamePattern { get; set; } = "";
         public int ColorIndex { get; set; } = 4; // 1..16 (デフォルト青)
 
-        public Color Color => (ColorIndex >= 1 && ColorIndex < EditorLayerService.LayerTableColors.Length)
-            ? EditorLayerService.LayerTableColors[ColorIndex]
-            : Color.FromArgb(0, 0, 0);
+        public Color Color => GetColor(false);
+
+        public Color GetColor(bool isDarkBackground = false)
+        {
+            if (ColorIndex == 1)
+            {
+                return isDarkBackground ? Color.FromArgb(240, 240, 240) : Color.FromArgb(0, 0, 0);
+            }
+            if (ColorIndex == 8)
+            {
+                return isDarkBackground ? Color.FromArgb(255, 255, 255) : Color.FromArgb(100, 100, 100);
+            }
+
+            return (ColorIndex >= 1 && ColorIndex < EditorLayerService.LayerTableColors.Length)
+                ? EditorLayerService.LayerTableColors[ColorIndex]
+                : Color.FromArgb(0, 0, 0);
+        }
     }
 
     public class IkouNameColorService
@@ -202,7 +216,7 @@ namespace Site7DbEditor.Services
         /// 遺構名に対する基本色 (Color, ColorIndex) を取得。
         /// 一致しない場合は「最終行の色」を使用。
         /// </summary>
-        public (Color Color, int ColorIndex) GetIkouBaseColor(string ikouName)
+        public (Color Color, int ColorIndex) GetIkouBaseColor(string ikouName, bool isDarkBackground = false)
         {
             if (Items.Count == 0)
                 RegisterDefaultPatterns();
@@ -210,13 +224,13 @@ namespace Site7DbEditor.Services
             var lastItem = Items.LastOrDefault() ?? new IkouNameColorItem { NamePattern = "その他", ColorIndex = 4 };
 
             if (string.IsNullOrWhiteSpace(ikouName))
-                return (lastItem.Color, lastItem.ColorIndex);
+                return (lastItem.GetColor(isDarkBackground), lastItem.ColorIndex);
 
             string name = ikouName.Trim();
 
             // 1. 完全一致
             var exact = Items.FirstOrDefault(x => x.NamePattern.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (exact != null) return (exact.Color, exact.ColorIndex);
+            if (exact != null) return (exact.GetColor(isDarkBackground), exact.ColorIndex);
 
             // 2. 最長前方一致
             var match = Items
@@ -224,18 +238,18 @@ namespace Site7DbEditor.Services
                 .OrderByDescending(x => x.NamePattern.Length)
                 .FirstOrDefault();
 
-            if (match != null) return (match.Color, match.ColorIndex);
+            if (match != null) return (match.GetColor(isDarkBackground), match.ColorIndex);
 
             // 3. 対象とならない遺構名は「最終行の色」を使用
-            return (lastItem.Color, lastItem.ColorIndex);
+            return (lastItem.GetColor(isDarkBackground), lastItem.ColorIndex);
         }
 
         /// <summary>
         /// 遺構名と濃淡レベル (1:濃い/上端, 2:中間/中, 3:薄い/下端) から描画色と線幅を計算
         /// </summary>
-        public (Color Color, float PenWidth) GetIkouRenderStyle(string ikouName, int toneLevel, float basePenWidth = 1.6f)
+        public (Color Color, float PenWidth) GetIkouRenderStyle(string ikouName, int toneLevel, float basePenWidth = 1.6f, bool isDarkBackground = false)
         {
-            var (baseColor, _) = GetIkouBaseColor(ikouName);
+            var (baseColor, _) = GetIkouBaseColor(ikouName, isDarkBackground);
 
             int alpha;
             float penWidth = basePenWidth;
