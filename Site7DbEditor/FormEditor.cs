@@ -820,6 +820,11 @@ namespace Site7DbEditor {
                 picMapCanvas.Invalidate();
             };
             this.chkPointGuidance.CheckedChanged += (s, e) => {
+                if (!IsGaigyoMode) {
+                    chkPointGuidance.Checked = false;
+                    grpYudo.Visible = false;
+                    return;
+                }
                 grpYudo.Visible = chkPointGuidance.Checked;
                 if (!chkPointGuidance.Checked) {
                     lblYudo1.Text = "";
@@ -836,7 +841,13 @@ namespace Site7DbEditor {
                     gbl.UCCtrl?.SetBtns2(!isTuibi);
                 }
             };
-            grpYudo.Visible = chkPointGuidance.Checked;
+            if (!IsGaigyoMode) {
+                grpPointGuidance.Enabled = false;
+                chkPointGuidance.Checked = false;
+                grpYudo.Visible = false;
+            } else {
+                grpYudo.Visible = chkPointGuidance.Checked;
+            }
             if (!chkPointGuidance.Checked) {
                 lblYudo1.Text = "";
                 lblYudo2.Text = "";
@@ -1903,12 +1914,18 @@ namespace Site7DbEditor {
                 pnlKikaiRight.Controls.SetChildIndex(grpKikaiRecord, 0);
                 pnlKikaiRight.Controls.SetChildIndex(grpPointGuidance, 1);
                 pnlKikaiRight.Controls.SetChildIndex(grpCoordValue, 2);
+                if (!IsGaigyoMode) {
+                    grpPointGuidance.Enabled = false;
+                    if (chkPointGuidance != null) chkPointGuidance.Checked = false;
+                } else {
+                    grpPointGuidance.Enabled = true;
+                }
                 dgvKikai_SelectionChanged(this, EventArgs.Empty);
             }
 
             // TS自動追尾／視準測定モードのタブ連動切り替え（点誘導ON時は自動追尾）
             bool isKijun = (tabControlData.SelectedTab == tabKikai);
-            bool isModeKijunSetting = isKijun && !(chkPointGuidance != null && chkPointGuidance.Checked);
+            bool isModeKijunSetting = isKijun && !(IsGaigyoMode && chkPointGuidance != null && chkPointGuidance.Checked);
             _ucCtrl?.SetBtns2(isModeKijunSetting);
             gbl.UCCtrl?.SetBtns2(isModeKijunSetting);
 
