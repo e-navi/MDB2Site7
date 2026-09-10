@@ -242,8 +242,9 @@ namespace Site7DbEditor
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
                 ShowImageMargin = false
             };
-            var itemDrawing = new ToolStripMenuItem("📐 遺構図作成", null, (s, e) => LaunchDrawingEditor());
-            menuNaigyoOption.Items.AddRange(new ToolStripItem[] { itemDrawing });
+            var itemDrawing = new ToolStripMenuItem("📐 個別遺構図作成", null, (s, e) => LaunchDrawingEditor());
+            var itemSection = new ToolStripMenuItem("📐 調査区断面図", null, (s, e) => LaunchSectionEditor());
+            menuNaigyoOption.Items.AddRange(new ToolStripItem[] { itemDrawing, itemSection });
 
             btnNaigyoOption.Click += (s, e) =>
             {
@@ -883,6 +884,17 @@ namespace Site7DbEditor
             {
                 MessageBox.Show($"Site7DrawingEditor の起動に失敗しました: {ex.Message}", "起動エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void LaunchSectionEditor()
+        {
+            if (_selectedSite == null || string.IsNullOrEmpty(_selectedSite.DbPath))
+            {
+                MessageBox.Show("現場を選択してください。", "選択確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            MessageBox.Show("調査区断面図作成機能は現在準備中です。", "調査区断面図", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void LaunchMdbFdbExporter()
