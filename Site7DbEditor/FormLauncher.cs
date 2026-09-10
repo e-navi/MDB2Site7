@@ -253,9 +253,9 @@ namespace Site7DbEditor
 
             btnTool = new Button
             {
-                Text = "🛠 ツール",
+                Text = "🛠 ツール ▾",
                 Location = new Point(535, 12),
-                Size = new Size(100, 38),
+                Size = new Size(110, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(238, 242, 246),
                 ForeColor = Color.FromArgb(51, 65, 85),
@@ -299,7 +299,7 @@ namespace Site7DbEditor
             btnExit = new Button
             {
                 Text = "✖ 終了",
-                Location = new Point(645, 12),
+                Location = new Point(655, 12),
                 Size = new Size(95, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 245, 249),
