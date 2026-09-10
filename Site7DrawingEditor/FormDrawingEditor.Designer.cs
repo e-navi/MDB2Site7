@@ -181,9 +181,9 @@ namespace Site7DrawingEditor
             lblDbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblDbStatus.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
             lblDbStatus.ForeColor = Color.FromArgb(255, 193, 7);
-            lblDbStatus.Location = new Point(500, 15);
+            lblDbStatus.Location = new Point(550, 15);
             lblDbStatus.Name = "lblDbStatus";
-            lblDbStatus.Size = new Size(850, 30);
+            lblDbStatus.Size = new Size(800, 30);
             lblDbStatus.TabIndex = 3;
             lblDbStatus.Text = "DB未読み込み";
             lblDbStatus.TextAlign = ContentAlignment.MiddleRight;
@@ -194,7 +194,7 @@ namespace Site7DrawingEditor
             btnSaveDb.FlatStyle = FlatStyle.Flat;
             btnSaveDb.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
             btnSaveDb.ForeColor = Color.White;
-            btnSaveDb.Location = new Point(360, 12);
+            btnSaveDb.Location = new Point(388, 13);
             btnSaveDb.Name = "btnSaveDb";
             btnSaveDb.Size = new Size(120, 35);
             btnSaveDb.TabIndex = 2;
@@ -219,7 +219,7 @@ namespace Site7DrawingEditor
             lblHeaderTitle.ForeColor = Color.White;
             lblHeaderTitle.Location = new Point(12, 8);
             lblHeaderTitle.Name = "lblHeaderTitle";
-            lblHeaderTitle.Size = new Size(351, 25);
+            lblHeaderTitle.Size = new Size(370, 25);
             lblHeaderTitle.TabIndex = 0;
             lblHeaderTitle.Text = "📐 SITE7 遺跡調査・個別遺構図作成システム";
             // 
@@ -1055,19 +1055,6 @@ namespace Site7DrawingEditor
             btnSetPaperPosition.Text = "表示位置指定";
             btnSetPaperPosition.UseVisualStyleBackColor = false;
             // 
-            // btnPickCropBounds
-            // 
-            btnPickCropBounds.BackColor = Color.FromArgb(225, 232, 242);
-            btnPickCropBounds.FlatStyle = FlatStyle.Flat;
-            btnPickCropBounds.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            btnPickCropBounds.ForeColor = Color.FromArgb(25, 45, 80);
-            btnPickCropBounds.Location = new Point(62, 48);
-            btnPickCropBounds.Name = "btnPickCropBounds";
-            btnPickCropBounds.Size = new Size(124, 26);
-            btnPickCropBounds.TabIndex = 3;
-            btnPickCropBounds.Text = "遺構枠指示 (3点)";
-            btnPickCropBounds.UseVisualStyleBackColor = false;
-            // 
             // btnRecalcIkouDrawing
             // 
             btnRecalcIkouDrawing.BackColor = Color.FromArgb(225, 232, 242);
@@ -1080,6 +1067,19 @@ namespace Site7DrawingEditor
             btnRecalcIkouDrawing.TabIndex = 5;
             btnRecalcIkouDrawing.Text = "遺構図再計算";
             btnRecalcIkouDrawing.UseVisualStyleBackColor = false;
+            // 
+            // btnPickCropBounds
+            // 
+            btnPickCropBounds.BackColor = Color.FromArgb(225, 232, 242);
+            btnPickCropBounds.FlatStyle = FlatStyle.Flat;
+            btnPickCropBounds.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnPickCropBounds.ForeColor = Color.FromArgb(25, 45, 80);
+            btnPickCropBounds.Location = new Point(62, 48);
+            btnPickCropBounds.Name = "btnPickCropBounds";
+            btnPickCropBounds.Size = new Size(124, 26);
+            btnPickCropBounds.TabIndex = 3;
+            btnPickCropBounds.Text = "遺構枠指示 (3点)";
+            btnPickCropBounds.UseVisualStyleBackColor = false;
             // 
             // cmbFeatureSelect
             // 
