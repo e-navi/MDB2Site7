@@ -10,7 +10,7 @@ using Site7DbEditor.Services;
 
 namespace Site7DbEditor
 {
-    public class FormLauncher : Form
+    public partial class FormLauncher : Form
     {
         [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string? SelectedDbPath { get; private set; } = null;
@@ -26,345 +26,14 @@ namespace Site7DbEditor
         private enum ViewMode { ListAndPreview, ThumbnailGrid }
         private ViewMode _currentViewMode = ViewMode.ListAndPreview;
 
-        // UI Controls
-        private Panel panelHeader = null!;
-        private Panel panelMain = null!;
-        private Panel panelFooter = null!;
-
-        // Header controls
-        private Label lblTitle = null!;
-        private TextBox txtSearch = null!;
-        private Button btnBrowseFolder = null!;
-        private Label lblCurrentFolder = null!;
-        private Button btnViewList = null!;
-        private Button btnViewGrid = null!;
-
-        // Mode 1: List + Preview
-        private SplitContainer splitListPreview = null!;
-        private DataGridView dgvSites = null!;
-        private Panel panelPreviewCard = null!;
-        private PictureBox picPreview = null!;
-        private Label lblPreviewName = null!;
-        private Label lblPreviewDate = null!;
-        private Label lblPreviewSize = null!;
-        private Label lblPreviewPath = null!;
-
-        // Mode 2: Thumbnail Grid
-        private FlowLayoutPanel flowThumbnails = null!;
-
-        // Footer controls
-        private Button btnNewSite = null!;
-        private Button btnOpenGaigyo = null!;
-        private Button btnOpenNaigyo = null!;
-        private Button btnNaigyoOption = null!;
-        private Button btnTool = null!;
-        private Button btnExit = null!;
-
         public FormLauncher()
         {
             InitializeComponent();
-            _currentRootFolder = SiteDiscoveryService.GetDefaultRootPath();
-            lblCurrentFolder.Text = $"現場フォルダ: {_currentRootFolder}";
-            RefreshSiteList();
+            SetupColumns();
         }
 
-        private void InitializeComponent()
+        private void SetupColumns()
         {
-            string versionStr = GetAppVersionString();
-            this.Text = $"遺跡調査システム Site7 - 現場選択  {versionStr}";
-            this.Size = new Size(1060, 700);
-            this.MinimumSize = new Size(880, 560);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
-            this.BackColor = Color.FromArgb(244, 246, 249);
-
-            // 1. Header Panel
-            panelHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 85,
-                BackColor = Color.White,
-                Padding = new Padding(15, 10, 15, 10)
-            };
-            panelHeader.Paint += (s, e) =>
-            {
-                using var p = new Pen(Color.FromArgb(220, 224, 230));
-                e.Graphics.DrawLine(p, 0, panelHeader.Height - 1, panelHeader.Width, panelHeader.Height - 1);
-            };
-
-            lblTitle = new Label
-            {
-                Text = "遺跡調査システム Site7",
-                Font = new Font("Yu Gothic UI", 15F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(24, 32, 47),
-                Location = new Point(15, 8),
-                AutoSize = true
-            };
-
-            var lblSubtitle = new Label
-            {
-                Text = $"現場管理ランチャー  {versionStr}",
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(120, 130, 145),
-                Location = new Point(255, 14),
-                AutoSize = true
-            };
-
-            lblCurrentFolder = new Label
-            {
-                Text = "現場フォルダ: ...",
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(100, 110, 125),
-                Location = new Point(16, 45),
-                Size = new Size(420, 20),
-                AutoEllipsis = true
-            };
-
-            btnBrowseFolder = new Button
-            {
-                Text = "📂 フォルダ変更",
-                Location = new Point(445, 40),
-                Size = new Size(115, 28),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-                BackColor = Color.FromArgb(235, 238, 243),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnBrowseFolder.FlatAppearance.BorderColor = Color.FromArgb(200, 205, 215);
-            btnBrowseFolder.Click += BtnBrowseFolder_Click;
-
-            txtSearch = new TextBox
-            {
-                Location = new Point(575, 40),
-                Size = new Size(220, 26),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
-                PlaceholderText = "🔍 現場名を検索..."
-            };
-            txtSearch.TextChanged += (s, e) => ApplyFilter();
-
-            btnViewList = new Button
-            {
-                Text = "📄 リスト",
-                Location = new Point(810, 38),
-                Size = new Size(95, 30),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-                BackColor = Color.FromArgb(0, 122, 255),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat
-            };
-            btnViewList.FlatAppearance.BorderSize = 0;
-            btnViewList.Click += (s, e) => SwitchViewMode(ViewMode.ListAndPreview);
-
-            btnViewGrid = new Button
-            {
-                Text = "🖼 グリッド",
-                Location = new Point(915, 38),
-                Size = new Size(95, 30),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-                BackColor = Color.FromArgb(235, 238, 243),
-                ForeColor = Color.FromArgb(50, 60, 75),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnViewGrid.FlatAppearance.BorderColor = Color.FromArgb(200, 205, 215);
-            btnViewGrid.Click += (s, e) => SwitchViewMode(ViewMode.ThumbnailGrid);
-
-            panelHeader.Controls.AddRange(new Control[] {
-                lblTitle, lblSubtitle, lblCurrentFolder, btnBrowseFolder,
-                txtSearch, btnViewList, btnViewGrid
-            });
-
-            // 2. Footer Panel
-            panelFooter = new Panel
-            {
-                Dock = DockStyle.Bottom,
-                Height = 65,
-                BackColor = Color.White,
-                Padding = new Padding(20, 12, 20, 12)
-            };
-            panelFooter.Paint += (s, e) =>
-            {
-                using var p = new Pen(Color.FromArgb(220, 224, 230));
-                e.Graphics.DrawLine(p, 0, 0, panelFooter.Width, 0);
-            };
-
-            btnNewSite = new Button
-            {
-                Text = "＋ 新規現場",
-                Location = new Point(20, 12),
-                Size = new Size(115, 38),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                BackColor = Color.FromArgb(240, 243, 248),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnNewSite.FlatAppearance.BorderColor = Color.FromArgb(190, 200, 215);
-            btnNewSite.Click += BtnNewSite_Click;
-
-            btnOpenGaigyo = new Button
-            {
-                Text = "📡 外業",
-                Location = new Point(145, 12),
-                Size = new Size(110, 38),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                BackColor = Color.FromArgb(34, 197, 94),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat
-            };
-            btnOpenGaigyo.FlatAppearance.BorderSize = 0;
-            btnOpenGaigyo.Click += (s, e) => ConfirmAndOpenSite(isGaigyo: true);
-
-            btnOpenNaigyo = new Button
-            {
-                Text = "💻 内業",
-                Location = new Point(265, 12),
-                Size = new Size(110, 38),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                BackColor = Color.FromArgb(14, 116, 144),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat
-            };
-            btnOpenNaigyo.FlatAppearance.BorderSize = 0;
-            btnOpenNaigyo.Click += (s, e) => ConfirmAndOpenSite(isGaigyo: false);
-
-            btnNaigyoOption = new Button
-            {
-                Text = "📐 内業オプション ▾",
-                Location = new Point(385, 12),
-                Size = new Size(140, 38),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                BackColor = Color.FromArgb(238, 242, 246),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnNaigyoOption.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-
-            var menuNaigyoOption = new ContextMenuStrip
-            {
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
-                ShowImageMargin = false
-            };
-            var itemDrawing = new ToolStripMenuItem("📐 個別遺構図作成", null, (s, e) => LaunchDrawingEditor());
-            var itemSection = new ToolStripMenuItem("📐 調査区断面図", null, (s, e) => LaunchSectionEditor());
-            menuNaigyoOption.Items.AddRange(new ToolStripItem[] { itemDrawing, itemSection });
-
-            btnNaigyoOption.Click += (s, e) =>
-            {
-                menuNaigyoOption.Show(btnNaigyoOption, new Point(0, -menuNaigyoOption.PreferredSize.Height));
-            };
-
-            btnTool = new Button
-            {
-                Text = "🛠 ツール ▾",
-                Location = new Point(535, 12),
-                Size = new Size(110, 38),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                BackColor = Color.FromArgb(238, 242, 246),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnTool.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-
-            var menuTool = new ContextMenuStrip
-            {
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
-                ShowImageMargin = false
-            };
-            var itemMasterDef = new ToolStripMenuItem("⚙ マスターDef設定 (入力定義)...", null, (s, e) => {
-                using var form = new FormMasterSettings(null);
-                form.ShowDialog(this);
-            });
-            var itemMasterLayer = new ToolStripMenuItem("📐 マスターレイヤ設定...", null, (s, e) => {
-                using var form = new FormLayerSettings(dbPath: (string?)null);
-                form.ShowDialog(this);
-            });
-            var itemMasterEnv = new ToolStripMenuItem("📡 マスターTS・GPS環境設定...", null, (s, e) => {
-                using var form = new FormDefEnv(isMasterMode: true);
-                form.ShowDialog(this);
-            });
-            var itemSep = new ToolStripSeparator();
-            var itemExporter = new ToolStripMenuItem("💾 旧DB移行 (MDB/FDB Exporter)", null, (s, e) => LaunchMdbFdbExporter());
-
-            menuTool.Items.AddRange(new ToolStripItem[] {
-                itemMasterDef,
-                itemMasterLayer,
-                itemMasterEnv,
-                itemSep,
-                itemExporter
-            });
-
-            btnTool.Click += (s, e) =>
-            {
-                menuTool.Show(btnTool, new Point(0, -menuTool.PreferredSize.Height));
-            };
-
-            btnExit = new Button
-            {
-                Text = "✖ 終了",
-                Location = new Point(655, 12),
-                Size = new Size(95, 38),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                BackColor = Color.FromArgb(241, 245, 249),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnExit.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnExit.Click += (s, e) => {
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
-            };
-
-            panelFooter.Controls.AddRange(new Control[] {
-                btnNewSite, btnOpenGaigyo, btnOpenNaigyo, btnNaigyoOption, btnTool, btnExit
-            });
-
-            // 3. Main Panel (Container)
-            panelMain = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.FromArgb(244, 246, 249),
-                Padding = new Padding(15)
-            };
-
-            // Mode 1: SplitContainer (List + Preview)
-            splitListPreview = new SplitContainer
-            {
-                Dock = DockStyle.Fill,
-                Orientation = Orientation.Vertical,
-                FixedPanel = FixedPanel.Panel2,
-                SplitterWidth = 8,
-                Panel1MinSize = 50,
-                Panel2MinSize = 50,
-                BackColor = Color.FromArgb(244, 246, 249)
-            };
-
-            this.Load += (s, e) =>
-            {
-                try
-                {
-                    if (splitListPreview.Width > 300)
-                    {
-                        splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 235);
-                    }
-                }
-                catch { }
-            };
-
-            dgvSites = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                BackgroundColor = Color.White,
-                BorderStyle = BorderStyle.None,
-                RowHeadersVisible = false,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
-                RowTemplate = { Height = 46 }
-            };
-            dgvSites.DataError += (s, e) => { e.ThrowException = false; };
-
             var colThumb = new DataGridViewImageColumn
             {
                 Name = "Thumb",
@@ -378,109 +47,124 @@ namespace Site7DbEditor
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Name", HeaderText = "現場名", FillWeight = 45 });
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "UpdatedAt", HeaderText = "最終更新日時", FillWeight = 32 });
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Size", HeaderText = "サイズ", FillWeight = 23 });
-            dgvSites.SelectionChanged += DgvSites_SelectionChanged;
-            dgvSites.CellDoubleClick += (s, e) => ConfirmAndOpenSite(isGaigyo: false);
+            dgvSites.DataError += (s, e) => { e.ThrowException = false; };
+        }
 
-            var panelDgvWrapper = new Panel
+        private void FormLauncher_Load(object? sender, EventArgs e)
+        {
+            if (DesignMode) return;
+
+            string versionStr = GetAppVersionString();
+            this.Text = $"遺跡調査システム Site7 - 現場選択  {versionStr}";
+            lblSubtitle.Text = $"現場管理ランチャー  {versionStr}";
+
+            _currentRootFolder = SiteDiscoveryService.GetDefaultRootPath();
+            lblCurrentFolder.Text = $"現場フォルダ: {_currentRootFolder}";
+
+            try
             {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                Padding = new Padding(1)
-            };
-            panelDgvWrapper.Controls.Add(dgvSites);
-            splitListPreview.Panel1.Controls.Add(panelDgvWrapper);
+                if (splitListPreview.Width > 300)
+                {
+                    splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 235);
+                }
+            }
+            catch { }
 
-            // Preview Card Panel (幅235px固定)
-            panelPreviewCard = new Panel
+            RefreshSiteList();
+        }
+
+        private void PanelHeader_Paint(object? sender, PaintEventArgs e)
+        {
+            using var p = new Pen(Color.FromArgb(220, 224, 230));
+            e.Graphics.DrawLine(p, 0, panelHeader.Height - 1, panelHeader.Width, panelHeader.Height - 1);
+        }
+
+        private void PanelFooter_Paint(object? sender, PaintEventArgs e)
+        {
+            using var p = new Pen(Color.FromArgb(220, 224, 230));
+            e.Graphics.DrawLine(p, 0, 0, panelFooter.Width, 0);
+        }
+
+        private void BtnViewList_Click(object? sender, EventArgs e)
+        {
+            SwitchViewMode(ViewMode.ListAndPreview);
+        }
+
+        private void BtnViewGrid_Click(object? sender, EventArgs e)
+        {
+            SwitchViewMode(ViewMode.ThumbnailGrid);
+        }
+
+        private void BtnOpenGaigyo_Click(object? sender, EventArgs e)
+        {
+            ConfirmAndOpenSite(isGaigyo: true);
+        }
+
+        private void BtnOpenNaigyo_Click(object? sender, EventArgs e)
+        {
+            ConfirmAndOpenSite(isGaigyo: false);
+        }
+
+        private void BtnNaigyoOption_Click(object? sender, EventArgs e)
+        {
+            menuNaigyoOption.Show(btnNaigyoOption, new Point(0, -menuNaigyoOption.PreferredSize.Height));
+        }
+
+        private void ItemDrawing_Click(object? sender, EventArgs e)
+        {
+            LaunchDrawingEditor();
+        }
+
+        private void ItemSection_Click(object? sender, EventArgs e)
+        {
+            LaunchSectionEditor();
+        }
+
+        private void BtnTool_Click(object? sender, EventArgs e)
+        {
+            menuTool.Show(btnTool, new Point(0, -menuTool.PreferredSize.Height));
+        }
+
+        private void ItemMasterDef_Click(object? sender, EventArgs e)
+        {
+            using var form = new FormMasterSettings(null);
+            form.ShowDialog(this);
+        }
+
+        private void ItemMasterLayer_Click(object? sender, EventArgs e)
+        {
+            using var form = new FormLayerSettings(dbPath: (string?)null);
+            form.ShowDialog(this);
+        }
+
+        private void ItemMasterEnv_Click(object? sender, EventArgs e)
+        {
+            using var form = new FormDefEnv(isMasterMode: true);
+            form.ShowDialog(this);
+        }
+
+        private void ItemExporter_Click(object? sender, EventArgs e)
+        {
+            LaunchMdbFdbExporter();
+        }
+
+        private void BtnExit_Click(object? sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void TxtSearch_TextChanged(object? sender, EventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        private void DgvSites_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
             {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                Padding = new Padding(12),
-                AutoScroll = true
-            };
-
-            var lblPreviewHeader = new Label
-            {
-                Text = "現場プレビュー",
-                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(12, 10),
-                AutoSize = true
-            };
-
-            picPreview = new PictureBox
-            {
-                Location = new Point(12, 35),
-                Size = new Size(200, 200),
-                SizeMode = PictureBoxSizeMode.Zoom,
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White
-            };
-
-            lblPreviewName = new Label
-            {
-                Text = "現場名: -",
-                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(12, 245),
-                Size = new Size(205, 24),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
-                AutoEllipsis = true
-            };
-
-            lblPreviewDate = new Label
-            {
-                Text = "更新日時: -",
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(12, 272),
-                Size = new Size(205, 18),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
-            };
-
-            lblPreviewSize = new Label
-            {
-                Text = "データ容量: -",
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(12, 294),
-                Size = new Size(205, 18),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
-            };
-
-            lblPreviewPath = new Label
-            {
-                Text = "フォルダ: -",
-                Font = new Font("Yu Gothic UI", 8F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(12, 316),
-                Size = new Size(205, 42),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
-                AutoEllipsis = true
-            };
-
-            panelPreviewCard.Controls.AddRange(new Control[] {
-                lblPreviewHeader, picPreview, lblPreviewName,
-                lblPreviewDate, lblPreviewSize, lblPreviewPath
-            });
-            splitListPreview.Panel2.Controls.Add(panelPreviewCard);
-
-            // Mode 2: Thumbnail Flow Panel (Grid)
-            flowThumbnails = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                AutoScroll = true,
-                BackColor = Color.FromArgb(244, 246, 249),
-                Padding = new Padding(10),
-                Visible = false
-            };
-
-            panelMain.Controls.Add(splitListPreview);
-            panelMain.Controls.Add(flowThumbnails);
-
-            this.Controls.Add(panelMain);
-            this.Controls.Add(panelHeader);
-            this.Controls.Add(panelFooter);
+                ConfirmAndOpenSite(isGaigyo: false);
+            }
         }
 
         private void SwitchViewMode(ViewMode mode)
@@ -959,9 +643,9 @@ namespace Site7DbEditor
             {
                 string infoVersion = System.Reflection.Assembly.GetExecutingAssembly()
                     .GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()?
-                    .InformationalVersion ?? "0.9.2";
+                    .InformationalVersion ?? "0.9.6";
 
-                string verStr = "v0.9.2";
+                string verStr = "v0.9.6";
                 string gitHash = "";
 
                 if (infoVersion.Contains("+"))
@@ -979,7 +663,7 @@ namespace Site7DbEditor
             }
             catch
             {
-                return "v0.9.2";
+                return "v0.9.6";
             }
         }
     }
