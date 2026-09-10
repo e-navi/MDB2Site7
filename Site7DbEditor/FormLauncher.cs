@@ -56,6 +56,7 @@ namespace Site7DbEditor
         private Button btnNewSite = null!;
         private Button btnOpenGaigyo = null!;
         private Button btnOpenNaigyo = null!;
+        private Button btnNaigyoOption = null!;
         private Button btnTool = null!;
         private Button btnExit = null!;
 
@@ -213,34 +214,46 @@ namespace Site7DbEditor
 
             btnOpenNaigyo = new Button
             {
-                Text = "💻 内業 ▾",
+                Text = "💻 内業",
                 Location = new Point(265, 12),
-                Size = new Size(115, 38),
+                Size = new Size(110, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(14, 116, 144),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
             btnOpenNaigyo.FlatAppearance.BorderSize = 0;
+            btnOpenNaigyo.Click += (s, e) => ConfirmAndOpenSite(isGaigyo: false);
 
-            var menuNaigyo = new ContextMenuStrip
+            btnNaigyoOption = new Button
+            {
+                Text = "📐 内業オプション ▾",
+                Location = new Point(385, 12),
+                Size = new Size(140, 38),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
+                BackColor = Color.FromArgb(238, 242, 246),
+                ForeColor = Color.FromArgb(51, 65, 85),
+                FlatStyle = FlatStyle.Flat
+            };
+            btnNaigyoOption.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
+
+            var menuNaigyoOption = new ContextMenuStrip
             {
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
                 ShowImageMargin = false
             };
-            var itemSeiri = new ToolStripMenuItem("📑 遺跡調査整理", null, (s, e) => ConfirmAndOpenSite(isGaigyo: false));
             var itemDrawing = new ToolStripMenuItem("📐 遺構図作成", null, (s, e) => LaunchDrawingEditor());
-            menuNaigyo.Items.AddRange(new ToolStripItem[] { itemSeiri, itemDrawing });
+            menuNaigyoOption.Items.AddRange(new ToolStripItem[] { itemDrawing });
 
-            btnOpenNaigyo.Click += (s, e) =>
+            btnNaigyoOption.Click += (s, e) =>
             {
-                menuNaigyo.Show(btnOpenNaigyo, new Point(0, -menuNaigyo.PreferredSize.Height));
+                menuNaigyoOption.Show(btnNaigyoOption, new Point(0, -menuNaigyoOption.PreferredSize.Height));
             };
 
             btnTool = new Button
             {
                 Text = "🛠 ツール",
-                Location = new Point(385, 12),
+                Location = new Point(535, 12),
                 Size = new Size(100, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(238, 242, 246),
@@ -285,7 +298,7 @@ namespace Site7DbEditor
             btnExit = new Button
             {
                 Text = "✖ 終了",
-                Location = new Point(495, 12),
+                Location = new Point(645, 12),
                 Size = new Size(95, 38),
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 245, 249),
@@ -299,7 +312,7 @@ namespace Site7DbEditor
             };
 
             panelFooter.Controls.AddRange(new Control[] {
-                btnNewSite, btnOpenGaigyo, btnOpenNaigyo, btnTool, btnExit
+                btnNewSite, btnOpenGaigyo, btnOpenNaigyo, btnNaigyoOption, btnTool, btnExit
             });
 
             // 3. Main Panel (Container)
@@ -702,6 +715,7 @@ namespace Site7DbEditor
                 lblPreviewPath.Text = $"フォルダ: {site.FolderPath}";
                 btnOpenGaigyo.Enabled = true;
                 btnOpenNaigyo.Enabled = true;
+                btnNaigyoOption.Enabled = true;
             }
             else
             {
@@ -712,6 +726,7 @@ namespace Site7DbEditor
                 lblPreviewPath.Text = "フォルダ: -";
                 btnOpenGaigyo.Enabled = false;
                 btnOpenNaigyo.Enabled = false;
+                btnNaigyoOption.Enabled = false;
             }
         }
 
