@@ -35,6 +35,17 @@ namespace Site7DbEditor
             chkPreviewDrawing.ForeColor = Color.FromArgb(25, 45, 80);
             chkPreviewDrawing.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
 
+            grpPresets.ForeColor = Color.FromArgb(25, 45, 80);
+            grpPresets.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnSavePreset.BackColor = Color.FromArgb(219, 234, 254);
+            btnSavePreset.ForeColor = Color.FromArgb(29, 78, 216);
+            btnLoadPreset.BackColor = Color.FromArgb(240, 243, 248);
+            btnLoadPreset.ForeColor = Color.FromArgb(40, 40, 40);
+
+            var tt = new ToolTip();
+            tt.SetToolTip(btnSavePreset, "現在の図枠設定を名前を付けてファイル保存");
+            tt.SetToolTip(btnLoadPreset, "図枠設定ファイルから読込");
+
             foreach (TabPage tab in tabSettings.TabPages)
             {
                 tab.BackColor = Color.White;
@@ -202,11 +213,113 @@ namespace Site7DbEditor
             this.chkShowScaleBar.CheckedChanged += (s, e) => OnValueChanged();
             this.cmbScaleBarType.SelectedIndexChanged += (s, e) => OnValueChanged();
             this.cmbScaleBarPos.SelectedIndexChanged += (s, e) => OnValueChanged();
+
+            // プリセット切替・保存・読込
+            this.cmbPresets.SelectedIndexChanged += CmbPresets_SelectedIndexChanged;
+            this.btnSavePreset.Click += BtnSavePreset_Click;
+            this.btnLoadPreset.Click += BtnLoadPreset_Click;
         }
 
         private void FormDrawingFrame_Load(object? sender, EventArgs e)
         {
+            RefreshPresets();
             SyncFromService();
+        }
+
+        private class PresetItem
+        {
+            public string DisplayName { get; set; } = "";
+            public string FilePath { get; set; } = "";
+            public override string ToString() => DisplayName;
+        }
+
+        private void RefreshPresets(string? selectFilePath = null)
+        {
+            _isUpdatingUi = true;
+            try
+            {
+                cmbPresets.Items.Clear();
+                var files = DrawingFrameService.GetPresetFileList();
+
+                // 標準プリセット（現在のSITE7.ini）
+                cmbPresets.Items.Add(new PresetItem { DisplayName = "標準 (SITE7.ini)", FilePath = Def.iniFileName });
+
+                PresetItem? targetItem = null;
+                foreach (var f in files)
+                {
+                    string name = System.IO.Path.GetFileNameWithoutExtension(f);
+                    var item = new PresetItem { DisplayName = name, FilePath = f };
+                    cmbPresets.Items.Add(item);
+                    if (!string.IsNullOrEmpty(selectFilePath) && string.Equals(f, selectFilePath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetItem = item;
+                    }
+                }
+
+                if (targetItem != null)
+                {
+                    cmbPresets.SelectedItem = targetItem;
+                }
+                else if (cmbPresets.Items.Count > 0 && cmbPresets.SelectedIndex < 0)
+                {
+                    cmbPresets.SelectedIndex = 0;
+                }
+            }
+            finally
+            {
+                _isUpdatingUi = false;
+            }
+        }
+
+        private void CmbPresets_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_isUpdatingUi) return;
+            if (cmbPresets.SelectedItem is PresetItem item && System.IO.File.Exists(item.FilePath))
+            {
+                DrawingFrameService.Instance.LoadFromFile(item.FilePath);
+                SyncFromService();
+                FrameChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void BtnSavePreset_Click(object? sender, EventArgs e)
+        {
+            string defaultDir = DrawingFrameService.GetFramesPresetFolder();
+            using var sfd = new SaveFileDialog
+            {
+                Title = "図枠設定をファイルに保存",
+                InitialDirectory = defaultDir,
+                Filter = "図枠設定ファイル (*.frame)|*.frame|INIファイル (*.ini)|*.ini|すべてのファイル (*.*)|*.*",
+                DefaultExt = "frame",
+                FileName = $"図枠_{DrawingFrameService.Instance.PaperSizeName}_{(DrawingFrameService.Instance.IsLandscape ? "横" : "縦")}_1_{(int)DrawingFrameService.Instance.Scale}.frame"
+            };
+
+            if (sfd.ShowDialog(this) == DialogResult.OK)
+            {
+                DrawingFrameService.Instance.SaveToFile(sfd.FileName);
+                RefreshPresets(sfd.FileName);
+                MessageBox.Show(this, $"図枠設定を保存しました:\n{System.IO.Path.GetFileName(sfd.FileName)}", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void BtnLoadPreset_Click(object? sender, EventArgs e)
+        {
+            string defaultDir = DrawingFrameService.GetFramesPresetFolder();
+            using var ofd = new OpenFileDialog
+            {
+                Title = "図枠設定ファイルを読み込み",
+                InitialDirectory = defaultDir,
+                Filter = "図枠設定ファイル (*.frame;*.ini)|*.frame;*.ini|すべてのファイル (*.*)|*.*"
+            };
+
+            if (ofd.ShowDialog(this) == DialogResult.OK)
+            {
+                DrawingFrameService.Instance.LoadFromFile(ofd.FileName);
+                SyncFromService();
+                RefreshPresets(ofd.FileName);
+                FrameChanged?.Invoke(this, EventArgs.Empty);
+                MessageBox.Show(this, $"図枠設定を読み込みました:\n{System.IO.Path.GetFileName(ofd.FileName)}", "読込完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         /// <summary>

@@ -1847,49 +1847,99 @@ namespace Site7DbEditor.Services
                 g.Restore(state);
             }
         }
-
         /// <summary>
-        /// INIファイルから図枠設定を読み込み
+        /// INIファイルまたは指定ファイルから図枠設定を読込
         /// </summary>
         public void LoadFromIni()
         {
+            LoadFromFile(Def.iniFileName);
+        }
+
+        /// <summary>
+        /// 指定したファイルから図枠設定を読込
+        /// </summary>
+        public void LoadFromFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath)) return;
             try
             {
-                IsVisible = Def.GetIniInt("DRAWING_FRAME", "Visible", 1) == 1;
-                IsDrawingPreviewEnabled = Def.GetIniInt("DRAWING_FRAME", "IsDrawingPreviewEnabled", 0) == 1;
-                PaperSizeName = Def.GetIniStr("DRAWING_FRAME", "PaperSizeName");
-                if (string.IsNullOrEmpty(PaperSizeName)) PaperSizeName = "A3";
-                IsLandscape = Def.GetIniInt("DRAWING_FRAME", "IsLandscape", 1) == 1;
-                Scale = Def.GetIniDouble("DRAWING_FRAME", "Scale", 200.0);
-                CenterX = Def.GetIniDouble("DRAWING_FRAME", "CenterX", 0.0);
-                CenterY = Def.GetIniDouble("DRAWING_FRAME", "CenterY", 0.0);
-                RotationAngleDeg = Def.GetIniDouble("DRAWING_FRAME", "RotationAngleDeg", 0.0);
+                string sVisible = Def.GetIniStr(filePath, "DRAWING_FRAME", "Visible");
+                if (!string.IsNullOrEmpty(sVisible)) IsVisible = sVisible == "1";
 
-                ShowTombo = Def.GetIniInt("DRAWING_FRAME", "ShowTombo", 1) == 1;
-                ShowGridLines = Def.GetIniInt("DRAWING_FRAME", "ShowGridLines", 0) == 1;
-                IsPitchAuto = Def.GetIniInt("DRAWING_FRAME", "IsPitchAuto", 1) == 1;
-                PitchMeters = Def.GetIniDouble("DRAWING_FRAME", "PitchMeters", 20.0);
-                ShowBorderCoords = Def.GetIniInt("DRAWING_FRAME", "ShowBorderCoords", 1) == 1;
+                string sPreview = Def.GetIniStr(filePath, "DRAWING_FRAME", "IsDrawingPreviewEnabled");
+                if (!string.IsNullOrEmpty(sPreview)) IsDrawingPreviewEnabled = sPreview == "1";
 
-                ShowNorthArrow = Def.GetIniInt("DRAWING_FRAME", "ShowNorthArrow", 1) == 1;
-                NorthArrowType = Def.GetIniStr("DRAWING_FRAME", "NorthArrowType");
-                if (string.IsNullOrEmpty(NorthArrowType)) NorthArrowType = "標準矢印";
-                NorthArrowSizeMm = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowSizeMm", 15.0);
-                NorthArrowPosition = Def.GetIniStr("DRAWING_FRAME", "NorthArrowPosition");
-                if (string.IsNullOrEmpty(NorthArrowPosition)) NorthArrowPosition = "右上";
-                NorthArrowCustomSurveyX = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyX", 0.0);
-                NorthArrowCustomSurveyY = Def.GetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyY", 0.0);
-                HasCustomNorthArrowPos = Def.GetIniInt("DRAWING_FRAME", "HasCustomNorthArrowPos", 0) == 1;
+                string sPaper = Def.GetIniStr(filePath, "DRAWING_FRAME", "PaperSizeName");
+                if (!string.IsNullOrEmpty(sPaper)) PaperSizeName = sPaper;
 
-                ShowScaleBar = Def.GetIniInt("DRAWING_FRAME", "ShowScaleBar", 1) == 1;
-                ScaleBarType = Def.GetIniStr("DRAWING_FRAME", "ScaleBarType");
-                if (string.IsNullOrEmpty(ScaleBarType)) ScaleBarType = "精密線 (下縮尺)";
-                ScaleBarPosition = Def.GetIniStr("DRAWING_FRAME", "ScaleBarPosition");
-                if (string.IsNullOrEmpty(ScaleBarPosition)) ScaleBarPosition = "中下";
+                string sLand = Def.GetIniStr(filePath, "DRAWING_FRAME", "IsLandscape");
+                if (!string.IsNullOrEmpty(sLand)) IsLandscape = sLand == "1";
 
-                MarginLeftMm = Def.GetIniDouble("DRAWING_FRAME", "MarginLeftMm", 20.0);
-                MarginOtherMm = Def.GetIniDouble("DRAWING_FRAME", "MarginOtherMm", 10.0);
-                OuterInnerSpacingMm = Def.GetIniDouble("DRAWING_FRAME", "OuterInnerSpacingMm", 10.0);
+                string sScale = Def.GetIniStr(filePath, "DRAWING_FRAME", "Scale");
+                if (double.TryParse(sScale, out double sc) && sc > 0) Scale = sc;
+
+                string sCx = Def.GetIniStr(filePath, "DRAWING_FRAME", "CenterX");
+                if (double.TryParse(sCx, out double cx)) CenterX = cx;
+
+                string sCy = Def.GetIniStr(filePath, "DRAWING_FRAME", "CenterY");
+                if (double.TryParse(sCy, out double cy)) CenterY = cy;
+
+                string sRot = Def.GetIniStr(filePath, "DRAWING_FRAME", "RotationAngleDeg");
+                if (double.TryParse(sRot, out double rot)) RotationAngleDeg = rot;
+
+                string sTombo = Def.GetIniStr(filePath, "DRAWING_FRAME", "ShowTombo");
+                if (!string.IsNullOrEmpty(sTombo)) ShowTombo = sTombo == "1";
+
+                string sGrid = Def.GetIniStr(filePath, "DRAWING_FRAME", "ShowGridLines");
+                if (!string.IsNullOrEmpty(sGrid)) ShowGridLines = sGrid == "1";
+
+                string sPitchAuto = Def.GetIniStr(filePath, "DRAWING_FRAME", "IsPitchAuto");
+                if (!string.IsNullOrEmpty(sPitchAuto)) IsPitchAuto = sPitchAuto == "1";
+
+                string sPitch = Def.GetIniStr(filePath, "DRAWING_FRAME", "PitchMeters");
+                if (double.TryParse(sPitch, out double pm)) PitchMeters = pm;
+
+                string sBorder = Def.GetIniStr(filePath, "DRAWING_FRAME", "ShowBorderCoords");
+                if (!string.IsNullOrEmpty(sBorder)) ShowBorderCoords = sBorder == "1";
+
+                string sNorth = Def.GetIniStr(filePath, "DRAWING_FRAME", "ShowNorthArrow");
+                if (!string.IsNullOrEmpty(sNorth)) ShowNorthArrow = sNorth == "1";
+
+                string sNorthType = Def.GetIniStr(filePath, "DRAWING_FRAME", "NorthArrowType");
+                if (!string.IsNullOrEmpty(sNorthType)) NorthArrowType = sNorthType;
+
+                string sNorthSize = Def.GetIniStr(filePath, "DRAWING_FRAME", "NorthArrowSizeMm");
+                if (double.TryParse(sNorthSize, out double ns)) NorthArrowSizeMm = ns;
+
+                string sNorthPos = Def.GetIniStr(filePath, "DRAWING_FRAME", "NorthArrowPosition");
+                if (!string.IsNullOrEmpty(sNorthPos)) NorthArrowPosition = sNorthPos;
+
+                string sNorthCx = Def.GetIniStr(filePath, "DRAWING_FRAME", "NorthArrowCustomSurveyX");
+                if (double.TryParse(sNorthCx, out double ncx)) NorthArrowCustomSurveyX = ncx;
+
+                string sNorthCy = Def.GetIniStr(filePath, "DRAWING_FRAME", "NorthArrowCustomSurveyY");
+                if (double.TryParse(sNorthCy, out double ncy)) NorthArrowCustomSurveyY = ncy;
+
+                string sHasCustNorth = Def.GetIniStr(filePath, "DRAWING_FRAME", "HasCustomNorthArrowPos");
+                if (!string.IsNullOrEmpty(sHasCustNorth)) HasCustomNorthArrowPos = sHasCustNorth == "1";
+
+                string sScaleBar = Def.GetIniStr(filePath, "DRAWING_FRAME", "ShowScaleBar");
+                if (!string.IsNullOrEmpty(sScaleBar)) ShowScaleBar = sScaleBar == "1";
+
+                string sScaleBarType = Def.GetIniStr(filePath, "DRAWING_FRAME", "ScaleBarType");
+                if (!string.IsNullOrEmpty(sScaleBarType)) ScaleBarType = sScaleBarType;
+
+                string sScaleBarPos = Def.GetIniStr(filePath, "DRAWING_FRAME", "ScaleBarPosition");
+                if (!string.IsNullOrEmpty(sScaleBarPos)) ScaleBarPosition = sScaleBarPos;
+
+                string sMarginLeft = Def.GetIniStr(filePath, "DRAWING_FRAME", "MarginLeftMm");
+                if (double.TryParse(sMarginLeft, out double ml)) MarginLeftMm = ml;
+
+                string sMarginOther = Def.GetIniStr(filePath, "DRAWING_FRAME", "MarginOtherMm");
+                if (double.TryParse(sMarginOther, out double mo)) MarginOtherMm = mo;
+
+                string sSpacing = Def.GetIniStr(filePath, "DRAWING_FRAME", "OuterInnerSpacingMm");
+                if (double.TryParse(sSpacing, out double sp)) OuterInnerSpacingMm = sp;
             }
             catch { }
         }
@@ -1899,40 +1949,98 @@ namespace Site7DbEditor.Services
         /// </summary>
         public void SaveToIni()
         {
+            SaveToFile(Def.iniFileName);
+        }
+
+        /// <summary>
+        /// 指定したファイルへ図枠設定を保存
+        /// </summary>
+        public void SaveToFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return;
             try
             {
-                Def.SetIniInt("DRAWING_FRAME", "Visible", IsVisible ? 1 : 0);
-                Def.SetIniInt("DRAWING_FRAME", "IsDrawingPreviewEnabled", IsDrawingPreviewEnabled ? 1 : 0);
-                Def.SetIniStr("DRAWING_FRAME", "PaperSizeName", PaperSizeName);
-                Def.SetIniInt("DRAWING_FRAME", "IsLandscape", IsLandscape ? 1 : 0);
-                Def.SetIniDouble("DRAWING_FRAME", "Scale", Scale);
-                Def.SetIniDouble("DRAWING_FRAME", "CenterX", CenterX);
-                Def.SetIniDouble("DRAWING_FRAME", "CenterY", CenterY);
-                Def.SetIniDouble("DRAWING_FRAME", "RotationAngleDeg", RotationAngleDeg);
+                string? dir = System.IO.Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                {
+                    System.IO.Directory.CreateDirectory(dir);
+                }
 
-                Def.SetIniInt("DRAWING_FRAME", "ShowTombo", ShowTombo ? 1 : 0);
-                Def.SetIniInt("DRAWING_FRAME", "ShowGridLines", ShowGridLines ? 1 : 0);
-                Def.SetIniInt("DRAWING_FRAME", "IsPitchAuto", IsPitchAuto ? 1 : 0);
-                Def.SetIniDouble("DRAWING_FRAME", "PitchMeters", PitchMeters);
-                Def.SetIniInt("DRAWING_FRAME", "ShowBorderCoords", ShowBorderCoords ? 1 : 0);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "Visible", IsVisible ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "IsDrawingPreviewEnabled", IsDrawingPreviewEnabled ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "PaperSizeName", PaperSizeName);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "IsLandscape", IsLandscape ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "Scale", Scale.ToString("F2"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "CenterX", CenterX.ToString("F4"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "CenterY", CenterY.ToString("F4"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "RotationAngleDeg", RotationAngleDeg.ToString("F3"));
 
-                Def.SetIniInt("DRAWING_FRAME", "ShowNorthArrow", ShowNorthArrow ? 1 : 0);
-                Def.SetIniStr("DRAWING_FRAME", "NorthArrowType", NorthArrowType);
-                Def.SetIniDouble("DRAWING_FRAME", "NorthArrowSizeMm", NorthArrowSizeMm);
-                Def.SetIniStr("DRAWING_FRAME", "NorthArrowPosition", NorthArrowPosition);
-                Def.SetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyX", NorthArrowCustomSurveyX);
-                Def.SetIniDouble("DRAWING_FRAME", "NorthArrowCustomSurveyY", NorthArrowCustomSurveyY);
-                Def.SetIniInt("DRAWING_FRAME", "HasCustomNorthArrowPos", HasCustomNorthArrowPos ? 1 : 0);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ShowTombo", ShowTombo ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ShowGridLines", ShowGridLines ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "IsPitchAuto", IsPitchAuto ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "PitchMeters", PitchMeters.ToString("F2"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ShowBorderCoords", ShowBorderCoords ? "1" : "0");
 
-                Def.SetIniInt("DRAWING_FRAME", "ShowScaleBar", ShowScaleBar ? 1 : 0);
-                Def.SetIniStr("DRAWING_FRAME", "ScaleBarType", ScaleBarType);
-                Def.SetIniStr("DRAWING_FRAME", "ScaleBarPosition", ScaleBarPosition);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ShowNorthArrow", ShowNorthArrow ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "NorthArrowType", NorthArrowType);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "NorthArrowSizeMm", NorthArrowSizeMm.ToString("F2"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "NorthArrowPosition", NorthArrowPosition);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "NorthArrowCustomSurveyX", NorthArrowCustomSurveyX.ToString("F4"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "NorthArrowCustomSurveyY", NorthArrowCustomSurveyY.ToString("F4"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "HasCustomNorthArrowPos", HasCustomNorthArrowPos ? "1" : "0");
 
-                Def.SetIniDouble("DRAWING_FRAME", "MarginLeftMm", MarginLeftMm);
-                Def.SetIniDouble("DRAWING_FRAME", "MarginOtherMm", MarginOtherMm);
-                Def.SetIniDouble("DRAWING_FRAME", "OuterInnerSpacingMm", OuterInnerSpacingMm);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ShowScaleBar", ShowScaleBar ? "1" : "0");
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ScaleBarType", ScaleBarType);
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "ScaleBarPosition", ScaleBarPosition);
+
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "MarginLeftMm", MarginLeftMm.ToString("F2"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "MarginOtherMm", MarginOtherMm.ToString("F2"));
+                Def.SetIniStr(filePath, "DRAWING_FRAME", "OuterInnerSpacingMm", OuterInnerSpacingMm.ToString("F2"));
             }
             catch { }
+        }
+
+        /// <summary>
+        /// 現場フォルダ内のFramesプリセット保存先フォルダを取得
+        /// </summary>
+        public static string GetFramesPresetFolder()
+        {
+            string? baseDir = System.IO.Path.GetDirectoryName(Def.iniFileName);
+            if (string.IsNullOrEmpty(baseDir) || !System.IO.Directory.Exists(baseDir))
+            {
+                baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            }
+            string framesDir = System.IO.Path.Combine(baseDir, "Frames");
+            if (!System.IO.Directory.Exists(framesDir))
+            {
+                try { System.IO.Directory.CreateDirectory(framesDir); } catch { }
+            }
+            return framesDir;
+        }
+
+        /// <summary>
+        /// 現場フォルダ内の図枠プリセットファイル一覧を取得
+        /// </summary>
+        public static List<string> GetPresetFileList()
+        {
+            var list = new List<string>();
+            try
+            {
+                string framesDir = GetFramesPresetFolder();
+                if (System.IO.Directory.Exists(framesDir))
+                {
+                    list.AddRange(System.IO.Directory.GetFiles(framesDir, "*.frame", System.IO.SearchOption.TopDirectoryOnly));
+                    list.AddRange(System.IO.Directory.GetFiles(framesDir, "*.ini", System.IO.SearchOption.TopDirectoryOnly));
+                }
+
+                string? baseDir = System.IO.Path.GetDirectoryName(Def.iniFileName);
+                if (!string.IsNullOrEmpty(baseDir) && System.IO.Directory.Exists(baseDir) && baseDir != framesDir)
+                {
+                    list.AddRange(System.IO.Directory.GetFiles(baseDir, "*.frame", System.IO.SearchOption.TopDirectoryOnly));
+                }
+            }
+            catch { }
+            return list.Distinct().OrderBy(f => System.IO.Path.GetFileName(f)).ToList();
         }
     }
 }

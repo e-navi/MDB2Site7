@@ -19,6 +19,10 @@ namespace Site7DrawingEditor
         {
             this.btnPrint = new System.Windows.Forms.Button();
             this.chkPreviewDrawing = new System.Windows.Forms.CheckBox();
+            this.grpPresets = new System.Windows.Forms.GroupBox();
+            this.cmbPresets = new System.Windows.Forms.ComboBox();
+            this.btnSavePreset = new System.Windows.Forms.Button();
+            this.btnLoadPreset = new System.Windows.Forms.Button();
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabBasic = new System.Windows.Forms.TabPage();
             this.grpPaper = new System.Windows.Forms.GroupBox();
@@ -77,6 +81,7 @@ namespace Site7DrawingEditor
             this.cmbScaleBarPos = new System.Windows.Forms.ComboBox();
             this.btnClose = new System.Windows.Forms.Button();
             this.tabSettings.SuspendLayout();
+            this.grpPresets.SuspendLayout();
             this.tabBasic.SuspendLayout();
             this.grpPaper.SuspendLayout();
             this.grpScale.SuspendLayout();
@@ -111,13 +116,63 @@ namespace Site7DrawingEditor
             this.chkPreviewDrawing.Text = "図面表示確認";
             this.chkPreviewDrawing.UseVisualStyleBackColor = true;
             // 
+            // grpPresets
+            // 
+            this.grpPresets.Controls.Add(this.btnLoadPreset);
+            this.grpPresets.Controls.Add(this.btnSavePreset);
+            this.grpPresets.Controls.Add(this.cmbPresets);
+            this.grpPresets.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.grpPresets.ForeColor = System.Drawing.Color.White;
+            this.grpPresets.Location = new System.Drawing.Point(6, 26);
+            this.grpPresets.Name = "grpPresets";
+            this.grpPresets.Size = new System.Drawing.Size(236, 48);
+            this.grpPresets.TabIndex = 1;
+            this.grpPresets.TabStop = false;
+            this.grpPresets.Text = "📁 図枠プリセット";
+            // 
+            // cmbPresets
+            // 
+            this.cmbPresets.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPresets.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbPresets.FormattingEnabled = true;
+            this.cmbPresets.Location = new System.Drawing.Point(6, 18);
+            this.cmbPresets.Name = "cmbPresets";
+            this.cmbPresets.Size = new System.Drawing.Size(142, 21);
+            this.cmbPresets.TabIndex = 0;
+            // 
+            // btnSavePreset
+            // 
+            this.btnSavePreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(240)))), ((int)(((byte)(250)))));
+            this.btnSavePreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSavePreset.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnSavePreset.ForeColor = System.Drawing.Color.Black;
+            this.btnSavePreset.Location = new System.Drawing.Point(152, 17);
+            this.btnSavePreset.Name = "btnSavePreset";
+            this.btnSavePreset.Size = new System.Drawing.Size(38, 24);
+            this.btnSavePreset.TabIndex = 1;
+            this.btnSavePreset.Text = "💾";
+            this.btnSavePreset.UseVisualStyleBackColor = false;
+            // 
+            // btnLoadPreset
+            // 
+            this.btnLoadPreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(240)))), ((int)(((byte)(250)))));
+            this.btnLoadPreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoadPreset.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnLoadPreset.ForeColor = System.Drawing.Color.Black;
+            this.btnLoadPreset.Location = new System.Drawing.Point(192, 17);
+            this.btnLoadPreset.Name = "btnLoadPreset";
+            this.btnLoadPreset.Size = new System.Drawing.Size(38, 24);
+            this.btnLoadPreset.TabIndex = 2;
+            this.btnLoadPreset.Text = "📂";
+            this.btnLoadPreset.UseVisualStyleBackColor = false;
+            // 
             // tabSettings
             // 
             this.tabSettings.Controls.Add(this.tabBasic);
             this.tabSettings.Controls.Add(this.tabTombo);
             this.tabSettings.Controls.Add(this.tabExtras);
             this.tabSettings.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tabSettings.Location = new System.Drawing.Point(6, 28);
+            this.tabSettings.Location = new System.Drawing.Point(6, 78);
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.SelectedIndex = 0;
             this.tabSettings.Size = new System.Drawing.Size(236, 318);
@@ -851,10 +906,10 @@ namespace Site7DrawingEditor
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnClose.ForeColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(152, 350);
+            this.btnClose.Location = new System.Drawing.Point(152, 402);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(86, 26);
-            this.btnClose.TabIndex = 2;
+            this.btnClose.TabIndex = 4;
             this.btnClose.Text = "閉じる";
             this.btnClose.UseVisualStyleBackColor = false;
             // 
@@ -865,7 +920,7 @@ namespace Site7DrawingEditor
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrint.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnPrint.ForeColor = System.Drawing.Color.White;
-            this.btnPrint.Location = new System.Drawing.Point(60, 350);
+            this.btnPrint.Location = new System.Drawing.Point(60, 402);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(86, 26);
             this.btnPrint.TabIndex = 3;
@@ -877,7 +932,8 @@ namespace Site7DrawingEditor
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(38)))));
-            this.ClientSize = new System.Drawing.Size(248, 382);
+            this.ClientSize = new System.Drawing.Size(248, 434);
+            this.Controls.Add(this.grpPresets);
             this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabSettings);
@@ -889,6 +945,7 @@ namespace Site7DrawingEditor
             this.Text = "図枠設定・印刷";
             this.TopMost = true;
             this.tabSettings.ResumeLayout(false);
+            this.grpPresets.ResumeLayout(false);
             this.tabBasic.ResumeLayout(false);
             this.grpPaper.ResumeLayout(false);
             this.grpPaper.PerformLayout();
@@ -990,6 +1047,10 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.Label lblScaleBarPos;
         private System.Windows.Forms.ComboBox cmbScaleBarPos;
 
+        private System.Windows.Forms.GroupBox grpPresets;
+        private System.Windows.Forms.ComboBox cmbPresets;
+        private System.Windows.Forms.Button btnSavePreset;
+        private System.Windows.Forms.Button btnLoadPreset;
         private System.Windows.Forms.Button btnClose;
     }
 }
