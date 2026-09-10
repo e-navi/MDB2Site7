@@ -122,15 +122,15 @@ namespace Site7DbEditor
             lblLinePrefixHeader = new Label();
             dgvIkouL = new DataGridView();
             grpIkouMaster = new GroupBox();
+            txtIkouNum = new TextBox();
+            lblIkouNameVal = new Label();
             btnDeleteIkouRight = new Button();
             btnUpdateIkouRight = new Button();
             btnAddIkou = new Button();
             btnSetPos = new Button();
             btnView3D = new Button();
             lblIkouNameTitle = new Label();
-            lblIkouNameVal = new Label();
             btnMaxPlusOne = new Button();
-            txtIkouNum = new TextBox();
             cmbIkouKind = new ComboBox();
             lblSeqHeader = new Label();
             lblPrefixHeader = new Label();
@@ -1610,6 +1610,28 @@ namespace Site7DbEditor
             grpIkouMaster.TabStop = false;
             grpIkouMaster.Text = "遺構";
             // 
+            // txtIkouNum
+            // 
+            txtIkouNum.BackColor = Color.FromArgb(255, 255, 191);
+            txtIkouNum.ForeColor = Color.Black;
+            txtIkouNum.Location = new Point(247, 54);
+            txtIkouNum.MaxLength = 3;
+            txtIkouNum.Name = "txtIkouNum";
+            txtIkouNum.Size = new Size(34, 27);
+            txtIkouNum.TabIndex = 4;
+            // 
+            // lblIkouNameVal
+            // 
+            lblIkouNameVal.BackColor = Color.FromArgb(255, 255, 191);
+            lblIkouNameVal.BorderStyle = BorderStyle.FixedSingle;
+            lblIkouNameVal.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblIkouNameVal.ForeColor = Color.FromArgb(0, 225, 255);
+            lblIkouNameVal.Location = new Point(247, 88);
+            lblIkouNameVal.Name = "lblIkouNameVal";
+            lblIkouNameVal.Size = new Size(128, 25);
+            lblIkouNameVal.TabIndex = 7;
+            lblIkouNameVal.TextAlign = ContentAlignment.MiddleLeft;
+            // 
             // btnDeleteIkouRight
             // 
             btnDeleteIkouRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -1689,18 +1711,6 @@ namespace Site7DbEditor
             lblIkouNameTitle.TabIndex = 6;
             lblIkouNameTitle.Text = "遺構名";
             // 
-            // lblIkouNameVal
-            // 
-            lblIkouNameVal.BackColor = Color.FromArgb(255, 255, 191);
-            lblIkouNameVal.BorderStyle = BorderStyle.FixedSingle;
-            lblIkouNameVal.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            lblIkouNameVal.ForeColor = Color.FromArgb(0, 225, 255);
-            lblIkouNameVal.Location = new Point(247, 88);
-            lblIkouNameVal.Name = "lblIkouNameVal";
-            lblIkouNameVal.Size = new Size(128, 25);
-            lblIkouNameVal.TabIndex = 7;
-            lblIkouNameVal.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // btnMaxPlusOne
             // 
             btnMaxPlusOne.BackColor = Color.FromArgb(53, 55, 76);
@@ -1714,16 +1724,6 @@ namespace Site7DbEditor
             btnMaxPlusOne.TabIndex = 5;
             btnMaxPlusOne.Text = "最大+1";
             btnMaxPlusOne.UseVisualStyleBackColor = false;
-            // 
-            // txtIkouNum
-            // 
-            txtIkouNum.BackColor = Color.FromArgb(255, 255, 191);
-            txtIkouNum.ForeColor = Color.Black;
-            txtIkouNum.Location = new Point(247, 54);
-            txtIkouNum.MaxLength = 3;
-            txtIkouNum.Name = "txtIkouNum";
-            txtIkouNum.Size = new Size(34, 27);
-            txtIkouNum.TabIndex = 4;
             // 
             // cmbIkouKind
             // 
@@ -1801,7 +1801,7 @@ namespace Site7DbEditor
             // 
             lblCoordX.AutoSize = true;
             lblCoordX.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            lblCoordX.ForeColor = Color.White;
+            lblCoordX.ForeColor = Color.Black;
             lblCoordX.Location = new Point(8, 28);
             lblCoordX.Name = "lblCoordX";
             lblCoordX.Size = new Size(19, 17);
@@ -1822,7 +1822,7 @@ namespace Site7DbEditor
             // 
             lblCoordY.AutoSize = true;
             lblCoordY.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            lblCoordY.ForeColor = Color.White;
+            lblCoordY.ForeColor = Color.Black;
             lblCoordY.Location = new Point(8, 68);
             lblCoordY.Name = "lblCoordY";
             lblCoordY.Size = new Size(18, 17);
@@ -1843,7 +1843,7 @@ namespace Site7DbEditor
             // 
             lblCoordZ.AutoSize = true;
             lblCoordZ.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            lblCoordZ.ForeColor = Color.White;
+            lblCoordZ.ForeColor = Color.Black;
             lblCoordZ.Location = new Point(8, 108);
             lblCoordZ.Name = "lblCoordZ";
             lblCoordZ.Size = new Size(19, 17);
@@ -1973,7 +1973,7 @@ namespace Site7DbEditor
             // 
             lblFilterIbutu.AutoSize = true;
             lblFilterIbutu.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblFilterIbutu.ForeColor = Color.White;
+            lblFilterIbutu.ForeColor = Color.Black;
             lblFilterIbutu.Location = new Point(6, 26);
             lblFilterIbutu.Name = "lblFilterIbutu";
             lblFilterIbutu.Size = new Size(69, 15);
@@ -1993,7 +1993,7 @@ namespace Site7DbEditor
             // 
             lblIbutuChiku.AutoSize = true;
             lblIbutuChiku.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblIbutuChiku.ForeColor = Color.White;
+            lblIbutuChiku.ForeColor = Color.Black;
             lblIbutuChiku.Location = new Point(6, 50);
             lblIbutuChiku.Name = "lblIbutuChiku";
             lblIbutuChiku.Size = new Size(84, 15);
@@ -2014,7 +2014,7 @@ namespace Site7DbEditor
             // 
             lblIbutuSoui.AutoSize = true;
             lblIbutuSoui.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblIbutuSoui.ForeColor = Color.White;
+            lblIbutuSoui.ForeColor = Color.Black;
             lblIbutuSoui.Location = new Point(6, 94);
             lblIbutuSoui.Name = "lblIbutuSoui";
             lblIbutuSoui.Size = new Size(55, 15);
@@ -2035,7 +2035,7 @@ namespace Site7DbEditor
             // 
             lblIbutuSyubetu.AutoSize = true;
             lblIbutuSyubetu.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblIbutuSyubetu.ForeColor = Color.White;
+            lblIbutuSyubetu.ForeColor = Color.Black;
             lblIbutuSyubetu.Location = new Point(6, 138);
             lblIbutuSyubetu.Name = "lblIbutuSyubetu";
             lblIbutuSyubetu.Size = new Size(31, 15);
@@ -2056,7 +2056,7 @@ namespace Site7DbEditor
             // 
             lblIbutuLayer.AutoSize = true;
             lblIbutuLayer.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblIbutuLayer.ForeColor = Color.White;
+            lblIbutuLayer.ForeColor = Color.Black;
             lblIbutuLayer.Location = new Point(6, 199);
             lblIbutuLayer.Name = "lblIbutuLayer";
             lblIbutuLayer.Size = new Size(35, 15);
@@ -2077,7 +2077,7 @@ namespace Site7DbEditor
             // 
             lblIbutuNo.AutoSize = true;
             lblIbutuNo.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblIbutuNo.ForeColor = Color.White;
+            lblIbutuNo.ForeColor = Color.Black;
             lblIbutuNo.Location = new Point(6, 229);
             lblIbutuNo.Name = "lblIbutuNo";
             lblIbutuNo.Size = new Size(55, 15);
@@ -2101,7 +2101,7 @@ namespace Site7DbEditor
             chkIbutuAutoInc.Checked = true;
             chkIbutuAutoInc.CheckState = CheckState.Checked;
             chkIbutuAutoInc.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            chkIbutuAutoInc.ForeColor = Color.White;
+            chkIbutuAutoInc.ForeColor = Color.Black;
             chkIbutuAutoInc.Location = new Point(129, 228);
             chkIbutuAutoInc.Name = "chkIbutuAutoInc";
             chkIbutuAutoInc.Size = new Size(92, 19);
@@ -2172,7 +2172,7 @@ namespace Site7DbEditor
             // 
             lblKikaiName.AutoSize = true;
             lblKikaiName.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblKikaiName.ForeColor = Color.White;
+            lblKikaiName.ForeColor = Color.Black;
             lblKikaiName.Location = new Point(6, 25);
             lblKikaiName.Name = "lblKikaiName";
             lblKikaiName.Size = new Size(55, 15);
@@ -2192,7 +2192,7 @@ namespace Site7DbEditor
             // 
             lblKikaiLayer.AutoSize = true;
             lblKikaiLayer.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblKikaiLayer.ForeColor = Color.White;
+            lblKikaiLayer.ForeColor = Color.Black;
             lblKikaiLayer.Location = new Point(6, 65);
             lblKikaiLayer.Name = "lblKikaiLayer";
             lblKikaiLayer.Size = new Size(35, 15);
@@ -2236,7 +2236,7 @@ namespace Site7DbEditor
             // lblYudo3
             // 
             lblYudo3.AutoSize = true;
-            lblYudo3.BackColor = Color.Black;
+            lblYudo3.BackColor = Color.Transparent;
             lblYudo3.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblYudo3.ForeColor = Color.Red;
             lblYudo3.Location = new Point(15, 93);
@@ -2248,7 +2248,7 @@ namespace Site7DbEditor
             // lblYudo2
             // 
             lblYudo2.AutoSize = true;
-            lblYudo2.BackColor = Color.Black;
+            lblYudo2.BackColor = Color.Transparent;
             lblYudo2.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblYudo2.ForeColor = Color.Red;
             lblYudo2.Location = new Point(15, 64);
@@ -2260,7 +2260,7 @@ namespace Site7DbEditor
             // lblYudo1
             // 
             lblYudo1.AutoSize = true;
-            lblYudo1.BackColor = Color.Black;
+            lblYudo1.BackColor = Color.Transparent;
             lblYudo1.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
             lblYudo1.ForeColor = Color.Red;
             lblYudo1.Location = new Point(15, 36);
@@ -2273,7 +2273,7 @@ namespace Site7DbEditor
             // 
             chkPointGuidance.AutoSize = true;
             chkPointGuidance.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            chkPointGuidance.ForeColor = Color.White;
+            chkPointGuidance.ForeColor = Color.Black;
             chkPointGuidance.Location = new Point(12, 25);
             chkPointGuidance.Name = "chkPointGuidance";
             chkPointGuidance.Size = new Size(62, 19);

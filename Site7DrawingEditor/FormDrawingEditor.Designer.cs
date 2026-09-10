@@ -221,7 +221,7 @@ namespace Site7DrawingEditor
             lblHeaderTitle.Name = "lblHeaderTitle";
             lblHeaderTitle.Size = new Size(351, 25);
             lblHeaderTitle.TabIndex = 0;
-            lblHeaderTitle.Text = "📐 SITE7 遺跡調査・遺構図面作成システム";
+            lblHeaderTitle.Text = "📐 SITE7 遺跡調査・個別遺構図作成システム";
             // 
             // cmbOrientation
             // 
@@ -1437,7 +1437,7 @@ namespace Site7DrawingEditor
             MinimumSize = new Size(1280, 780);
             Name = "FormDrawingEditor";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "遺跡調査システム(内楽) - 遺構図面作成エディタ";
+            Text = "遺跡調査システム(内業) - 個別遺構図作成エディタ";
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelHcLeftSidebar.ResumeLayout(false);

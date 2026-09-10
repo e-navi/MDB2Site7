@@ -604,7 +604,7 @@ namespace Site7DrawingEditor
                 string fileName = Path.GetFileName(dbPath);
                 string siteName = !string.IsNullOrEmpty(dirName) ? dirName : fileName;
 
-                this.Text = $"遺跡調査システム(内業) - 遺構図面作成エディタ [{siteName}]";
+                this.Text = $"遺跡調査システム(内業) - 個別遺構図作成エディタ [{siteName}]";
                 lblDbStatus.Text = $"✔ [{siteName}]  {_db.DrawingsList.Count}図面 | {_db.DrawingIkousList.Count}配置遺構 | {_db.MasterIkouList.Count}遺構 | {_db.MasterIbutuList.Count}遺物 | {_db.MasterKikaiList.Count}基準点";
                 lblDbStatus.ForeColor = Color.FromArgb(56, 176, 0);
 
