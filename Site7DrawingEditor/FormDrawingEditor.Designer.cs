@@ -231,10 +231,11 @@ namespace Site7DrawingEditor
             // 
             cmbOrientation.BackColor = Color.White;
             cmbOrientation.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbOrientation.Font = new Font("Yu Gothic UI", 12F);
             cmbOrientation.ForeColor = Color.FromArgb(33, 37, 41);
-            cmbOrientation.Location = new Point(190, 47);
+            cmbOrientation.Location = new Point(238, 56);
             cmbOrientation.Name = "cmbOrientation";
-            cmbOrientation.Size = new Size(53, 23);
+            cmbOrientation.Size = new Size(65, 29);
             cmbOrientation.TabIndex = 7;
             // 
             // btnResetCropZoom
@@ -937,7 +938,7 @@ namespace Site7DrawingEditor
             panelControls.Location = new Point(585, 0);
             panelControls.Name = "panelControls";
             panelControls.Padding = new Padding(3);
-            panelControls.Size = new Size(325, 361);
+            panelControls.Size = new Size(380, 361);
             panelControls.TabIndex = 1;
             // 
             // grpIkouProps
@@ -952,9 +953,9 @@ namespace Site7DrawingEditor
             grpIkouProps.Controls.Add(lblTargetIkou);
             grpIkouProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpIkouProps.ForeColor = Color.FromArgb(25, 55, 105);
-            grpIkouProps.Location = new Point(3, 86);
+            grpIkouProps.Location = new Point(3, 102);
             grpIkouProps.Name = "grpIkouProps";
-            grpIkouProps.Size = new Size(309, 260);
+            grpIkouProps.Size = new Size(374, 255);
             grpIkouProps.TabIndex = 1;
             grpIkouProps.TabStop = false;
             grpIkouProps.Text = "遺構";
@@ -969,7 +970,7 @@ namespace Site7DrawingEditor
             grpDanmenProps.ForeColor = Color.FromArgb(25, 55, 105);
             grpDanmenProps.Location = new Point(10, 168);
             grpDanmenProps.Name = "grpDanmenProps";
-            grpDanmenProps.Size = new Size(292, 82);
+            grpDanmenProps.Size = new Size(354, 75);
             grpDanmenProps.TabIndex = 6;
             grpDanmenProps.TabStop = false;
             grpDanmenProps.Text = "断面 (複数定義可能)";
@@ -980,9 +981,9 @@ namespace Site7DrawingEditor
             btnSetDanmenPosition.FlatStyle = FlatStyle.Flat;
             btnSetDanmenPosition.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSetDanmenPosition.ForeColor = Color.FromArgb(25, 45, 80);
-            btnSetDanmenPosition.Location = new Point(150, 19);
+            btnSetDanmenPosition.Location = new Point(190, 23);
             btnSetDanmenPosition.Name = "btnSetDanmenPosition";
-            btnSetDanmenPosition.Size = new Size(100, 26);
+            btnSetDanmenPosition.Size = new Size(130, 32);
             btnSetDanmenPosition.TabIndex = 2;
             btnSetDanmenPosition.Text = "断面指定";
             btnSetDanmenPosition.UseVisualStyleBackColor = false;
@@ -990,10 +991,11 @@ namespace Site7DrawingEditor
             // txtDanmenName
             // 
             txtDanmenName.BackColor = Color.FromArgb(255, 255, 191);
+            txtDanmenName.Font = new Font("Yu Gothic UI", 12F);
             txtDanmenName.ForeColor = Color.Black;
-            txtDanmenName.Location = new Point(62, 21);
+            txtDanmenName.Location = new Point(66, 25);
             txtDanmenName.Name = "txtDanmenName";
-            txtDanmenName.Size = new Size(80, 23);
+            txtDanmenName.Size = new Size(115, 29);
             txtDanmenName.TabIndex = 1;
             // 
             // lblDanmenName
@@ -1001,9 +1003,9 @@ namespace Site7DrawingEditor
             lblDanmenName.AutoSize = true;
             lblDanmenName.Font = new Font("Yu Gothic UI", 12F);
             lblDanmenName.ForeColor = Color.FromArgb(33, 37, 41);
-            lblDanmenName.Location = new Point(10, 24);
+            lblDanmenName.Location = new Point(8, 28);
             lblDanmenName.Name = "lblDanmenName";
-            lblDanmenName.Size = new Size(43, 15);
+            lblDanmenName.Size = new Size(58, 21);
             lblDanmenName.TabIndex = 0;
             lblDanmenName.Text = "断面名";
             // 
@@ -1014,9 +1016,9 @@ namespace Site7DrawingEditor
             grpCompassProps.Controls.Add(chkShowDirection);
             grpCompassProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpCompassProps.ForeColor = Color.FromArgb(25, 55, 105);
-            grpCompassProps.Location = new Point(10, 90);
+            grpCompassProps.Location = new Point(10, 96);
             grpCompassProps.Name = "grpCompassProps";
-            grpCompassProps.Size = new Size(292, 65);
+            grpCompassProps.Size = new Size(354, 65);
             grpCompassProps.TabIndex = 5;
             grpCompassProps.TabStop = false;
             grpCompassProps.Text = "方位マーク";
@@ -1027,9 +1029,9 @@ namespace Site7DrawingEditor
             btnSetDirectionPosition.FlatStyle = FlatStyle.Flat;
             btnSetDirectionPosition.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSetDirectionPosition.ForeColor = Color.FromArgb(25, 45, 80);
-            btnSetDirectionPosition.Location = new Point(70, 20);
+            btnSetDirectionPosition.Location = new Point(90, 22);
             btnSetDirectionPosition.Name = "btnSetDirectionPosition";
-            btnSetDirectionPosition.Size = new Size(92, 25);
+            btnSetDirectionPosition.Size = new Size(140, 32);
             btnSetDirectionPosition.TabIndex = 1;
             btnSetDirectionPosition.Text = "表示位置指定";
             btnSetDirectionPosition.UseVisualStyleBackColor = false;
@@ -1041,9 +1043,9 @@ namespace Site7DrawingEditor
             chkShowDirection.CheckState = CheckState.Checked;
             chkShowDirection.Font = new Font("Yu Gothic UI", 12F);
             chkShowDirection.ForeColor = Color.FromArgb(33, 37, 41);
-            chkShowDirection.Location = new Point(10, 24);
+            chkShowDirection.Location = new Point(12, 26);
             chkShowDirection.Name = "chkShowDirection";
-            chkShowDirection.Size = new Size(50, 19);
+            chkShowDirection.Size = new Size(61, 25);
             chkShowDirection.TabIndex = 0;
             chkShowDirection.Text = "表示";
             chkShowDirection.UseVisualStyleBackColor = true;
@@ -1054,9 +1056,9 @@ namespace Site7DrawingEditor
             btnSetPaperPosition.FlatStyle = FlatStyle.Flat;
             btnSetPaperPosition.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSetPaperPosition.ForeColor = Color.FromArgb(25, 45, 80);
-            btnSetPaperPosition.Location = new Point(192, 19);
+            btnSetPaperPosition.Location = new Point(242, 20);
             btnSetPaperPosition.Name = "btnSetPaperPosition";
-            btnSetPaperPosition.Size = new Size(95, 26);
+            btnSetPaperPosition.Size = new Size(124, 32);
             btnSetPaperPosition.TabIndex = 4;
             btnSetPaperPosition.Text = "表示位置指定";
             btnSetPaperPosition.UseVisualStyleBackColor = false;
@@ -1067,9 +1069,9 @@ namespace Site7DrawingEditor
             btnRecalcIkouDrawing.FlatStyle = FlatStyle.Flat;
             btnRecalcIkouDrawing.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnRecalcIkouDrawing.ForeColor = Color.FromArgb(25, 45, 80);
-            btnRecalcIkouDrawing.Location = new Point(192, 48);
+            btnRecalcIkouDrawing.Location = new Point(242, 56);
             btnRecalcIkouDrawing.Name = "btnRecalcIkouDrawing";
-            btnRecalcIkouDrawing.Size = new Size(95, 26);
+            btnRecalcIkouDrawing.Size = new Size(124, 32);
             btnRecalcIkouDrawing.TabIndex = 5;
             btnRecalcIkouDrawing.Text = "遺構図再計算";
             btnRecalcIkouDrawing.UseVisualStyleBackColor = false;
@@ -1080,9 +1082,9 @@ namespace Site7DrawingEditor
             btnPickCropBounds.FlatStyle = FlatStyle.Flat;
             btnPickCropBounds.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnPickCropBounds.ForeColor = Color.FromArgb(25, 45, 80);
-            btnPickCropBounds.Location = new Point(62, 48);
+            btnPickCropBounds.Location = new Point(66, 56);
             btnPickCropBounds.Name = "btnPickCropBounds";
-            btnPickCropBounds.Size = new Size(124, 26);
+            btnPickCropBounds.Size = new Size(170, 32);
             btnPickCropBounds.TabIndex = 3;
             btnPickCropBounds.Text = "遺構枠指示 (3点)";
             btnPickCropBounds.UseVisualStyleBackColor = false;
@@ -1090,10 +1092,11 @@ namespace Site7DrawingEditor
             // cmbFeatureSelect
             // 
             cmbFeatureSelect.BackColor = Color.FromArgb(255, 255, 191);
+            cmbFeatureSelect.Font = new Font("Yu Gothic UI", 12F);
             cmbFeatureSelect.ForeColor = Color.Black;
-            cmbFeatureSelect.Location = new Point(62, 19);
+            cmbFeatureSelect.Location = new Point(66, 21);
             cmbFeatureSelect.Name = "cmbFeatureSelect";
-            cmbFeatureSelect.Size = new Size(124, 23);
+            cmbFeatureSelect.Size = new Size(170, 29);
             cmbFeatureSelect.TabIndex = 1;
             // 
             // lblTargetIkou
@@ -1101,9 +1104,9 @@ namespace Site7DrawingEditor
             lblTargetIkou.AutoSize = true;
             lblTargetIkou.Font = new Font("Yu Gothic UI", 12F);
             lblTargetIkou.ForeColor = Color.FromArgb(33, 37, 41);
-            lblTargetIkou.Location = new Point(10, 22);
+            lblTargetIkou.Location = new Point(8, 24);
             lblTargetIkou.Name = "lblTargetIkou";
-            lblTargetIkou.Size = new Size(43, 15);
+            lblTargetIkou.Size = new Size(58, 21);
             lblTargetIkou.TabIndex = 0;
             lblTargetIkou.Text = "遺構名";
             // 
@@ -1121,7 +1124,7 @@ namespace Site7DrawingEditor
             grpDrawingProps.ForeColor = Color.FromArgb(25, 55, 105);
             grpDrawingProps.Location = new Point(3, 3);
             grpDrawingProps.Name = "grpDrawingProps";
-            grpDrawingProps.Size = new Size(302, 80);
+            grpDrawingProps.Size = new Size(374, 95);
             grpDrawingProps.TabIndex = 0;
             grpDrawingProps.TabStop = false;
             grpDrawingProps.Text = "図面";
@@ -1130,10 +1133,11 @@ namespace Site7DrawingEditor
             // 
             cmbScale.BackColor = Color.White;
             cmbScale.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbScale.Font = new Font("Yu Gothic UI", 12F);
             cmbScale.ForeColor = Color.FromArgb(33, 37, 41);
-            cmbScale.Location = new Point(188, 19);
+            cmbScale.Location = new Point(248, 21);
             cmbScale.Name = "cmbScale";
-            cmbScale.Size = new Size(55, 23);
+            cmbScale.Size = new Size(75, 29);
             cmbScale.TabIndex = 5;
             // 
             // lblScale
@@ -1141,9 +1145,9 @@ namespace Site7DrawingEditor
             lblScale.AutoSize = true;
             lblScale.Font = new Font("Yu Gothic UI", 12F);
             lblScale.ForeColor = Color.FromArgb(33, 37, 41);
-            lblScale.Location = new Point(141, 22);
+            lblScale.Location = new Point(180, 24);
             lblScale.Name = "lblScale";
-            lblScale.Size = new Size(45, 15);
+            lblScale.Size = new Size(65, 21);
             lblScale.TabIndex = 4;
             lblScale.Text = "縮尺 1/";
             // 
@@ -1151,10 +1155,11 @@ namespace Site7DrawingEditor
             // 
             cmbPaperSize.BackColor = Color.White;
             cmbPaperSize.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbPaperSize.Font = new Font("Yu Gothic UI", 12F);
             cmbPaperSize.ForeColor = Color.FromArgb(33, 37, 41);
-            cmbPaperSize.Location = new Point(55, 47);
+            cmbPaperSize.Location = new Point(66, 56);
             cmbPaperSize.Name = "cmbPaperSize";
-            cmbPaperSize.Size = new Size(129, 23);
+            cmbPaperSize.Size = new Size(165, 29);
             cmbPaperSize.TabIndex = 3;
             // 
             // lblPaperSize
@@ -1162,19 +1167,20 @@ namespace Site7DrawingEditor
             lblPaperSize.AutoSize = true;
             lblPaperSize.Font = new Font("Yu Gothic UI", 12F);
             lblPaperSize.ForeColor = Color.FromArgb(33, 37, 41);
-            lblPaperSize.Location = new Point(20, 50);
+            lblPaperSize.Location = new Point(8, 59);
             lblPaperSize.Name = "lblPaperSize";
-            lblPaperSize.Size = new Size(31, 15);
+            lblPaperSize.Size = new Size(42, 21);
             lblPaperSize.TabIndex = 2;
             lblPaperSize.Text = "用紙";
             // 
             // txtDrawingName
             // 
             txtDrawingName.BackColor = Color.FromArgb(255, 255, 191);
+            txtDrawingName.Font = new Font("Yu Gothic UI", 12F);
             txtDrawingName.ForeColor = Color.Black;
-            txtDrawingName.Location = new Point(55, 19);
+            txtDrawingName.Location = new Point(66, 21);
             txtDrawingName.Name = "txtDrawingName";
-            txtDrawingName.Size = new Size(80, 23);
+            txtDrawingName.Size = new Size(105, 29);
             txtDrawingName.TabIndex = 1;
             // 
             // lblDrawingName
@@ -1182,9 +1188,9 @@ namespace Site7DrawingEditor
             lblDrawingName.AutoSize = true;
             lblDrawingName.Font = new Font("Yu Gothic UI", 12F);
             lblDrawingName.ForeColor = Color.FromArgb(33, 37, 41);
-            lblDrawingName.Location = new Point(8, 22);
+            lblDrawingName.Location = new Point(8, 24);
             lblDrawingName.Name = "lblDrawingName";
-            lblDrawingName.Size = new Size(43, 15);
+            lblDrawingName.Size = new Size(58, 21);
             lblDrawingName.TabIndex = 0;
             lblDrawingName.Text = "図面名";
             // 
@@ -1239,9 +1245,9 @@ namespace Site7DrawingEditor
             btnDeleteDrawing.FlatStyle = FlatStyle.Flat;
             btnDeleteDrawing.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeleteDrawing.ForeColor = Color.White;
-            btnDeleteDrawing.Location = new Point(8, 320);
+            btnDeleteDrawing.Location = new Point(6, 318);
             btnDeleteDrawing.Name = "btnDeleteDrawing";
-            btnDeleteDrawing.Size = new Size(54, 26);
+            btnDeleteDrawing.Size = new Size(56, 30);
             btnDeleteDrawing.TabIndex = 1;
             btnDeleteDrawing.Text = "削除";
             btnDeleteDrawing.UseVisualStyleBackColor = false;
@@ -1252,9 +1258,9 @@ namespace Site7DrawingEditor
             btnUpdateDrawingProps.FlatStyle = FlatStyle.Flat;
             btnUpdateDrawingProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdateDrawingProps.ForeColor = Color.White;
-            btnUpdateDrawingProps.Location = new Point(66, 320);
+            btnUpdateDrawingProps.Location = new Point(66, 318);
             btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
-            btnUpdateDrawingProps.Size = new Size(54, 26);
+            btnUpdateDrawingProps.Size = new Size(56, 30);
             btnUpdateDrawingProps.TabIndex = 2;
             btnUpdateDrawingProps.Text = "更新";
             btnUpdateDrawingProps.UseVisualStyleBackColor = false;
@@ -1265,9 +1271,9 @@ namespace Site7DrawingEditor
             btnAddDrawing.FlatStyle = FlatStyle.Flat;
             btnAddDrawing.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddDrawing.ForeColor = Color.White;
-            btnAddDrawing.Location = new Point(124, 320);
+            btnAddDrawing.Location = new Point(126, 318);
             btnAddDrawing.Name = "btnAddDrawing";
-            btnAddDrawing.Size = new Size(54, 26);
+            btnAddDrawing.Size = new Size(56, 30);
             btnAddDrawing.TabIndex = 3;
             btnAddDrawing.Text = "追加";
             btnAddDrawing.UseVisualStyleBackColor = false;
@@ -1305,9 +1311,9 @@ namespace Site7DrawingEditor
             btnDeleteDrawingIkou.FlatStyle = FlatStyle.Flat;
             btnDeleteDrawingIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeleteDrawingIkou.ForeColor = Color.White;
-            btnDeleteDrawingIkou.Location = new Point(8, 320);
+            btnDeleteDrawingIkou.Location = new Point(6, 318);
             btnDeleteDrawingIkou.Name = "btnDeleteDrawingIkou";
-            btnDeleteDrawingIkou.Size = new Size(54, 26);
+            btnDeleteDrawingIkou.Size = new Size(56, 30);
             btnDeleteDrawingIkou.TabIndex = 1;
             btnDeleteDrawingIkou.Text = "削除";
             btnDeleteDrawingIkou.UseVisualStyleBackColor = false;
@@ -1318,9 +1324,9 @@ namespace Site7DrawingEditor
             btnUpdateIkouProps.FlatStyle = FlatStyle.Flat;
             btnUpdateIkouProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdateIkouProps.ForeColor = Color.White;
-            btnUpdateIkouProps.Location = new Point(66, 320);
+            btnUpdateIkouProps.Location = new Point(66, 318);
             btnUpdateIkouProps.Name = "btnUpdateIkouProps";
-            btnUpdateIkouProps.Size = new Size(54, 26);
+            btnUpdateIkouProps.Size = new Size(56, 30);
             btnUpdateIkouProps.TabIndex = 2;
             btnUpdateIkouProps.Text = "更新";
             btnUpdateIkouProps.UseVisualStyleBackColor = false;
@@ -1331,9 +1337,9 @@ namespace Site7DrawingEditor
             btnAddDrawingIkou.FlatStyle = FlatStyle.Flat;
             btnAddDrawingIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddDrawingIkou.ForeColor = Color.White;
-            btnAddDrawingIkou.Location = new Point(124, 320);
+            btnAddDrawingIkou.Location = new Point(126, 318);
             btnAddDrawingIkou.Name = "btnAddDrawingIkou";
-            btnAddDrawingIkou.Size = new Size(54, 26);
+            btnAddDrawingIkou.Size = new Size(56, 30);
             btnAddDrawingIkou.TabIndex = 3;
             btnAddDrawingIkou.Text = "追加";
             btnAddDrawingIkou.UseVisualStyleBackColor = false;
@@ -1371,9 +1377,9 @@ namespace Site7DrawingEditor
             btnDeleteDanmen.FlatStyle = FlatStyle.Flat;
             btnDeleteDanmen.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeleteDanmen.ForeColor = Color.White;
-            btnDeleteDanmen.Location = new Point(8, 320);
+            btnDeleteDanmen.Location = new Point(6, 318);
             btnDeleteDanmen.Name = "btnDeleteDanmen";
-            btnDeleteDanmen.Size = new Size(54, 26);
+            btnDeleteDanmen.Size = new Size(56, 30);
             btnDeleteDanmen.TabIndex = 1;
             btnDeleteDanmen.Text = "削除";
             btnDeleteDanmen.UseVisualStyleBackColor = false;
@@ -1384,9 +1390,9 @@ namespace Site7DrawingEditor
             btnUpdateDanmenName.FlatStyle = FlatStyle.Flat;
             btnUpdateDanmenName.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdateDanmenName.ForeColor = Color.White;
-            btnUpdateDanmenName.Location = new Point(66, 320);
+            btnUpdateDanmenName.Location = new Point(66, 318);
             btnUpdateDanmenName.Name = "btnUpdateDanmenName";
-            btnUpdateDanmenName.Size = new Size(54, 26);
+            btnUpdateDanmenName.Size = new Size(56, 30);
             btnUpdateDanmenName.TabIndex = 2;
             btnUpdateDanmenName.Text = "更新";
             btnUpdateDanmenName.UseVisualStyleBackColor = false;
@@ -1397,9 +1403,9 @@ namespace Site7DrawingEditor
             btnAddDanmen.FlatStyle = FlatStyle.Flat;
             btnAddDanmen.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddDanmen.ForeColor = Color.White;
-            btnAddDanmen.Location = new Point(124, 320);
+            btnAddDanmen.Location = new Point(126, 318);
             btnAddDanmen.Name = "btnAddDanmen";
-            btnAddDanmen.Size = new Size(54, 26);
+            btnAddDanmen.Size = new Size(56, 30);
             btnAddDanmen.TabIndex = 3;
             btnAddDanmen.Text = "追加";
             btnAddDanmen.UseVisualStyleBackColor = false;

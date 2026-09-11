@@ -250,6 +250,9 @@ namespace Site7DrawingEditor
             dgv.GridColor = Color.FromArgb(215, 220, 228);
             dgv.RowHeadersVisible = false;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+            dgv.ColumnHeadersHeight = 34;
+            dgv.RowTemplate.Height = 28;
 
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 235, 245);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(25, 45, 80);
@@ -265,7 +268,7 @@ namespace Site7DrawingEditor
             {
                 DataPropertyName = idPropName,
                 HeaderText = idHeaderText,
-                Width = 45,
+                Width = 50,
                 ReadOnly = true,
                 DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
