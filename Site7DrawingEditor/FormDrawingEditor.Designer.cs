@@ -724,10 +724,10 @@ namespace Site7DrawingEditor
             // 
             // btnEnvSettings
             // 
-            btnEnvSettings.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            btnEnvSettings.Location = new Point(90, 4);
+            btnEnvSettings.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            btnEnvSettings.Location = new Point(120, 3);
             btnEnvSettings.Name = "btnEnvSettings";
-            btnEnvSettings.Size = new Size(88, 26);
+            btnEnvSettings.Size = new Size(125, 32);
             btnEnvSettings.TabIndex = 1;
             btnEnvSettings.Text = "遺構図面設定";
             btnEnvSettings.UseVisualStyleBackColor = true;
@@ -788,26 +788,27 @@ namespace Site7DrawingEditor
             panelTopRightHeader.Dock = DockStyle.Top;
             panelTopRightHeader.Location = new Point(0, 0);
             panelTopRightHeader.Name = "panelTopRightHeader";
-            panelTopRightHeader.Size = new Size(691, 35);
+            panelTopRightHeader.Size = new Size(691, 38);
             panelTopRightHeader.TabIndex = 0;
             // 
             // lblPaperInfoBanner
             // 
-            lblPaperInfoBanner.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            lblPaperInfoBanner.ForeColor = Color.FromArgb(255, 191, 0);
-            lblPaperInfoBanner.Location = new Point(500, 8);
+            lblPaperInfoBanner.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblPaperInfoBanner.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblPaperInfoBanner.ForeColor = Color.FromArgb(25, 45, 80);
+            lblPaperInfoBanner.Location = new Point(440, 7);
             lblPaperInfoBanner.Name = "lblPaperInfoBanner";
-            lblPaperInfoBanner.Size = new Size(225, 20);
+            lblPaperInfoBanner.Size = new Size(245, 24);
             lblPaperInfoBanner.TabIndex = 5;
             lblPaperInfoBanner.Text = "A3 (420×297mm) | 1/10";
             lblPaperInfoBanner.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnPrintPaper
             // 
-            btnPrintPaper.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            btnPrintPaper.Location = new Point(398, 4);
+            btnPrintPaper.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            btnPrintPaper.Location = new Point(502, 3);
             btnPrintPaper.Name = "btnPrintPaper";
-            btnPrintPaper.Size = new Size(75, 26);
+            btnPrintPaper.Size = new Size(105, 32);
             btnPrintPaper.TabIndex = 4;
             btnPrintPaper.Text = "🖨 印刷...";
             btnPrintPaper.UseVisualStyleBackColor = true;
@@ -817,21 +818,21 @@ namespace Site7DrawingEditor
             chkAutoZoomPaperIkou.AutoSize = true;
             chkAutoZoomPaperIkou.Checked = true;
             chkAutoZoomPaperIkou.CheckState = CheckState.Checked;
-            chkAutoZoomPaperIkou.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            chkAutoZoomPaperIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkAutoZoomPaperIkou.ForeColor = Color.FromArgb(30, 40, 60);
-            chkAutoZoomPaperIkou.Location = new Point(266, 8);
+            chkAutoZoomPaperIkou.Location = new Point(355, 6);
             chkAutoZoomPaperIkou.Name = "chkAutoZoomPaperIkou";
-            chkAutoZoomPaperIkou.Size = new Size(107, 19);
+            chkAutoZoomPaperIkou.Size = new Size(140, 25);
             chkAutoZoomPaperIkou.TabIndex = 3;
-            chkAutoZoomPaperIkou.Text = "選択遺構を拡大";
+            chkAutoZoomPaperIkou.Text = "選択遺構拡大";
             chkAutoZoomPaperIkou.UseVisualStyleBackColor = true;
             // 
             // btnResetPaperZoom
             // 
-            btnResetPaperZoom.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            btnResetPaperZoom.Location = new Point(184, 4);
+            btnResetPaperZoom.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            btnResetPaperZoom.Location = new Point(252, 3);
             btnResetPaperZoom.Name = "btnResetPaperZoom";
-            btnResetPaperZoom.Size = new Size(75, 26);
+            btnResetPaperZoom.Size = new Size(95, 32);
             btnResetPaperZoom.TabIndex = 2;
             btnResetPaperZoom.Text = "全図表示";
             btnResetPaperZoom.UseVisualStyleBackColor = true;
@@ -839,11 +840,11 @@ namespace Site7DrawingEditor
             // lblPaperSheetTitle
             // 
             lblPaperSheetTitle.AutoSize = true;
-            lblPaperSheetTitle.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblPaperSheetTitle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblPaperSheetTitle.ForeColor = Color.FromArgb(25, 45, 80);
-            lblPaperSheetTitle.Location = new Point(8, 8);
+            lblPaperSheetTitle.Location = new Point(6, 7);
             lblPaperSheetTitle.Name = "lblPaperSheetTitle";
-            lblPaperSheetTitle.Size = new Size(83, 17);
+            lblPaperSheetTitle.Size = new Size(105, 21);
             lblPaperSheetTitle.TabIndex = 0;
             lblPaperSheetTitle.Text = "📄 遺構図面";
             // 
@@ -911,9 +912,9 @@ namespace Site7DrawingEditor
             grpFeatureDetailPreview.Controls.Add(picFeatureDetailCanvas);
             grpFeatureDetailPreview.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpFeatureDetailPreview.ForeColor = Color.FromArgb(25, 55, 105);
-            grpFeatureDetailPreview.Location = new Point(916, 0);
+            grpFeatureDetailPreview.Location = new Point(958, 0);
             grpFeatureDetailPreview.Name = "grpFeatureDetailPreview";
-            grpFeatureDetailPreview.Size = new Size(474, 361);
+            grpFeatureDetailPreview.Size = new Size(432, 361);
             grpFeatureDetailPreview.TabIndex = 2;
             grpFeatureDetailPreview.TabStop = false;
             grpFeatureDetailPreview.Text = "選択遺構 詳細プレビュー";
@@ -922,9 +923,9 @@ namespace Site7DrawingEditor
             // 
             picFeatureDetailCanvas.BackColor = Color.FromArgb(250, 250, 250);
             picFeatureDetailCanvas.Dock = DockStyle.Fill;
-            picFeatureDetailCanvas.Location = new Point(3, 19);
+            picFeatureDetailCanvas.Location = new Point(3, 25);
             picFeatureDetailCanvas.Name = "picFeatureDetailCanvas";
-            picFeatureDetailCanvas.Size = new Size(468, 339);
+            picFeatureDetailCanvas.Size = new Size(426, 333);
             picFeatureDetailCanvas.TabIndex = 0;
             picFeatureDetailCanvas.TabStop = false;
             // 
@@ -1147,7 +1148,7 @@ namespace Site7DrawingEditor
             lblScale.ForeColor = Color.FromArgb(33, 37, 41);
             lblScale.Location = new Point(180, 24);
             lblScale.Name = "lblScale";
-            lblScale.Size = new Size(65, 21);
+            lblScale.Size = new Size(61, 21);
             lblScale.TabIndex = 4;
             lblScale.Text = "縮尺 1/";
             // 
@@ -1234,7 +1235,7 @@ namespace Site7DrawingEditor
             dgvDrawings.AllowUserToAddRows = false;
             dgvDrawings.AllowUserToDeleteRows = false;
             dgvDrawings.Dock = DockStyle.Top;
-            dgvDrawings.Location = new Point(3, 19);
+            dgvDrawings.Location = new Point(3, 25);
             dgvDrawings.Name = "dgvDrawings";
             dgvDrawings.Size = new Size(186, 290);
             dgvDrawings.TabIndex = 0;
@@ -1300,7 +1301,7 @@ namespace Site7DrawingEditor
             dgvDrawingIkous.AllowUserToAddRows = false;
             dgvDrawingIkous.AllowUserToDeleteRows = false;
             dgvDrawingIkous.Dock = DockStyle.Top;
-            dgvDrawingIkous.Location = new Point(3, 19);
+            dgvDrawingIkous.Location = new Point(3, 25);
             dgvDrawingIkous.Name = "dgvDrawingIkous";
             dgvDrawingIkous.Size = new Size(181, 290);
             dgvDrawingIkous.TabIndex = 0;
@@ -1366,7 +1367,7 @@ namespace Site7DrawingEditor
             dgvDanmen.AllowUserToAddRows = false;
             dgvDanmen.AllowUserToDeleteRows = false;
             dgvDanmen.Dock = DockStyle.Top;
-            dgvDanmen.Location = new Point(3, 19);
+            dgvDanmen.Location = new Point(3, 25);
             dgvDanmen.Name = "dgvDanmen";
             dgvDanmen.Size = new Size(182, 290);
             dgvDanmen.TabIndex = 0;
