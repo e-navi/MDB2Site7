@@ -883,8 +883,8 @@ namespace Site7DrawingEditor
             // 
             // panelTopRight
             // 
-            panelTopRight.Controls.Add(panelTopRightHeader);
             panelTopRight.Controls.Add(picPaperCanvas);
+            panelTopRight.Controls.Add(panelTopRightHeader);
             panelTopRight.Dock = DockStyle.Fill;
             panelTopRight.Location = new Point(0, 0);
             panelTopRight.Name = "panelTopRight";
@@ -1431,8 +1431,8 @@ namespace Site7DrawingEditor
             // 
             // panelMiddle
             // 
-            panelMiddle.Controls.Add(panelHcLeftSidebar);
             panelMiddle.Controls.Add(panelRight);
+            panelMiddle.Controls.Add(panelHcLeftSidebar);
             panelMiddle.Dock = DockStyle.Fill;
             panelMiddle.Location = new Point(0, 60);
             panelMiddle.Name = "panelMiddle";
@@ -1441,8 +1441,8 @@ namespace Site7DrawingEditor
             // 
             // panelRight
             // 
-            panelRight.Controls.Add(panelBottomFixedGroup);
             panelRight.Controls.Add(splitContainerTopHorizontal);
+            panelRight.Controls.Add(panelBottomFixedGroup);
             panelRight.Dock = DockStyle.Fill;
             panelRight.Location = new Point(130, 0);
             panelRight.Name = "panelRight";
