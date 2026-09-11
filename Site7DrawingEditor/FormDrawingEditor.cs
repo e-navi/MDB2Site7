@@ -469,12 +469,18 @@ namespace Site7DrawingEditor
             this.picCropCanvas.Resize += (s, e) => picCropCanvas.Invalidate();
             this.picPaperCanvas.Resize += (s, e) => picPaperCanvas.Invalidate();
             this.picFeatureDetailCanvas.Resize += (s, e) => picFeatureDetailCanvas.Invalidate();
-            this.splitContainerTopHorizontal.SplitterMoved += (s, e) => { PerformTopLeftLayout(); PerformTopRightLayout(); };
+            this.splitContainerTopHorizontal.SplitterMoved += (s, e) =>
+            {
+                picCropCanvas.Invalidate();
+                picPaperCanvas.Invalidate();
+            };
 
-            this.panelTopLeft.Resize += (s, e) => PerformTopLeftLayout();
-            this.panelTopRight.Resize += (s, e) => PerformTopRightLayout();
-
-            this.Shown += (s, e) => { PerformTopLeftLayout(); PerformTopRightLayout(); picFeatureDetailCanvas.Invalidate(); };
+            this.Shown += (s, e) =>
+            {
+                picCropCanvas.Invalidate();
+                picPaperCanvas.Invalidate();
+                picFeatureDetailCanvas.Invalidate();
+            };
 
             this.Resize += (s, e) =>
             {
@@ -487,33 +493,9 @@ namespace Site7DrawingEditor
             };
         }
 
-        private void PerformTopLeftLayout()
-        {
-            if (this.panelTopLeft == null || this.picCropCanvas == null || this.panelHcLeftSidebar == null) return;
-            int sidebarW = 130;
-            this.panelHcLeftSidebar.Bounds = new System.Drawing.Rectangle(0, 0, sidebarW, this.panelTopLeft.Height);
-            this.picCropCanvas.Bounds = new System.Drawing.Rectangle(sidebarW, 0, Math.Max(10, this.panelTopLeft.Width - sidebarW), this.panelTopLeft.Height);
-            this.panelHcLeftSidebar.BringToFront();
-            this.picCropCanvas.Invalidate();
-        }
-
-        private void PerformTopRightLayout()
-        {
-            if (this.panelTopRight == null || this.picPaperCanvas == null) return;
-            if (this.panelTopRightHeader != null)
-            {
-                this.panelTopRightHeader.Bounds = new System.Drawing.Rectangle(0, 0, this.panelTopRight.Width, 35);
-                this.panelTopRightHeader.BringToFront();
-            }
-            this.picPaperCanvas.Bounds = new System.Drawing.Rectangle(0, 35, this.panelTopRight.Width, Math.Max(10, this.panelTopRight.Height - 35));
-            this.picPaperCanvas.Invalidate();
-        }
-
         private void FormDrawingEditor_Load(object? sender, EventArgs e)
         {
             InitComboBoxes();
-            PerformTopLeftLayout();
-            PerformTopRightLayout();
 
             string? targetDb = !string.IsNullOrEmpty(_initialDbPath) ? _initialDbPath : Def.GetIniStr("Site7DbEditor", "LastOpenedDb");
             string? resolvedDb = ResolveDbPath(targetDb);

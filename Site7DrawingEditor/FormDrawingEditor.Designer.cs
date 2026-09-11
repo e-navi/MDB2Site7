@@ -118,6 +118,8 @@ namespace Site7DrawingEditor
             statusStripBar = new StatusStrip();
             lblStatusCoords = new ToolStripStatusLabel();
             lblStatusMessage = new ToolStripStatusLabel();
+            panelMiddle = new Panel();
+            panelRight = new Panel();
             panelHeader.SuspendLayout();
             panelHcLeftSidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picCropCanvas).BeginInit();
@@ -145,6 +147,8 @@ namespace Site7DrawingEditor
             grpDanmenList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDanmen).BeginInit();
             statusStripBar.SuspendLayout();
+            panelMiddle.SuspendLayout();
+            panelRight.SuspendLayout();
             SuspendLayout();
             // 
             // panelHeader
@@ -256,12 +260,11 @@ namespace Site7DrawingEditor
             chkAutoZoomIkou.Name = "chkAutoZoomIkou";
             chkAutoZoomIkou.Size = new Size(125, 25);
             chkAutoZoomIkou.TabIndex = 1;
-            chkAutoZoomIkou.Text = "選択遺構を拡大";
+            chkAutoZoomIkou.Text = "選択遺構拡大";
             chkAutoZoomIkou.UseVisualStyleBackColor = true;
             // 
             // panelHcLeftSidebar
             // 
-            panelHcLeftSidebar.AutoScroll = true;
             panelHcLeftSidebar.BackColor = Color.FromArgb(240, 242, 245);
             panelHcLeftSidebar.Controls.Add(btnResetCropZoom);
             panelHcLeftSidebar.Controls.Add(chkAutoZoomIkou);
@@ -297,9 +300,10 @@ namespace Site7DrawingEditor
             panelHcLeftSidebar.Controls.Add(chkShowDrawingFrame);
             panelHcLeftSidebar.Controls.Add(chkColorByIkouFull);
             panelHcLeftSidebar.Controls.Add(chkShowWhiteBackground);
+            panelHcLeftSidebar.Dock = DockStyle.Left;
             panelHcLeftSidebar.Location = new Point(0, 0);
             panelHcLeftSidebar.Name = "panelHcLeftSidebar";
-            panelHcLeftSidebar.Size = new Size(130, 505);
+            panelHcLeftSidebar.Size = new Size(130, 878);
             panelHcLeftSidebar.TabIndex = 1;
             // 
             // btnDrawingFrame
@@ -321,7 +325,7 @@ namespace Site7DrawingEditor
             lblIkouLayerGrpHeader.ForeColor = Color.Red;
             lblIkouLayerGrpHeader.Location = new Point(5, 98);
             lblIkouLayerGrpHeader.Name = "lblIkouLayerGrpHeader";
-            lblIkouLayerGrpHeader.Size = new Size(76, 21);
+            lblIkouLayerGrpHeader.Size = new Size(79, 21);
             lblIkouLayerGrpHeader.TabIndex = 3;
             lblIkouLayerGrpHeader.Text = "遺構レイヤ";
             // 
@@ -764,9 +768,10 @@ namespace Site7DrawingEditor
             // 
             // picCropCanvas
             // 
-            picCropCanvas.Location = new Point(130, 35);
+            picCropCanvas.Dock = DockStyle.Fill;
+            picCropCanvas.Location = new Point(0, 0);
             picCropCanvas.Name = "picCropCanvas";
-            picCropCanvas.Size = new Size(610, 415);
+            picCropCanvas.Size = new Size(695, 517);
             picCropCanvas.TabIndex = 1;
             picCropCanvas.TabStop = false;
             // 
@@ -782,7 +787,7 @@ namespace Site7DrawingEditor
             panelTopRightHeader.Dock = DockStyle.Top;
             panelTopRightHeader.Location = new Point(0, 0);
             panelTopRightHeader.Name = "panelTopRightHeader";
-            panelTopRightHeader.Size = new Size(756, 35);
+            panelTopRightHeader.Size = new Size(691, 35);
             panelTopRightHeader.TabIndex = 0;
             // 
             // lblPaperInfoBanner
@@ -843,16 +848,17 @@ namespace Site7DrawingEditor
             // 
             // picPaperCanvas
             // 
+            picPaperCanvas.Dock = DockStyle.Fill;
             picPaperCanvas.Location = new Point(0, 35);
             picPaperCanvas.Name = "picPaperCanvas";
-            picPaperCanvas.Size = new Size(736, 415);
+            picPaperCanvas.Size = new Size(691, 482);
             picPaperCanvas.TabIndex = 1;
             picPaperCanvas.TabStop = false;
             // 
             // splitContainerTopHorizontal
             // 
             splitContainerTopHorizontal.Dock = DockStyle.Fill;
-            splitContainerTopHorizontal.Location = new Point(0, 60);
+            splitContainerTopHorizontal.Location = new Point(0, 0);
             splitContainerTopHorizontal.Name = "splitContainerTopHorizontal";
             // 
             // splitContainerTopHorizontal.Panel1
@@ -862,28 +868,27 @@ namespace Site7DrawingEditor
             // splitContainerTopHorizontal.Panel2
             // 
             splitContainerTopHorizontal.Panel2.Controls.Add(panelTopRight);
-            splitContainerTopHorizontal.Size = new Size(1520, 517);
-            splitContainerTopHorizontal.SplitterDistance = 760;
+            splitContainerTopHorizontal.Size = new Size(1390, 517);
+            splitContainerTopHorizontal.SplitterDistance = 695;
             splitContainerTopHorizontal.TabIndex = 1;
             // 
             // panelTopLeft
             // 
-            panelTopLeft.Controls.Add(panelHcLeftSidebar);
             panelTopLeft.Controls.Add(picCropCanvas);
             panelTopLeft.Dock = DockStyle.Fill;
             panelTopLeft.Location = new Point(0, 0);
             panelTopLeft.Name = "panelTopLeft";
-            panelTopLeft.Size = new Size(760, 517);
+            panelTopLeft.Size = new Size(695, 517);
             panelTopLeft.TabIndex = 0;
             // 
             // panelTopRight
             // 
-            panelTopRight.Controls.Add(picPaperCanvas);
             panelTopRight.Controls.Add(panelTopRightHeader);
+            panelTopRight.Controls.Add(picPaperCanvas);
             panelTopRight.Dock = DockStyle.Fill;
             panelTopRight.Location = new Point(0, 0);
             panelTopRight.Name = "panelTopRight";
-            panelTopRight.Size = new Size(756, 517);
+            panelTopRight.Size = new Size(691, 517);
             panelTopRight.TabIndex = 0;
             // 
             // panelBottomFixedGroup
@@ -893,9 +898,9 @@ namespace Site7DrawingEditor
             panelBottomFixedGroup.Controls.Add(panelControls);
             panelBottomFixedGroup.Controls.Add(panelBottomGrids);
             panelBottomFixedGroup.Dock = DockStyle.Bottom;
-            panelBottomFixedGroup.Location = new Point(0, 577);
+            panelBottomFixedGroup.Location = new Point(0, 517);
             panelBottomFixedGroup.Name = "panelBottomFixedGroup";
-            panelBottomFixedGroup.Size = new Size(1520, 361);
+            panelBottomFixedGroup.Size = new Size(1390, 361);
             panelBottomFixedGroup.TabIndex = 3;
             // 
             // grpFeatureDetailPreview
@@ -907,7 +912,7 @@ namespace Site7DrawingEditor
             grpFeatureDetailPreview.ForeColor = Color.FromArgb(25, 55, 105);
             grpFeatureDetailPreview.Location = new Point(916, 0);
             grpFeatureDetailPreview.Name = "grpFeatureDetailPreview";
-            grpFeatureDetailPreview.Size = new Size(604, 361);
+            grpFeatureDetailPreview.Size = new Size(474, 361);
             grpFeatureDetailPreview.TabIndex = 2;
             grpFeatureDetailPreview.TabStop = false;
             grpFeatureDetailPreview.Text = "選択遺構 詳細プレビュー";
@@ -918,7 +923,7 @@ namespace Site7DrawingEditor
             picFeatureDetailCanvas.Dock = DockStyle.Fill;
             picFeatureDetailCanvas.Location = new Point(3, 19);
             picFeatureDetailCanvas.Name = "picFeatureDetailCanvas";
-            picFeatureDetailCanvas.Size = new Size(598, 339);
+            picFeatureDetailCanvas.Size = new Size(468, 339);
             picFeatureDetailCanvas.TabIndex = 0;
             picFeatureDetailCanvas.TabStop = false;
             // 
@@ -1424,14 +1429,33 @@ namespace Site7DrawingEditor
             lblStatusMessage.Text = "準備完了";
             lblStatusMessage.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // panelMiddle
+            // 
+            panelMiddle.Controls.Add(panelHcLeftSidebar);
+            panelMiddle.Controls.Add(panelRight);
+            panelMiddle.Dock = DockStyle.Fill;
+            panelMiddle.Location = new Point(0, 60);
+            panelMiddle.Name = "panelMiddle";
+            panelMiddle.Size = new Size(1520, 878);
+            panelMiddle.TabIndex = 4;
+            // 
+            // panelRight
+            // 
+            panelRight.Controls.Add(panelBottomFixedGroup);
+            panelRight.Controls.Add(splitContainerTopHorizontal);
+            panelRight.Dock = DockStyle.Fill;
+            panelRight.Location = new Point(130, 0);
+            panelRight.Name = "panelRight";
+            panelRight.Size = new Size(1390, 878);
+            panelRight.TabIndex = 2;
+            // 
             // FormDrawingEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 246, 248);
             ClientSize = new Size(1520, 960);
-            Controls.Add(splitContainerTopHorizontal);
-            Controls.Add(panelBottomFixedGroup);
+            Controls.Add(panelMiddle);
             Controls.Add(panelHeader);
             Controls.Add(statusStripBar);
             Font = new Font("Yu Gothic UI", 9F);
@@ -1474,6 +1498,8 @@ namespace Site7DrawingEditor
             ((System.ComponentModel.ISupportInitialize)dgvDanmen).EndInit();
             statusStripBar.ResumeLayout(false);
             statusStripBar.PerformLayout();
+            panelMiddle.ResumeLayout(false);
+            panelRight.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1597,5 +1623,7 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.StatusStrip statusStripBar;
         private System.Windows.Forms.ToolStripStatusLabel lblStatusCoords;
         private System.Windows.Forms.ToolStripStatusLabel lblStatusMessage;
+        private Panel panelMiddle;
+        private Panel panelRight;
     }
 }
