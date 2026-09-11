@@ -908,7 +908,7 @@ namespace Site7DrawingEditor
             grpFeatureDetailPreview.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpFeatureDetailPreview.BackColor = Color.FromArgb(245, 246, 248);
             grpFeatureDetailPreview.Controls.Add(picFeatureDetailCanvas);
-            grpFeatureDetailPreview.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpFeatureDetailPreview.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpFeatureDetailPreview.ForeColor = Color.FromArgb(25, 55, 105);
             grpFeatureDetailPreview.Location = new Point(916, 0);
             grpFeatureDetailPreview.Name = "grpFeatureDetailPreview";
@@ -950,7 +950,7 @@ namespace Site7DrawingEditor
             grpIkouProps.Controls.Add(btnPickCropBounds);
             grpIkouProps.Controls.Add(cmbFeatureSelect);
             grpIkouProps.Controls.Add(lblTargetIkou);
-            grpIkouProps.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpIkouProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpIkouProps.ForeColor = Color.FromArgb(25, 55, 105);
             grpIkouProps.Location = new Point(3, 86);
             grpIkouProps.Name = "grpIkouProps";
@@ -965,7 +965,7 @@ namespace Site7DrawingEditor
             grpDanmenProps.Controls.Add(btnSetDanmenPosition);
             grpDanmenProps.Controls.Add(txtDanmenName);
             grpDanmenProps.Controls.Add(lblDanmenName);
-            grpDanmenProps.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpDanmenProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpDanmenProps.ForeColor = Color.FromArgb(25, 55, 105);
             grpDanmenProps.Location = new Point(10, 168);
             grpDanmenProps.Name = "grpDanmenProps";
@@ -978,7 +978,7 @@ namespace Site7DrawingEditor
             // 
             btnSetDanmenPosition.BackColor = Color.FromArgb(225, 232, 242);
             btnSetDanmenPosition.FlatStyle = FlatStyle.Flat;
-            btnSetDanmenPosition.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnSetDanmenPosition.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSetDanmenPosition.ForeColor = Color.FromArgb(25, 45, 80);
             btnSetDanmenPosition.Location = new Point(150, 19);
             btnSetDanmenPosition.Name = "btnSetDanmenPosition";
@@ -999,7 +999,7 @@ namespace Site7DrawingEditor
             // lblDanmenName
             // 
             lblDanmenName.AutoSize = true;
-            lblDanmenName.Font = new Font("Yu Gothic UI", 9F);
+            lblDanmenName.Font = new Font("Yu Gothic UI", 12F);
             lblDanmenName.ForeColor = Color.FromArgb(33, 37, 41);
             lblDanmenName.Location = new Point(10, 24);
             lblDanmenName.Name = "lblDanmenName";
@@ -1012,7 +1012,7 @@ namespace Site7DrawingEditor
             grpCompassProps.BackColor = Color.FromArgb(245, 246, 248);
             grpCompassProps.Controls.Add(btnSetDirectionPosition);
             grpCompassProps.Controls.Add(chkShowDirection);
-            grpCompassProps.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpCompassProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpCompassProps.ForeColor = Color.FromArgb(25, 55, 105);
             grpCompassProps.Location = new Point(10, 90);
             grpCompassProps.Name = "grpCompassProps";
@@ -1025,7 +1025,7 @@ namespace Site7DrawingEditor
             // 
             btnSetDirectionPosition.BackColor = Color.FromArgb(225, 232, 242);
             btnSetDirectionPosition.FlatStyle = FlatStyle.Flat;
-            btnSetDirectionPosition.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnSetDirectionPosition.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSetDirectionPosition.ForeColor = Color.FromArgb(25, 45, 80);
             btnSetDirectionPosition.Location = new Point(70, 20);
             btnSetDirectionPosition.Name = "btnSetDirectionPosition";
@@ -1039,7 +1039,7 @@ namespace Site7DrawingEditor
             chkShowDirection.AutoSize = true;
             chkShowDirection.Checked = true;
             chkShowDirection.CheckState = CheckState.Checked;
-            chkShowDirection.Font = new Font("Yu Gothic UI", 9F);
+            chkShowDirection.Font = new Font("Yu Gothic UI", 12F);
             chkShowDirection.ForeColor = Color.FromArgb(33, 37, 41);
             chkShowDirection.Location = new Point(10, 24);
             chkShowDirection.Name = "chkShowDirection";
@@ -1052,7 +1052,7 @@ namespace Site7DrawingEditor
             // 
             btnSetPaperPosition.BackColor = Color.FromArgb(225, 232, 242);
             btnSetPaperPosition.FlatStyle = FlatStyle.Flat;
-            btnSetPaperPosition.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnSetPaperPosition.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSetPaperPosition.ForeColor = Color.FromArgb(25, 45, 80);
             btnSetPaperPosition.Location = new Point(192, 19);
             btnSetPaperPosition.Name = "btnSetPaperPosition";
@@ -1065,7 +1065,7 @@ namespace Site7DrawingEditor
             // 
             btnRecalcIkouDrawing.BackColor = Color.FromArgb(225, 232, 242);
             btnRecalcIkouDrawing.FlatStyle = FlatStyle.Flat;
-            btnRecalcIkouDrawing.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnRecalcIkouDrawing.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnRecalcIkouDrawing.ForeColor = Color.FromArgb(25, 45, 80);
             btnRecalcIkouDrawing.Location = new Point(192, 48);
             btnRecalcIkouDrawing.Name = "btnRecalcIkouDrawing";
@@ -1078,7 +1078,7 @@ namespace Site7DrawingEditor
             // 
             btnPickCropBounds.BackColor = Color.FromArgb(225, 232, 242);
             btnPickCropBounds.FlatStyle = FlatStyle.Flat;
-            btnPickCropBounds.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnPickCropBounds.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnPickCropBounds.ForeColor = Color.FromArgb(25, 45, 80);
             btnPickCropBounds.Location = new Point(62, 48);
             btnPickCropBounds.Name = "btnPickCropBounds";
@@ -1099,7 +1099,7 @@ namespace Site7DrawingEditor
             // lblTargetIkou
             // 
             lblTargetIkou.AutoSize = true;
-            lblTargetIkou.Font = new Font("Yu Gothic UI", 9F);
+            lblTargetIkou.Font = new Font("Yu Gothic UI", 12F);
             lblTargetIkou.ForeColor = Color.FromArgb(33, 37, 41);
             lblTargetIkou.Location = new Point(10, 22);
             lblTargetIkou.Name = "lblTargetIkou";
@@ -1117,7 +1117,7 @@ namespace Site7DrawingEditor
             grpDrawingProps.Controls.Add(lblPaperSize);
             grpDrawingProps.Controls.Add(txtDrawingName);
             grpDrawingProps.Controls.Add(lblDrawingName);
-            grpDrawingProps.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpDrawingProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpDrawingProps.ForeColor = Color.FromArgb(25, 55, 105);
             grpDrawingProps.Location = new Point(3, 3);
             grpDrawingProps.Name = "grpDrawingProps";
@@ -1139,7 +1139,7 @@ namespace Site7DrawingEditor
             // lblScale
             // 
             lblScale.AutoSize = true;
-            lblScale.Font = new Font("Yu Gothic UI", 9F);
+            lblScale.Font = new Font("Yu Gothic UI", 12F);
             lblScale.ForeColor = Color.FromArgb(33, 37, 41);
             lblScale.Location = new Point(141, 22);
             lblScale.Name = "lblScale";
@@ -1160,7 +1160,7 @@ namespace Site7DrawingEditor
             // lblPaperSize
             // 
             lblPaperSize.AutoSize = true;
-            lblPaperSize.Font = new Font("Yu Gothic UI", 9F);
+            lblPaperSize.Font = new Font("Yu Gothic UI", 12F);
             lblPaperSize.ForeColor = Color.FromArgb(33, 37, 41);
             lblPaperSize.Location = new Point(20, 50);
             lblPaperSize.Name = "lblPaperSize";
@@ -1180,7 +1180,7 @@ namespace Site7DrawingEditor
             // lblDrawingName
             // 
             lblDrawingName.AutoSize = true;
-            lblDrawingName.Font = new Font("Yu Gothic UI", 9F);
+            lblDrawingName.Font = new Font("Yu Gothic UI", 12F);
             lblDrawingName.ForeColor = Color.FromArgb(33, 37, 41);
             lblDrawingName.Location = new Point(8, 22);
             lblDrawingName.Name = "lblDrawingName";
@@ -1214,7 +1214,7 @@ namespace Site7DrawingEditor
             grpDrawings.Controls.Add(btnUpdateDrawingProps);
             grpDrawings.Controls.Add(btnAddDrawing);
             grpDrawings.Dock = DockStyle.Fill;
-            grpDrawings.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpDrawings.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpDrawings.ForeColor = Color.FromArgb(25, 55, 105);
             grpDrawings.Location = new Point(3, 3);
             grpDrawings.Name = "grpDrawings";
@@ -1237,7 +1237,7 @@ namespace Site7DrawingEditor
             // 
             btnDeleteDrawing.BackColor = Color.FromArgb(195, 55, 55);
             btnDeleteDrawing.FlatStyle = FlatStyle.Flat;
-            btnDeleteDrawing.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDeleteDrawing.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeleteDrawing.ForeColor = Color.White;
             btnDeleteDrawing.Location = new Point(8, 320);
             btnDeleteDrawing.Name = "btnDeleteDrawing";
@@ -1250,7 +1250,7 @@ namespace Site7DrawingEditor
             // 
             btnUpdateDrawingProps.BackColor = Color.FromArgb(38, 145, 75);
             btnUpdateDrawingProps.FlatStyle = FlatStyle.Flat;
-            btnUpdateDrawingProps.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnUpdateDrawingProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdateDrawingProps.ForeColor = Color.White;
             btnUpdateDrawingProps.Location = new Point(66, 320);
             btnUpdateDrawingProps.Name = "btnUpdateDrawingProps";
@@ -1263,7 +1263,7 @@ namespace Site7DrawingEditor
             // 
             btnAddDrawing.BackColor = Color.FromArgb(30, 115, 210);
             btnAddDrawing.FlatStyle = FlatStyle.Flat;
-            btnAddDrawing.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnAddDrawing.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddDrawing.ForeColor = Color.White;
             btnAddDrawing.Location = new Point(124, 320);
             btnAddDrawing.Name = "btnAddDrawing";
@@ -1280,7 +1280,7 @@ namespace Site7DrawingEditor
             grpDrawingIkous.Controls.Add(btnUpdateIkouProps);
             grpDrawingIkous.Controls.Add(btnAddDrawingIkou);
             grpDrawingIkous.Dock = DockStyle.Fill;
-            grpDrawingIkous.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpDrawingIkous.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpDrawingIkous.ForeColor = Color.FromArgb(25, 55, 105);
             grpDrawingIkous.Location = new Point(201, 3);
             grpDrawingIkous.Name = "grpDrawingIkous";
@@ -1303,7 +1303,7 @@ namespace Site7DrawingEditor
             // 
             btnDeleteDrawingIkou.BackColor = Color.FromArgb(195, 55, 55);
             btnDeleteDrawingIkou.FlatStyle = FlatStyle.Flat;
-            btnDeleteDrawingIkou.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDeleteDrawingIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeleteDrawingIkou.ForeColor = Color.White;
             btnDeleteDrawingIkou.Location = new Point(8, 320);
             btnDeleteDrawingIkou.Name = "btnDeleteDrawingIkou";
@@ -1316,7 +1316,7 @@ namespace Site7DrawingEditor
             // 
             btnUpdateIkouProps.BackColor = Color.FromArgb(38, 145, 75);
             btnUpdateIkouProps.FlatStyle = FlatStyle.Flat;
-            btnUpdateIkouProps.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnUpdateIkouProps.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdateIkouProps.ForeColor = Color.White;
             btnUpdateIkouProps.Location = new Point(66, 320);
             btnUpdateIkouProps.Name = "btnUpdateIkouProps";
@@ -1329,7 +1329,7 @@ namespace Site7DrawingEditor
             // 
             btnAddDrawingIkou.BackColor = Color.FromArgb(30, 115, 210);
             btnAddDrawingIkou.FlatStyle = FlatStyle.Flat;
-            btnAddDrawingIkou.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnAddDrawingIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddDrawingIkou.ForeColor = Color.White;
             btnAddDrawingIkou.Location = new Point(124, 320);
             btnAddDrawingIkou.Name = "btnAddDrawingIkou";
@@ -1346,7 +1346,7 @@ namespace Site7DrawingEditor
             grpDanmenList.Controls.Add(btnUpdateDanmenName);
             grpDanmenList.Controls.Add(btnAddDanmen);
             grpDanmenList.Dock = DockStyle.Fill;
-            grpDanmenList.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            grpDanmenList.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpDanmenList.ForeColor = Color.FromArgb(25, 55, 105);
             grpDanmenList.Location = new Point(394, 3);
             grpDanmenList.Name = "grpDanmenList";
@@ -1369,7 +1369,7 @@ namespace Site7DrawingEditor
             // 
             btnDeleteDanmen.BackColor = Color.FromArgb(195, 55, 55);
             btnDeleteDanmen.FlatStyle = FlatStyle.Flat;
-            btnDeleteDanmen.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnDeleteDanmen.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeleteDanmen.ForeColor = Color.White;
             btnDeleteDanmen.Location = new Point(8, 320);
             btnDeleteDanmen.Name = "btnDeleteDanmen";
@@ -1382,7 +1382,7 @@ namespace Site7DrawingEditor
             // 
             btnUpdateDanmenName.BackColor = Color.FromArgb(38, 145, 75);
             btnUpdateDanmenName.FlatStyle = FlatStyle.Flat;
-            btnUpdateDanmenName.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnUpdateDanmenName.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdateDanmenName.ForeColor = Color.White;
             btnUpdateDanmenName.Location = new Point(66, 320);
             btnUpdateDanmenName.Name = "btnUpdateDanmenName";
@@ -1395,7 +1395,7 @@ namespace Site7DrawingEditor
             // 
             btnAddDanmen.BackColor = Color.FromArgb(30, 115, 210);
             btnAddDanmen.FlatStyle = FlatStyle.Flat;
-            btnAddDanmen.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            btnAddDanmen.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddDanmen.ForeColor = Color.White;
             btnAddDanmen.Location = new Point(124, 320);
             btnAddDanmen.Name = "btnAddDanmen";
