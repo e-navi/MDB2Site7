@@ -200,7 +200,7 @@ namespace Site7DbEditor {
             if (colId != null) {
                 colId.DisplayIndex = 0;
                 colId.HeaderText = "ID";
-                colId.Width = 65;
+                colId.Width = 40;
                 colId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             var colName = dgvIkou.Columns["Name"];
@@ -217,15 +217,15 @@ namespace Site7DbEditor {
             if (colLid != null) {
                 colLid.DisplayIndex = 0;
                 colLid.HeaderText = "LID";
-                colLid.Width = 48;
+                colLid.Width = 40;
                 colLid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             var colName = dgvIkouL.Columns["Name"];
             if (colName != null) { colName.DisplayIndex = 1; colName.HeaderText = "線名"; colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
             var colMode = dgvIkouL.Columns["Mode"];
-            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 65; }
+            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 48; }
             var colLayer = dgvIkouL.Columns["Layer"];
-            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 68; }
+            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 50; }
         }
 
         private void ApplyDgvPrecsColumns() {
@@ -233,12 +233,12 @@ namespace Site7DbEditor {
                 col.Visible = (col.Name == "Pid" || col.Name == "X" || col.Name == "Y" || col.Name == "Z");
             }
             var colPid = dgvPrecs.Columns["Pid"];
-            if (colPid != null) { colPid.DisplayIndex = 0; colPid.HeaderText = "PID"; colPid.Width = 48; colPid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; }
+            if (colPid != null) { colPid.DisplayIndex = 0; colPid.HeaderText = "PID"; colPid.Width = 45; colPid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; }
             var colX = dgvPrecs.Columns["X"];
             if (colX != null) {
                 colX.DisplayIndex = 1;
                 colX.HeaderText = "X";
-                colX.Width = 80;
+                colX.Width = 110;
                 colX.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colX.DefaultCellStyle.Format = "0.000";
             }
@@ -246,7 +246,7 @@ namespace Site7DbEditor {
             if (colY != null) {
                 colY.DisplayIndex = 2;
                 colY.HeaderText = "Y";
-                colY.Width = 80;
+                colY.Width = 110;
                 colY.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colY.DefaultCellStyle.Format = "0.000";
             }
@@ -254,7 +254,7 @@ namespace Site7DbEditor {
             if (colZ != null) {
                 colZ.DisplayIndex = 3;
                 colZ.HeaderText = "Z";
-                colZ.Width = 62;
+                colZ.Width = 80;
                 colZ.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colZ.DefaultCellStyle.Format = "0.000";
             }
