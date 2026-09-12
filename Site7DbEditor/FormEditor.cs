@@ -200,7 +200,7 @@ namespace Site7DbEditor {
             if (colId != null) {
                 colId.DisplayIndex = 0;
                 colId.HeaderText = "ID";
-                colId.Width = 55;
+                colId.Width = 65;
                 colId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             var colName = dgvIkou.Columns["Name"];
@@ -217,15 +217,15 @@ namespace Site7DbEditor {
             if (colLid != null) {
                 colLid.DisplayIndex = 0;
                 colLid.HeaderText = "LID";
-                colLid.Width = 42;
+                colLid.Width = 48;
                 colLid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             var colName = dgvIkouL.Columns["Name"];
             if (colName != null) { colName.DisplayIndex = 1; colName.HeaderText = "線名"; colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
             var colMode = dgvIkouL.Columns["Mode"];
-            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 55; }
+            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 65; }
             var colLayer = dgvIkouL.Columns["Layer"];
-            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 60; }
+            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 68; }
         }
 
         private void ApplyDgvPrecsColumns() {
@@ -233,12 +233,12 @@ namespace Site7DbEditor {
                 col.Visible = (col.Name == "Pid" || col.Name == "X" || col.Name == "Y" || col.Name == "Z");
             }
             var colPid = dgvPrecs.Columns["Pid"];
-            if (colPid != null) { colPid.DisplayIndex = 0; colPid.HeaderText = "PID"; colPid.Width = 40; colPid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; }
+            if (colPid != null) { colPid.DisplayIndex = 0; colPid.HeaderText = "PID"; colPid.Width = 48; colPid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; }
             var colX = dgvPrecs.Columns["X"];
             if (colX != null) {
                 colX.DisplayIndex = 1;
                 colX.HeaderText = "X";
-                colX.Width = 92;
+                colX.Width = 80;
                 colX.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colX.DefaultCellStyle.Format = "0.000";
             }
@@ -246,7 +246,7 @@ namespace Site7DbEditor {
             if (colY != null) {
                 colY.DisplayIndex = 2;
                 colY.HeaderText = "Y";
-                colY.Width = 92;
+                colY.Width = 80;
                 colY.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colY.DefaultCellStyle.Format = "0.000";
             }
@@ -254,7 +254,7 @@ namespace Site7DbEditor {
             if (colZ != null) {
                 colZ.DisplayIndex = 3;
                 colZ.HeaderText = "Z";
-                colZ.Width = 70;
+                colZ.Width = 62;
                 colZ.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colZ.DefaultCellStyle.Format = "0.000";
             }
@@ -311,10 +311,13 @@ namespace Site7DbEditor {
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.MultiSelect = false;
 
+            dgv.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular);
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 235, 245);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(25, 45, 80);
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
+            dgv.ColumnHeadersHeight = 34;
+            dgv.RowTemplate.Height = 28;
 
             dgv.DefaultCellStyle.BackColor = Color.White;
             dgv.DefaultCellStyle.ForeColor = Color.FromArgb(20, 20, 20);
