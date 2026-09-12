@@ -189,7 +189,54 @@ namespace Site7DbEditor {
             dgvIbutu.DataBindingComplete += (s, e) => ApplyDgvIbutuColumns();
             dgvKikai.DataBindingComplete += (s, e) => ApplyDgvKikaiColumns();
 
+            if (tabControlData != null) {
+                tabControlData.DrawMode = TabDrawMode.OwnerDrawFixed;
+                tabControlData.SizeMode = TabSizeMode.Fixed;
+                tabControlData.ItemSize = new Size(30, 72);
+                tabControlData.DrawItem += tabControlData_DrawItem;
+            }
+
             ApplyBottomPanelTheme();
+        }
+
+        private void tabControlData_DrawItem(object? sender, DrawItemEventArgs e) {
+            var tabCtrl = sender as TabControl;
+            if (tabCtrl == null || e.Index < 0 || e.Index >= tabCtrl.TabPages.Count) return;
+
+            var tabPage = tabCtrl.TabPages[e.Index];
+            bool isSelected = (e.Index == tabCtrl.SelectedIndex);
+            Rectangle rect = e.Bounds;
+
+            // 背景色（選択中: 鮮やかなブルー、非選択: 薄いグレー）
+            Color bgColor = isSelected ? Color.FromArgb(0, 120, 215) : Color.FromArgb(233, 236, 243);
+            Color textColor = isSelected ? Color.White : Color.FromArgb(50, 55, 65);
+
+            using (var brush = new SolidBrush(bgColor)) {
+                e.Graphics.FillRectangle(brush, rect);
+            }
+
+            // 枠線
+            if (isSelected) {
+                using (var accentPen = new Pen(Color.FromArgb(0, 90, 180), 2)) {
+                    e.Graphics.DrawRectangle(accentPen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
+                }
+            } else {
+                using (var borderPen = new Pen(Color.FromArgb(205, 210, 220), 1)) {
+                    e.Graphics.DrawRectangle(borderPen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
+                }
+            }
+
+            // 縦書きテキスト描画（各文字を改行で配置）
+            string rawText = tabPage.Text ?? "";
+            string verticalText = string.Join("\n", rawText.Select(c => c.ToString()));
+
+            using (var font = new Font("Yu Gothic UI", 11F, isSelected ? FontStyle.Bold : FontStyle.Regular))
+            using (var textBrush = new SolidBrush(textColor))
+            using (var sf = new StringFormat()) {
+                sf.Alignment = StringAlignment.Center;
+                sf.LineAlignment = StringAlignment.Center;
+                e.Graphics.DrawString(verticalText, font, textBrush, rect, sf);
+            }
         }
 
         private void ApplyDgvIkouColumns() {
