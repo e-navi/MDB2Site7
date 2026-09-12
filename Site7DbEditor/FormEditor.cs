@@ -332,8 +332,18 @@ namespace Site7DbEditor {
             btnDetachBottomPanel.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachBottomPanel.ForeColor = Color.FromArgb(30, 40, 60);
 
-            // 各タブページ背景色
+            // 各タブページ・コンテナ背景色
             Color tabBgColor = Color.FromArgb(245, 246, 248);
+            if (panelMapBottom != null) panelMapBottom.BackColor = tabBgColor;
+            if (panelBottomContent != null) panelBottomContent.BackColor = tabBgColor;
+            if (splitContainerBottom != null) {
+                splitContainerBottom.BackColor = tabBgColor;
+                splitContainerBottom.Panel1.BackColor = tabBgColor;
+                splitContainerBottom.Panel2.BackColor = tabBgColor;
+            }
+            if (panelData != null) panelData.BackColor = tabBgColor;
+            if (tabControlData != null) tabControlData.BackColor = tabBgColor;
+
             tabIkou.BackColor = tabBgColor;
             tabIbutu.BackColor = tabBgColor;
             tabKikai.BackColor = tabBgColor;
