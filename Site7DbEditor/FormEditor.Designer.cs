@@ -284,11 +284,11 @@ namespace Site7DbEditor
             btnHeaderSettings.BackColor = Color.FromArgb(45, 52, 80);
             btnHeaderSettings.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
             btnHeaderSettings.FlatStyle = FlatStyle.Flat;
-            btnHeaderSettings.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderSettings.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnHeaderSettings.ForeColor = Color.White;
             btnHeaderSettings.Location = new Point(235, 7);
             btnHeaderSettings.Name = "btnHeaderSettings";
-            btnHeaderSettings.Size = new Size(95, 32);
+            btnHeaderSettings.Size = new Size(116, 32);
             btnHeaderSettings.TabIndex = 7;
             btnHeaderSettings.Text = "⚙ 各種設定";
             btnHeaderSettings.UseVisualStyleBackColor = false;
@@ -298,11 +298,11 @@ namespace Site7DbEditor
             btnHeaderTools.BackColor = Color.FromArgb(45, 52, 80);
             btnHeaderTools.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
             btnHeaderTools.FlatStyle = FlatStyle.Flat;
-            btnHeaderTools.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderTools.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnHeaderTools.ForeColor = Color.White;
-            btnHeaderTools.Location = new Point(336, 7);
+            btnHeaderTools.Location = new Point(357, 7);
             btnHeaderTools.Name = "btnHeaderTools";
-            btnHeaderTools.Size = new Size(95, 32);
+            btnHeaderTools.Size = new Size(120, 32);
             btnHeaderTools.TabIndex = 8;
             btnHeaderTools.Text = "🛠 各種ツール";
             btnHeaderTools.UseVisualStyleBackColor = false;
@@ -312,11 +312,11 @@ namespace Site7DbEditor
             btnHeaderCsv.BackColor = Color.FromArgb(45, 52, 80);
             btnHeaderCsv.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
             btnHeaderCsv.FlatStyle = FlatStyle.Flat;
-            btnHeaderCsv.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderCsv.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnHeaderCsv.ForeColor = Color.White;
-            btnHeaderCsv.Location = new Point(437, 7);
+            btnHeaderCsv.Location = new Point(483, 7);
             btnHeaderCsv.Name = "btnHeaderCsv";
-            btnHeaderCsv.Size = new Size(100, 32);
+            btnHeaderCsv.Size = new Size(128, 32);
             btnHeaderCsv.TabIndex = 9;
             btnHeaderCsv.Text = "📄 CSV入出力";
             btnHeaderCsv.UseVisualStyleBackColor = false;
@@ -326,11 +326,11 @@ namespace Site7DbEditor
             btnHeaderSync.BackColor = Color.FromArgb(45, 52, 80);
             btnHeaderSync.FlatAppearance.BorderColor = Color.FromArgb(75, 85, 120);
             btnHeaderSync.FlatStyle = FlatStyle.Flat;
-            btnHeaderSync.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnHeaderSync.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnHeaderSync.ForeColor = Color.White;
-            btnHeaderSync.Location = new Point(543, 7);
+            btnHeaderSync.Location = new Point(617, 7);
             btnHeaderSync.Name = "btnHeaderSync";
-            btnHeaderSync.Size = new Size(95, 32);
+            btnHeaderSync.Size = new Size(121, 32);
             btnHeaderSync.TabIndex = 10;
             btnHeaderSync.Text = "🔄 同期処理";
             btnHeaderSync.UseVisualStyleBackColor = false;
@@ -339,9 +339,9 @@ namespace Site7DbEditor
             // 
             btnSaveDb.BackColor = Color.FromArgb(56, 176, 0);
             btnSaveDb.FlatStyle = FlatStyle.Flat;
-            btnSaveDb.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnSaveDb.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSaveDb.ForeColor = Color.Black;
-            btnSaveDb.Location = new Point(644, 7);
+            btnSaveDb.Location = new Point(744, 7);
             btnSaveDb.Name = "btnSaveDb";
             btnSaveDb.Size = new Size(100, 32);
             btnSaveDb.TabIndex = 11;
@@ -351,11 +351,11 @@ namespace Site7DbEditor
             // lblDbStatus
             // 
             lblDbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lblDbStatus.Font = new Font("Yu Gothic UI", 8.5F);
+            lblDbStatus.Font = new Font("Yu Gothic UI", 12F);
             lblDbStatus.ForeColor = Color.FromArgb(255, 183, 3);
-            lblDbStatus.Location = new Point(1165, 7);
+            lblDbStatus.Location = new Point(1073, 7);
             lblDbStatus.Name = "lblDbStatus";
-            lblDbStatus.Size = new Size(220, 32);
+            lblDbStatus.Size = new Size(312, 32);
             lblDbStatus.TabIndex = 6;
             lblDbStatus.Text = "DB未読み込み";
             lblDbStatus.TextAlign = ContentAlignment.MiddleRight;
@@ -366,7 +366,7 @@ namespace Site7DbEditor
             btnExit.BackColor = Color.FromArgb(70, 75, 95);
             btnExit.FlatAppearance.BorderColor = Color.FromArgb(100, 105, 130);
             btnExit.FlatStyle = FlatStyle.Flat;
-            btnExit.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnExit.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnExit.ForeColor = Color.White;
             btnExit.Location = new Point(1395, 7);
             btnExit.Name = "btnExit";
@@ -526,6 +526,7 @@ namespace Site7DbEditor
             panelRightHeader.Controls.Add(lblRightTitle);
             panelRightHeader.Controls.Add(btnDetachWindow);
             panelRightHeader.Dock = DockStyle.Top;
+            panelRightHeader.Font = new Font("Yu Gothic UI", 12F);
             panelRightHeader.Location = new Point(0, 0);
             panelRightHeader.Name = "panelRightHeader";
             panelRightHeader.Size = new Size(264, 30);
@@ -534,11 +535,11 @@ namespace Site7DbEditor
             // lblRightTitle
             // 
             lblRightTitle.AutoSize = true;
-            lblRightTitle.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            lblRightTitle.Font = new Font("MS UI Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
             lblRightTitle.ForeColor = Color.FromArgb(25, 45, 80);
             lblRightTitle.Location = new Point(6, 8);
             lblRightTitle.Name = "lblRightTitle";
-            lblRightTitle.Size = new Size(109, 13);
+            lblRightTitle.Size = new Size(132, 16);
             lblRightTitle.TabIndex = 0;
             lblRightTitle.Text = "📡 測量機器制御";
             // 
@@ -547,11 +548,11 @@ namespace Site7DbEditor
             btnDetachWindow.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachWindow.Dock = DockStyle.Right;
             btnDetachWindow.FlatStyle = FlatStyle.Flat;
-            btnDetachWindow.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDetachWindow.Font = new Font("MS UI Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDetachWindow.ForeColor = Color.FromArgb(30, 40, 60);
-            btnDetachWindow.Location = new Point(200, 0);
+            btnDetachWindow.Location = new Point(184, 0);
             btnDetachWindow.Name = "btnDetachWindow";
-            btnDetachWindow.Size = new Size(64, 30);
+            btnDetachWindow.Size = new Size(80, 30);
             btnDetachWindow.TabIndex = 1;
             btnDetachWindow.Text = "↗ 分離";
             btnDetachWindow.UseVisualStyleBackColor = false;
@@ -920,7 +921,7 @@ namespace Site7DbEditor
             btnLayerAllOn.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnLayerAllOn.Location = new Point(2, 314);
             btnLayerAllOn.Name = "btnLayerAllOn";
-            btnLayerAllOn.Size = new Size(64, 32);
+            btnLayerAllOn.Size = new Size(64, 30);
             btnLayerAllOn.TabIndex = 22;
             btnLayerAllOn.Text = "全ON";
             btnLayerAllOn.UseVisualStyleBackColor = true;
@@ -930,7 +931,7 @@ namespace Site7DbEditor
             btnLayerAllOff.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnLayerAllOff.Location = new Point(65, 314);
             btnLayerAllOff.Name = "btnLayerAllOff";
-            btnLayerAllOff.Size = new Size(64, 32);
+            btnLayerAllOff.Size = new Size(64, 30);
             btnLayerAllOff.TabIndex = 23;
             btnLayerAllOff.Text = "全OFF";
             btnLayerAllOff.UseVisualStyleBackColor = true;
@@ -1216,8 +1217,8 @@ namespace Site7DbEditor
             // panelLeftHeader
             // 
             panelLeftHeader.BackColor = Color.FromArgb(233, 236, 243);
-            panelLeftHeader.Controls.Add(lblLeftTitle);
             panelLeftHeader.Controls.Add(btnDetachLeftPanel);
+            panelLeftHeader.Controls.Add(lblLeftTitle);
             panelLeftHeader.Dock = DockStyle.Top;
             panelLeftHeader.Location = new Point(0, 0);
             panelLeftHeader.Name = "panelLeftHeader";
@@ -1227,11 +1228,11 @@ namespace Site7DbEditor
             // lblLeftTitle
             // 
             lblLeftTitle.AutoSize = true;
-            lblLeftTitle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
+            lblLeftTitle.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold);
             lblLeftTitle.ForeColor = Color.FromArgb(25, 45, 80);
-            lblLeftTitle.Location = new Point(4, 7);
+            lblLeftTitle.Location = new Point(2, 5);
             lblLeftTitle.Name = "lblLeftTitle";
-            lblLeftTitle.Size = new Size(51, 15);
+            lblLeftTitle.Size = new Size(65, 19);
             lblLeftTitle.TabIndex = 1;
             lblLeftTitle.Text = "⚙ レイヤ";
             // 
@@ -1240,7 +1241,7 @@ namespace Site7DbEditor
             btnDetachLeftPanel.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachLeftPanel.Dock = DockStyle.Right;
             btnDetachLeftPanel.FlatStyle = FlatStyle.Flat;
-            btnDetachLeftPanel.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDetachLeftPanel.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDetachLeftPanel.ForeColor = Color.FromArgb(30, 40, 60);
             btnDetachLeftPanel.Location = new Point(66, 0);
             btnDetachLeftPanel.Name = "btnDetachLeftPanel";
@@ -1289,7 +1290,7 @@ namespace Site7DbEditor
             tabControlData.Controls.Add(tabIbutu);
             tabControlData.Controls.Add(tabKikai);
             tabControlData.Dock = DockStyle.Fill;
-            tabControlData.Font = new Font("Yu Gothic UI", 11.25F, FontStyle.Bold);
+            tabControlData.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             tabControlData.Location = new Point(0, 0);
             tabControlData.Multiline = true;
             tabControlData.Name = "tabControlData";
@@ -1304,10 +1305,10 @@ namespace Site7DbEditor
             tabIkou.Controls.Add(grpIkouL);
             tabIkou.Controls.Add(grpIkouMaster);
             tabIkou.Controls.Add(pnlPrecsRight);
-            tabIkou.Location = new Point(30, 4);
+            tabIkou.Location = new Point(32, 4);
             tabIkou.Name = "tabIkou";
             tabIkou.Padding = new Padding(3);
-            tabIkou.Size = new Size(1356, 298);
+            tabIkou.Size = new Size(1354, 298);
             tabIkou.TabIndex = 0;
             tabIkou.Text = "遺構";
             // 
@@ -1318,7 +1319,7 @@ namespace Site7DbEditor
             grpPrecs.ForeColor = Color.FromArgb(0, 180, 216);
             grpPrecs.Location = new Point(865, 3);
             grpPrecs.Name = "grpPrecs";
-            grpPrecs.Size = new Size(326, 292);
+            grpPrecs.Size = new Size(324, 292);
             grpPrecs.TabIndex = 2;
             grpPrecs.TabStop = false;
             grpPrecs.Text = "構成座標";
@@ -1327,9 +1328,9 @@ namespace Site7DbEditor
             // 
             dgvPrecs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvPrecs.Dock = DockStyle.Fill;
-            dgvPrecs.Location = new Point(3, 23);
+            dgvPrecs.Location = new Point(3, 25);
             dgvPrecs.Name = "dgvPrecs";
-            dgvPrecs.Size = new Size(320, 266);
+            dgvPrecs.Size = new Size(318, 264);
             dgvPrecs.TabIndex = 0;
             // 
             // grpIkouL
@@ -1425,7 +1426,7 @@ namespace Site7DbEditor
             cmbLineIkouMaster.FormattingEnabled = true;
             cmbLineIkouMaster.Location = new Point(337, 179);
             cmbLineIkouMaster.Name = "cmbLineIkouMaster";
-            cmbLineIkouMaster.Size = new Size(127, 28);
+            cmbLineIkouMaster.Size = new Size(127, 29);
             cmbLineIkouMaster.TabIndex = 14;
             // 
             // lblLineIkouMaster
@@ -1447,7 +1448,7 @@ namespace Site7DbEditor
             cmbLineLayer.FormattingEnabled = true;
             cmbLineLayer.Location = new Point(337, 147);
             cmbLineLayer.Name = "cmbLineLayer";
-            cmbLineLayer.Size = new Size(127, 28);
+            cmbLineLayer.Size = new Size(127, 29);
             cmbLineLayer.TabIndex = 12;
             // 
             // lblLineLayer
@@ -1543,7 +1544,7 @@ namespace Site7DbEditor
             txtLineNum.Location = new Point(337, 54);
             txtLineNum.MaxLength = 3;
             txtLineNum.Name = "txtLineNum";
-            txtLineNum.Size = new Size(34, 27);
+            txtLineNum.Size = new Size(34, 29);
             txtLineNum.TabIndex = 4;
             // 
             // cmbLineKind
@@ -1619,7 +1620,7 @@ namespace Site7DbEditor
             txtIkouNum.Location = new Point(247, 54);
             txtIkouNum.MaxLength = 3;
             txtIkouNum.Name = "txtIkouNum";
-            txtIkouNum.Size = new Size(34, 27);
+            txtIkouNum.Size = new Size(34, 29);
             txtIkouNum.TabIndex = 4;
             // 
             // lblIkouNameVal
@@ -1764,16 +1765,16 @@ namespace Site7DbEditor
             // 
             dgvIkou.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvIkou.Dock = DockStyle.Left;
-            dgvIkou.Location = new Point(3, 23);
+            dgvIkou.Location = new Point(3, 25);
             dgvIkou.Name = "dgvIkou";
-            dgvIkou.Size = new Size(196, 266);
+            dgvIkou.Size = new Size(196, 264);
             dgvIkou.TabIndex = 0;
             // 
             // pnlPrecsRight
             // 
             pnlPrecsRight.Controls.Add(grpCoordValue);
             pnlPrecsRight.Dock = DockStyle.Right;
-            pnlPrecsRight.Location = new Point(1191, 3);
+            pnlPrecsRight.Location = new Point(1189, 3);
             pnlPrecsRight.Name = "pnlPrecsRight";
             pnlPrecsRight.Size = new Size(162, 292);
             pnlPrecsRight.TabIndex = 3;
@@ -1816,7 +1817,7 @@ namespace Site7DbEditor
             txtCoordX.ForeColor = Color.Black;
             txtCoordX.Location = new Point(32, 25);
             txtCoordX.Name = "txtCoordX";
-            txtCoordX.Size = new Size(120, 27);
+            txtCoordX.Size = new Size(120, 29);
             txtCoordX.TabIndex = 2;
             txtCoordX.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1837,7 +1838,7 @@ namespace Site7DbEditor
             txtCoordY.ForeColor = Color.Black;
             txtCoordY.Location = new Point(32, 65);
             txtCoordY.Name = "txtCoordY";
-            txtCoordY.Size = new Size(120, 27);
+            txtCoordY.Size = new Size(120, 29);
             txtCoordY.TabIndex = 4;
             txtCoordY.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1858,7 +1859,7 @@ namespace Site7DbEditor
             txtCoordZ.ForeColor = Color.Black;
             txtCoordZ.Location = new Point(32, 105);
             txtCoordZ.Name = "txtCoordZ";
-            txtCoordZ.Size = new Size(120, 27);
+            txtCoordZ.Size = new Size(120, 29);
             txtCoordZ.TabIndex = 6;
             txtCoordZ.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1921,10 +1922,10 @@ namespace Site7DbEditor
             tabIbutu.BackColor = Color.FromArgb(245, 246, 248);
             tabIbutu.Controls.Add(dgvIbutu);
             tabIbutu.Controls.Add(pnlIbutuRight);
-            tabIbutu.Location = new Point(30, 4);
+            tabIbutu.Location = new Point(32, 4);
             tabIbutu.Name = "tabIbutu";
             tabIbutu.Padding = new Padding(3);
-            tabIbutu.Size = new Size(1356, 298);
+            tabIbutu.Size = new Size(1354, 298);
             tabIbutu.TabIndex = 1;
             tabIbutu.Text = "遺物";
             // 
@@ -1934,14 +1935,14 @@ namespace Site7DbEditor
             dgvIbutu.Dock = DockStyle.Fill;
             dgvIbutu.Location = new Point(3, 3);
             dgvIbutu.Name = "dgvIbutu";
-            dgvIbutu.Size = new Size(925, 292);
+            dgvIbutu.Size = new Size(923, 292);
             dgvIbutu.TabIndex = 2;
             // 
             // pnlIbutuRight
             // 
             pnlIbutuRight.Controls.Add(grpIbutuRecord);
             pnlIbutuRight.Dock = DockStyle.Right;
-            pnlIbutuRight.Location = new Point(928, 3);
+            pnlIbutuRight.Location = new Point(926, 3);
             pnlIbutuRight.Name = "pnlIbutuRight";
             pnlIbutuRight.Size = new Size(425, 292);
             pnlIbutuRight.TabIndex = 5;
@@ -1988,7 +1989,7 @@ namespace Site7DbEditor
             txtFilterIbutu.ForeColor = Color.White;
             txtFilterIbutu.Location = new Point(80, 23);
             txtFilterIbutu.Name = "txtFilterIbutu";
-            txtFilterIbutu.Size = new Size(148, 27);
+            txtFilterIbutu.Size = new Size(148, 29);
             txtFilterIbutu.TabIndex = 1;
             // 
             // lblIbutuChiku
@@ -2009,7 +2010,7 @@ namespace Site7DbEditor
             cmbIbutuChiku.FormattingEnabled = true;
             cmbIbutuChiku.Location = new Point(6, 67);
             cmbIbutuChiku.Name = "cmbIbutuChiku";
-            cmbIbutuChiku.Size = new Size(222, 28);
+            cmbIbutuChiku.Size = new Size(222, 29);
             cmbIbutuChiku.TabIndex = 3;
             // 
             // lblIbutuSoui
@@ -2030,7 +2031,7 @@ namespace Site7DbEditor
             cmbIbutuSoui.FormattingEnabled = true;
             cmbIbutuSoui.Location = new Point(6, 111);
             cmbIbutuSoui.Name = "cmbIbutuSoui";
-            cmbIbutuSoui.Size = new Size(222, 28);
+            cmbIbutuSoui.Size = new Size(222, 29);
             cmbIbutuSoui.TabIndex = 5;
             // 
             // lblIbutuSyubetu
@@ -2051,7 +2052,7 @@ namespace Site7DbEditor
             cmbIbutuSyubetu.FormattingEnabled = true;
             cmbIbutuSyubetu.Location = new Point(6, 155);
             cmbIbutuSyubetu.Name = "cmbIbutuSyubetu";
-            cmbIbutuSyubetu.Size = new Size(160, 28);
+            cmbIbutuSyubetu.Size = new Size(160, 29);
             cmbIbutuSyubetu.TabIndex = 7;
             // 
             // lblIbutuLayer
@@ -2072,7 +2073,7 @@ namespace Site7DbEditor
             cmbIbutuLayer.FormattingEnabled = true;
             cmbIbutuLayer.Location = new Point(50, 196);
             cmbIbutuLayer.Name = "cmbIbutuLayer";
-            cmbIbutuLayer.Size = new Size(178, 28);
+            cmbIbutuLayer.Size = new Size(178, 29);
             cmbIbutuLayer.TabIndex = 9;
             // 
             // lblIbutuNo
@@ -2093,7 +2094,7 @@ namespace Site7DbEditor
             txtIbutuNo.Location = new Point(68, 226);
             txtIbutuNo.MaxLength = 3;
             txtIbutuNo.Name = "txtIbutuNo";
-            txtIbutuNo.Size = new Size(35, 27);
+            txtIbutuNo.Size = new Size(35, 29);
             txtIbutuNo.TabIndex = 11;
             txtIbutuNo.Text = "1";
             // 
@@ -2129,10 +2130,10 @@ namespace Site7DbEditor
             tabKikai.BackColor = Color.FromArgb(245, 246, 248);
             tabKikai.Controls.Add(dgvKikai);
             tabKikai.Controls.Add(pnlKikaiRight);
-            tabKikai.Location = new Point(30, 4);
+            tabKikai.Location = new Point(32, 4);
             tabKikai.Name = "tabKikai";
             tabKikai.Padding = new Padding(3);
-            tabKikai.Size = new Size(1356, 298);
+            tabKikai.Size = new Size(1354, 298);
             tabKikai.TabIndex = 2;
             tabKikai.Text = "基準点";
             // 
@@ -2142,7 +2143,7 @@ namespace Site7DbEditor
             dgvKikai.Dock = DockStyle.Fill;
             dgvKikai.Location = new Point(3, 3);
             dgvKikai.Name = "dgvKikai";
-            dgvKikai.Size = new Size(750, 292);
+            dgvKikai.Size = new Size(748, 292);
             dgvKikai.TabIndex = 0;
             // 
             // pnlKikaiRight
@@ -2150,7 +2151,7 @@ namespace Site7DbEditor
             pnlKikaiRight.Controls.Add(grpKikaiRecord);
             pnlKikaiRight.Controls.Add(grpPointGuidance);
             pnlKikaiRight.Dock = DockStyle.Right;
-            pnlKikaiRight.Location = new Point(753, 3);
+            pnlKikaiRight.Location = new Point(751, 3);
             pnlKikaiRight.Name = "pnlKikaiRight";
             pnlKikaiRight.Size = new Size(600, 292);
             pnlKikaiRight.TabIndex = 3;
@@ -2187,7 +2188,7 @@ namespace Site7DbEditor
             txtKikaiName.ForeColor = Color.Black;
             txtKikaiName.Location = new Point(68, 22);
             txtKikaiName.Name = "txtKikaiName";
-            txtKikaiName.Size = new Size(128, 27);
+            txtKikaiName.Size = new Size(128, 29);
             txtKikaiName.TabIndex = 1;
             // 
             // lblKikaiLayer
@@ -2208,7 +2209,7 @@ namespace Site7DbEditor
             cmbKikaiLayer.FormattingEnabled = true;
             cmbKikaiLayer.Location = new Point(50, 62);
             cmbKikaiLayer.Name = "cmbKikaiLayer";
-            cmbKikaiLayer.Size = new Size(146, 28);
+            cmbKikaiLayer.Size = new Size(146, 29);
             cmbKikaiLayer.TabIndex = 3;
             // 
             // grpPointGuidance
@@ -2289,6 +2290,7 @@ namespace Site7DbEditor
             panelBottomHeader.Controls.Add(lblBottomTitle);
             panelBottomHeader.Controls.Add(btnDetachBottomPanel);
             panelBottomHeader.Dock = DockStyle.Top;
+            panelBottomHeader.Font = new Font("Yu Gothic UI", 12F);
             panelBottomHeader.Location = new Point(0, 0);
             panelBottomHeader.Name = "panelBottomHeader";
             panelBottomHeader.Size = new Size(1390, 30);
@@ -2297,11 +2299,11 @@ namespace Site7DbEditor
             // lblBottomTitle
             // 
             lblBottomTitle.AutoSize = true;
-            lblBottomTitle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            lblBottomTitle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblBottomTitle.ForeColor = Color.FromArgb(25, 45, 80);
-            lblBottomTitle.Location = new Point(10, 7);
+            lblBottomTitle.Location = new Point(10, 4);
             lblBottomTitle.Name = "lblBottomTitle";
-            lblBottomTitle.Size = new Size(115, 15);
+            lblBottomTitle.Size = new Size(160, 21);
             lblBottomTitle.TabIndex = 0;
             lblBottomTitle.Text = "📋 データ・編集テーブル";
             // 
@@ -2310,11 +2312,11 @@ namespace Site7DbEditor
             btnDetachBottomPanel.BackColor = Color.FromArgb(215, 222, 235);
             btnDetachBottomPanel.Dock = DockStyle.Right;
             btnDetachBottomPanel.FlatStyle = FlatStyle.Flat;
-            btnDetachBottomPanel.Font = new Font("MS UI Gothic", 8.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDetachBottomPanel.Font = new Font("MS UI Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDetachBottomPanel.ForeColor = Color.FromArgb(30, 40, 60);
-            btnDetachBottomPanel.Location = new Point(1326, 0);
+            btnDetachBottomPanel.Location = new Point(1310, 0);
             btnDetachBottomPanel.Name = "btnDetachBottomPanel";
-            btnDetachBottomPanel.Size = new Size(64, 30);
+            btnDetachBottomPanel.Size = new Size(80, 30);
             btnDetachBottomPanel.TabIndex = 1;
             btnDetachBottomPanel.Text = "↗ 分離";
             btnDetachBottomPanel.UseVisualStyleBackColor = false;

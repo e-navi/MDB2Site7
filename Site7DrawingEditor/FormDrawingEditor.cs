@@ -49,7 +49,6 @@ namespace Site7DrawingEditor
 
             // 各ヘッダーバー
             panelTopRightHeader.BackColor = headerBgColor;
-            lblPaperSheetTitle.ForeColor = headerFgColor;
 
             // 下部コンテナ
             panelBottomFixedGroup.BackColor = formBgColor;
@@ -78,7 +77,6 @@ namespace Site7DrawingEditor
                     if (c is Label lbl)
                     {
                         if (lbl != lblHeaderTitle && lbl != lblSubHeader &&
-                            lbl != lblPaperSheetTitle &&
                             lbl != lblIkouLayerGrpHeader && lbl != lblEntityNameHeader)
                         {
                             if (lbl == lblPaperInfoBanner)
@@ -1279,12 +1277,10 @@ namespace Site7DrawingEditor
             if (isPreview)
             {
                 var f = DrawingFrameService.Instance;
-                lblPaperSheetTitle.Text = $"📄 図面出力イメージ [{f.PaperSizeName} {(f.IsLandscape ? "横" : "縦")} 1/{f.Scale:0} (回転 {f.RotationAngleDeg:0.0}°)]";
-                lblPaperInfoBanner.Text = "";
+                lblPaperInfoBanner.Text = $"図面出力イメージ [{f.PaperSizeName} {(f.IsLandscape ? "横" : "縦")} 1/{f.Scale:0} (回転 {f.RotationAngleDeg:0.0}°)]";
             }
             else
             {
-                lblPaperSheetTitle.Text = "📄 遺構図面";
                 DrawingModel? curDrawing = GetSelectedDataBoundItem<DrawingModel>(dgvDrawings);
                 if (curDrawing != null)
                 {

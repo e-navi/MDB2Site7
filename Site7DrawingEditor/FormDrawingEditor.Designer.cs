@@ -70,7 +70,6 @@ namespace Site7DrawingEditor
             btnPrintPaper = new Button();
             chkAutoZoomPaperIkou = new CheckBox();
             btnResetPaperZoom = new Button();
-            lblPaperSheetTitle = new Label();
             picPaperCanvas = new PictureBox();
             splitContainerTopHorizontal = new SplitContainer();
             panelTopLeft = new Panel();
@@ -171,7 +170,7 @@ namespace Site7DrawingEditor
             btnExit.BackColor = Color.FromArgb(70, 75, 95);
             btnExit.FlatAppearance.BorderColor = Color.FromArgb(100, 105, 130);
             btnExit.FlatStyle = FlatStyle.Flat;
-            btnExit.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            btnExit.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnExit.ForeColor = Color.White;
             btnExit.Location = new Point(1365, 12);
             btnExit.Name = "btnExit";
@@ -183,7 +182,7 @@ namespace Site7DrawingEditor
             // lblDbStatus
             // 
             lblDbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lblDbStatus.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            lblDbStatus.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblDbStatus.ForeColor = Color.FromArgb(255, 193, 7);
             lblDbStatus.Location = new Point(550, 15);
             lblDbStatus.Name = "lblDbStatus";
@@ -196,9 +195,9 @@ namespace Site7DrawingEditor
             // 
             btnSaveDb.BackColor = Color.FromArgb(40, 167, 69);
             btnSaveDb.FlatStyle = FlatStyle.Flat;
-            btnSaveDb.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
+            btnSaveDb.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnSaveDb.ForeColor = Color.White;
-            btnSaveDb.Location = new Point(388, 13);
+            btnSaveDb.Location = new Point(337, 13);
             btnSaveDb.Name = "btnSaveDb";
             btnSaveDb.Size = new Size(120, 35);
             btnSaveDb.TabIndex = 2;
@@ -212,9 +211,9 @@ namespace Site7DrawingEditor
             lblSubHeader.ForeColor = Color.FromArgb(170, 185, 210);
             lblSubHeader.Location = new Point(14, 35);
             lblSubHeader.Name = "lblSubHeader";
-            lblSubHeader.Size = new Size(277, 15);
+            lblSubHeader.Size = new Size(244, 15);
             lblSubHeader.TabIndex = 1;
-            lblSubHeader.Text = "全図3点切り出し・用紙図面レイアウト・断面図連動保存";
+            lblSubHeader.Text = "断面を含めた個別遺構図を用紙にレイアウトします";
             // 
             // lblHeaderTitle
             // 
@@ -223,9 +222,9 @@ namespace Site7DrawingEditor
             lblHeaderTitle.ForeColor = Color.White;
             lblHeaderTitle.Location = new Point(12, 8);
             lblHeaderTitle.Name = "lblHeaderTitle";
-            lblHeaderTitle.Size = new Size(370, 25);
+            lblHeaderTitle.Size = new Size(309, 25);
             lblHeaderTitle.TabIndex = 0;
-            lblHeaderTitle.Text = "📐 SITE7 遺跡調査・個別遺構図作成システム";
+            lblHeaderTitle.Text = "📐 SITE7 遺跡調査・個別遺構図作成";
             // 
             // cmbOrientation
             // 
@@ -724,10 +723,11 @@ namespace Site7DrawingEditor
             // 
             // btnEnvSettings
             // 
+            btnEnvSettings.Dock = DockStyle.Left;
             btnEnvSettings.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            btnEnvSettings.Location = new Point(120, 3);
+            btnEnvSettings.Location = new Point(0, 0);
             btnEnvSettings.Name = "btnEnvSettings";
-            btnEnvSettings.Size = new Size(125, 32);
+            btnEnvSettings.Size = new Size(125, 38);
             btnEnvSettings.TabIndex = 1;
             btnEnvSettings.Text = "遺構図面設定";
             btnEnvSettings.UseVisualStyleBackColor = true;
@@ -779,12 +779,11 @@ namespace Site7DrawingEditor
             // panelTopRightHeader
             // 
             panelTopRightHeader.BackColor = Color.FromArgb(233, 236, 243);
+            panelTopRightHeader.Controls.Add(chkAutoZoomPaperIkou);
             panelTopRightHeader.Controls.Add(lblPaperInfoBanner);
             panelTopRightHeader.Controls.Add(btnPrintPaper);
-            panelTopRightHeader.Controls.Add(chkAutoZoomPaperIkou);
             panelTopRightHeader.Controls.Add(btnResetPaperZoom);
             panelTopRightHeader.Controls.Add(btnEnvSettings);
-            panelTopRightHeader.Controls.Add(lblPaperSheetTitle);
             panelTopRightHeader.Dock = DockStyle.Top;
             panelTopRightHeader.Location = new Point(0, 0);
             panelTopRightHeader.Name = "panelTopRightHeader";
@@ -793,22 +792,24 @@ namespace Site7DrawingEditor
             // 
             // lblPaperInfoBanner
             // 
-            lblPaperInfoBanner.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblPaperInfoBanner.Dock = DockStyle.Fill;
             lblPaperInfoBanner.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblPaperInfoBanner.ForeColor = Color.FromArgb(25, 45, 80);
-            lblPaperInfoBanner.Location = new Point(440, 7);
+            lblPaperInfoBanner.Location = new Point(325, 0);
             lblPaperInfoBanner.Name = "lblPaperInfoBanner";
-            lblPaperInfoBanner.Size = new Size(245, 24);
+            lblPaperInfoBanner.Size = new Size(366, 38);
             lblPaperInfoBanner.TabIndex = 5;
             lblPaperInfoBanner.Text = "A3 (420×297mm) | 1/10";
             lblPaperInfoBanner.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnPrintPaper
             // 
+            btnPrintPaper.Dock = DockStyle.Left;
             btnPrintPaper.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            btnPrintPaper.Location = new Point(502, 3);
+            btnPrintPaper.Location = new Point(220, 0);
             btnPrintPaper.Name = "btnPrintPaper";
-            btnPrintPaper.Size = new Size(105, 32);
+            btnPrintPaper.Padding = new Padding(2);
+            btnPrintPaper.Size = new Size(105, 38);
             btnPrintPaper.TabIndex = 4;
             btnPrintPaper.Text = "🖨 印刷...";
             btnPrintPaper.UseVisualStyleBackColor = true;
@@ -818,42 +819,36 @@ namespace Site7DrawingEditor
             chkAutoZoomPaperIkou.AutoSize = true;
             chkAutoZoomPaperIkou.Checked = true;
             chkAutoZoomPaperIkou.CheckState = CheckState.Checked;
+            chkAutoZoomPaperIkou.Dock = DockStyle.Left;
             chkAutoZoomPaperIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkAutoZoomPaperIkou.ForeColor = Color.FromArgb(30, 40, 60);
-            chkAutoZoomPaperIkou.Location = new Point(355, 6);
+            chkAutoZoomPaperIkou.Location = new Point(325, 0);
             chkAutoZoomPaperIkou.Name = "chkAutoZoomPaperIkou";
-            chkAutoZoomPaperIkou.Size = new Size(140, 25);
+            chkAutoZoomPaperIkou.Padding = new Padding(2);
+            chkAutoZoomPaperIkou.Size = new Size(129, 38);
             chkAutoZoomPaperIkou.TabIndex = 3;
             chkAutoZoomPaperIkou.Text = "選択遺構拡大";
             chkAutoZoomPaperIkou.UseVisualStyleBackColor = true;
             // 
             // btnResetPaperZoom
             // 
+            btnResetPaperZoom.Dock = DockStyle.Left;
             btnResetPaperZoom.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            btnResetPaperZoom.Location = new Point(252, 3);
+            btnResetPaperZoom.Location = new Point(125, 0);
             btnResetPaperZoom.Name = "btnResetPaperZoom";
-            btnResetPaperZoom.Size = new Size(95, 32);
+            btnResetPaperZoom.Padding = new Padding(2);
+            btnResetPaperZoom.Size = new Size(95, 38);
             btnResetPaperZoom.TabIndex = 2;
             btnResetPaperZoom.Text = "全図表示";
             btnResetPaperZoom.UseVisualStyleBackColor = true;
             // 
-            // lblPaperSheetTitle
-            // 
-            lblPaperSheetTitle.AutoSize = true;
-            lblPaperSheetTitle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            lblPaperSheetTitle.ForeColor = Color.FromArgb(25, 45, 80);
-            lblPaperSheetTitle.Location = new Point(6, 7);
-            lblPaperSheetTitle.Name = "lblPaperSheetTitle";
-            lblPaperSheetTitle.Size = new Size(105, 21);
-            lblPaperSheetTitle.TabIndex = 0;
-            lblPaperSheetTitle.Text = "📄 遺構図面";
-            // 
             // picPaperCanvas
             // 
             picPaperCanvas.Dock = DockStyle.Fill;
-            picPaperCanvas.Location = new Point(0, 35);
+            picPaperCanvas.Location = new Point(0, 38);
             picPaperCanvas.Name = "picPaperCanvas";
-            picPaperCanvas.Size = new Size(691, 482);
+            picPaperCanvas.Padding = new Padding(2);
+            picPaperCanvas.Size = new Size(691, 479);
             picPaperCanvas.TabIndex = 1;
             picPaperCanvas.TabStop = false;
             // 
@@ -912,9 +907,9 @@ namespace Site7DrawingEditor
             grpFeatureDetailPreview.Controls.Add(picFeatureDetailCanvas);
             grpFeatureDetailPreview.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpFeatureDetailPreview.ForeColor = Color.FromArgb(25, 55, 105);
-            grpFeatureDetailPreview.Location = new Point(958, 0);
+            grpFeatureDetailPreview.Location = new Point(968, 0);
             grpFeatureDetailPreview.Name = "grpFeatureDetailPreview";
-            grpFeatureDetailPreview.Size = new Size(432, 361);
+            grpFeatureDetailPreview.Size = new Size(422, 361);
             grpFeatureDetailPreview.TabIndex = 2;
             grpFeatureDetailPreview.TabStop = false;
             grpFeatureDetailPreview.Text = "選択遺構 詳細プレビュー";
@@ -925,7 +920,7 @@ namespace Site7DrawingEditor
             picFeatureDetailCanvas.Dock = DockStyle.Fill;
             picFeatureDetailCanvas.Location = new Point(3, 25);
             picFeatureDetailCanvas.Name = "picFeatureDetailCanvas";
-            picFeatureDetailCanvas.Size = new Size(426, 333);
+            picFeatureDetailCanvas.Size = new Size(416, 333);
             picFeatureDetailCanvas.TabIndex = 0;
             picFeatureDetailCanvas.TabStop = false;
             // 
@@ -1566,7 +1561,6 @@ namespace Site7DrawingEditor
         private System.Windows.Forms.PictureBox picCropCanvas;
 
         private System.Windows.Forms.Panel panelTopRightHeader;
-        private System.Windows.Forms.Label lblPaperSheetTitle;
         private System.Windows.Forms.Button btnResetPaperZoom;
         private System.Windows.Forms.CheckBox chkAutoZoomPaperIkou;
         private System.Windows.Forms.Button btnPrintPaper;
