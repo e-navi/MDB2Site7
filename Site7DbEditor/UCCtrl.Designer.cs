@@ -94,7 +94,7 @@ namespace Site7DbEditor
             tabControl4.Controls.Add(tabTS);
             tabControl4.Controls.Add(tabGPS);
             tabControl4.Dock = DockStyle.Bottom;
-            tabControl4.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            tabControl4.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             tabControl4.Location = new Point(0, 77);
             tabControl4.Margin = new Padding(4);
             tabControl4.Multiline = true;
@@ -155,7 +155,7 @@ namespace Site7DbEditor
             // comboBox1
             // 
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.Font = new Font("MS UI Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            comboBox1.Font = new Font("Yu Gothic UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 128);
             comboBox1.FormattingEnabled = true;
             comboBox1.Location = new Point(2, 42);
             comboBox1.Margin = new Padding(4);
@@ -166,7 +166,7 @@ namespace Site7DbEditor
             // 
             // btnConnect
             // 
-            btnConnect.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnConnect.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnConnect.Location = new Point(195, 34);
             btnConnect.Margin = new Padding(4);
             btnConnect.Name = "btnConnect";
@@ -180,7 +180,7 @@ namespace Site7DbEditor
             // btnDefKikaiBack
             // 
             btnDefKikaiBack.BackColor = SystemColors.Control;
-            btnDefKikaiBack.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDefKikaiBack.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDefKikaiBack.Location = new Point(2, 80);
             btnDefKikaiBack.Margin = new Padding(4);
             btnDefKikaiBack.Name = "btnDefKikaiBack";
@@ -192,7 +192,7 @@ namespace Site7DbEditor
             // 
             // Label12
             // 
-            Label12.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Label12.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Label12.Location = new Point(102, 88);
             Label12.Margin = new Padding(4, 0, 4, 0);
             Label12.Name = "Label12";
@@ -203,7 +203,7 @@ namespace Site7DbEditor
             // Kikaikou1
             // 
             Kikaikou1.BackColor = Color.FromArgb(255, 255, 128);
-            Kikaikou1.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Kikaikou1.Font = new Font("Yu Gothic UI", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Kikaikou1.Location = new Point(156, 80);
             Kikaikou1.Margin = new Padding(4);
             Kikaikou1.Name = "Kikaikou1";
@@ -216,7 +216,7 @@ namespace Site7DbEditor
             // 
             // Label14
             // 
-            Label14.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Label14.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Label14.Location = new Point(229, 88);
             Label14.Margin = new Padding(4, 0, 4, 0);
             Label14.Name = "Label14";
@@ -228,7 +228,7 @@ namespace Site7DbEditor
             // 
             SelKikaiTenBackTenBtn1.BackColor = SystemColors.Control;
             SelKikaiTenBackTenBtn1.Enabled = false;
-            SelKikaiTenBackTenBtn1.Font = new Font("MS UI Gothic", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            SelKikaiTenBackTenBtn1.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 128);
             SelKikaiTenBackTenBtn1.Location = new Point(2, 119);
             SelKikaiTenBackTenBtn1.Margin = new Padding(4);
             SelKikaiTenBackTenBtn1.Name = "SelKikaiTenBackTenBtn1";
@@ -240,7 +240,7 @@ namespace Site7DbEditor
             // 
             // Label13
             // 
-            Label13.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Label13.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Label13.Location = new Point(102, 126);
             Label13.Margin = new Padding(4, 0, 4, 0);
             Label13.Name = "Label13";
@@ -251,7 +251,7 @@ namespace Site7DbEditor
             // Mirrorkou1
             // 
             Mirrorkou1.BackColor = Color.FromArgb(255, 255, 128);
-            Mirrorkou1.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Mirrorkou1.Font = new Font("Yu Gothic UI", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Mirrorkou1.Location = new Point(156, 119);
             Mirrorkou1.Margin = new Padding(4);
             Mirrorkou1.Name = "Mirrorkou1";
@@ -264,7 +264,7 @@ namespace Site7DbEditor
             // 
             // Label16
             // 
-            Label16.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Label16.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Label16.Location = new Point(229, 126);
             Label16.Margin = new Padding(4, 0, 4, 0);
             Label16.Name = "Label16";
@@ -274,7 +274,7 @@ namespace Site7DbEditor
             // 
             // btnLight
             // 
-            btnLight.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnLight.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnLight.Location = new Point(1, 158);
             btnLight.Margin = new Padding(4);
             btnLight.Name = "btnLight";
@@ -287,7 +287,7 @@ namespace Site7DbEditor
             // 
             // btnSearch
             // 
-            btnSearch.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnSearch.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnSearch.Location = new Point(50, 158);
             btnSearch.Margin = new Padding(4);
             btnSearch.Name = "btnSearch";
@@ -301,7 +301,7 @@ namespace Site7DbEditor
             // btnUp
             // 
             btnUp.Enabled = false;
-            btnUp.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnUp.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnUp.Location = new Point(99, 158);
             btnUp.Margin = new Padding(4);
             btnUp.Name = "btnUp";
@@ -316,7 +316,7 @@ namespace Site7DbEditor
             // 
             // btnAutoTsuibi
             // 
-            btnAutoTsuibi.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnAutoTsuibi.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnAutoTsuibi.Location = new Point(148, 158);
             btnAutoTsuibi.Margin = new Padding(4);
             btnAutoTsuibi.Name = "btnAutoTsuibi";
@@ -329,7 +329,7 @@ namespace Site7DbEditor
             // 
             // btnSijun
             // 
-            btnSijun.Font = new Font("MS UI Gothic", 11F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            btnSijun.Font = new Font("Yu Gothic UI", 11F, FontStyle.Regular, GraphicsUnit.Point, 128);
             btnSijun.Location = new Point(233, 158);
             btnSijun.Margin = new Padding(4);
             btnSijun.Name = "btnSijun";
@@ -342,7 +342,7 @@ namespace Site7DbEditor
             // 
             // btnLeft2
             // 
-            btnLeft2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnLeft2.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnLeft2.Location = new Point(1, 200);
             btnLeft2.Margin = new Padding(4);
             btnLeft2.Name = "btnLeft2";
@@ -357,7 +357,7 @@ namespace Site7DbEditor
             // 
             // btnLeft
             // 
-            btnLeft.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnLeft.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnLeft.Location = new Point(50, 200);
             btnLeft.Margin = new Padding(4);
             btnLeft.Name = "btnLeft";
@@ -372,7 +372,7 @@ namespace Site7DbEditor
             // 
             // btnStop
             // 
-            btnStop.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnStop.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnStop.Location = new Point(102, 200);
             btnStop.Margin = new Padding(4);
             btnStop.Name = "btnStop";
@@ -385,7 +385,7 @@ namespace Site7DbEditor
             // 
             // btnRight
             // 
-            btnRight.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnRight.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnRight.Location = new Point(145, 200);
             btnRight.Margin = new Padding(4);
             btnRight.Name = "btnRight";
@@ -400,7 +400,7 @@ namespace Site7DbEditor
             // 
             // btnRight2
             // 
-            btnRight2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnRight2.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnRight2.Location = new Point(195, 200);
             btnRight2.Margin = new Padding(4);
             btnRight2.Name = "btnRight2";
@@ -430,7 +430,7 @@ namespace Site7DbEditor
             // btnDown
             // 
             btnDown.Enabled = false;
-            btnDown.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnDown.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnDown.Location = new Point(99, 242);
             btnDown.Margin = new Padding(4);
             btnDown.Name = "btnDown";
@@ -446,7 +446,7 @@ namespace Site7DbEditor
             // labelStatus
             // 
             labelStatus.AutoSize = true;
-            labelStatus.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            labelStatus.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             labelStatus.ForeColor = Color.Red;
             labelStatus.Location = new Point(152, 252);
             labelStatus.Margin = new Padding(4, 0, 4, 0);
@@ -493,7 +493,7 @@ namespace Site7DbEditor
             // 
             // label27
             // 
-            label27.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label27.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label27.Location = new Point(105, 10);
             label27.Margin = new Padding(4, 0, 4, 0);
             label27.Name = "label27";
@@ -516,7 +516,7 @@ namespace Site7DbEditor
             // comboBox2
             // 
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox2.Font = new Font("MS UI Gothic", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            comboBox2.Font = new Font("Yu Gothic UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 128);
             comboBox2.FormattingEnabled = true;
             comboBox2.Location = new Point(2, 42);
             comboBox2.Margin = new Padding(4);
@@ -527,7 +527,7 @@ namespace Site7DbEditor
             // 
             // btnConnect2
             // 
-            btnConnect2.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnConnect2.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnConnect2.Location = new Point(196, 35);
             btnConnect2.Margin = new Padding(4);
             btnConnect2.Name = "btnConnect2";
@@ -540,7 +540,7 @@ namespace Site7DbEditor
             // 
             // label20
             // 
-            label20.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label20.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label20.Location = new Point(2, 85);
             label20.Margin = new Padding(4, 0, 4, 0);
             label20.Name = "label20";
@@ -562,7 +562,7 @@ namespace Site7DbEditor
             // 
             // label24
             // 
-            label24.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label24.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label24.Location = new Point(2, 125);
             label24.Margin = new Padding(4, 0, 4, 0);
             label24.Name = "label24";
@@ -573,7 +573,7 @@ namespace Site7DbEditor
             // textBoxKikaikou2
             // 
             textBoxKikaikou2.BackColor = Color.FromArgb(255, 255, 128);
-            textBoxKikaikou2.Font = new Font("MS UI Gothic", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            textBoxKikaikou2.Font = new Font("Yu Gothic UI", 16F, FontStyle.Bold, GraphicsUnit.Point, 128);
             textBoxKikaikou2.Location = new Point(70, 118);
             textBoxKikaikou2.Margin = new Padding(4);
             textBoxKikaikou2.Name = "textBoxKikaikou2";
@@ -586,7 +586,7 @@ namespace Site7DbEditor
             // 
             // label25
             // 
-            label25.Font = new Font("MS UI Gothic", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label25.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label25.Location = new Point(149, 125);
             label25.Margin = new Padding(4, 0, 4, 0);
             label25.Name = "label25";
@@ -597,7 +597,7 @@ namespace Site7DbEditor
             // labelStatus2
             // 
             labelStatus2.AutoSize = true;
-            labelStatus2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            labelStatus2.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             labelStatus2.ForeColor = Color.Red;
             labelStatus2.Location = new Point(2, 165);
             labelStatus2.Margin = new Padding(4, 0, 4, 0);
@@ -608,7 +608,7 @@ namespace Site7DbEditor
             // 
             // labelGPS1
             // 
-            labelGPS1.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            labelGPS1.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             labelGPS1.Location = new Point(2, 192);
             labelGPS1.Margin = new Padding(4, 0, 4, 0);
             labelGPS1.Name = "labelGPS1";
@@ -618,7 +618,7 @@ namespace Site7DbEditor
             // 
             // labelGPS2
             // 
-            labelGPS2.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            labelGPS2.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             labelGPS2.Location = new Point(2, 220);
             labelGPS2.Margin = new Padding(4, 0, 4, 0);
             labelGPS2.Name = "labelGPS2";
@@ -646,7 +646,7 @@ namespace Site7DbEditor
             // 
             // btnUpdPos
             // 
-            btnUpdPos.Font = new Font("MS UI Gothic", 28F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnUpdPos.Font = new Font("Yu Gothic UI", 28F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnUpdPos.Location = new Point(174, 31);
             btnUpdPos.Margin = new Padding(4);
             btnUpdPos.Name = "btnUpdPos";
@@ -659,7 +659,7 @@ namespace Site7DbEditor
             // textBoxX
             // 
             textBoxX.Enabled = false;
-            textBoxX.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            textBoxX.Font = new Font("Yu Gothic UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
             textBoxX.Location = new Point(32, 5);
             textBoxX.Margin = new Padding(4);
             textBoxX.Name = "textBoxX";
@@ -670,7 +670,7 @@ namespace Site7DbEditor
             // label18
             // 
             label18.AutoSize = true;
-            label18.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label18.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label18.Location = new Point(8, 12);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
@@ -681,7 +681,7 @@ namespace Site7DbEditor
             // textBoxY
             // 
             textBoxY.Enabled = false;
-            textBoxY.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            textBoxY.Font = new Font("Yu Gothic UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
             textBoxY.Location = new Point(32, 40);
             textBoxY.Margin = new Padding(4);
             textBoxY.Name = "textBoxY";
@@ -692,7 +692,7 @@ namespace Site7DbEditor
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label11.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label11.Location = new Point(8, 48);
             label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
@@ -703,7 +703,7 @@ namespace Site7DbEditor
             // textBoxZ
             // 
             textBoxZ.Enabled = false;
-            textBoxZ.Font = new Font("MS UI Gothic", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            textBoxZ.Font = new Font("Yu Gothic UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 128);
             textBoxZ.Location = new Point(32, 75);
             textBoxZ.Margin = new Padding(4);
             textBoxZ.Name = "textBoxZ";
@@ -714,7 +714,7 @@ namespace Site7DbEditor
             // label10
             // 
             label10.AutoSize = true;
-            label10.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label10.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label10.Location = new Point(8, 82);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
@@ -727,7 +727,7 @@ namespace Site7DbEditor
             chbContMeasure.AutoSize = true;
             chbContMeasure.Checked = true;
             chbContMeasure.CheckState = CheckState.Checked;
-            chbContMeasure.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            chbContMeasure.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             chbContMeasure.Location = new Point(172, 8);
             chbContMeasure.Margin = new Padding(4);
             chbContMeasure.Name = "chbContMeasure";
@@ -742,7 +742,7 @@ namespace Site7DbEditor
             chkAutoSet.AutoSize = true;
             chkAutoSet.Checked = true;
             chkAutoSet.CheckState = CheckState.Checked;
-            chkAutoSet.Font = new Font("MS UI Gothic", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            chkAutoSet.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 128);
             chkAutoSet.Location = new Point(172, 80);
             chkAutoSet.Margin = new Padding(4);
             chkAutoSet.Name = "chkAutoSet";
