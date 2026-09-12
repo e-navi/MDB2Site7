@@ -148,7 +148,6 @@ namespace Site7DbEditor
             btnUpdatePointRight = new Button();
             btnAddPointRight = new Button();
             tabIbutu = new TabPage();
-            dgvIbutu = new DataGridView();
             pnlIbutuRight = new Panel();
             grpIbutuRecord = new GroupBox();
             lblFilterIbutu = new Label();
@@ -165,20 +164,21 @@ namespace Site7DbEditor
             txtIbutuNo = new TextBox();
             chkIbutuAutoInc = new CheckBox();
             btnIbutuMaxPlusOne = new Button();
+            dgvIbutu = new DataGridView();
             tabKikai = new TabPage();
-            dgvKikai = new DataGridView();
             pnlKikaiRight = new Panel();
-            grpKikaiRecord = new GroupBox();
-            lblKikaiName = new Label();
-            txtKikaiName = new TextBox();
-            lblKikaiLayer = new Label();
-            cmbKikaiLayer = new ComboBox();
             grpPointGuidance = new GroupBox();
             grpYudo = new GroupBox();
             lblYudo3 = new Label();
             lblYudo2 = new Label();
             lblYudo1 = new Label();
             chkPointGuidance = new CheckBox();
+            grpKikaiRecord = new GroupBox();
+            lblKikaiName = new Label();
+            txtKikaiName = new TextBox();
+            lblKikaiLayer = new Label();
+            cmbKikaiLayer = new ComboBox();
+            dgvKikai = new DataGridView();
             panelBottomHeader = new Panel();
             lblBottomTitle = new Label();
             btnDetachBottomPanel = new Button();
@@ -241,13 +241,13 @@ namespace Site7DbEditor
             pnlPrecsRight.SuspendLayout();
             grpCoordValue.SuspendLayout();
             tabIbutu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvIbutu).BeginInit();
             grpIbutuRecord.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIbutu).BeginInit();
             tabKikai.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvKikai).BeginInit();
-            grpKikaiRecord.SuspendLayout();
             grpPointGuidance.SuspendLayout();
             grpYudo.SuspendLayout();
+            grpKikaiRecord.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvKikai).BeginInit();
             panelBottomHeader.SuspendLayout();
             tabLayer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLayer).BeginInit();
@@ -1262,7 +1262,7 @@ namespace Site7DbEditor
             // 
             panelBottomContent.Controls.Add(splitContainerBottom);
             panelBottomContent.Dock = DockStyle.Fill;
-            panelBottomContent.Location = new Point(0, 30);
+            panelBottomContent.Location = new Point(0, 0);
             panelBottomContent.Name = "panelBottomContent";
             panelBottomContent.Size = new Size(1390, 306);
             panelBottomContent.TabIndex = 1;
@@ -1299,10 +1299,10 @@ namespace Site7DbEditor
             // tabIkou
             // 
             tabIkou.BackColor = Color.FromArgb(245, 246, 248);
+            tabIkou.Controls.Add(pnlPrecsRight);
             tabIkou.Controls.Add(grpPrecs);
             tabIkou.Controls.Add(grpIkouL);
             tabIkou.Controls.Add(grpIkouMaster);
-            tabIkou.Controls.Add(pnlPrecsRight);
             tabIkou.Location = new Point(32, 4);
             tabIkou.Name = "tabIkou";
             tabIkou.Padding = new Padding(3);
@@ -1313,7 +1313,7 @@ namespace Site7DbEditor
             // grpPrecs
             // 
             grpPrecs.Controls.Add(dgvPrecs);
-            grpPrecs.Dock = DockStyle.Fill;
+            grpPrecs.Dock = DockStyle.Left;
             grpPrecs.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpPrecs.ForeColor = Color.FromArgb(0, 180, 216);
             grpPrecs.Location = new Point(813, 3);
@@ -1778,7 +1778,7 @@ namespace Site7DbEditor
             // pnlPrecsRight
             // 
             pnlPrecsRight.Controls.Add(grpCoordValue);
-            pnlPrecsRight.Dock = DockStyle.Right;
+            pnlPrecsRight.Dock = DockStyle.Left;
             pnlPrecsRight.Location = new Point(1159, 3);
             pnlPrecsRight.Name = "pnlPrecsRight";
             pnlPrecsRight.Size = new Size(192, 292);
@@ -1938,15 +1938,6 @@ namespace Site7DbEditor
             tabIbutu.Size = new Size(1354, 298);
             tabIbutu.TabIndex = 1;
             tabIbutu.Text = "遺物";
-            // 
-            // dgvIbutu
-            // 
-            dgvIbutu.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvIbutu.Dock = DockStyle.Left;
-            dgvIbutu.Location = new Point(3, 3);
-            dgvIbutu.Name = "dgvIbutu";
-            dgvIbutu.Size = new Size(922, 292);
-            dgvIbutu.TabIndex = 2;
             // 
             // pnlIbutuRight
             // 
@@ -2134,6 +2125,15 @@ namespace Site7DbEditor
             btnIbutuMaxPlusOne.Text = "最大+1";
             btnIbutuMaxPlusOne.UseVisualStyleBackColor = false;
             // 
+            // dgvIbutu
+            // 
+            dgvIbutu.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvIbutu.Dock = DockStyle.Left;
+            dgvIbutu.Location = new Point(3, 3);
+            dgvIbutu.Name = "dgvIbutu";
+            dgvIbutu.Size = new Size(922, 292);
+            dgvIbutu.TabIndex = 2;
+            // 
             // tabKikai
             // 
             tabKikai.BackColor = Color.FromArgb(245, 246, 248);
@@ -2148,15 +2148,6 @@ namespace Site7DbEditor
             tabKikai.TabIndex = 2;
             tabKikai.Text = "基準点";
             // 
-            // dgvKikai
-            // 
-            dgvKikai.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvKikai.Dock = DockStyle.Left;
-            dgvKikai.Location = new Point(3, 3);
-            dgvKikai.Name = "dgvKikai";
-            dgvKikai.Size = new Size(707, 292);
-            dgvKikai.TabIndex = 0;
-            // 
             // pnlKikaiRight
             // 
             pnlKikaiRight.Dock = DockStyle.Left;
@@ -2164,62 +2155,6 @@ namespace Site7DbEditor
             pnlKikaiRight.Name = "pnlKikaiRight";
             pnlKikaiRight.Size = new Size(192, 292);
             pnlKikaiRight.TabIndex = 3;
-            // 
-            // grpKikaiRecord
-            // 
-            grpKikaiRecord.Controls.Add(lblKikaiName);
-            grpKikaiRecord.Controls.Add(txtKikaiName);
-            grpKikaiRecord.Controls.Add(lblKikaiLayer);
-            grpKikaiRecord.Controls.Add(cmbKikaiLayer);
-            grpKikaiRecord.Dock = DockStyle.Left;
-            grpKikaiRecord.ForeColor = Color.FromArgb(0, 180, 216);
-            grpKikaiRecord.Location = new Point(710, 3);
-            grpKikaiRecord.Name = "grpKikaiRecord";
-            grpKikaiRecord.Size = new Size(229, 292);
-            grpKikaiRecord.TabIndex = 0;
-            grpKikaiRecord.TabStop = false;
-            grpKikaiRecord.Text = "📍 基準点属性";
-            // 
-            // lblKikaiName
-            // 
-            lblKikaiName.AutoSize = true;
-            lblKikaiName.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            lblKikaiName.ForeColor = Color.Black;
-            lblKikaiName.Location = new Point(6, 33);
-            lblKikaiName.Name = "lblKikaiName";
-            lblKikaiName.Size = new Size(74, 21);
-            lblKikaiName.TabIndex = 0;
-            lblKikaiName.Text = "基準点名";
-            // 
-            // txtKikaiName
-            // 
-            txtKikaiName.BackColor = Color.FromArgb(255, 255, 190);
-            txtKikaiName.ForeColor = Color.Black;
-            txtKikaiName.Location = new Point(86, 30);
-            txtKikaiName.Name = "txtKikaiName";
-            txtKikaiName.Size = new Size(133, 29);
-            txtKikaiName.TabIndex = 1;
-            // 
-            // lblKikaiLayer
-            // 
-            lblKikaiLayer.AutoSize = true;
-            lblKikaiLayer.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            lblKikaiLayer.ForeColor = Color.Black;
-            lblKikaiLayer.Location = new Point(19, 73);
-            lblKikaiLayer.Name = "lblKikaiLayer";
-            lblKikaiLayer.Size = new Size(47, 21);
-            lblKikaiLayer.TabIndex = 2;
-            lblKikaiLayer.Text = "レイヤ";
-            // 
-            // cmbKikaiLayer
-            // 
-            cmbKikaiLayer.BackColor = Color.FromArgb(43, 45, 66);
-            cmbKikaiLayer.ForeColor = Color.White;
-            cmbKikaiLayer.FormattingEnabled = true;
-            cmbKikaiLayer.Location = new Point(82, 70);
-            cmbKikaiLayer.Name = "cmbKikaiLayer";
-            cmbKikaiLayer.Size = new Size(137, 29);
-            cmbKikaiLayer.TabIndex = 3;
             // 
             // grpPointGuidance
             // 
@@ -2293,14 +2228,79 @@ namespace Site7DbEditor
             chkPointGuidance.Text = "点誘導";
             chkPointGuidance.UseVisualStyleBackColor = true;
             // 
+            // grpKikaiRecord
+            // 
+            grpKikaiRecord.Controls.Add(lblKikaiName);
+            grpKikaiRecord.Controls.Add(txtKikaiName);
+            grpKikaiRecord.Controls.Add(lblKikaiLayer);
+            grpKikaiRecord.Controls.Add(cmbKikaiLayer);
+            grpKikaiRecord.Dock = DockStyle.Left;
+            grpKikaiRecord.ForeColor = Color.FromArgb(0, 180, 216);
+            grpKikaiRecord.Location = new Point(710, 3);
+            grpKikaiRecord.Name = "grpKikaiRecord";
+            grpKikaiRecord.Size = new Size(229, 292);
+            grpKikaiRecord.TabIndex = 0;
+            grpKikaiRecord.TabStop = false;
+            grpKikaiRecord.Text = "📍 基準点属性";
+            // 
+            // lblKikaiName
+            // 
+            lblKikaiName.AutoSize = true;
+            lblKikaiName.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblKikaiName.ForeColor = Color.Black;
+            lblKikaiName.Location = new Point(6, 33);
+            lblKikaiName.Name = "lblKikaiName";
+            lblKikaiName.Size = new Size(74, 21);
+            lblKikaiName.TabIndex = 0;
+            lblKikaiName.Text = "基準点名";
+            // 
+            // txtKikaiName
+            // 
+            txtKikaiName.BackColor = Color.FromArgb(255, 255, 190);
+            txtKikaiName.ForeColor = Color.Black;
+            txtKikaiName.Location = new Point(86, 30);
+            txtKikaiName.Name = "txtKikaiName";
+            txtKikaiName.Size = new Size(133, 29);
+            txtKikaiName.TabIndex = 1;
+            // 
+            // lblKikaiLayer
+            // 
+            lblKikaiLayer.AutoSize = true;
+            lblKikaiLayer.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblKikaiLayer.ForeColor = Color.Black;
+            lblKikaiLayer.Location = new Point(19, 73);
+            lblKikaiLayer.Name = "lblKikaiLayer";
+            lblKikaiLayer.Size = new Size(47, 21);
+            lblKikaiLayer.TabIndex = 2;
+            lblKikaiLayer.Text = "レイヤ";
+            // 
+            // cmbKikaiLayer
+            // 
+            cmbKikaiLayer.BackColor = Color.FromArgb(43, 45, 66);
+            cmbKikaiLayer.ForeColor = Color.White;
+            cmbKikaiLayer.FormattingEnabled = true;
+            cmbKikaiLayer.Location = new Point(82, 70);
+            cmbKikaiLayer.Name = "cmbKikaiLayer";
+            cmbKikaiLayer.Size = new Size(137, 29);
+            cmbKikaiLayer.TabIndex = 3;
+            // 
+            // dgvKikai
+            // 
+            dgvKikai.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvKikai.Dock = DockStyle.Left;
+            dgvKikai.Location = new Point(3, 3);
+            dgvKikai.Name = "dgvKikai";
+            dgvKikai.Size = new Size(707, 292);
+            dgvKikai.TabIndex = 0;
+            // 
             // panelBottomHeader
             // 
             panelBottomHeader.BackColor = Color.FromArgb(233, 236, 243);
             panelBottomHeader.Controls.Add(lblBottomTitle);
             panelBottomHeader.Controls.Add(btnDetachBottomPanel);
-            panelBottomHeader.Dock = DockStyle.Top;
+            panelBottomHeader.Dock = DockStyle.Bottom;
             panelBottomHeader.Font = new Font("Yu Gothic UI", 12F);
-            panelBottomHeader.Location = new Point(0, 0);
+            panelBottomHeader.Location = new Point(0, 306);
             panelBottomHeader.Name = "panelBottomHeader";
             panelBottomHeader.Size = new Size(1390, 30);
             panelBottomHeader.TabIndex = 0;
@@ -2665,17 +2665,17 @@ namespace Site7DbEditor
             grpCoordValue.ResumeLayout(false);
             grpCoordValue.PerformLayout();
             tabIbutu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvIbutu).EndInit();
             grpIbutuRecord.ResumeLayout(false);
             grpIbutuRecord.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvIbutu).EndInit();
             tabKikai.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvKikai).EndInit();
-            grpKikaiRecord.ResumeLayout(false);
-            grpKikaiRecord.PerformLayout();
             grpPointGuidance.ResumeLayout(false);
             grpPointGuidance.PerformLayout();
             grpYudo.ResumeLayout(false);
             grpYudo.PerformLayout();
+            grpKikaiRecord.ResumeLayout(false);
+            grpKikaiRecord.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvKikai).EndInit();
             panelBottomHeader.ResumeLayout(false);
             panelBottomHeader.PerformLayout();
             tabLayer.ResumeLayout(false);
