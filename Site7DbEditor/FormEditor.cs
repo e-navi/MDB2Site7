@@ -866,7 +866,6 @@ namespace Site7DbEditor {
             this.cmbLineKind.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.txtLineNum.TextChanged += (s, e) => UpdateCombinedLineNameLabel();
             this.btnLineMaxPlusOne.Click += btnLineMaxPlusOne_Click;
-            this.btnResetMapZoom.Click += (s, e) => { _vc.InvalidateBoundsCache(); _vc.ResetZoom(); picMapCanvas.Invalidate(); };
             this.btnZoomAll.Click += (s, e) => { _vc.InvalidateBoundsCache(); _vc.ResetZoom(); picMapCanvas.Invalidate(); };
 
             this.picMapCanvas.Paint += picMapCanvas_Paint;
@@ -1295,12 +1294,7 @@ namespace Site7DbEditor {
         }
 
         private void UpdatePanelWidthsDisplay() {
-            int formW = this.Width;
-            int leftW = panelMapLeft.Visible ? panelMapLeft.Width : 0;
-            int rightW = panelMapRight.Visible ? panelMapRight.Width : 0;
-            int mapW = picMapCanvas.Width;
-
-            lblMapTitle.Text = $"🗺 2D 測量平面図 (Form: {formW}px | LeftPanel: {leftW}px | MapCanvas: {mapW}px | RightPanel: {rightW}px)";
+            // パネル幅更新時の処理
         }
 
         private void FormEditor_Load(object? sender, EventArgs e) {

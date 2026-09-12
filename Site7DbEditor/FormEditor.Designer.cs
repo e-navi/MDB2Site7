@@ -41,9 +41,6 @@ namespace Site7DbEditor
             panelRightHeader = new Panel();
             lblRightTitle = new Label();
             btnDetachWindow = new Button();
-            panelMapHeader = new Panel();
-            lblMapTitle = new Label();
-            btnResetMapZoom = new Button();
             panelMapLeft = new Panel();
             panelLeftContent = new Panel();
             btnZoomAll = new Button();
@@ -97,8 +94,21 @@ namespace Site7DbEditor
             panelMapBottom = new Panel();
             panelBottomContent = new Panel();
             splitContainerBottom = new SplitContainer();
+            panelData = new Panel();
             tabControlData = new TabControl();
             tabIkou = new TabPage();
+            pnlPrecsRight = new Panel();
+            grpCoordValue = new GroupBox();
+            lblCoordX = new Label();
+            txtCoordX = new TextBox();
+            lblCoordY = new Label();
+            txtCoordY = new TextBox();
+            lblCoordZ = new Label();
+            txtCoordZ = new TextBox();
+            chkScreenInput = new CheckBox();
+            btnDeletePointRight = new Button();
+            btnUpdatePointRight = new Button();
+            btnAddPointRight = new Button();
             grpPrecs = new GroupBox();
             dgvPrecs = new DataGridView();
             grpIkouL = new GroupBox();
@@ -135,18 +145,6 @@ namespace Site7DbEditor
             lblSeqHeader = new Label();
             lblPrefixHeader = new Label();
             dgvIkou = new DataGridView();
-            pnlPrecsRight = new Panel();
-            grpCoordValue = new GroupBox();
-            lblCoordX = new Label();
-            txtCoordX = new TextBox();
-            lblCoordY = new Label();
-            txtCoordY = new TextBox();
-            lblCoordZ = new Label();
-            txtCoordZ = new TextBox();
-            chkScreenInput = new CheckBox();
-            btnDeletePointRight = new Button();
-            btnUpdatePointRight = new Button();
-            btnAddPointRight = new Button();
             tabIbutu = new TabPage();
             pnlIbutuRight = new Panel();
             grpIbutuRecord = new GroupBox();
@@ -219,7 +217,6 @@ namespace Site7DbEditor
             panelDrawingPreviewHeader.SuspendLayout();
             panelMapRight.SuspendLayout();
             panelRightHeader.SuspendLayout();
-            panelMapHeader.SuspendLayout();
             panelMapLeft.SuspendLayout();
             panelLeftContent.SuspendLayout();
             grpDspTarget.SuspendLayout();
@@ -230,16 +227,17 @@ namespace Site7DbEditor
             ((System.ComponentModel.ISupportInitialize)splitContainerBottom).BeginInit();
             splitContainerBottom.Panel1.SuspendLayout();
             splitContainerBottom.SuspendLayout();
+            panelData.SuspendLayout();
             tabControlData.SuspendLayout();
             tabIkou.SuspendLayout();
+            pnlPrecsRight.SuspendLayout();
+            grpCoordValue.SuspendLayout();
             grpPrecs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPrecs).BeginInit();
             grpIkouL.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvIkouL).BeginInit();
             grpIkouMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvIkou).BeginInit();
-            pnlPrecsRight.SuspendLayout();
-            grpCoordValue.SuspendLayout();
             tabIbutu.SuspendLayout();
             grpIbutuRecord.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvIbutu).BeginInit();
@@ -420,7 +418,6 @@ namespace Site7DbEditor
             // 
             panelMapArea.Controls.Add(splitMapArea);
             panelMapArea.Controls.Add(panelMapRight);
-            panelMapArea.Controls.Add(panelMapHeader);
             panelMapArea.Dock = DockStyle.Fill;
             panelMapArea.Location = new Point(0, 0);
             panelMapArea.Name = "panelMapArea";
@@ -430,7 +427,7 @@ namespace Site7DbEditor
             // splitMapArea
             // 
             splitMapArea.Dock = DockStyle.Fill;
-            splitMapArea.Location = new Point(0, 35);
+            splitMapArea.Location = new Point(0, 0);
             splitMapArea.Name = "splitMapArea";
             // 
             // splitMapArea.Panel1
@@ -441,7 +438,7 @@ namespace Site7DbEditor
             // 
             splitMapArea.Panel2.Controls.Add(panelDrawingPreview);
             splitMapArea.Panel2Collapsed = true;
-            splitMapArea.Size = new Size(1126, 516);
+            splitMapArea.Size = new Size(1126, 551);
             splitMapArea.SplitterDistance = 560;
             splitMapArea.TabIndex = 2;
             // 
@@ -451,7 +448,7 @@ namespace Site7DbEditor
             picMapCanvas.Dock = DockStyle.Fill;
             picMapCanvas.Location = new Point(0, 0);
             picMapCanvas.Name = "picMapCanvas";
-            picMapCanvas.Size = new Size(1126, 516);
+            picMapCanvas.Size = new Size(1126, 551);
             picMapCanvas.TabIndex = 0;
             picMapCanvas.TabStop = false;
             // 
@@ -504,9 +501,9 @@ namespace Site7DbEditor
             panelMapRight.Controls.Add(panelRightContent);
             panelMapRight.Controls.Add(panelRightHeader);
             panelMapRight.Dock = DockStyle.Right;
-            panelMapRight.Location = new Point(1126, 35);
+            panelMapRight.Location = new Point(1126, 0);
             panelMapRight.Name = "panelMapRight";
-            panelMapRight.Size = new Size(264, 516);
+            panelMapRight.Size = new Size(264, 551);
             panelMapRight.TabIndex = 2;
             // 
             // panelRightContent
@@ -515,7 +512,7 @@ namespace Site7DbEditor
             panelRightContent.Dock = DockStyle.Fill;
             panelRightContent.Location = new Point(0, 30);
             panelRightContent.Name = "panelRightContent";
-            panelRightContent.Size = new Size(264, 486);
+            panelRightContent.Size = new Size(264, 521);
             panelRightContent.TabIndex = 0;
             // 
             // panelRightHeader
@@ -524,7 +521,7 @@ namespace Site7DbEditor
             panelRightHeader.Controls.Add(lblRightTitle);
             panelRightHeader.Controls.Add(btnDetachWindow);
             panelRightHeader.Dock = DockStyle.Top;
-            panelRightHeader.Font = new Font("Yu Gothic UI", 12F);
+            panelRightHeader.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             panelRightHeader.Location = new Point(0, 0);
             panelRightHeader.Name = "panelRightHeader";
             panelRightHeader.Size = new Size(264, 30);
@@ -533,11 +530,11 @@ namespace Site7DbEditor
             // lblRightTitle
             // 
             lblRightTitle.AutoSize = true;
-            lblRightTitle.Font = new Font("MS UI Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            lblRightTitle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblRightTitle.ForeColor = Color.FromArgb(25, 45, 80);
-            lblRightTitle.Location = new Point(6, 8);
+            lblRightTitle.Location = new Point(6, 3);
             lblRightTitle.Name = "lblRightTitle";
-            lblRightTitle.Size = new Size(132, 16);
+            lblRightTitle.Size = new Size(133, 21);
             lblRightTitle.TabIndex = 0;
             lblRightTitle.Text = "📡 測量機器制御";
             // 
@@ -554,43 +551,6 @@ namespace Site7DbEditor
             btnDetachWindow.TabIndex = 1;
             btnDetachWindow.Text = "↗ 分離";
             btnDetachWindow.UseVisualStyleBackColor = false;
-            // 
-            // panelMapHeader
-            // 
-            panelMapHeader.BackColor = Color.FromArgb(30, 30, 38);
-            panelMapHeader.Controls.Add(lblMapTitle);
-            panelMapHeader.Controls.Add(btnResetMapZoom);
-            panelMapHeader.Dock = DockStyle.Top;
-            panelMapHeader.Location = new Point(0, 0);
-            panelMapHeader.Name = "panelMapHeader";
-            panelMapHeader.Size = new Size(1390, 35);
-            panelMapHeader.TabIndex = 0;
-            panelMapHeader.Visible = false;
-            // 
-            // lblMapTitle
-            // 
-            lblMapTitle.AutoSize = true;
-            lblMapTitle.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            lblMapTitle.ForeColor = Color.FromArgb(0, 225, 255);
-            lblMapTitle.Location = new Point(12, 8);
-            lblMapTitle.Name = "lblMapTitle";
-            lblMapTitle.Size = new Size(180, 17);
-            lblMapTitle.TabIndex = 0;
-            lblMapTitle.Text = "🗺 2D 測量平面図 (CAD表示)";
-            // 
-            // btnResetMapZoom
-            // 
-            btnResetMapZoom.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnResetMapZoom.BackColor = Color.FromArgb(53, 55, 76);
-            btnResetMapZoom.FlatStyle = FlatStyle.Flat;
-            btnResetMapZoom.Font = new Font("Yu Gothic UI", 8.5F);
-            btnResetMapZoom.ForeColor = Color.White;
-            btnResetMapZoom.Location = new Point(1260, 5);
-            btnResetMapZoom.Name = "btnResetMapZoom";
-            btnResetMapZoom.Size = new Size(115, 26);
-            btnResetMapZoom.TabIndex = 1;
-            btnResetMapZoom.Text = "🔍 全体表示リセット";
-            btnResetMapZoom.UseVisualStyleBackColor = false;
             // 
             // panelMapLeft
             // 
@@ -1251,7 +1211,6 @@ namespace Site7DbEditor
             // panelMapBottom
             // 
             panelMapBottom.Controls.Add(panelBottomContent);
-            panelMapBottom.Controls.Add(panelBottomHeader);
             panelMapBottom.Dock = DockStyle.Bottom;
             panelMapBottom.Location = new Point(0, 551);
             panelMapBottom.Name = "panelMapBottom";
@@ -1264,7 +1223,7 @@ namespace Site7DbEditor
             panelBottomContent.Dock = DockStyle.Fill;
             panelBottomContent.Location = new Point(0, 0);
             panelBottomContent.Name = "panelBottomContent";
-            panelBottomContent.Size = new Size(1390, 306);
+            panelBottomContent.Size = new Size(1390, 336);
             panelBottomContent.TabIndex = 1;
             // 
             // splitContainerBottom
@@ -1275,11 +1234,21 @@ namespace Site7DbEditor
             // 
             // splitContainerBottom.Panel1
             // 
-            splitContainerBottom.Panel1.Controls.Add(tabControlData);
+            splitContainerBottom.Panel1.Controls.Add(panelData);
             splitContainerBottom.Panel2Collapsed = true;
-            splitContainerBottom.Size = new Size(1390, 306);
+            splitContainerBottom.Size = new Size(1390, 336);
             splitContainerBottom.SplitterDistance = 1365;
             splitContainerBottom.TabIndex = 0;
+            // 
+            // panelData
+            // 
+            panelData.Controls.Add(tabControlData);
+            panelData.Controls.Add(panelBottomHeader);
+            panelData.Dock = DockStyle.Left;
+            panelData.Location = new Point(0, 0);
+            panelData.Name = "panelData";
+            panelData.Size = new Size(1390, 336);
+            panelData.TabIndex = 1;
             // 
             // tabControlData
             // 
@@ -1287,7 +1256,7 @@ namespace Site7DbEditor
             tabControlData.Controls.Add(tabIkou);
             tabControlData.Controls.Add(tabIbutu);
             tabControlData.Controls.Add(tabKikai);
-            tabControlData.Dock = DockStyle.Fill;
+            tabControlData.Dock = DockStyle.Left;
             tabControlData.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             tabControlData.Location = new Point(0, 0);
             tabControlData.Multiline = true;
@@ -1309,6 +1278,157 @@ namespace Site7DbEditor
             tabIkou.Size = new Size(1354, 298);
             tabIkou.TabIndex = 0;
             tabIkou.Text = "遺構";
+            // 
+            // pnlPrecsRight
+            // 
+            pnlPrecsRight.Controls.Add(grpCoordValue);
+            pnlPrecsRight.Dock = DockStyle.Left;
+            pnlPrecsRight.Location = new Point(1159, 3);
+            pnlPrecsRight.Name = "pnlPrecsRight";
+            pnlPrecsRight.Size = new Size(192, 292);
+            pnlPrecsRight.TabIndex = 3;
+            // 
+            // grpCoordValue
+            // 
+            grpCoordValue.Controls.Add(lblCoordX);
+            grpCoordValue.Controls.Add(txtCoordX);
+            grpCoordValue.Controls.Add(lblCoordY);
+            grpCoordValue.Controls.Add(txtCoordY);
+            grpCoordValue.Controls.Add(lblCoordZ);
+            grpCoordValue.Controls.Add(txtCoordZ);
+            grpCoordValue.Controls.Add(chkScreenInput);
+            grpCoordValue.Controls.Add(btnDeletePointRight);
+            grpCoordValue.Controls.Add(btnUpdatePointRight);
+            grpCoordValue.Controls.Add(btnAddPointRight);
+            grpCoordValue.Dock = DockStyle.Fill;
+            grpCoordValue.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            grpCoordValue.ForeColor = Color.FromArgb(0, 180, 216);
+            grpCoordValue.Location = new Point(0, 0);
+            grpCoordValue.Name = "grpCoordValue";
+            grpCoordValue.Size = new Size(192, 292);
+            grpCoordValue.TabIndex = 0;
+            grpCoordValue.TabStop = false;
+            grpCoordValue.Text = "座標値";
+            // 
+            // lblCoordX
+            // 
+            lblCoordX.AutoSize = true;
+            lblCoordX.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblCoordX.ForeColor = Color.Black;
+            lblCoordX.Location = new Point(4, 27);
+            lblCoordX.Name = "lblCoordX";
+            lblCoordX.Size = new Size(24, 21);
+            lblCoordX.TabIndex = 1;
+            lblCoordX.Text = "X:";
+            // 
+            // txtCoordX
+            // 
+            txtCoordX.BackColor = Color.FromArgb(255, 255, 191);
+            txtCoordX.Font = new Font("Yu Gothic UI", 12F);
+            txtCoordX.ForeColor = Color.Black;
+            txtCoordX.Location = new Point(28, 24);
+            txtCoordX.Name = "txtCoordX";
+            txtCoordX.Size = new Size(155, 29);
+            txtCoordX.TabIndex = 2;
+            txtCoordX.TextAlign = HorizontalAlignment.Right;
+            // 
+            // lblCoordY
+            // 
+            lblCoordY.AutoSize = true;
+            lblCoordY.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblCoordY.ForeColor = Color.Black;
+            lblCoordY.Location = new Point(4, 60);
+            lblCoordY.Name = "lblCoordY";
+            lblCoordY.Size = new Size(22, 21);
+            lblCoordY.TabIndex = 3;
+            lblCoordY.Text = "Y:";
+            // 
+            // txtCoordY
+            // 
+            txtCoordY.BackColor = Color.FromArgb(255, 255, 191);
+            txtCoordY.Font = new Font("Yu Gothic UI", 12F);
+            txtCoordY.ForeColor = Color.Black;
+            txtCoordY.Location = new Point(28, 57);
+            txtCoordY.Name = "txtCoordY";
+            txtCoordY.Size = new Size(155, 29);
+            txtCoordY.TabIndex = 4;
+            txtCoordY.TextAlign = HorizontalAlignment.Right;
+            // 
+            // lblCoordZ
+            // 
+            lblCoordZ.AutoSize = true;
+            lblCoordZ.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblCoordZ.ForeColor = Color.Black;
+            lblCoordZ.Location = new Point(4, 93);
+            lblCoordZ.Name = "lblCoordZ";
+            lblCoordZ.Size = new Size(23, 21);
+            lblCoordZ.TabIndex = 5;
+            lblCoordZ.Text = "Z:";
+            // 
+            // txtCoordZ
+            // 
+            txtCoordZ.BackColor = Color.FromArgb(255, 255, 191);
+            txtCoordZ.Font = new Font("Yu Gothic UI", 12F);
+            txtCoordZ.ForeColor = Color.Black;
+            txtCoordZ.Location = new Point(28, 90);
+            txtCoordZ.Name = "txtCoordZ";
+            txtCoordZ.Size = new Size(155, 29);
+            txtCoordZ.TabIndex = 6;
+            txtCoordZ.TextAlign = HorizontalAlignment.Right;
+            // 
+            // chkScreenInput
+            // 
+            chkScreenInput.AutoSize = true;
+            chkScreenInput.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            chkScreenInput.ForeColor = Color.FromArgb(239, 35, 60);
+            chkScreenInput.Location = new Point(6, 126);
+            chkScreenInput.Name = "chkScreenInput";
+            chkScreenInput.Size = new Size(120, 25);
+            chkScreenInput.TabIndex = 7;
+            chkScreenInput.Text = "📌 画面入力";
+            chkScreenInput.UseVisualStyleBackColor = true;
+            // 
+            // btnDeletePointRight
+            // 
+            btnDeletePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDeletePointRight.BackColor = Color.FromArgb(190, 45, 60);
+            btnDeletePointRight.FlatStyle = FlatStyle.Flat;
+            btnDeletePointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnDeletePointRight.ForeColor = Color.White;
+            btnDeletePointRight.Location = new Point(4, 252);
+            btnDeletePointRight.Name = "btnDeletePointRight";
+            btnDeletePointRight.Size = new Size(58, 34);
+            btnDeletePointRight.TabIndex = 8;
+            btnDeletePointRight.Text = "削除";
+            btnDeletePointRight.UseVisualStyleBackColor = false;
+            // 
+            // btnUpdatePointRight
+            // 
+            btnUpdatePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnUpdatePointRight.BackColor = Color.FromArgb(247, 184, 1);
+            btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
+            btnUpdatePointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnUpdatePointRight.ForeColor = Color.Black;
+            btnUpdatePointRight.Location = new Point(66, 252);
+            btnUpdatePointRight.Name = "btnUpdatePointRight";
+            btnUpdatePointRight.Size = new Size(58, 34);
+            btnUpdatePointRight.TabIndex = 9;
+            btnUpdatePointRight.Text = "更新";
+            btnUpdatePointRight.UseVisualStyleBackColor = false;
+            // 
+            // btnAddPointRight
+            // 
+            btnAddPointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnAddPointRight.BackColor = Color.FromArgb(53, 55, 76);
+            btnAddPointRight.FlatStyle = FlatStyle.Flat;
+            btnAddPointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnAddPointRight.ForeColor = Color.White;
+            btnAddPointRight.Location = new Point(128, 252);
+            btnAddPointRight.Name = "btnAddPointRight";
+            btnAddPointRight.Size = new Size(58, 34);
+            btnAddPointRight.TabIndex = 10;
+            btnAddPointRight.Text = "追加";
+            btnAddPointRight.UseVisualStyleBackColor = false;
             // 
             // grpPrecs
             // 
@@ -1774,157 +1894,6 @@ namespace Site7DbEditor
             dgvIkou.Name = "dgvIkou";
             dgvIkou.Size = new Size(160, 264);
             dgvIkou.TabIndex = 0;
-            // 
-            // pnlPrecsRight
-            // 
-            pnlPrecsRight.Controls.Add(grpCoordValue);
-            pnlPrecsRight.Dock = DockStyle.Left;
-            pnlPrecsRight.Location = new Point(1159, 3);
-            pnlPrecsRight.Name = "pnlPrecsRight";
-            pnlPrecsRight.Size = new Size(192, 292);
-            pnlPrecsRight.TabIndex = 3;
-            // 
-            // grpCoordValue
-            // 
-            grpCoordValue.Controls.Add(lblCoordX);
-            grpCoordValue.Controls.Add(txtCoordX);
-            grpCoordValue.Controls.Add(lblCoordY);
-            grpCoordValue.Controls.Add(txtCoordY);
-            grpCoordValue.Controls.Add(lblCoordZ);
-            grpCoordValue.Controls.Add(txtCoordZ);
-            grpCoordValue.Controls.Add(chkScreenInput);
-            grpCoordValue.Controls.Add(btnDeletePointRight);
-            grpCoordValue.Controls.Add(btnUpdatePointRight);
-            grpCoordValue.Controls.Add(btnAddPointRight);
-            grpCoordValue.Dock = DockStyle.Fill;
-            grpCoordValue.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            grpCoordValue.ForeColor = Color.FromArgb(0, 180, 216);
-            grpCoordValue.Location = new Point(0, 0);
-            grpCoordValue.Name = "grpCoordValue";
-            grpCoordValue.Size = new Size(192, 292);
-            grpCoordValue.TabIndex = 0;
-            grpCoordValue.TabStop = false;
-            grpCoordValue.Text = "座標値";
-            // 
-            // lblCoordX
-            // 
-            lblCoordX.AutoSize = true;
-            lblCoordX.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            lblCoordX.ForeColor = Color.Black;
-            lblCoordX.Location = new Point(4, 27);
-            lblCoordX.Name = "lblCoordX";
-            lblCoordX.Size = new Size(24, 21);
-            lblCoordX.TabIndex = 1;
-            lblCoordX.Text = "X:";
-            // 
-            // txtCoordX
-            // 
-            txtCoordX.BackColor = Color.FromArgb(255, 255, 191);
-            txtCoordX.Font = new Font("Yu Gothic UI", 12F);
-            txtCoordX.ForeColor = Color.Black;
-            txtCoordX.Location = new Point(28, 24);
-            txtCoordX.Name = "txtCoordX";
-            txtCoordX.Size = new Size(155, 29);
-            txtCoordX.TabIndex = 2;
-            txtCoordX.TextAlign = HorizontalAlignment.Right;
-            // 
-            // lblCoordY
-            // 
-            lblCoordY.AutoSize = true;
-            lblCoordY.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            lblCoordY.ForeColor = Color.Black;
-            lblCoordY.Location = new Point(4, 60);
-            lblCoordY.Name = "lblCoordY";
-            lblCoordY.Size = new Size(22, 21);
-            lblCoordY.TabIndex = 3;
-            lblCoordY.Text = "Y:";
-            // 
-            // txtCoordY
-            // 
-            txtCoordY.BackColor = Color.FromArgb(255, 255, 191);
-            txtCoordY.Font = new Font("Yu Gothic UI", 12F);
-            txtCoordY.ForeColor = Color.Black;
-            txtCoordY.Location = new Point(28, 57);
-            txtCoordY.Name = "txtCoordY";
-            txtCoordY.Size = new Size(155, 29);
-            txtCoordY.TabIndex = 4;
-            txtCoordY.TextAlign = HorizontalAlignment.Right;
-            // 
-            // lblCoordZ
-            // 
-            lblCoordZ.AutoSize = true;
-            lblCoordZ.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            lblCoordZ.ForeColor = Color.Black;
-            lblCoordZ.Location = new Point(4, 93);
-            lblCoordZ.Name = "lblCoordZ";
-            lblCoordZ.Size = new Size(23, 21);
-            lblCoordZ.TabIndex = 5;
-            lblCoordZ.Text = "Z:";
-            // 
-            // txtCoordZ
-            // 
-            txtCoordZ.BackColor = Color.FromArgb(255, 255, 191);
-            txtCoordZ.Font = new Font("Yu Gothic UI", 12F);
-            txtCoordZ.ForeColor = Color.Black;
-            txtCoordZ.Location = new Point(28, 90);
-            txtCoordZ.Name = "txtCoordZ";
-            txtCoordZ.Size = new Size(155, 29);
-            txtCoordZ.TabIndex = 6;
-            txtCoordZ.TextAlign = HorizontalAlignment.Right;
-            // 
-            // chkScreenInput
-            // 
-            chkScreenInput.AutoSize = true;
-            chkScreenInput.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            chkScreenInput.ForeColor = Color.FromArgb(239, 35, 60);
-            chkScreenInput.Location = new Point(6, 126);
-            chkScreenInput.Name = "chkScreenInput";
-            chkScreenInput.Size = new Size(120, 25);
-            chkScreenInput.TabIndex = 7;
-            chkScreenInput.Text = "📌 画面入力";
-            chkScreenInput.UseVisualStyleBackColor = true;
-            // 
-            // btnDeletePointRight
-            // 
-            btnDeletePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnDeletePointRight.BackColor = Color.FromArgb(190, 45, 60);
-            btnDeletePointRight.FlatStyle = FlatStyle.Flat;
-            btnDeletePointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
-            btnDeletePointRight.ForeColor = Color.White;
-            btnDeletePointRight.Location = new Point(4, 252);
-            btnDeletePointRight.Name = "btnDeletePointRight";
-            btnDeletePointRight.Size = new Size(58, 34);
-            btnDeletePointRight.TabIndex = 8;
-            btnDeletePointRight.Text = "削除";
-            btnDeletePointRight.UseVisualStyleBackColor = false;
-            // 
-            // btnUpdatePointRight
-            // 
-            btnUpdatePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnUpdatePointRight.BackColor = Color.FromArgb(247, 184, 1);
-            btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
-            btnUpdatePointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
-            btnUpdatePointRight.ForeColor = Color.Black;
-            btnUpdatePointRight.Location = new Point(66, 252);
-            btnUpdatePointRight.Name = "btnUpdatePointRight";
-            btnUpdatePointRight.Size = new Size(58, 34);
-            btnUpdatePointRight.TabIndex = 9;
-            btnUpdatePointRight.Text = "更新";
-            btnUpdatePointRight.UseVisualStyleBackColor = false;
-            // 
-            // btnAddPointRight
-            // 
-            btnAddPointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnAddPointRight.BackColor = Color.FromArgb(53, 55, 76);
-            btnAddPointRight.FlatStyle = FlatStyle.Flat;
-            btnAddPointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
-            btnAddPointRight.ForeColor = Color.White;
-            btnAddPointRight.Location = new Point(128, 252);
-            btnAddPointRight.Name = "btnAddPointRight";
-            btnAddPointRight.Size = new Size(58, 34);
-            btnAddPointRight.TabIndex = 10;
-            btnAddPointRight.Text = "追加";
-            btnAddPointRight.UseVisualStyleBackColor = false;
             // 
             // tabIbutu
             // 
@@ -2635,8 +2604,6 @@ namespace Site7DbEditor
             panelMapRight.ResumeLayout(false);
             panelRightHeader.ResumeLayout(false);
             panelRightHeader.PerformLayout();
-            panelMapHeader.ResumeLayout(false);
-            panelMapHeader.PerformLayout();
             panelMapLeft.ResumeLayout(false);
             panelLeftContent.ResumeLayout(false);
             panelLeftContent.PerformLayout();
@@ -2651,8 +2618,12 @@ namespace Site7DbEditor
             splitContainerBottom.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerBottom).EndInit();
             splitContainerBottom.ResumeLayout(false);
+            panelData.ResumeLayout(false);
             tabControlData.ResumeLayout(false);
             tabIkou.ResumeLayout(false);
+            pnlPrecsRight.ResumeLayout(false);
+            grpCoordValue.ResumeLayout(false);
+            grpCoordValue.PerformLayout();
             grpPrecs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvPrecs).EndInit();
             grpIkouL.ResumeLayout(false);
@@ -2661,9 +2632,6 @@ namespace Site7DbEditor
             grpIkouMaster.ResumeLayout(false);
             grpIkouMaster.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvIkou).EndInit();
-            pnlPrecsRight.ResumeLayout(false);
-            grpCoordValue.ResumeLayout(false);
-            grpCoordValue.PerformLayout();
             tabIbutu.ResumeLayout(false);
             grpIbutuRecord.ResumeLayout(false);
             grpIbutuRecord.PerformLayout();
@@ -2706,9 +2674,6 @@ namespace Site7DbEditor
         private System.Windows.Forms.ComboBox cmbQuickDbSelect;
         private System.Windows.Forms.Label lblDbStatus;
 
-        private System.Windows.Forms.Panel panelMapHeader;
-        private System.Windows.Forms.Label lblMapTitle;
-        private System.Windows.Forms.Button btnResetMapZoom;
         private System.Windows.Forms.Button btnZoomAll;
         private System.Windows.Forms.Panel panelMapLeft;
         private System.Windows.Forms.CheckBox chkShowIkou;
@@ -2894,5 +2859,6 @@ namespace Site7DbEditor
         private Label lblYudo3;
         private Label lblYudo2;
         private Label lblYudo1;
+        private Panel panelData;
     }
 }
