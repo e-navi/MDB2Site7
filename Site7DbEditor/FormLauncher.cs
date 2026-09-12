@@ -38,7 +38,7 @@ namespace Site7DbEditor
             {
                 Name = "Thumb",
                 HeaderText = "図面",
-                Width = 54,
+                Width = 60,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 ImageLayout = DataGridViewImageCellLayout.Zoom,
                 Resizable = DataGridViewTriState.False
@@ -47,6 +47,9 @@ namespace Site7DbEditor
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Name", HeaderText = "現場名", FillWeight = 45 });
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "UpdatedAt", HeaderText = "最終更新日時", FillWeight = 32 });
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Size", HeaderText = "サイズ", FillWeight = 23 });
+            dgvSites.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            dgvSites.DefaultCellStyle.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Regular);
+            dgvSites.RowTemplate.Height = 52;
             dgvSites.DataError += (s, e) => { e.ThrowException = false; };
         }
 
@@ -65,7 +68,7 @@ namespace Site7DbEditor
             {
                 if (splitListPreview.Width > 300)
                 {
-                    splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 235);
+                    splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 270);
                 }
             }
             catch { }
@@ -281,9 +284,9 @@ namespace Site7DbEditor
         {
             var pnl = new Panel
             {
-                Size = new Size(200, 230),
+                Size = new Size(210, 255),
                 BackColor = (_selectedSite == site) ? Color.FromArgb(235, 243, 255) : Color.White,
-                Margin = new Padding(10),
+                Margin = new Padding(12),
                 Cursor = Cursors.Hand,
                 Tag = site
             };
@@ -298,7 +301,7 @@ namespace Site7DbEditor
             var pic = new PictureBox
             {
                 Location = new Point(8, 8),
-                Size = new Size(184, 150),
+                Size = new Size(194, 160),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 BackColor = Color.FromArgb(250, 250, 252),
                 Image = site.GetThumbnailImage() ?? CreateDefaultPlaceholderImage()
@@ -307,10 +310,10 @@ namespace Site7DbEditor
             var lblName = new Label
             {
                 Text = site.Name,
-                Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(6, 162),
-                Size = new Size(188, 24),
+                Location = new Point(6, 174),
+                Size = new Size(198, 26),
                 TextAlign = ContentAlignment.MiddleCenter,
                 AutoEllipsis = true
             };
@@ -318,10 +321,10 @@ namespace Site7DbEditor
             var lblDate = new Label
             {
                 Text = site.DisplayUpdatedAt,
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
+                Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(6, 188),
-                Size = new Size(188, 18),
+                Location = new Point(6, 204),
+                Size = new Size(198, 22),
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
@@ -355,12 +358,12 @@ namespace Site7DbEditor
 
         private Image CreateDefaultPlaceholderImage()
         {
-            var bmp = new Bitmap(184, 150);
+            var bmp = new Bitmap(194, 160);
             using var g = Graphics.FromImage(bmp);
             g.Clear(Color.FromArgb(245, 247, 250));
             using var p = new Pen(Color.FromArgb(210, 215, 225));
             g.DrawRectangle(p, 0, 0, bmp.Width - 1, bmp.Height - 1);
-            using var font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
+            using var font = new Font("Yu Gothic UI", 10F, FontStyle.Regular);
             using var brush = new SolidBrush(Color.FromArgb(140, 150, 165));
             var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
             g.DrawString("No Preview\n(SITE7.png)", font, brush, new RectangleF(0, 0, bmp.Width, bmp.Height), sf);
@@ -435,20 +438,20 @@ namespace Site7DbEditor
         {
             using var prompt = new Form
             {
-                Width = 420,
-                Height = 180,
+                Width = 460,
+                Height = 200,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = "新規現場の作成",
                 StartPosition = FormStartPosition.CenterParent,
                 MaximizeBox = false,
                 MinimizeBox = false,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular)
+                Font = new Font("Yu Gothic UI", 11F, FontStyle.Regular)
             };
 
-            var textLabel = new Label { Left = 20, Top = 18, Text = "現場名を入力してください:", AutoSize = true };
-            var textBox = new TextBox { Left = 20, Top = 42, Width = 360, Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold) };
-            var confirmation = new Button { Text = "作成", Left = 200, Width = 85, Top = 85, DialogResult = DialogResult.OK, BackColor = Color.FromArgb(0, 122, 255), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            var cancel = new Button { Text = "キャンセル", Left = 295, Width = 85, Top = 85, DialogResult = DialogResult.Cancel, BackColor = Color.FromArgb(240, 240, 240), FlatStyle = FlatStyle.Flat };
+            var textLabel = new Label { Left = 20, Top = 18, Text = "現場名を入力してください:", AutoSize = true, Font = new Font("Yu Gothic UI", 11F) };
+            var textBox = new TextBox { Left = 20, Top = 46, Width = 400, Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold) };
+            var confirmation = new Button { Text = "作成", Left = 220, Width = 95, Height = 36, Top = 95, DialogResult = DialogResult.OK, BackColor = Color.FromArgb(0, 122, 255), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold) };
+            var cancel = new Button { Text = "キャンセル", Left = 325, Width = 95, Height = 36, Top = 95, DialogResult = DialogResult.Cancel, BackColor = Color.FromArgb(240, 240, 240), FlatStyle = FlatStyle.Flat, Font = new Font("Yu Gothic UI", 11F) };
 
             prompt.Controls.AddRange(new Control[] { textLabel, textBox, confirmation, cancel });
             prompt.AcceptButton = confirmation;

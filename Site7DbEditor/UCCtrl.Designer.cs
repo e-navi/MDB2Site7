@@ -131,11 +131,11 @@ namespace Site7DbEditor
             tabTS.Controls.Add(trackBar1);
             tabTS.Controls.Add(btnDown);
             tabTS.Controls.Add(labelStatus);
-            tabTS.Location = new Point(4, 23);
+            tabTS.Location = new Point(4, 26);
             tabTS.Margin = new Padding(4);
             tabTS.Name = "tabTS";
             tabTS.Padding = new Padding(4);
-            tabTS.Size = new Size(257, 290);
+            tabTS.Size = new Size(257, 287);
             tabTS.TabIndex = 2;
             tabTS.Text = "TS";
             tabTS.UseVisualStyleBackColor = true;
@@ -148,7 +148,7 @@ namespace Site7DbEditor
             cBoxTS.Location = new Point(2, 5);
             cBoxTS.Margin = new Padding(4);
             cBoxTS.Name = "cBoxTS";
-            cBoxTS.Size = new Size(244, 21);
+            cBoxTS.Size = new Size(244, 25);
             cBoxTS.TabIndex = 182;
             cBoxTS.SelectionChangeCommitted += cBoxTS_SelectedIndexChanged;
             // 
@@ -160,7 +160,7 @@ namespace Site7DbEditor
             comboBox1.Location = new Point(2, 42);
             comboBox1.Margin = new Padding(4);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(191, 21);
+            comboBox1.Size = new Size(191, 25);
             comboBox1.TabIndex = 0;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -207,7 +207,7 @@ namespace Site7DbEditor
             Kikaikou1.Location = new Point(156, 80);
             Kikaikou1.Margin = new Padding(4);
             Kikaikou1.Name = "Kikaikou1";
-            Kikaikou1.Size = new Size(69, 29);
+            Kikaikou1.Size = new Size(69, 36);
             Kikaikou1.TabIndex = 183;
             Kikaikou1.Tag = "1";
             Kikaikou1.Text = "1.500";
@@ -255,7 +255,7 @@ namespace Site7DbEditor
             Mirrorkou1.Location = new Point(156, 119);
             Mirrorkou1.Margin = new Padding(4);
             Mirrorkou1.Name = "Mirrorkou1";
-            Mirrorkou1.Size = new Size(69, 29);
+            Mirrorkou1.Size = new Size(69, 36);
             Mirrorkou1.TabIndex = 184;
             Mirrorkou1.Tag = "2";
             Mirrorkou1.Text = "1.200";
@@ -451,7 +451,7 @@ namespace Site7DbEditor
             labelStatus.Location = new Point(152, 252);
             labelStatus.Margin = new Padding(4, 0, 4, 0);
             labelStatus.Name = "labelStatus";
-            labelStatus.Size = new Size(67, 14);
+            labelStatus.Size = new Size(65, 19);
             labelStatus.TabIndex = 189;
             labelStatus.Text = "TSの状況";
             // 
@@ -470,11 +470,11 @@ namespace Site7DbEditor
             tabGPS.Controls.Add(labelStatus2);
             tabGPS.Controls.Add(labelGPS1);
             tabGPS.Controls.Add(labelGPS2);
-            tabGPS.Location = new Point(4, 23);
+            tabGPS.Location = new Point(4, 26);
             tabGPS.Margin = new Padding(4);
             tabGPS.Name = "tabGPS";
             tabGPS.Padding = new Padding(4);
-            tabGPS.Size = new Size(282, 295);
+            tabGPS.Size = new Size(257, 287);
             tabGPS.TabIndex = 3;
             tabGPS.Text = "GPS";
             tabGPS.UseVisualStyleBackColor = true;
@@ -487,7 +487,7 @@ namespace Site7DbEditor
             cBoxGPS.Location = new Point(2, 5);
             cBoxGPS.Margin = new Padding(4);
             cBoxGPS.Name = "cBoxGPS";
-            cBoxGPS.Size = new Size(100, 21);
+            cBoxGPS.Size = new Size(100, 25);
             cBoxGPS.TabIndex = 193;
             cBoxGPS.SelectedIndexChanged += cBoxGPS_SelectedIndexChanged;
             // 
@@ -509,7 +509,7 @@ namespace Site7DbEditor
             cBoxKei.Location = new Point(196, 5);
             cBoxKei.Margin = new Padding(4);
             cBoxKei.Name = "cBoxKei";
-            cBoxKei.Size = new Size(44, 21);
+            cBoxKei.Size = new Size(44, 25);
             cBoxKei.TabIndex = 196;
             cBoxKei.SelectedIndexChanged += cBoxKei_SelectedIndexChanged;
             // 
@@ -521,7 +521,7 @@ namespace Site7DbEditor
             comboBox2.Location = new Point(2, 42);
             comboBox2.Margin = new Padding(4);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(194, 21);
+            comboBox2.Size = new Size(194, 25);
             comboBox2.TabIndex = 161;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
@@ -556,7 +556,7 @@ namespace Site7DbEditor
             cBoxGPSStatus.Location = new Point(135, 80);
             cBoxGPSStatus.Margin = new Padding(4);
             cBoxGPSStatus.Name = "cBoxGPSStatus";
-            cBoxGPSStatus.Size = new Size(107, 21);
+            cBoxGPSStatus.Size = new Size(107, 25);
             cBoxGPSStatus.TabIndex = 194;
             cBoxGPSStatus.SelectedIndexChanged += cBoxGPSStatus_SelectedIndexChanged;
             // 
@@ -577,7 +577,7 @@ namespace Site7DbEditor
             textBoxKikaikou2.Location = new Point(70, 118);
             textBoxKikaikou2.Margin = new Padding(4);
             textBoxKikaikou2.Name = "textBoxKikaikou2";
-            textBoxKikaikou2.Size = new Size(74, 29);
+            textBoxKikaikou2.Size = new Size(74, 36);
             textBoxKikaikou2.TabIndex = 189;
             textBoxKikaikou2.Tag = "3";
             textBoxKikaikou2.Text = "1.500";
@@ -602,7 +602,7 @@ namespace Site7DbEditor
             labelStatus2.Location = new Point(2, 165);
             labelStatus2.Margin = new Padding(4, 0, 4, 0);
             labelStatus2.Name = "labelStatus2";
-            labelStatus2.Size = new Size(79, 14);
+            labelStatus2.Size = new Size(75, 19);
             labelStatus2.TabIndex = 195;
             labelStatus2.Text = "GPSの状況";
             // 
@@ -646,7 +646,7 @@ namespace Site7DbEditor
             // 
             // btnUpdPos
             // 
-            btnUpdPos.Font = new Font("Yu Gothic UI", 28F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            btnUpdPos.Font = new Font("MS UI Gothic", 28F, FontStyle.Bold, GraphicsUnit.Point, 128);
             btnUpdPos.Location = new Point(174, 31);
             btnUpdPos.Margin = new Padding(4);
             btnUpdPos.Name = "btnUpdPos";
@@ -663,7 +663,7 @@ namespace Site7DbEditor
             textBoxX.Location = new Point(32, 5);
             textBoxX.Margin = new Padding(4);
             textBoxX.Name = "textBoxX";
-            textBoxX.Size = new Size(135, 29);
+            textBoxX.Size = new Size(135, 36);
             textBoxX.TabIndex = 3;
             textBoxX.TextAlign = HorizontalAlignment.Right;
             // 
@@ -674,7 +674,7 @@ namespace Site7DbEditor
             label18.Location = new Point(8, 12);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
-            label18.Size = new Size(20, 14);
+            label18.Size = new Size(21, 19);
             label18.TabIndex = 163;
             label18.Text = "X:";
             // 
@@ -685,7 +685,7 @@ namespace Site7DbEditor
             textBoxY.Location = new Point(32, 40);
             textBoxY.Margin = new Padding(4);
             textBoxY.Name = "textBoxY";
-            textBoxY.Size = new Size(135, 29);
+            textBoxY.Size = new Size(135, 36);
             textBoxY.TabIndex = 4;
             textBoxY.TextAlign = HorizontalAlignment.Right;
             // 
@@ -696,7 +696,7 @@ namespace Site7DbEditor
             label11.Location = new Point(8, 48);
             label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new Size(20, 14);
+            label11.Size = new Size(19, 19);
             label11.TabIndex = 162;
             label11.Text = "Y:";
             // 
@@ -707,7 +707,7 @@ namespace Site7DbEditor
             textBoxZ.Location = new Point(32, 75);
             textBoxZ.Margin = new Padding(4);
             textBoxZ.Name = "textBoxZ";
-            textBoxZ.Size = new Size(135, 29);
+            textBoxZ.Size = new Size(135, 36);
             textBoxZ.TabIndex = 5;
             textBoxZ.TextAlign = HorizontalAlignment.Right;
             // 
@@ -718,7 +718,7 @@ namespace Site7DbEditor
             label10.Location = new Point(8, 82);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(20, 14);
+            label10.Size = new Size(20, 19);
             label10.TabIndex = 161;
             label10.Text = "Z:";
             // 
@@ -731,7 +731,7 @@ namespace Site7DbEditor
             chbContMeasure.Location = new Point(172, 8);
             chbContMeasure.Margin = new Padding(4);
             chbContMeasure.Name = "chbContMeasure";
-            chbContMeasure.Size = new Size(86, 18);
+            chbContMeasure.Size = new Size(84, 23);
             chbContMeasure.TabIndex = 173;
             chbContMeasure.Text = "連続測定";
             chbContMeasure.UseVisualStyleBackColor = true;
@@ -746,7 +746,7 @@ namespace Site7DbEditor
             chkAutoSet.Location = new Point(172, 80);
             chkAutoSet.Margin = new Padding(4);
             chkAutoSet.Name = "chkAutoSet";
-            chkAutoSet.Size = new Size(79, 18);
+            chkAutoSet.Size = new Size(76, 23);
             chkAutoSet.TabIndex = 173;
             chkAutoSet.Text = "自動Set";
             chkAutoSet.UseVisualStyleBackColor = true;
