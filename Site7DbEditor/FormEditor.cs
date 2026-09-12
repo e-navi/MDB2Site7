@@ -1213,8 +1213,8 @@ namespace Site7DbEditor {
             int selTab = tabControlData.SelectedIndex;
 
             if (isFloatingForm) {
-                Point targetLoc = panelMapBottom.PointToScreen(Point.Empty);
-                Size targetSize = panelMapBottom.Size;
+                Point targetLoc = (panelData != null) ? panelData.PointToScreen(Point.Empty) : panelMapBottom.PointToScreen(Point.Empty);
+                Size targetSize = (panelData != null && panelData.Width > 0) ? new Size(panelData.Width, panelMapBottom.Height) : panelMapBottom.Size;
 
                 if (_dlgBottom == null || _dlgBottom.IsDisposed) {
                     _dlgBottom = new FormBottomPanelCtrl();
