@@ -217,15 +217,15 @@ namespace Site7DbEditor {
             if (colLid != null) {
                 colLid.DisplayIndex = 0;
                 colLid.HeaderText = "LID";
-                colLid.Width = 40;
+                colLid.Width = 42;
                 colLid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             var colName = dgvIkouL.Columns["Name"];
             if (colName != null) { colName.DisplayIndex = 1; colName.HeaderText = "線名"; colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
             var colMode = dgvIkouL.Columns["Mode"];
-            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 48; }
+            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 52; }
             var colLayer = dgvIkouL.Columns["Layer"];
-            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 50; }
+            if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 60; }
         }
 
         private void ApplyDgvPrecsColumns() {
@@ -238,7 +238,7 @@ namespace Site7DbEditor {
             if (colX != null) {
                 colX.DisplayIndex = 1;
                 colX.HeaderText = "X";
-                colX.Width = 110;
+                colX.Width = 105;
                 colX.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colX.DefaultCellStyle.Format = "0.000";
             }
@@ -246,7 +246,7 @@ namespace Site7DbEditor {
             if (colY != null) {
                 colY.DisplayIndex = 2;
                 colY.HeaderText = "Y";
-                colY.Width = 110;
+                colY.Width = 105;
                 colY.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colY.DefaultCellStyle.Format = "0.000";
             }
@@ -254,7 +254,7 @@ namespace Site7DbEditor {
             if (colZ != null) {
                 colZ.DisplayIndex = 3;
                 colZ.HeaderText = "Z";
-                colZ.Width = 80;
+                colZ.Width = 68;
                 colZ.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 colZ.DefaultCellStyle.Format = "0.000";
             }
