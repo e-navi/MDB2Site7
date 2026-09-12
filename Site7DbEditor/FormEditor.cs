@@ -1901,24 +1901,15 @@ namespace Site7DbEditor {
         }
 
         private void tabControlData_SelectedIndexChanged(object? sender, EventArgs e) {
+            grpCoordValue.Dock = DockStyle.Fill;
+
             if (tabControlData.SelectedTab == tabIkou) {
-                grpCoordValue.Dock = DockStyle.Fill;
                 pnlPrecsRight.Controls.Add(grpCoordValue);
-                pnlPrecsRight.Controls.SetChildIndex(grpCoordValue, 0);
             } else if (tabControlData.SelectedTab == tabIbutu) {
-                grpCoordValue.Dock = DockStyle.Right;
-                grpCoordValue.Width = 192;
                 pnlIbutuRight.Controls.Add(grpCoordValue);
-                pnlIbutuRight.Controls.SetChildIndex(grpIbutuRecord, 0);
-                pnlIbutuRight.Controls.SetChildIndex(grpCoordValue, 1);
                 dgvIbutu_SelectionChanged(this, EventArgs.Empty);
             } else if (tabControlData.SelectedTab == tabKikai) {
-                grpCoordValue.Dock = DockStyle.Right;
-                grpCoordValue.Width = 192;
                 pnlKikaiRight.Controls.Add(grpCoordValue);
-                pnlKikaiRight.Controls.SetChildIndex(grpKikaiRecord, 0);
-                pnlKikaiRight.Controls.SetChildIndex(grpPointGuidance, 1);
-                pnlKikaiRight.Controls.SetChildIndex(grpCoordValue, 2);
                 if (!IsGaigyoMode) {
                     grpPointGuidance.Enabled = false;
                     if (chkPointGuidance != null) chkPointGuidance.Checked = false;
