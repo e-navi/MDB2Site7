@@ -15,255 +15,254 @@ namespace Site7DbEditor
 
         #region Windows Form Designer generated code
 
-        private void InitializeComponent()
-        {
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnMoveUp = new System.Windows.Forms.Button();
-            this.btnMoveDown = new System.Windows.Forms.Button();
-            this.grpEdit = new System.Windows.Forms.GroupBox();
-            this.lblPattern = new System.Windows.Forms.Label();
-            this.txtPattern = new System.Windows.Forms.TextBox();
-            this.lblColor = new System.Windows.Forms.Label();
-            this.CBoxColor = new System.Windows.Forms.ComboBox();
-            this.lblColorSample = new System.Windows.Forms.Label();
-            this.lblNotice = new System.Windows.Forms.Label();
-            this.btnExportToMaster = new System.Windows.Forms.Button();
-            this.btnImportFromMaster = new System.Windows.Forms.Button();
-            this.Save_Button = new System.Windows.Forms.Button();
-            this.Cancel_Button = new System.Windows.Forms.Button();
-            this.grpEdit.SuspendLayout();
-            this.SuspendLayout();
+        private void InitializeComponent() {
+            lblTitle = new Label();
+            listBox1 = new ListBox();
+            btnAdd = new Button();
+            btnDelete = new Button();
+            btnMoveUp = new Button();
+            btnMoveDown = new Button();
+            grpEdit = new GroupBox();
+            lblNotice = new Label();
+            lblColorSample = new Label();
+            CBoxColor = new ComboBox();
+            lblColor = new Label();
+            txtPattern = new TextBox();
+            lblPattern = new Label();
+            btnExportToMaster = new Button();
+            btnImportFromMaster = new Button();
+            Save_Button = new Button();
+            Cancel_Button = new Button();
+            grpEdit.SuspendLayout();
+            SuspendLayout();
             // 
             // lblTitle
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(35)))), ((int)(((byte)(65)))));
-            this.lblTitle.Location = new System.Drawing.Point(14, 10);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(356, 21);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "遺構名・プレフィックス別 表示色定義 (遺構名色.txt)";
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblTitle.ForeColor = Color.FromArgb(20, 35, 65);
+            lblTitle.Location = new Point(14, 10);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(348, 21);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "遺構名・プレフィックス別 表示色定義 (遺構名色.txt)";
             // 
             // listBox1
             // 
-            this.listBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.listBox1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.IntegralHeight = false;
-            this.listBox1.ItemHeight = 28;
-            this.listBox1.Location = new System.Drawing.Point(14, 38);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(250, 310);
-            this.listBox1.TabIndex = 1;
+            listBox1.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox1.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            listBox1.FormattingEnabled = true;
+            listBox1.IntegralHeight = false;
+            listBox1.ItemHeight = 28;
+            listBox1.Location = new Point(14, 38);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(250, 310);
+            listBox1.TabIndex = 1;
             // 
             // btnAdd
             // 
-            this.btnAdd.BackColor = System.Drawing.Color.White;
-            this.btnAdd.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnAdd.Location = new System.Drawing.Point(14, 355);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(66, 32);
-            this.btnAdd.TabIndex = 2;
-            this.btnAdd.Text = "➕ 追加";
-            this.btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.BackColor = Color.White;
+            btnAdd.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            btnAdd.Location = new Point(14, 355);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(80, 32);
+            btnAdd.TabIndex = 2;
+            btnAdd.Text = "➕ 追加";
+            btnAdd.UseVisualStyleBackColor = true;
             // 
             // btnDelete
             // 
-            this.btnDelete.BackColor = System.Drawing.Color.White;
-            this.btnDelete.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnDelete.Location = new System.Drawing.Point(84, 355);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(66, 32);
-            this.btnDelete.TabIndex = 3;
-            this.btnDelete.Text = "➖ 削除";
-            this.btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.BackColor = Color.White;
+            btnDelete.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            btnDelete.Location = new Point(97, 355);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(80, 32);
+            btnDelete.TabIndex = 3;
+            btnDelete.Text = "➖ 削除";
+            btnDelete.UseVisualStyleBackColor = true;
             // 
             // btnMoveUp
             // 
-            this.btnMoveUp.BackColor = System.Drawing.Color.White;
-            this.btnMoveUp.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnMoveUp.Location = new System.Drawing.Point(154, 355);
-            this.btnMoveUp.Name = "btnMoveUp";
-            this.btnMoveUp.Size = new System.Drawing.Size(52, 32);
-            this.btnMoveUp.TabIndex = 4;
-            this.btnMoveUp.Text = "▲";
-            this.btnMoveUp.UseVisualStyleBackColor = true;
+            btnMoveUp.BackColor = Color.White;
+            btnMoveUp.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            btnMoveUp.Location = new Point(183, 355);
+            btnMoveUp.Name = "btnMoveUp";
+            btnMoveUp.Size = new Size(39, 32);
+            btnMoveUp.TabIndex = 4;
+            btnMoveUp.Text = "▲";
+            btnMoveUp.UseVisualStyleBackColor = true;
             // 
             // btnMoveDown
             // 
-            this.btnMoveDown.BackColor = System.Drawing.Color.White;
-            this.btnMoveDown.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnMoveDown.Location = new System.Drawing.Point(210, 355);
-            this.btnMoveDown.Name = "btnMoveDown";
-            this.btnMoveDown.Size = new System.Drawing.Size(54, 32);
-            this.btnMoveDown.TabIndex = 5;
-            this.btnMoveDown.Text = "▼";
-            this.btnMoveDown.UseVisualStyleBackColor = true;
+            btnMoveDown.BackColor = Color.White;
+            btnMoveDown.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            btnMoveDown.Location = new Point(222, 355);
+            btnMoveDown.Name = "btnMoveDown";
+            btnMoveDown.Size = new Size(42, 32);
+            btnMoveDown.TabIndex = 5;
+            btnMoveDown.Text = "▼";
+            btnMoveDown.UseVisualStyleBackColor = true;
             // 
             // grpEdit
             // 
-            this.grpEdit.BackColor = System.Drawing.Color.White;
-            this.grpEdit.Controls.Add(this.lblNotice);
-            this.grpEdit.Controls.Add(this.lblColorSample);
-            this.grpEdit.Controls.Add(this.CBoxColor);
-            this.grpEdit.Controls.Add(this.lblColor);
-            this.grpEdit.Controls.Add(this.txtPattern);
-            this.grpEdit.Controls.Add(this.lblPattern);
-            this.grpEdit.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.grpEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.grpEdit.Location = new System.Drawing.Point(276, 38);
-            this.grpEdit.Name = "grpEdit";
-            this.grpEdit.Size = new System.Drawing.Size(328, 350);
-            this.grpEdit.TabIndex = 6;
-            this.grpEdit.TabStop = false;
-            this.grpEdit.Text = "遺構色設定";
-            // 
-            // lblPattern
-            // 
-            this.lblPattern.AutoSize = true;
-            this.lblPattern.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            this.lblPattern.Location = new System.Drawing.Point(14, 28);
-            this.lblPattern.Name = "lblPattern";
-            this.lblPattern.Size = new System.Drawing.Size(164, 21);
-            this.lblPattern.TabIndex = 0;
-            this.lblPattern.Text = "遺構名 / プレフィックス:";
-            // 
-            // txtPattern
-            // 
-            this.txtPattern.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.txtPattern.Location = new System.Drawing.Point(14, 54);
-            this.txtPattern.Name = "txtPattern";
-            this.txtPattern.Size = new System.Drawing.Size(298, 29);
-            this.txtPattern.TabIndex = 1;
-            // 
-            // lblColor
-            // 
-            this.lblColor.AutoSize = true;
-            this.lblColor.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            this.lblColor.Location = new System.Drawing.Point(14, 98);
-            this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(61, 21);
-            this.lblColor.TabIndex = 2;
-            this.lblColor.Text = "表示色:";
-            // 
-            // CBoxColor
-            // 
-            this.CBoxColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.CBoxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxColor.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.CBoxColor.FormattingEnabled = true;
-            this.CBoxColor.ItemHeight = 23;
-            this.CBoxColor.Location = new System.Drawing.Point(14, 124);
-            this.CBoxColor.Name = "CBoxColor";
-            this.CBoxColor.Size = new System.Drawing.Size(218, 29);
-            this.CBoxColor.TabIndex = 3;
-            // 
-            // lblColorSample
-            // 
-            this.lblColorSample.BackColor = System.Drawing.Color.Red;
-            this.lblColorSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblColorSample.Location = new System.Drawing.Point(238, 124);
-            this.lblColorSample.Name = "lblColorSample";
-            this.lblColorSample.Size = new System.Drawing.Size(74, 29);
-            this.lblColorSample.TabIndex = 4;
+            grpEdit.BackColor = Color.White;
+            grpEdit.Controls.Add(lblNotice);
+            grpEdit.Controls.Add(lblColorSample);
+            grpEdit.Controls.Add(CBoxColor);
+            grpEdit.Controls.Add(lblColor);
+            grpEdit.Controls.Add(txtPattern);
+            grpEdit.Controls.Add(lblPattern);
+            grpEdit.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            grpEdit.ForeColor = Color.FromArgb(30, 40, 60);
+            grpEdit.Location = new Point(276, 38);
+            grpEdit.Name = "grpEdit";
+            grpEdit.Size = new Size(328, 350);
+            grpEdit.TabIndex = 6;
+            grpEdit.TabStop = false;
+            grpEdit.Text = "遺構色設定";
             // 
             // lblNotice
             // 
-            this.lblNotice.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F);
-            this.lblNotice.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(90)))), ((int)(((byte)(110)))));
-            this.lblNotice.Location = new System.Drawing.Point(14, 175);
-            this.lblNotice.Name = "lblNotice";
-            this.lblNotice.Size = new System.Drawing.Size(298, 155);
-            this.lblNotice.TabIndex = 5;
-            this.lblNotice.Text = "※ 該当しない遺構名は「最終行」の色が自動適用されます。\r\n※ 上端・中・下端の濃淡はレイヤ設定の指定値で自動反映されます。\r\n※ プレフィックス指定（例: 'SB'）で前方一致判定します。";
+            lblNotice.Font = new Font("Yu Gothic UI", 10.5F);
+            lblNotice.ForeColor = Color.FromArgb(80, 90, 110);
+            lblNotice.Location = new Point(14, 175);
+            lblNotice.Name = "lblNotice";
+            lblNotice.Size = new Size(298, 155);
+            lblNotice.TabIndex = 5;
+            lblNotice.Text = "※ 該当しない遺構名は「最終行」の色が自動適用されます。\r\n※ 上端・中・下端の濃淡はレイヤ設定の指定値で自動反映されます。\r\n※ プレフィックス指定（例: 'SB'）で前方一致判定します。";
+            // 
+            // lblColorSample
+            // 
+            lblColorSample.BackColor = Color.Red;
+            lblColorSample.BorderStyle = BorderStyle.FixedSingle;
+            lblColorSample.Location = new Point(238, 124);
+            lblColorSample.Name = "lblColorSample";
+            lblColorSample.Size = new Size(74, 29);
+            lblColorSample.TabIndex = 4;
+            // 
+            // CBoxColor
+            // 
+            CBoxColor.DrawMode = DrawMode.OwnerDrawFixed;
+            CBoxColor.DropDownStyle = ComboBoxStyle.DropDownList;
+            CBoxColor.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            CBoxColor.FormattingEnabled = true;
+            CBoxColor.ItemHeight = 23;
+            CBoxColor.Location = new Point(14, 124);
+            CBoxColor.Name = "CBoxColor";
+            CBoxColor.Size = new Size(218, 29);
+            CBoxColor.TabIndex = 3;
+            // 
+            // lblColor
+            // 
+            lblColor.AutoSize = true;
+            lblColor.Font = new Font("Yu Gothic UI", 12F);
+            lblColor.Location = new Point(14, 98);
+            lblColor.Name = "lblColor";
+            lblColor.Size = new Size(61, 21);
+            lblColor.TabIndex = 2;
+            lblColor.Text = "表示色:";
+            // 
+            // txtPattern
+            // 
+            txtPattern.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            txtPattern.Location = new Point(14, 54);
+            txtPattern.Name = "txtPattern";
+            txtPattern.Size = new Size(298, 29);
+            txtPattern.TabIndex = 1;
+            // 
+            // lblPattern
+            // 
+            lblPattern.AutoSize = true;
+            lblPattern.Font = new Font("Yu Gothic UI", 12F);
+            lblPattern.Location = new Point(14, 28);
+            lblPattern.Name = "lblPattern";
+            lblPattern.Size = new Size(152, 21);
+            lblPattern.TabIndex = 0;
+            lblPattern.Text = "遺構名 / プレフィックス:";
             // 
             // btnExportToMaster
             // 
-            this.btnExportToMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
-            this.btnExportToMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
-            this.btnExportToMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnExportToMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnExportToMaster.Location = new System.Drawing.Point(14, 408);
-            this.btnExportToMaster.Name = "btnExportToMaster";
-            this.btnExportToMaster.Size = new System.Drawing.Size(135, 36);
-            this.btnExportToMaster.TabIndex = 7;
-            this.btnExportToMaster.Text = "📤 マスターへ反映";
-            this.btnExportToMaster.UseVisualStyleBackColor = false;
+            btnExportToMaster.BackColor = Color.FromArgb(233, 236, 243);
+            btnExportToMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            btnExportToMaster.FlatStyle = FlatStyle.Flat;
+            btnExportToMaster.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            btnExportToMaster.ForeColor = Color.FromArgb(25, 45, 80);
+            btnExportToMaster.Location = new Point(14, 408);
+            btnExportToMaster.Name = "btnExportToMaster";
+            btnExportToMaster.Size = new Size(135, 36);
+            btnExportToMaster.TabIndex = 7;
+            btnExportToMaster.Text = "📤 マスターへ反映";
+            btnExportToMaster.UseVisualStyleBackColor = false;
             // 
             // btnImportFromMaster
             // 
-            this.btnImportFromMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
-            this.btnImportFromMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
-            this.btnImportFromMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnImportFromMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnImportFromMaster.Location = new System.Drawing.Point(155, 408);
-            this.btnImportFromMaster.Name = "btnImportFromMaster";
-            this.btnImportFromMaster.Size = new System.Drawing.Size(145, 36);
-            this.btnImportFromMaster.TabIndex = 8;
-            this.btnImportFromMaster.Text = "📥 マスターから反映";
-            this.btnImportFromMaster.UseVisualStyleBackColor = false;
+            btnImportFromMaster.BackColor = Color.FromArgb(233, 236, 243);
+            btnImportFromMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            btnImportFromMaster.FlatStyle = FlatStyle.Flat;
+            btnImportFromMaster.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            btnImportFromMaster.ForeColor = Color.FromArgb(25, 45, 80);
+            btnImportFromMaster.Location = new Point(155, 408);
+            btnImportFromMaster.Name = "btnImportFromMaster";
+            btnImportFromMaster.Size = new Size(145, 36);
+            btnImportFromMaster.TabIndex = 8;
+            btnImportFromMaster.Text = "📥 マスターから反映";
+            btnImportFromMaster.UseVisualStyleBackColor = false;
             // 
             // Save_Button
             // 
-            this.Save_Button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
-            this.Save_Button.FlatAppearance.BorderSize = 0;
-            this.Save_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_Button.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.Save_Button.ForeColor = System.Drawing.Color.White;
-            this.Save_Button.Location = new System.Drawing.Point(364, 406);
-            this.Save_Button.Name = "Save_Button";
-            this.Save_Button.Size = new System.Drawing.Size(138, 40);
-            this.Save_Button.TabIndex = 9;
-            this.Save_Button.Text = "💾 設定を保存";
-            this.Save_Button.UseVisualStyleBackColor = false;
+            Save_Button.BackColor = Color.FromArgb(40, 167, 69);
+            Save_Button.FlatAppearance.BorderSize = 0;
+            Save_Button.FlatStyle = FlatStyle.Flat;
+            Save_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            Save_Button.ForeColor = Color.White;
+            Save_Button.Location = new Point(364, 406);
+            Save_Button.Name = "Save_Button";
+            Save_Button.Size = new Size(138, 40);
+            Save_Button.TabIndex = 9;
+            Save_Button.Text = "💾 設定を保存";
+            Save_Button.UseVisualStyleBackColor = false;
             // 
             // Cancel_Button
             // 
-            this.Cancel_Button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(235)))));
-            this.Cancel_Button.FlatAppearance.BorderSize = 0;
-            this.Cancel_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Cancel_Button.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.Cancel_Button.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.Cancel_Button.Location = new System.Drawing.Point(510, 406);
-            this.Cancel_Button.Name = "Cancel_Button";
-            this.Cancel_Button.Size = new System.Drawing.Size(94, 40);
-            this.Cancel_Button.TabIndex = 10;
-            this.Cancel_Button.Text = "閉じる";
-            this.Cancel_Button.UseVisualStyleBackColor = false;
+            Cancel_Button.BackColor = Color.FromArgb(220, 225, 235);
+            Cancel_Button.FlatAppearance.BorderSize = 0;
+            Cancel_Button.FlatStyle = FlatStyle.Flat;
+            Cancel_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            Cancel_Button.ForeColor = Color.FromArgb(30, 40, 60);
+            Cancel_Button.Location = new Point(510, 406);
+            Cancel_Button.Name = "Cancel_Button";
+            Cancel_Button.Size = new Size(94, 40);
+            Cancel_Button.TabIndex = 10;
+            Cancel_Button.Text = "閉じる";
+            Cancel_Button.UseVisualStyleBackColor = false;
             // 
             // FormIkouNameColorSettings
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.ClientSize = new System.Drawing.Size(618, 460);
-            this.Controls.Add(this.Cancel_Button);
-            this.Controls.Add(this.Save_Button);
-            this.Controls.Add(this.btnImportFromMaster);
-            this.Controls.Add(this.btnExportToMaster);
-            this.Controls.Add(this.grpEdit);
-            this.Controls.Add(this.btnMoveDown);
-            this.Controls.Add(this.btnMoveUp);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.lblTitle);
-            this.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormIkouNameColorSettings";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "遺構名色設定";
-            this.grpEdit.ResumeLayout(false);
-            this.grpEdit.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.None;
+            BackColor = Color.FromArgb(240, 242, 245);
+            ClientSize = new Size(618, 460);
+            Controls.Add(Cancel_Button);
+            Controls.Add(Save_Button);
+            Controls.Add(btnImportFromMaster);
+            Controls.Add(btnExportToMaster);
+            Controls.Add(grpEdit);
+            Controls.Add(btnMoveDown);
+            Controls.Add(btnMoveUp);
+            Controls.Add(btnDelete);
+            Controls.Add(btnAdd);
+            Controls.Add(listBox1);
+            Controls.Add(lblTitle);
+            Font = new Font("Yu Gothic UI", 12F);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormIkouNameColorSettings";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "遺構名色設定";
+            grpEdit.ResumeLayout(false);
+            grpEdit.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

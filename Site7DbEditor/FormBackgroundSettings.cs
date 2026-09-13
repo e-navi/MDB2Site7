@@ -9,42 +9,10 @@ using Site7DbEditor.Services;
 
 namespace Site7DbEditor
 {
-    public class FormBackgroundSettings : Form
+    public partial class FormBackgroundSettings : Form
     {
         private readonly EditorDbManager _db;
         private readonly BackgroundImageService _bgService = BackgroundImageService.Instance;
-
-        // UI Controls
-        private TextBox txtImagePath = new TextBox();
-        private Button btnBrowseImage = new Button();
-
-        private ComboBox cmbKikai1 = new ComboBox();
-        private TextBox txtKikai1X = new TextBox();
-        private TextBox txtKikai1Y = new TextBox();
-        private Button btnSetPoint1 = new Button();
-        private Label lblPoint1Pix = new Label();
-
-        private ComboBox cmbKikai2 = new ComboBox();
-        private TextBox txtKikai2X = new TextBox();
-        private TextBox txtKikai2Y = new TextBox();
-        private Button btnSetPoint2 = new Button();
-        private Label lblPoint2Pix = new Label();
-
-        private TrackBar trkOpacity = new TrackBar();
-        private Label lblOpacityVal = new Label();
-
-        // Point Cloud Controls
-        private TextBox txtPointCloudPath = new TextBox();
-        private Button btnBrowsePointCloud = new Button();
-        private Button btnClearPointCloud = new Button();
-        private CheckBox chkSwapPointCloudXY = new CheckBox();
-        private Label lblPointCloudStatus = new Label();
-
-        private PictureBox picPreview = new PictureBox();
-        private Button btnOk = new Button();
-        private Button btnCancel = new Button();
-        private Button btnReset = new Button();
-        private Label lblStatusGuide = new Label();
 
         // State
         private Bitmap? _previewImg;
@@ -64,228 +32,26 @@ namespace Site7DbEditor
         {
             _db = db;
             InitializeComponent();
+            InitializeEvents();
+            PopulateKikaiCombos();
             LoadCurrentSettings();
         }
 
-        private void InitializeComponent()
+        private void InitializeEvents()
         {
-            this.Text = "背景画像・点群設定";
-            this.ClientSize = new Size(1060, 640);
-            this.MinimumSize = new Size(980, 580);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.BackColor = Color.FromArgb(242, 244, 248);
-            this.ForeColor = Color.FromArgb(30, 30, 30);
-            this.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            var pnlLeft = new Panel {
-                Dock = DockStyle.Left,
-                Width = 360,
-                BackColor = Color.FromArgb(242, 244, 248),
-                Padding = new Padding(8, 6, 8, 6),
-                AutoScroll = false
-            };
-            var pnlBottom = new Panel {
-                Dock = DockStyle.Bottom,
-                Height = 46,
-                BackColor = Color.FromArgb(232, 235, 240)
-            };
-            var pnlCenter = new Panel {
-                Dock = DockStyle.Fill,
-                Padding = new Padding(6, 6, 6, 0),
-                BackColor = Color.FromArgb(232, 235, 240)
-            };
-
-            // ==========================================
-            // 1. 背景画像設定 GroupBox
-            // ==========================================
-            var grpBgImage = new GroupBox
-            {
-                Text = "🗺 背景画像設定",
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(25, 45, 80),
-                Location = new Point(8, 6),
-                Size = new Size(344, 330),
-                BackColor = Color.White
-            };
-
-            // 画像ファイル
-            var lblImgFile = new Label { Text = "画像ファイル:", Location = new Point(10, 22), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtImagePath.Location = new Point(10, 40);
-            txtImagePath.Size = new Size(248, 23);
-            txtImagePath.ReadOnly = true;
-            txtImagePath.BackColor = Color.FromArgb(248, 249, 251);
-            txtImagePath.ForeColor = Color.FromArgb(20, 20, 20);
-            txtImagePath.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            btnBrowseImage.Text = "参照...";
-            btnBrowseImage.Location = new Point(262, 39);
-            btnBrowseImage.Size = new Size(72, 25);
-            btnBrowseImage.BackColor = Color.FromArgb(230, 238, 248);
-            btnBrowseImage.ForeColor = Color.FromArgb(20, 50, 100);
-            btnBrowseImage.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            btnBrowseImage.UseVisualStyleBackColor = false;
-            btnBrowseImage.Click += BtnBrowseImage_Click;
-
-            // 基準点 1 (隙間をあけて配置)
-            var lblK1 = new Label { Text = "基準点 1:", Location = new Point(10, 76), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(190, 30, 30) };
-            cmbKikai1.Location = new Point(70, 73);
-            cmbKikai1.Size = new Size(264, 23);
-            cmbKikai1.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbKikai1.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
             cmbKikai1.SelectedIndexChanged += (s, e) => OnKikaiSelected(cmbKikai1, txtKikai1X, txtKikai1Y);
-
-            var lblX1 = new Label { Text = "X:", Location = new Point(10, 102), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai1X.Location = new Point(26, 99);
-            txtKikai1X.Size = new Size(110, 23);
-            txtKikai1X.BackColor = Color.White;
-            txtKikai1X.ForeColor = Color.Black;
-            txtKikai1X.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            var lblY1 = new Label { Text = "Y:", Location = new Point(142, 102), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai1Y.Location = new Point(158, 99);
-            txtKikai1Y.Size = new Size(110, 23);
-            txtKikai1Y.BackColor = Color.White;
-            txtKikai1Y.ForeColor = Color.Black;
-            txtKikai1Y.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            btnSetPoint1.Text = "🎯 点1を指示";
-            btnSetPoint1.Location = new Point(10, 126);
-            btnSetPoint1.Size = new Size(126, 26);
-            btnSetPoint1.BackColor = Color.FromArgb(254, 226, 226);
-            btnSetPoint1.ForeColor = Color.FromArgb(185, 28, 28);
-            btnSetPoint1.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            btnSetPoint1.UseVisualStyleBackColor = false;
-            btnSetPoint1.Click += (s, e) => SetPickMode(1);
-
-            lblPoint1Pix.Text = "未指示";
-            lblPoint1Pix.Location = new Point(142, 131);
-            lblPoint1Pix.AutoSize = true;
-            lblPoint1Pix.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            lblPoint1Pix.ForeColor = Color.FromArgb(185, 28, 28);
-
-            // 基準点 2 (隙間をあけて配置)
-            var lblK2 = new Label { Text = "基準点 2:", Location = new Point(10, 163), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(25, 80, 190) };
-            cmbKikai2.Location = new Point(70, 160);
-            cmbKikai2.Size = new Size(264, 23);
-            cmbKikai2.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbKikai2.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
             cmbKikai2.SelectedIndexChanged += (s, e) => OnKikaiSelected(cmbKikai2, txtKikai2X, txtKikai2Y);
-
-            var lblX2 = new Label { Text = "X:", Location = new Point(10, 189), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai2X.Location = new Point(26, 186);
-            txtKikai2X.Size = new Size(110, 23);
-            txtKikai2X.BackColor = Color.White;
-            txtKikai2X.ForeColor = Color.Black;
-            txtKikai2X.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            var lblY2 = new Label { Text = "Y:", Location = new Point(142, 189), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtKikai2Y.Location = new Point(158, 186);
-            txtKikai2Y.Size = new Size(110, 23);
-            txtKikai2Y.BackColor = Color.White;
-            txtKikai2Y.ForeColor = Color.Black;
-            txtKikai2Y.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            btnSetPoint2.Text = "🎯 点2を指示";
-            btnSetPoint2.Location = new Point(10, 213);
-            btnSetPoint2.Size = new Size(126, 26);
-            btnSetPoint2.BackColor = Color.FromArgb(219, 234, 254);
-            btnSetPoint2.ForeColor = Color.FromArgb(29, 78, 216);
-            btnSetPoint2.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            btnSetPoint2.UseVisualStyleBackColor = false;
+            btnSetPoint1.Click += (s, e) => SetPickMode(1);
             btnSetPoint2.Click += (s, e) => SetPickMode(2);
-
-            lblPoint2Pix.Text = "未指示";
-            lblPoint2Pix.Location = new Point(142, 218);
-            lblPoint2Pix.AutoSize = true;
-            lblPoint2Pix.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            lblPoint2Pix.ForeColor = Color.FromArgb(29, 78, 216);
-
-            // 180°反転 (隙間をあけて配置)
-            var btnSwap = new Button
-            {
-                Text = "🔄 2点を入れ替えて180°反転",
-                Location = new Point(10, 250),
-                Size = new Size(324, 28),
-                BackColor = Color.FromArgb(240, 243, 248),
-                ForeColor = Color.FromArgb(40, 40, 40),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular),
-                UseVisualStyleBackColor = false
-            };
             btnSwap.Click += (s, e) => SwapPoints();
-
-            // 不透明度 (隙間をあけて配置)
-            var lblOpacity = new Label { Text = "不透明度:", Location = new Point(10, 292), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            trkOpacity.Location = new Point(70, 285);
-            trkOpacity.Size = new Size(215, 30);
-            trkOpacity.Minimum = 10;
-            trkOpacity.Maximum = 100;
-            trkOpacity.Value = 80;
-            trkOpacity.TickFrequency = 10;
             trkOpacity.ValueChanged += (s, e) => {
                 lblOpacityVal.Text = $"{trkOpacity.Value}%";
             };
-
-            lblOpacityVal.Text = "80%";
-            lblOpacityVal.Location = new Point(288, 292);
-            lblOpacityVal.AutoSize = true;
-            lblOpacityVal.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            lblOpacityVal.ForeColor = Color.FromArgb(20, 20, 20);
-
-            grpBgImage.Controls.AddRange(new Control[] {
-                lblImgFile, txtImagePath, btnBrowseImage,
-                lblK1, cmbKikai1, lblX1, txtKikai1X, lblY1, txtKikai1Y, btnSetPoint1, lblPoint1Pix,
-                lblK2, cmbKikai2, lblX2, txtKikai2X, lblY2, txtKikai2Y, btnSetPoint2, lblPoint2Pix,
-                btnSwap, lblOpacity, trkOpacity, lblOpacityVal
-            });
-
-            // ==========================================
-            // 2. 点群設定 GroupBox
-            // ==========================================
-            var grpPointCloud = new GroupBox
-            {
-                Text = "🌐 点群データ設定",
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(25, 45, 80),
-                Location = new Point(8, 344),
-                Size = new Size(344, 180),
-                BackColor = Color.White
-            };
-
-            var lblPcFile = new Label { Text = "点群ファイル (XYZ / LAS / CSV):", Location = new Point(10, 20), AutoSize = true, Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular), ForeColor = Color.FromArgb(60, 60, 60) };
-            txtPointCloudPath.Location = new Point(10, 38);
-            txtPointCloudPath.Size = new Size(210, 23);
-            txtPointCloudPath.ReadOnly = true;
-            txtPointCloudPath.BackColor = Color.FromArgb(248, 249, 251);
-            txtPointCloudPath.ForeColor = Color.FromArgb(20, 20, 20);
-            txtPointCloudPath.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-
-            btnBrowsePointCloud.Text = "参照...";
-            btnBrowsePointCloud.Location = new Point(224, 37);
-            btnBrowsePointCloud.Size = new Size(54, 25);
-            btnBrowsePointCloud.BackColor = Color.FromArgb(230, 238, 248);
-            btnBrowsePointCloud.ForeColor = Color.FromArgb(20, 50, 100);
-            btnBrowsePointCloud.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            btnBrowsePointCloud.UseVisualStyleBackColor = false;
-            btnBrowsePointCloud.Click += BtnBrowsePointCloud_Click;
-
-            btnClearPointCloud.Text = "解除";
-            btnClearPointCloud.Location = new Point(280, 37);
-            btnClearPointCloud.Size = new Size(54, 25);
-            btnClearPointCloud.BackColor = Color.FromArgb(254, 226, 226);
-            btnClearPointCloud.ForeColor = Color.FromArgb(185, 28, 28);
-            btnClearPointCloud.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-            btnClearPointCloud.UseVisualStyleBackColor = false;
             btnClearPointCloud.Click += (s, e) => {
                 txtPointCloudPath.Text = "";
                 PointCloudService.Instance.Clear();
                 UpdatePointCloudStatusLabel();
             };
-
-            chkSwapPointCloudXY.Text = "🔄 点群のX・Y座標を入れ替える (E/N反転)";
-            chkSwapPointCloudXY.Location = new Point(10, 68);
-            chkSwapPointCloudXY.AutoSize = true;
-            chkSwapPointCloudXY.Font = new Font("Yu Gothic UI", 9F, FontStyle.Regular);
-            chkSwapPointCloudXY.ForeColor = Color.FromArgb(40, 40, 40);
             chkSwapPointCloudXY.CheckedChanged += (s, e) => {
                 if (PointCloudService.Instance.HasPoints)
                 {
@@ -293,148 +59,69 @@ namespace Site7DbEditor
                     UpdatePointCloudStatusLabel();
                 }
             };
+            btnOpen3D.Click += BtnOpen3D_Click;
 
-            lblPointCloudStatus.Text = "点群未読込 (Z表示なし)";
-            lblPointCloudStatus.Location = new Point(10, 93);
-            lblPointCloudStatus.AutoSize = true;
-            lblPointCloudStatus.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            lblPointCloudStatus.ForeColor = Color.FromArgb(100, 100, 100);
-
-            // 3D Preview Button
-            var btnOpen3D = new Button
-            {
-                Text = "🎮 3次元で確認 (3Dプレビュー)",
-                Location = new Point(10, 120),
-                Size = new Size(324, 32),
-                BackColor = Color.FromArgb(43, 114, 186),
-                ForeColor = Color.White,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                UseVisualStyleBackColor = false
-            };
-            btnOpen3D.Click += (s, e) => {
-                var pc = PointCloudService.Instance;
-                if (pc.HasPoints)
-                {
-                    double siteX = 0, siteY = 0;
-                    bool hasSite = false;
-
-                    if (_db.KikaiList.Count > 0)
-                    {
-                        siteX = _db.KikaiList.Average(k => k.X);
-                        siteY = _db.KikaiList.Average(k => k.Y);
-                        hasSite = true;
-                    }
-                    else if (_bgService.Config.IsAligned)
-                    {
-                        siteX = (_bgService.Config.Pt1_SurveyX + _bgService.Config.Pt2_SurveyX) / 2.0;
-                        siteY = (_bgService.Config.Pt1_SurveyY + _bgService.Config.Pt2_SurveyY) / 2.0;
-                        hasSite = true;
-                    }
-
-                    if (hasSite)
-                    {
-                        if (pc.AutoDetectAndSwapXY(siteX, siteY))
-                        {
-                            chkSwapPointCloudXY.Checked = pc.SwapXY;
-                            UpdatePointCloudStatusLabel();
-                        }
-
-                        double pcMidX = (pc.MinX + pc.MaxX) / 2.0;
-                        double pcMidY = (pc.MinY + pc.MaxY) / 2.0;
-                        double dist = Math.Sqrt((pcMidX - siteX) * (pcMidX - siteX) + (pcMidY - siteY) * (pcMidY - siteY));
-
-                        if (dist > 1000.0)
-                        {
-                            MessageBox.Show(
-                                $"⚠ 点群データの座標が現場の基準点と大きく離れています。\n\n" +
-                                $"・現場基準点中心: X={siteX:F1}, Y={siteY:F1}\n" +
-                                $"・点群データ中心: X={pcMidX:F1}, Y={pcMidY:F1}\n" +
-                                $"・離れ距離: 約 {dist / 1000.0:F1} km ({dist:N0} m)\n\n" +
-                                $"点群の測量座標系やXY反転設定をご確認ください。\n3Dビューアの起動を中止します。",
-                                "点群座標の不一致 (3D起動中止)",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
-                            return;
-                        }
-                    }
-                }
-
-                using (var f3d = new Form3DViewer(_db)) {
-                    f3d.ShowDialog(this);
-                }
-            };
-
-            grpPointCloud.Controls.AddRange(new Control[] {
-                lblPcFile, txtPointCloudPath, btnBrowsePointCloud, btnClearPointCloud,
-                chkSwapPointCloudXY, lblPointCloudStatus, btnOpen3D
-            });
-
-            // Assemble left panel
-            pnlLeft.Controls.Add(grpBgImage);
-            pnlLeft.Controls.Add(grpPointCloud);
-
-            // Center Preview
-            picPreview.Dock = DockStyle.Fill;
-            picPreview.BackColor = Color.FromArgb(24, 26, 32);
             picPreview.Paint += PicPreview_Paint;
             picPreview.MouseDown += PicPreview_MouseDown;
             picPreview.MouseMove += PicPreview_MouseMove;
             picPreview.MouseUp += PicPreview_MouseUp;
             picPreview.MouseWheel += PicPreview_MouseWheel;
-
-            lblStatusGuide.Text = "【操作ガイド】ホイール: 拡大/縮小 | 右ドラッグ: 平行移動 | 左クリック: 点の指示";
-            lblStatusGuide.Dock = DockStyle.Top;
-            lblStatusGuide.Height = 26;
-            lblStatusGuide.BackColor = Color.FromArgb(232, 235, 240);
-            lblStatusGuide.ForeColor = Color.FromArgb(40, 50, 70);
-            lblStatusGuide.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            lblStatusGuide.TextAlign = ContentAlignment.MiddleLeft;
-
-            pnlCenter.Controls.Add(picPreview);
-            pnlCenter.Controls.Add(lblStatusGuide);
-
-            // Bottom Buttons
-            btnOk.Text = "✔ 設定を適用";
-            btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOk.Location = new Point(pnlBottom.Width - 230, 8);
-            btnOk.Size = new Size(110, 30);
-            btnOk.BackColor = Color.FromArgb(34, 197, 94);
-            btnOk.ForeColor = Color.White;
-            btnOk.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold);
-            btnOk.UseVisualStyleBackColor = false;
-            btnOk.Click += BtnOk_Click;
-
-            btnCancel.Text = "キャンセル";
-            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(pnlBottom.Width - 110, 8);
-            btnCancel.Size = new Size(95, 30);
-            btnCancel.BackColor = Color.FromArgb(220, 224, 230);
-            btnCancel.ForeColor = Color.Black;
-            btnCancel.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
-            btnCancel.UseVisualStyleBackColor = false;
-            btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
-
-            btnReset.Text = "🗑 解除 / リセット";
-            btnReset.Location = new Point(12, 8);
-            btnReset.Size = new Size(130, 30);
-            btnReset.BackColor = Color.FromArgb(239, 68, 68);
-            btnReset.ForeColor = Color.White;
-            btnReset.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
-            btnReset.UseVisualStyleBackColor = false;
-            btnReset.Click += BtnReset_Click;
-
-            pnlBottom.Controls.AddRange(new Control[] { btnReset, btnOk, btnCancel });
-            pnlBottom.Resize += (s, e) => {
-                btnOk.Location = new Point(pnlBottom.Width - 230, 8);
-                btnCancel.Location = new Point(pnlBottom.Width - 110, 8);
-            };
-
-            this.Controls.Add(pnlCenter);
-            this.Controls.Add(pnlLeft);
-            this.Controls.Add(pnlBottom);
-
-            PopulateKikaiCombos();
         }
+
+        private void BtnOpen3D_Click(object? sender, EventArgs e)
+        {
+            var pc = PointCloudService.Instance;
+            if (pc.HasPoints)
+            {
+                double siteX = 0, siteY = 0;
+                bool hasSite = false;
+
+                if (_db.KikaiList.Count > 0)
+                {
+                    siteX = _db.KikaiList.Average(k => k.X);
+                    siteY = _db.KikaiList.Average(k => k.Y);
+                    hasSite = true;
+                }
+                else if (_bgService.Config.IsAligned)
+                {
+                    siteX = (_bgService.Config.Pt1_SurveyX + _bgService.Config.Pt2_SurveyX) / 2.0;
+                    siteY = (_bgService.Config.Pt1_SurveyY + _bgService.Config.Pt2_SurveyY) / 2.0;
+                    hasSite = true;
+                }
+
+                if (hasSite)
+                {
+                    if (pc.AutoDetectAndSwapXY(siteX, siteY))
+                    {
+                        chkSwapPointCloudXY.Checked = pc.SwapXY;
+                        UpdatePointCloudStatusLabel();
+                    }
+
+                    double pcMidX = (pc.MinX + pc.MaxX) / 2.0;
+                    double pcMidY = (pc.MinY + pc.MaxY) / 2.0;
+                    double dist = Math.Sqrt((pcMidX - siteX) * (pcMidX - siteX) + (pcMidY - siteY) * (pcMidY - siteY));
+
+                    if (dist > 1000.0)
+                    {
+                        MessageBox.Show(
+                            $"⚠ 点群データの座標が現場の基準点と大きく離れています。\n\n" +
+                            $"・現場基準点中心: X={siteX:F1}, Y={siteY:F1}\n" +
+                            $"・点群データ中心: X={pcMidX:F1}, Y={pcMidY:F1}\n" +
+                            $"・離れ距離: 約 {dist / 1000.0:F1} km ({dist:N0} m)\n\n" +
+                            $"点群の測量座標系やXY反転設定をご確認ください。\n3Dビューアの起動を中止します。",
+                            "点群座標の不一致 (3D起動中止)",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+            }
+
+            using (var f3d = new Form3DViewer(_db)) {
+                f3d.ShowDialog(this);
+            }
+        }
+
 
         private void PopulateKikaiCombos()
         {
