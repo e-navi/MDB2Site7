@@ -59,7 +59,7 @@ namespace Site7DbEditor
             listBox1.ItemHeight = 24;
             listBox1.Location = new Point(14, 48);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(264, 370);
+            listBox1.Size = new Size(264, 382);
             listBox1.TabIndex = 1;
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
             // 
@@ -252,7 +252,7 @@ namespace Site7DbEditor
             btnExportToMaster.FlatStyle = FlatStyle.Flat;
             btnExportToMaster.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             btnExportToMaster.ForeColor = Color.FromArgb(25, 45, 80);
-            btnExportToMaster.Location = new Point(292, 312);
+            btnExportToMaster.Location = new Point(292, 322);
             btnExportToMaster.Name = "btnExportToMaster";
             btnExportToMaster.Size = new Size(174, 38);
             btnExportToMaster.TabIndex = 3;
@@ -267,7 +267,7 @@ namespace Site7DbEditor
             btnImportFromMaster.FlatStyle = FlatStyle.Flat;
             btnImportFromMaster.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             btnImportFromMaster.ForeColor = Color.FromArgb(25, 45, 80);
-            btnImportFromMaster.Location = new Point(480, 312);
+            btnImportFromMaster.Location = new Point(480, 322);
             btnImportFromMaster.Name = "btnImportFromMaster";
             btnImportFromMaster.Size = new Size(174, 38);
             btnImportFromMaster.TabIndex = 4;
@@ -282,7 +282,7 @@ namespace Site7DbEditor
             Save_Button.FlatStyle = FlatStyle.Flat;
             Save_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             Save_Button.ForeColor = Color.White;
-            Save_Button.Location = new Point(292, 366);
+            Save_Button.Location = new Point(292, 376);
             Save_Button.Name = "Save_Button";
             Save_Button.Size = new Size(224, 44);
             Save_Button.TabIndex = 5;
@@ -297,7 +297,7 @@ namespace Site7DbEditor
             Cancel_Button.FlatStyle = FlatStyle.Flat;
             Cancel_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             Cancel_Button.ForeColor = Color.FromArgb(30, 40, 60);
-            Cancel_Button.Location = new Point(526, 366);
+            Cancel_Button.Location = new Point(526, 376);
             Cancel_Button.Name = "Cancel_Button";
             Cancel_Button.Size = new Size(128, 44);
             Cancel_Button.TabIndex = 6;
@@ -309,7 +309,7 @@ namespace Site7DbEditor
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(240, 242, 245);
-            ClientSize = new Size(668, 430);
+            ClientSize = new Size(668, 442);
             Controls.Add(Cancel_Button);
             Controls.Add(Save_Button);
             Controls.Add(btnImportFromMaster);
