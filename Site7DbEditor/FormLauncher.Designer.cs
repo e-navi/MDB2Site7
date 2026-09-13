@@ -450,31 +450,34 @@ namespace Site7DbEditor
             // 
             // menuNaigyoOption
             // 
-            this.menuNaigyoOption.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F);
+            this.menuNaigyoOption.Font = new System.Drawing.Font("Yu Gothic UI", 13F);
             this.menuNaigyoOption.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemDrawing,
             this.itemSection});
             this.menuNaigyoOption.Name = "menuNaigyoOption";
+            this.menuNaigyoOption.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.menuNaigyoOption.ShowImageMargin = false;
-            this.menuNaigyoOption.Size = new System.Drawing.Size(185, 56);
+            this.menuNaigyoOption.Size = new System.Drawing.Size(220, 96);
             // 
             // itemDrawing
             // 
             this.itemDrawing.Name = "itemDrawing";
-            this.itemDrawing.Size = new System.Drawing.Size(184, 26);
+            this.itemDrawing.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.itemDrawing.Size = new System.Drawing.Size(219, 41);
             this.itemDrawing.Text = "📐 個別遺構図作成";
             this.itemDrawing.Click += new System.EventHandler(this.ItemDrawing_Click);
             // 
             // itemSection
             // 
             this.itemSection.Name = "itemSection";
-            this.itemSection.Size = new System.Drawing.Size(184, 26);
+            this.itemSection.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.itemSection.Size = new System.Drawing.Size(219, 41);
             this.itemSection.Text = "📐 調査区断面図";
             this.itemSection.Click += new System.EventHandler(this.ItemSection_Click);
             // 
             // menuTool
             // 
-            this.menuTool.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F);
+            this.menuTool.Font = new System.Drawing.Font("Yu Gothic UI", 13F);
             this.menuTool.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemMasterDef,
             this.itemMasterLayer,
@@ -482,39 +485,45 @@ namespace Site7DbEditor
             this.itemSep,
             this.itemExporter});
             this.menuTool.Name = "menuTool";
+            this.menuTool.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.menuTool.ShowImageMargin = false;
-            this.menuTool.Size = new System.Drawing.Size(285, 114);
+            this.menuTool.Size = new System.Drawing.Size(330, 190);
             // 
             // itemMasterDef
             // 
             this.itemMasterDef.Name = "itemMasterDef";
-            this.itemMasterDef.Size = new System.Drawing.Size(284, 26);
+            this.itemMasterDef.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.itemMasterDef.Size = new System.Drawing.Size(329, 41);
             this.itemMasterDef.Text = "⚙ マスターDef設定 (入力定義)...";
             this.itemMasterDef.Click += new System.EventHandler(this.ItemMasterDef_Click);
             // 
             // itemMasterLayer
             // 
             this.itemMasterLayer.Name = "itemMasterLayer";
-            this.itemMasterLayer.Size = new System.Drawing.Size(284, 26);
+            this.itemMasterLayer.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.itemMasterLayer.Size = new System.Drawing.Size(329, 41);
             this.itemMasterLayer.Text = "📐 マスターレイヤ設定...";
             this.itemMasterLayer.Click += new System.EventHandler(this.ItemMasterLayer_Click);
             // 
             // itemMasterEnv
             // 
             this.itemMasterEnv.Name = "itemMasterEnv";
-            this.itemMasterEnv.Size = new System.Drawing.Size(284, 26);
+            this.itemMasterEnv.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.itemMasterEnv.Size = new System.Drawing.Size(329, 41);
             this.itemMasterEnv.Text = "📡 マスターTS・GPS環境設定...";
             this.itemMasterEnv.Click += new System.EventHandler(this.ItemMasterEnv_Click);
             // 
             // itemSep
             // 
+            this.itemSep.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.itemSep.Name = "itemSep";
-            this.itemSep.Size = new System.Drawing.Size(281, 6);
+            this.itemSep.Size = new System.Drawing.Size(326, 6);
             // 
             // itemExporter
             // 
             this.itemExporter.Name = "itemExporter";
-            this.itemExporter.Size = new System.Drawing.Size(284, 26);
+            this.itemExporter.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.itemExporter.Size = new System.Drawing.Size(329, 41);
             this.itemExporter.Text = "💾 旧DB移行 (MDB/FDB Exporter)";
             this.itemExporter.Click += new System.EventHandler(this.ItemExporter_Click);
             // 
