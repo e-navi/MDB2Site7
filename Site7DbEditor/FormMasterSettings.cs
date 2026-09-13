@@ -80,12 +80,14 @@ namespace Site7DbEditor
                     Padding = new Padding(8)
                 };
 
-                var pnlBtns = new Panel
+                var pnlBtns = new FlowLayoutPanel
                 {
                     Dock = DockStyle.Right,
                     Width = 115,
                     Padding = new Padding(6, 4, 4, 4),
-                    BackColor = Color.FromArgb(245, 246, 248)
+                    BackColor = Color.FromArgb(245, 246, 248),
+                    FlowDirection = FlowDirection.TopDown,
+                    WrapContents = false
                 };
 
                 var dgv = new DataGridView
@@ -134,13 +136,13 @@ namespace Site7DbEditor
                 var btnAdd = new Button
                 {
                     Text = "➕ 行追加",
-                    Dock = DockStyle.Top,
-                    Height = 38,
+                    Width = 104,
+                    Height = 36,
                     BackColor = Color.FromArgb(40, 167, 69),
                     ForeColor = Color.White,
                     FlatStyle = FlatStyle.Flat,
-                    Margin = new Padding(0, 0, 0, 8),
-                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
+                    Margin = new Padding(0, 0, 0, 6),
+                    Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
                 };
                 btnAdd.FlatAppearance.BorderSize = 0;
                 btnAdd.Click += (s, e) => AddRow(type);
@@ -148,13 +150,13 @@ namespace Site7DbEditor
                 var btnDel = new Button
                 {
                     Text = "➖ 削除",
-                    Dock = DockStyle.Top,
-                    Height = 38,
+                    Width = 104,
+                    Height = 36,
                     BackColor = Color.FromArgb(220, 53, 69),
                     ForeColor = Color.White,
                     FlatStyle = FlatStyle.Flat,
                     Margin = new Padding(0, 0, 0, 14),
-                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
+                    Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
                 };
                 btnDel.FlatAppearance.BorderSize = 0;
                 btnDel.Click += (s, e) => DeleteRow(type);
@@ -162,34 +164,37 @@ namespace Site7DbEditor
                 var btnUp = new Button
                 {
                     Text = "▲ 上へ",
-                    Dock = DockStyle.Top,
-                    Height = 36,
+                    Width = 104,
+                    Height = 34,
                     BackColor = Color.FromArgb(225, 232, 242),
                     ForeColor = Color.FromArgb(25, 45, 80),
                     FlatStyle = FlatStyle.Flat,
-                    Margin = new Padding(0, 0, 0, 8),
-                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
+                    Margin = new Padding(0, 0, 0, 6),
+                    Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
                 };
-                btnUp.FlatAppearance.BorderSize = 0;
+                btnUp.FlatAppearance.BorderSize = 1;
+                btnUp.FlatAppearance.BorderColor = Color.FromArgb(180, 195, 215);
                 btnUp.Click += (s, e) => MoveRow(type, -1);
 
                 var btnDown = new Button
                 {
                     Text = "▼ 下へ",
-                    Dock = DockStyle.Top,
-                    Height = 36,
+                    Width = 104,
+                    Height = 34,
                     BackColor = Color.FromArgb(225, 232, 242),
                     ForeColor = Color.FromArgb(25, 45, 80),
                     FlatStyle = FlatStyle.Flat,
-                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
+                    Margin = new Padding(0, 0, 0, 6),
+                    Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold)
                 };
-                btnDown.FlatAppearance.BorderSize = 0;
+                btnDown.FlatAppearance.BorderSize = 1;
+                btnDown.FlatAppearance.BorderColor = Color.FromArgb(180, 195, 215);
                 btnDown.Click += (s, e) => MoveRow(type, 1);
 
-                pnlBtns.Controls.Add(btnDown);
-                pnlBtns.Controls.Add(btnUp);
-                pnlBtns.Controls.Add(btnDel);
                 pnlBtns.Controls.Add(btnAdd);
+                pnlBtns.Controls.Add(btnDel);
+                pnlBtns.Controls.Add(btnUp);
+                pnlBtns.Controls.Add(btnDown);
 
                 tabPage.Controls.Add(dgv);
                 tabPage.Controls.Add(pnlBtns);
