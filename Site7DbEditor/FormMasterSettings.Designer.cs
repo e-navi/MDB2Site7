@@ -80,11 +80,12 @@ namespace Site7DbEditor
             // 
             this.tabControlMasters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMasters.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tabControlMasters.ItemSize = new System.Drawing.Size(185, 36);
+            this.tabControlMasters.ItemSize = new System.Drawing.Size(225, 36);
             this.tabControlMasters.Location = new System.Drawing.Point(12, 4);
             this.tabControlMasters.Name = "tabControlMasters";
+            this.tabControlMasters.Padding = new System.Drawing.Point(12, 6);
             this.tabControlMasters.SelectedIndex = 0;
-            this.tabControlMasters.Size = new System.Drawing.Size(996, 478);
+            this.tabControlMasters.Size = new System.Drawing.Size(1156, 478);
             this.tabControlMasters.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControlMasters.TabIndex = 0;
             // 
@@ -98,7 +99,7 @@ namespace Site7DbEditor
             this.panelBottom.Location = new System.Drawing.Point(0, 552);
             this.panelBottom.Name = "panelBottom";
             this.panelBottom.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
-            this.panelBottom.Size = new System.Drawing.Size(1020, 68);
+            this.panelBottom.Size = new System.Drawing.Size(1180, 68);
             this.panelBottom.TabIndex = 2;
             // 
             // btnExportToMaster
@@ -137,7 +138,7 @@ namespace Site7DbEditor
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(708, 13);
+            this.btnSave.Location = new System.Drawing.Point(868, 13);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(160, 42);
             this.btnSave.TabIndex = 2;
@@ -152,7 +153,7 @@ namespace Site7DbEditor
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnCancel.Location = new System.Drawing.Point(882, 13);
+            this.btnCancel.Location = new System.Drawing.Point(1042, 13);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(124, 42);
             this.btnCancel.TabIndex = 3;
@@ -163,11 +164,11 @@ namespace Site7DbEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
-            this.ClientSize = new System.Drawing.Size(1020, 620);
+            this.ClientSize = new System.Drawing.Size(1180, 620);
             this.Controls.Add(this.panelCenter);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.panelBottom);
-            this.MinimumSize = new System.Drawing.Size(900, 500);
+            this.MinimumSize = new System.Drawing.Size(1100, 500);
             this.Name = "FormMasterSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Def設定 (マスター / 現場)";
