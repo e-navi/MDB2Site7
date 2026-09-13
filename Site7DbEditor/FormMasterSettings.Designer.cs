@@ -40,17 +40,17 @@ namespace Site7DbEditor
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
             this.panelTop.Padding = new System.Windows.Forms.Padding(12, 8, 12, 4);
-            this.panelTop.Size = new System.Drawing.Size(920, 56);
+            this.panelTop.Size = new System.Drawing.Size(1020, 66);
             this.panelTop.TabIndex = 0;
             // 
             // lblHeader
             // 
             this.lblHeader.AutoSize = true;
-            this.lblHeader.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblHeader.Font = new System.Drawing.Font("Yu Gothic UI", 13.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.lblHeader.Location = new System.Drawing.Point(12, 6);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(235, 20);
+            this.lblHeader.Size = new System.Drawing.Size(285, 25);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "⚙ マスター設定・入力定義ファイル (Def)";
             // 
@@ -58,11 +58,11 @@ namespace Site7DbEditor
             // 
             this.lblPathInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPathInfo.Font = new System.Drawing.Font("Yu Gothic UI", 8.5F);
+            this.lblPathInfo.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lblPathInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(110)))), ((int)(((byte)(125)))));
-            this.lblPathInfo.Location = new System.Drawing.Point(12, 30);
+            this.lblPathInfo.Location = new System.Drawing.Point(12, 35);
             this.lblPathInfo.Name = "lblPathInfo";
-            this.lblPathInfo.Size = new System.Drawing.Size(896, 20);
+            this.lblPathInfo.Size = new System.Drawing.Size(996, 24);
             this.lblPathInfo.TabIndex = 1;
             this.lblPathInfo.Text = "読み込み元: ";
             // 
@@ -70,24 +70,23 @@ namespace Site7DbEditor
             // 
             this.panelCenter.Controls.Add(this.tabControlMasters);
             this.panelCenter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCenter.Location = new System.Drawing.Point(0, 56);
+            this.panelCenter.Location = new System.Drawing.Point(0, 66);
             this.panelCenter.Name = "panelCenter";
             this.panelCenter.Padding = new System.Windows.Forms.Padding(12, 4, 12, 4);
-            this.panelCenter.Size = new System.Drawing.Size(920, 428);
+            this.panelCenter.Size = new System.Drawing.Size(1020, 486);
             this.panelCenter.TabIndex = 1;
             // 
             // tabControlMasters
             // 
             this.tabControlMasters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMasters.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabControlMasters.ItemSize = new System.Drawing.Size(150, 26);
+            this.tabControlMasters.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.tabControlMasters.ItemSize = new System.Drawing.Size(185, 36);
             this.tabControlMasters.Location = new System.Drawing.Point(12, 4);
             this.tabControlMasters.Name = "tabControlMasters";
             this.tabControlMasters.SelectedIndex = 0;
-            this.tabControlMasters.Size = new System.Drawing.Size(896, 420);
+            this.tabControlMasters.Size = new System.Drawing.Size(996, 478);
             this.tabControlMasters.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControlMasters.TabIndex = 0;
-            // 
             // 
             // panelBottom
             // 
@@ -96,10 +95,10 @@ namespace Site7DbEditor
             this.panelBottom.Controls.Add(this.btnSave);
             this.panelBottom.Controls.Add(this.btnCancel);
             this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelBottom.Location = new System.Drawing.Point(0, 484);
+            this.panelBottom.Location = new System.Drawing.Point(0, 552);
             this.panelBottom.Name = "panelBottom";
-            this.panelBottom.Padding = new System.Windows.Forms.Padding(12, 6, 12, 6);
-            this.panelBottom.Size = new System.Drawing.Size(920, 56);
+            this.panelBottom.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
+            this.panelBottom.Size = new System.Drawing.Size(1020, 68);
             this.panelBottom.TabIndex = 2;
             // 
             // btnExportToMaster
@@ -107,11 +106,11 @@ namespace Site7DbEditor
             this.btnExportToMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.btnExportToMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
             this.btnExportToMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnExportToMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnExportToMaster.Location = new System.Drawing.Point(12, 11);
+            this.btnExportToMaster.Location = new System.Drawing.Point(12, 13);
             this.btnExportToMaster.Name = "btnExportToMaster";
-            this.btnExportToMaster.Size = new System.Drawing.Size(160, 34);
+            this.btnExportToMaster.Size = new System.Drawing.Size(195, 42);
             this.btnExportToMaster.TabIndex = 0;
             this.btnExportToMaster.Text = "📤 マスターへ反映";
             this.btnExportToMaster.UseVisualStyleBackColor = false;
@@ -121,11 +120,11 @@ namespace Site7DbEditor
             this.btnImportFromMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.btnImportFromMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
             this.btnImportFromMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnImportFromMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnImportFromMaster.Location = new System.Drawing.Point(180, 11);
+            this.btnImportFromMaster.Location = new System.Drawing.Point(217, 13);
             this.btnImportFromMaster.Name = "btnImportFromMaster";
-            this.btnImportFromMaster.Size = new System.Drawing.Size(160, 34);
+            this.btnImportFromMaster.Size = new System.Drawing.Size(195, 42);
             this.btnImportFromMaster.TabIndex = 1;
             this.btnImportFromMaster.Text = "📥 マスターから反映";
             this.btnImportFromMaster.UseVisualStyleBackColor = false;
@@ -136,11 +135,11 @@ namespace Site7DbEditor
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnSave.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(660, 11);
+            this.btnSave.Location = new System.Drawing.Point(708, 13);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(140, 34);
+            this.btnSave.Size = new System.Drawing.Size(160, 42);
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "💾 設定を保存";
             this.btnSave.UseVisualStyleBackColor = false;
@@ -151,11 +150,11 @@ namespace Site7DbEditor
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(235)))));
             this.btnCancel.FlatAppearance.BorderSize = 0;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.btnCancel.Location = new System.Drawing.Point(812, 11);
+            this.btnCancel.Location = new System.Drawing.Point(882, 13);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(96, 34);
+            this.btnCancel.Size = new System.Drawing.Size(124, 42);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "閉じる";
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -164,11 +163,11 @@ namespace Site7DbEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
-            this.ClientSize = new System.Drawing.Size(920, 540);
+            this.ClientSize = new System.Drawing.Size(1020, 620);
             this.Controls.Add(this.panelCenter);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.panelBottom);
-            this.MinimumSize = new System.Drawing.Size(820, 460);
+            this.MinimumSize = new System.Drawing.Size(900, 500);
             this.Name = "FormMasterSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Def設定 (マスター / 現場)";
@@ -176,7 +175,6 @@ namespace Site7DbEditor
             this.panelTop.PerformLayout();
             this.panelCenter.ResumeLayout(false);
             this.panelBottom.ResumeLayout(false);
-            this.panelBottom.PerformLayout();
             this.ResumeLayout(false);
 
         }

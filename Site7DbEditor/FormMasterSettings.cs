@@ -83,7 +83,7 @@ namespace Site7DbEditor
                 var pnlBtns = new Panel
                 {
                     Dock = DockStyle.Right,
-                    Width = 96,
+                    Width = 115,
                     Padding = new Padding(6, 4, 4, 4),
                     BackColor = Color.FromArgb(245, 246, 248)
                 };
@@ -99,17 +99,20 @@ namespace Site7DbEditor
                     AllowUserToDeleteRows = true,
                     SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                     MultiSelect = false,
-                    RowHeadersWidth = 28,
+                    RowHeadersWidth = 32,
                     BorderStyle = BorderStyle.None,
-                    ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+                    ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
+                    ColumnHeadersHeight = 36
                 };
+                dgv.RowTemplate.Height = 34;
 
                 dgv.EnableHeadersVisualStyles = false;
                 dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 235, 245);
                 dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(25, 45, 80);
-                dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+                dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
                 dgv.DefaultCellStyle.BackColor = Color.White;
                 dgv.DefaultCellStyle.ForeColor = Color.FromArgb(20, 20, 20);
+                dgv.DefaultCellStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular);
                 dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(179, 229, 252);
                 dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(0, 30, 80);
 
@@ -117,7 +120,7 @@ namespace Site7DbEditor
                 {
                     DataPropertyName = nameof(MasterItem.Code),
                     HeaderText = "コード・略称 (入力値)",
-                    Width = 220
+                    Width = 260
                 };
                 var colDesc = new DataGridViewTextBoxColumn
                 {
@@ -132,12 +135,12 @@ namespace Site7DbEditor
                 {
                     Text = "➕ 行追加",
                     Dock = DockStyle.Top,
-                    Height = 32,
+                    Height = 38,
                     BackColor = Color.FromArgb(40, 167, 69),
                     ForeColor = Color.White,
                     FlatStyle = FlatStyle.Flat,
-                    Margin = new Padding(0, 0, 0, 6),
-                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold)
+                    Margin = new Padding(0, 0, 0, 8),
+                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
                 };
                 btnAdd.FlatAppearance.BorderSize = 0;
                 btnAdd.Click += (s, e) => AddRow(type);
@@ -146,12 +149,12 @@ namespace Site7DbEditor
                 {
                     Text = "➖ 削除",
                     Dock = DockStyle.Top,
-                    Height = 32,
+                    Height = 38,
                     BackColor = Color.FromArgb(220, 53, 69),
                     ForeColor = Color.White,
                     FlatStyle = FlatStyle.Flat,
-                    Margin = new Padding(0, 0, 0, 10),
-                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold)
+                    Margin = new Padding(0, 0, 0, 14),
+                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
                 };
                 btnDel.FlatAppearance.BorderSize = 0;
                 btnDel.Click += (s, e) => DeleteRow(type);
@@ -160,12 +163,12 @@ namespace Site7DbEditor
                 {
                     Text = "▲ 上へ",
                     Dock = DockStyle.Top,
-                    Height = 30,
+                    Height = 36,
                     BackColor = Color.FromArgb(225, 232, 242),
                     ForeColor = Color.FromArgb(25, 45, 80),
                     FlatStyle = FlatStyle.Flat,
-                    Margin = new Padding(0, 0, 0, 6),
-                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold)
+                    Margin = new Padding(0, 0, 0, 8),
+                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
                 };
                 btnUp.FlatAppearance.BorderSize = 0;
                 btnUp.Click += (s, e) => MoveRow(type, -1);
@@ -174,11 +177,11 @@ namespace Site7DbEditor
                 {
                     Text = "▼ 下へ",
                     Dock = DockStyle.Top,
-                    Height = 30,
+                    Height = 36,
                     BackColor = Color.FromArgb(225, 232, 242),
                     ForeColor = Color.FromArgb(25, 45, 80),
                     FlatStyle = FlatStyle.Flat,
-                    Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold)
+                    Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold)
                 };
                 btnDown.FlatAppearance.BorderSize = 0;
                 btnDown.Click += (s, e) => MoveRow(type, 1);
