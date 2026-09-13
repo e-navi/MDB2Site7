@@ -286,7 +286,7 @@ namespace Site7DbEditor
             {
                 Size = new Size(210, 255),
                 BackColor = (_selectedSite == site) ? Color.FromArgb(235, 243, 255) : Color.White,
-                Margin = new Padding(12),
+                Margin = new Padding(10),
                 Cursor = Cursors.Hand,
                 Tag = site
             };

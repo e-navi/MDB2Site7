@@ -84,7 +84,7 @@ namespace Site7DbEditor
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Padding = new System.Windows.Forms.Padding(15, 10, 15, 10);
-            this.panelHeader.Size = new System.Drawing.Size(1044, 92);
+            this.panelHeader.Size = new System.Drawing.Size(1250, 92);
             this.panelHeader.TabIndex = 0;
             this.panelHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelHeader_Paint);
             // 
@@ -112,22 +112,25 @@ namespace Site7DbEditor
             // 
             // lblCurrentFolder
             // 
+            this.lblCurrentFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentFolder.AutoEllipsis = true;
             this.lblCurrentFolder.Font = new System.Drawing.Font("Yu Gothic UI", 10F);
             this.lblCurrentFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(110)))), ((int)(((byte)(125)))));
             this.lblCurrentFolder.Location = new System.Drawing.Point(16, 48);
             this.lblCurrentFolder.Name = "lblCurrentFolder";
-            this.lblCurrentFolder.Size = new System.Drawing.Size(440, 24);
+            this.lblCurrentFolder.Size = new System.Drawing.Size(635, 24);
             this.lblCurrentFolder.TabIndex = 2;
             this.lblCurrentFolder.Text = "現場フォルダ: ...";
             // 
             // btnBrowseFolder
             // 
+            this.btnBrowseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBrowseFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(243)))));
             this.btnBrowseFolder.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(205)))), ((int)(((byte)(215)))));
             this.btnBrowseFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowseFolder.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnBrowseFolder.Location = new System.Drawing.Point(465, 42);
+            this.btnBrowseFolder.Location = new System.Drawing.Point(665, 42);
             this.btnBrowseFolder.Name = "btnBrowseFolder";
             this.btnBrowseFolder.Size = new System.Drawing.Size(130, 34);
             this.btnBrowseFolder.TabIndex = 3;
@@ -137,22 +140,24 @@ namespace Site7DbEditor
             // 
             // txtSearch
             // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.Font = new System.Drawing.Font("Yu Gothic UI", 11F);
-            this.txtSearch.Location = new System.Drawing.Point(605, 45);
+            this.txtSearch.Location = new System.Drawing.Point(805, 45);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.PlaceholderText = "🔍 現場名を検索...";
-            this.txtSearch.Size = new System.Drawing.Size(210, 27);
+            this.txtSearch.Size = new System.Drawing.Size(220, 27);
             this.txtSearch.TabIndex = 4;
             this.txtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged);
             // 
             // btnViewList
             // 
+            this.btnViewList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnViewList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(255)))));
             this.btnViewList.FlatAppearance.BorderSize = 0;
             this.btnViewList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnViewList.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnViewList.ForeColor = System.Drawing.Color.White;
-            this.btnViewList.Location = new System.Drawing.Point(825, 42);
+            this.btnViewList.Location = new System.Drawing.Point(1035, 42);
             this.btnViewList.Name = "btnViewList";
             this.btnViewList.Size = new System.Drawing.Size(95, 34);
             this.btnViewList.TabIndex = 5;
@@ -162,12 +167,13 @@ namespace Site7DbEditor
             // 
             // btnViewGrid
             // 
+            this.btnViewGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnViewGrid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(243)))));
             this.btnViewGrid.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(205)))), ((int)(((byte)(215)))));
             this.btnViewGrid.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnViewGrid.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnViewGrid.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(75)))));
-            this.btnViewGrid.Location = new System.Drawing.Point(930, 42);
+            this.btnViewGrid.Location = new System.Drawing.Point(1140, 42);
             this.btnViewGrid.Name = "btnViewGrid";
             this.btnViewGrid.Size = new System.Drawing.Size(95, 34);
             this.btnViewGrid.TabIndex = 6;
@@ -185,10 +191,10 @@ namespace Site7DbEditor
             this.panelFooter.Controls.Add(this.btnTool);
             this.panelFooter.Controls.Add(this.btnExit);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFooter.Location = new System.Drawing.Point(0, 589);
+            this.panelFooter.Location = new System.Drawing.Point(0, 608);
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
-            this.panelFooter.Size = new System.Drawing.Size(1044, 72);
+            this.panelFooter.Size = new System.Drawing.Size(1250, 72);
             this.panelFooter.TabIndex = 2;
             this.panelFooter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelFooter_Paint);
             // 
@@ -269,12 +275,13 @@ namespace Site7DbEditor
             // 
             // btnExit
             // 
+            this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(245)))), ((int)(((byte)(249)))));
             this.btnExit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(203)))), ((int)(((byte)(213)))), ((int)(((byte)(225)))));
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
-            this.btnExit.Location = new System.Drawing.Point(710, 14);
+            this.btnExit.Location = new System.Drawing.Point(1130, 14);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(100, 44);
             this.btnExit.TabIndex = 5;
@@ -291,7 +298,7 @@ namespace Site7DbEditor
             this.panelMain.Location = new System.Drawing.Point(0, 92);
             this.panelMain.Name = "panelMain";
             this.panelMain.Padding = new System.Windows.Forms.Padding(15);
-            this.panelMain.Size = new System.Drawing.Size(1044, 497);
+            this.panelMain.Size = new System.Drawing.Size(1250, 516);
             this.panelMain.TabIndex = 1;
             // 
             // splitListPreview
@@ -311,8 +318,8 @@ namespace Site7DbEditor
             // 
             this.splitListPreview.Panel2.Controls.Add(this.panelPreviewCard);
             this.splitListPreview.Panel2MinSize = 50;
-            this.splitListPreview.Size = new System.Drawing.Size(1014, 467);
-            this.splitListPreview.SplitterDistance = 740;
+            this.splitListPreview.Size = new System.Drawing.Size(1220, 486);
+            this.splitListPreview.SplitterDistance = 940;
             this.splitListPreview.SplitterWidth = 8;
             this.splitListPreview.TabIndex = 0;
             // 
@@ -333,7 +340,7 @@ namespace Site7DbEditor
             this.dgvSites.RowHeadersVisible = false;
             this.dgvSites.RowTemplate.Height = 52;
             this.dgvSites.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSites.Size = new System.Drawing.Size(740, 467);
+            this.dgvSites.Size = new System.Drawing.Size(940, 486);
             this.dgvSites.TabIndex = 0;
             this.dgvSites.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvSites_CellDoubleClick);
             this.dgvSites.SelectionChanged += new System.EventHandler(this.DgvSites_SelectionChanged);
@@ -352,7 +359,7 @@ namespace Site7DbEditor
             this.panelPreviewCard.Location = new System.Drawing.Point(0, 0);
             this.panelPreviewCard.Name = "panelPreviewCard";
             this.panelPreviewCard.Padding = new System.Windows.Forms.Padding(12);
-            this.panelPreviewCard.Size = new System.Drawing.Size(266, 467);
+            this.panelPreviewCard.Size = new System.Drawing.Size(272, 486);
             this.panelPreviewCard.TabIndex = 0;
             // 
             // lblPreviewHeader
@@ -374,7 +381,7 @@ namespace Site7DbEditor
             this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picPreview.Location = new System.Drawing.Point(12, 38);
             this.picPreview.Name = "picPreview";
-            this.picPreview.Size = new System.Drawing.Size(238, 200);
+            this.picPreview.Size = new System.Drawing.Size(244, 200);
             this.picPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picPreview.TabIndex = 1;
             this.picPreview.TabStop = false;
@@ -388,7 +395,7 @@ namespace Site7DbEditor
             this.lblPreviewName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.lblPreviewName.Location = new System.Drawing.Point(12, 248);
             this.lblPreviewName.Name = "lblPreviewName";
-            this.lblPreviewName.Size = new System.Drawing.Size(238, 28);
+            this.lblPreviewName.Size = new System.Drawing.Size(244, 28);
             this.lblPreviewName.TabIndex = 2;
             this.lblPreviewName.Text = "現場名: -";
             // 
@@ -400,7 +407,7 @@ namespace Site7DbEditor
             this.lblPreviewDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
             this.lblPreviewDate.Location = new System.Drawing.Point(12, 280);
             this.lblPreviewDate.Name = "lblPreviewDate";
-            this.lblPreviewDate.Size = new System.Drawing.Size(238, 22);
+            this.lblPreviewDate.Size = new System.Drawing.Size(244, 22);
             this.lblPreviewDate.TabIndex = 3;
             this.lblPreviewDate.Text = "更新日時: -";
             // 
@@ -412,7 +419,7 @@ namespace Site7DbEditor
             this.lblPreviewSize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
             this.lblPreviewSize.Location = new System.Drawing.Point(12, 305);
             this.lblPreviewSize.Name = "lblPreviewSize";
-            this.lblPreviewSize.Size = new System.Drawing.Size(238, 22);
+            this.lblPreviewSize.Size = new System.Drawing.Size(244, 22);
             this.lblPreviewSize.TabIndex = 4;
             this.lblPreviewSize.Text = "データ容量: -";
             // 
@@ -425,7 +432,7 @@ namespace Site7DbEditor
             this.lblPreviewPath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
             this.lblPreviewPath.Location = new System.Drawing.Point(12, 330);
             this.lblPreviewPath.Name = "lblPreviewPath";
-            this.lblPreviewPath.Size = new System.Drawing.Size(238, 48);
+            this.lblPreviewPath.Size = new System.Drawing.Size(244, 48);
             this.lblPreviewPath.TabIndex = 5;
             this.lblPreviewPath.Text = "フォルダ: -";
             // 
@@ -437,7 +444,7 @@ namespace Site7DbEditor
             this.flowThumbnails.Location = new System.Drawing.Point(15, 15);
             this.flowThumbnails.Name = "flowThumbnails";
             this.flowThumbnails.Padding = new System.Windows.Forms.Padding(10);
-            this.flowThumbnails.Size = new System.Drawing.Size(1014, 467);
+            this.flowThumbnails.Size = new System.Drawing.Size(1220, 486);
             this.flowThumbnails.TabIndex = 1;
             this.flowThumbnails.Visible = false;
             // 
@@ -516,12 +523,12 @@ namespace Site7DbEditor
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
-            this.ClientSize = new System.Drawing.Size(1044, 661);
+            this.ClientSize = new System.Drawing.Size(1250, 680);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelHeader);
             this.Controls.Add(this.panelFooter);
             this.Font = new System.Drawing.Font("Yu Gothic UI", 11F);
-            this.MinimumSize = new System.Drawing.Size(920, 600);
+            this.MinimumSize = new System.Drawing.Size(1000, 600);
             this.Name = "FormLauncher";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "遺跡調査システム Site7 - 現場選択";
