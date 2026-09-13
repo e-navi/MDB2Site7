@@ -101,7 +101,7 @@ namespace Site7DbEditor
                     AllowUserToDeleteRows = true,
                     SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                     MultiSelect = false,
-                    RowHeadersWidth = 32,
+                    RowHeadersVisible = false,
                     BorderStyle = BorderStyle.None,
                     ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
                     ColumnHeadersHeight = 36
