@@ -68,7 +68,7 @@ namespace Site7DbEditor
             {
                 if (splitListPreview.Width > 300)
                 {
-                    splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 270);
+                    splitListPreview.SplitterDistance = Math.Max(150, splitListPreview.Width - 275);
                 }
             }
             catch { }
@@ -284,9 +284,9 @@ namespace Site7DbEditor
         {
             var pnl = new Panel
             {
-                Size = new Size(210, 255),
+                Size = new Size(205, 250),
                 BackColor = (_selectedSite == site) ? Color.FromArgb(235, 243, 255) : Color.White,
-                Margin = new Padding(10),
+                Margin = new Padding(8),
                 Cursor = Cursors.Hand,
                 Tag = site
             };
@@ -301,7 +301,7 @@ namespace Site7DbEditor
             var pic = new PictureBox
             {
                 Location = new Point(8, 8),
-                Size = new Size(194, 160),
+                Size = new Size(189, 155),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 BackColor = Color.FromArgb(250, 250, 252),
                 Image = site.GetThumbnailImage() ?? CreateDefaultPlaceholderImage()
@@ -312,8 +312,8 @@ namespace Site7DbEditor
                 Text = site.Name,
                 Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(6, 174),
-                Size = new Size(198, 26),
+                Location = new Point(6, 168),
+                Size = new Size(193, 26),
                 TextAlign = ContentAlignment.MiddleCenter,
                 AutoEllipsis = true
             };
@@ -323,8 +323,8 @@ namespace Site7DbEditor
                 Text = site.DisplayUpdatedAt,
                 Font = new Font("Yu Gothic UI", 10F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(6, 204),
-                Size = new Size(198, 22),
+                Location = new Point(6, 198),
+                Size = new Size(193, 22),
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
@@ -358,7 +358,7 @@ namespace Site7DbEditor
 
         private Image CreateDefaultPlaceholderImage()
         {
-            var bmp = new Bitmap(194, 160);
+            var bmp = new Bitmap(189, 155);
             using var g = Graphics.FromImage(bmp);
             g.Clear(Color.FromArgb(245, 247, 250));
             using var p = new Pen(Color.FromArgb(210, 215, 225));
