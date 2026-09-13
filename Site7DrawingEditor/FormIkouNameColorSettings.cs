@@ -8,23 +8,10 @@ using Site7DrawingEditor.Services;
 
 namespace Site7DrawingEditor
 {
-    public class FormIkouNameColorSettings : Form
+    public partial class FormIkouNameColorSettings : Form
     {
         private readonly DrawingDbManager? _db;
         private readonly string? _dbPath;
-
-        private ListBox listBox1 = null!;
-        private TextBox txtPattern = null!;
-        private ComboBox CBoxColor = null!;
-        private Label lblColorSample = null!;
-        private Button btnAdd = null!;
-        private Button btnDelete = null!;
-        private Button btnMoveUp = null!;
-        private Button btnMoveDown = null!;
-        private Button btnExportToMaster = null!;
-        private Button btnImportFromMaster = null!;
-        private Button Save_Button = null!;
-        private Button Cancel_Button = null!;
         private bool _isUpdatingUi = false;
 
         private readonly List<IkouNameColorItem> _items = new();
@@ -47,6 +34,7 @@ namespace Site7DrawingEditor
             }
 
             InitializeComponent();
+            SetupUI();
             PopulateList();
 
             if (listBox1.Items.Count > 0)
@@ -55,191 +43,36 @@ namespace Site7DrawingEditor
             }
         }
 
-        private void InitializeComponent()
+        private void SetupUI()
         {
             bool isMasterMode = string.IsNullOrEmpty(_dbPath);
             this.Text = isMasterMode ? "遺構名色設定 (システム共通マスター)" : "遺構名色設定 (現場定義データ)";
-            this.ClientSize = new Size(520, 420);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.BackColor = Color.FromArgb(240, 242, 245);
-            this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
+            btnExportToMaster.Visible = !isMasterMode;
+            btnImportFromMaster.Visible = !isMasterMode;
 
-            var lblTitle = new Label
-            {
-                Text = "遺構名・プレフィックス別 表示色定義 (遺構名色.txt)",
-                Location = new Point(16, 12),
-                Size = new Size(480, 20),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(20, 35, 65)
-            };
-
-            // listBox1
-            listBox1 = new ListBox
-            {
-                Location = new Point(16, 38),
-                Size = new Size(220, 290),
-                DrawMode = DrawMode.OwnerDrawFixed,
-                ItemHeight = 26,
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold),
-                IntegralHeight = false
-            };
+            // ListBox
             listBox1.DrawItem += ListBox1_DrawItem;
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
 
             // List action buttons
-            btnAdd = CreateSmallButton("➕ 追加", new Point(16, 335), new Size(62, 28));
             btnAdd.Click += BtnAdd_Click;
-
-            btnDelete = CreateSmallButton("➖ 削除", new Point(82, 335), new Size(62, 28));
             btnDelete.Click += BtnDelete_Click;
-
-            btnMoveUp = CreateSmallButton("▲", new Point(148, 335), new Size(40, 28));
             btnMoveUp.Click += BtnMoveUp_Click;
-
-            btnMoveDown = CreateSmallButton("▼", new Point(192, 335), new Size(40, 28));
             btnMoveDown.Click += BtnMoveDown_Click;
 
-            // Right edit group
-            var grpEdit = new GroupBox
-            {
-                Text = "遺構色設定",
-                Location = new Point(248, 38),
-                Size = new Size(255, 290),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 40, 60)
-            };
-
-            var lblPattern = new Label { Text = "遺構名 / プレフィックス:", Location = new Point(18, 30), AutoSize = true };
-            txtPattern = new TextBox
-            {
-                Location = new Point(18, 54),
-                Size = new Size(215, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
-            };
+            // Edit controls
             txtPattern.TextChanged += (s, e) => AutoApplyCurrentItem();
 
-            var lblColor = new Label { Text = "表示色:", Location = new Point(18, 96), AutoSize = true };
-
-            CBoxColor = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                DrawMode = DrawMode.OwnerDrawFixed,
-                Location = new Point(18, 120),
-                Size = new Size(160, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
-            };
+            CBoxColor.Items.Clear();
             CBoxColor.Items.AddRange(IkouNameColorService.ColorNames.Cast<object>().ToArray());
             CBoxColor.DrawItem += CBoxColor_DrawItem;
             CBoxColor.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
 
-            lblColorSample = new Label
-            {
-                Location = new Point(185, 120),
-                Size = new Size(48, 26),
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.Red
-            };
-
-            var lblNotice = new Label
-            {
-                Text = "※ 該当しない遺構名は「最終行」の色が自動適用されます。\n※ 上端・中・下端の濃淡はレイヤ設定の指定値で自動反映されます。",
-                Location = new Point(18, 175),
-                Size = new Size(220, 95),
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(80, 90, 110)
-            };
-
-            grpEdit.Controls.Add(lblPattern);
-            grpEdit.Controls.Add(txtPattern);
-            grpEdit.Controls.Add(lblColor);
-            grpEdit.Controls.Add(CBoxColor);
-            grpEdit.Controls.Add(lblColorSample);
-            grpEdit.Controls.Add(lblNotice);
-
-            // Bottom Buttons
-            btnExportToMaster = new Button
-            {
-                Text = "📤 マスターへ反映",
-                Location = new Point(16, 375),
-                Size = new Size(115, 30),
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
-                BackColor = Color.FromArgb(233, 236, 243),
-                ForeColor = Color.FromArgb(25, 45, 80),
-                FlatStyle = FlatStyle.Flat,
-                Visible = !isMasterMode
-            };
-            btnExportToMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            // Bottom buttons
             btnExportToMaster.Click += BtnExportToMaster_Click;
-
-            btnImportFromMaster = new Button
-            {
-                Text = "📥 マスターから反映",
-                Location = new Point(136, 375),
-                Size = new Size(115, 30),
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
-                BackColor = Color.FromArgb(233, 236, 243),
-                ForeColor = Color.FromArgb(25, 45, 80),
-                FlatStyle = FlatStyle.Flat,
-                Visible = !isMasterMode
-            };
-            btnImportFromMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
             btnImportFromMaster.Click += BtnImportFromMaster_Click;
-
-            Save_Button = new Button
-            {
-                Text = "💾 設定を保存",
-                Location = new Point(275, 372),
-                Size = new Size(130, 34),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                BackColor = Color.FromArgb(40, 167, 69),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                UseVisualStyleBackColor = false
-            };
-            Save_Button.FlatAppearance.BorderSize = 0;
             Save_Button.Click += Save_Button_Click;
-
-            Cancel_Button = new Button
-            {
-                Text = "閉じる",
-                Location = new Point(415, 372),
-                Size = new Size(90, 34),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                BackColor = Color.FromArgb(220, 225, 235),
-                ForeColor = Color.FromArgb(30, 40, 60),
-                FlatStyle = FlatStyle.Flat,
-                UseVisualStyleBackColor = false
-            };
-            Cancel_Button.FlatAppearance.BorderSize = 0;
             Cancel_Button.Click += (s, e) => { this.DialogResult = DialogResult.OK; this.Close(); };
-
-            this.Controls.Add(lblTitle);
-            this.Controls.Add(listBox1);
-            this.Controls.Add(btnAdd);
-            this.Controls.Add(btnDelete);
-            this.Controls.Add(btnMoveUp);
-            this.Controls.Add(btnMoveDown);
-            this.Controls.Add(grpEdit);
-            this.Controls.Add(btnExportToMaster);
-            this.Controls.Add(btnImportFromMaster);
-            this.Controls.Add(Save_Button);
-            this.Controls.Add(Cancel_Button);
-        }
-
-        private Button CreateSmallButton(string text, Point location, Size size)
-        {
-            return new Button
-            {
-                Text = text,
-                Location = location,
-                Size = size,
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
-                BackColor = Color.White,
-                UseVisualStyleBackColor = true
-            };
         }
 
         private void PopulateList()
@@ -268,14 +101,14 @@ namespace Site7DrawingEditor
             bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
 
             // Color box
-            var colorRect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top + 4, 18, 18);
+            var colorRect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top + 4, 20, 20);
             using (var brush = new SolidBrush(item.Color))
             {
                 e.Graphics.FillRectangle(brush, colorRect);
             }
             e.Graphics.DrawRectangle(Pens.Gray, colorRect);
 
-            // Text
+            // Text (遺構名 + 色名)
             string colorName = (item.ColorIndex >= 1 && item.ColorIndex <= IkouNameColorService.ColorNames.Length)
                 ? IkouNameColorService.ColorNames[item.ColorIndex - 1]
                 : item.ColorIndex.ToString();
@@ -283,7 +116,7 @@ namespace Site7DrawingEditor
             string text = $"{item.NamePattern}  ({colorName})";
             using (var textBrush = new SolidBrush(isSelected ? Color.White : Color.Black))
             {
-                e.Graphics.DrawString(text, e.Font ?? this.Font, textBrush, e.Bounds.Left + 28, e.Bounds.Top + 4);
+                e.Graphics.DrawString(text, e.Font ?? this.Font, textBrush, e.Bounds.Left + 30, e.Bounds.Top + 3);
             }
 
             e.DrawFocusRectangle();
@@ -299,7 +132,7 @@ namespace Site7DrawingEditor
                 ? LayerManager.LayerTableColors[e.Index]
                 : e.ForeColor;
 
-            int boxSize = 14;
+            int boxSize = 16;
             int boxX = e.Bounds.X + 4;
             int boxY = e.Bounds.Y + (e.Bounds.Height - boxSize) / 2;
 
@@ -319,7 +152,7 @@ namespace Site7DrawingEditor
             }
 
             using (var textBrush = new SolidBrush(textColor))
-            using (var font = new Font("Yu Gothic UI", 10F, FontStyle.Bold))
+            using (var font = new Font("Yu Gothic UI", 11F, FontStyle.Bold))
             {
                 float ym = (e.Bounds.Height - e.Graphics.MeasureString(txt, font).Height) / 2;
                 e.Graphics.DrawString(txt, font, textBrush, boxX + boxSize + 6, e.Bounds.Y + ym);
