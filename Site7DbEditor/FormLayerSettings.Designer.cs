@@ -15,334 +15,318 @@ namespace Site7DbEditor
 
         #region Windows Form Designer generated code
 
-        private void InitializeComponent()
-        {
-            this.comboBoxLayerG = new System.Windows.Forms.ComboBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.lblLayerName = new System.Windows.Forms.Label();
-            this.lblColor = new System.Windows.Forms.Label();
-            this.lblMark = new System.Windows.Forms.Label();
-            this.lblSize = new System.Windows.Forms.Label();
-            this.lblWidth = new System.Windows.Forms.Label();
-            this.lblLineStyle = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.CBoxColor = new System.Windows.Forms.ComboBox();
-            this.CBoxMark = new System.Windows.Forms.ComboBox();
-            this.CBoxSize = new System.Windows.Forms.ComboBox();
-            this.CBoxWidth = new System.Windows.Forms.ComboBox();
-            this.CBoxLineStyle = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnExportToMaster = new System.Windows.Forms.Button();
-            this.btnImportFromMaster = new System.Windows.Forms.Button();
-            this.Save_Button = new System.Windows.Forms.Button();
-            this.Cancel_Button = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+        private void InitializeComponent() {
+            comboBoxLayerG = new ComboBox();
+            listBox1 = new ListBox();
+            grpEdit = new GroupBox();
+            lblLayerName = new Label();
+            textBox1 = new TextBox();
+            lblColor = new Label();
+            CBoxColor = new ComboBox();
+            lblMark = new Label();
+            CBoxMark = new ComboBox();
+            lblSize = new Label();
+            CBoxSize = new ComboBox();
+            lblWidth = new Label();
+            CBoxWidth = new ComboBox();
+            lblLineStyle = new Label();
+            CBoxLineStyle = new ComboBox();
+            button1 = new Button();
+            btnExportToMaster = new Button();
+            btnImportFromMaster = new Button();
+            Save_Button = new Button();
+            Cancel_Button = new Button();
+            grpEdit.SuspendLayout();
+            SuspendLayout();
             // 
             // comboBoxLayerG
             // 
-            this.comboBoxLayerG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxLayerG.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.comboBoxLayerG.FormattingEnabled = true;
-            this.comboBoxLayerG.Items.AddRange(new object[] {
-            "🏛 遺構 (Layer遺構.txt)",
-            "🏺 遺物 (Layer遺物.txt)",
-            "📍 基準点 (Layer基準点.txt)",
-            "📏 作図 (Layer作図.txt)"});
-            this.comboBoxLayerG.Location = new System.Drawing.Point(16, 14);
-            this.comboBoxLayerG.Name = "comboBoxLayerG";
-            this.comboBoxLayerG.Size = new System.Drawing.Size(260, 29);
-            this.comboBoxLayerG.TabIndex = 0;
-            this.comboBoxLayerG.SelectedIndexChanged += new System.EventHandler(this.ComboBoxLayerG_SelectedIndexChanged);
+            comboBoxLayerG.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxLayerG.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            comboBoxLayerG.FormattingEnabled = true;
+            comboBoxLayerG.Items.AddRange(new object[] { "🏛 遺構 (Layer遺構.txt)", "🏺 遺物 (Layer遺物.txt)", "📍 基準点 (Layer基準点.txt)", "📏 作図 (Layer作図.txt)" });
+            comboBoxLayerG.Location = new Point(14, 14);
+            comboBoxLayerG.Name = "comboBoxLayerG";
+            comboBoxLayerG.Size = new Size(264, 29);
+            comboBoxLayerG.TabIndex = 0;
+            comboBoxLayerG.SelectedIndexChanged += ComboBoxLayerG_SelectedIndexChanged;
             // 
             // listBox1
             // 
-            this.listBox1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular);
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.IntegralHeight = true;
-            this.listBox1.ItemHeight = 21;
-            this.listBox1.Location = new System.Drawing.Point(16, 56);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(260, 445);
-            this.listBox1.TabIndex = 1;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
+            listBox1.Font = new Font("Yu Gothic UI", 13F);
+            listBox1.FormattingEnabled = true;
+            listBox1.IntegralHeight = false;
+            listBox1.ItemHeight = 25;
+            listBox1.Location = new Point(14, 52);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(264, 438);
+            listBox1.TabIndex = 1;
+            listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
+            // 
+            // grpEdit
+            // 
+            grpEdit.Controls.Add(lblLayerName);
+            grpEdit.Controls.Add(textBox1);
+            grpEdit.Controls.Add(lblColor);
+            grpEdit.Controls.Add(CBoxColor);
+            grpEdit.Controls.Add(lblMark);
+            grpEdit.Controls.Add(CBoxMark);
+            grpEdit.Controls.Add(lblSize);
+            grpEdit.Controls.Add(CBoxSize);
+            grpEdit.Controls.Add(lblWidth);
+            grpEdit.Controls.Add(CBoxWidth);
+            grpEdit.Controls.Add(lblLineStyle);
+            grpEdit.Controls.Add(CBoxLineStyle);
+            grpEdit.Controls.Add(button1);
+            grpEdit.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
+            grpEdit.ForeColor = Color.FromArgb(40, 60, 90);
+            grpEdit.Location = new Point(292, 8);
+            grpEdit.Name = "grpEdit";
+            grpEdit.Size = new Size(362, 380);
+            grpEdit.TabIndex = 2;
+            grpEdit.TabStop = false;
+            grpEdit.Text = " 選択レイヤの設定 ";
             // 
             // lblLayerName
             // 
-            this.lblLayerName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblLayerName.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblLayerName.Location = new System.Drawing.Point(295, 56);
-            this.lblLayerName.Name = "lblLayerName";
-            this.lblLayerName.Size = new System.Drawing.Size(80, 28);
-            this.lblLayerName.TabIndex = 2;
-            this.lblLayerName.Text = "レイヤ名";
-            this.lblLayerName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblColor
-            // 
-            this.lblColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblColor.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblColor.Location = new System.Drawing.Point(295, 100);
-            this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(80, 28);
-            this.lblColor.TabIndex = 3;
-            this.lblColor.Text = "表示色";
-            this.lblColor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblMark
-            // 
-            this.lblMark.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblMark.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblMark.Location = new System.Drawing.Point(295, 144);
-            this.lblMark.Name = "lblMark";
-            this.lblMark.Size = new System.Drawing.Size(80, 28);
-            this.lblMark.TabIndex = 4;
-            this.lblMark.Text = "マーク";
-            this.lblMark.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblSize
-            // 
-            this.lblSize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblSize.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblSize.Location = new System.Drawing.Point(295, 188);
-            this.lblSize.Name = "lblSize";
-            this.lblSize.Size = new System.Drawing.Size(80, 28);
-            this.lblSize.TabIndex = 5;
-            this.lblSize.Text = "サイズ";
-            this.lblSize.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblWidth
-            // 
-            this.lblWidth.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblWidth.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblWidth.Location = new System.Drawing.Point(295, 232);
-            this.lblWidth.Name = "lblWidth";
-            this.lblWidth.Size = new System.Drawing.Size(80, 28);
-            this.lblWidth.TabIndex = 6;
-            this.lblWidth.Text = "線幅";
-            this.lblWidth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblLineStyle
-            // 
-            this.lblLineStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblLineStyle.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblLineStyle.Location = new System.Drawing.Point(295, 276);
-            this.lblLineStyle.Name = "lblLineStyle";
-            this.lblLineStyle.Size = new System.Drawing.Size(80, 28);
-            this.lblLineStyle.TabIndex = 7;
-            this.lblLineStyle.Text = "線種";
-            this.lblLineStyle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblLayerName.BackColor = Color.FromArgb(232, 237, 245);
+            lblLayerName.BorderStyle = BorderStyle.FixedSingle;
+            lblLayerName.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblLayerName.ForeColor = Color.FromArgb(30, 40, 60);
+            lblLayerName.Location = new Point(16, 34);
+            lblLayerName.Name = "lblLayerName";
+            lblLayerName.Size = new Size(80, 29);
+            lblLayerName.TabIndex = 0;
+            lblLayerName.Text = "レイヤ名";
+            lblLayerName.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.textBox1.Location = new System.Drawing.Point(385, 54);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(240, 29);
-            this.textBox1.TabIndex = 8;
+            textBox1.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            textBox1.Location = new Point(104, 34);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(242, 29);
+            textBox1.TabIndex = 1;
+            // 
+            // lblColor
+            // 
+            lblColor.BackColor = Color.FromArgb(232, 237, 245);
+            lblColor.BorderStyle = BorderStyle.FixedSingle;
+            lblColor.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblColor.ForeColor = Color.FromArgb(30, 40, 60);
+            lblColor.Location = new Point(16, 76);
+            lblColor.Name = "lblColor";
+            lblColor.Size = new Size(80, 30);
+            lblColor.TabIndex = 2;
+            lblColor.Text = "表示色";
+            lblColor.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CBoxColor
             // 
-            this.CBoxColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.CBoxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxColor.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.CBoxColor.FormattingEnabled = true;
-            this.CBoxColor.ItemHeight = 24;
-            this.CBoxColor.Items.AddRange(new object[] {
-            "黒",
-            "赤",
-            "緑",
-            "青",
-            "黄",
-            "マゼンタ",
-            "シアン",
-            "白",
-            "牡丹",
-            "茶",
-            "橙",
-            "薄緑",
-            "明青",
-            "青紫",
-            "明灰",
-            "暗灰"});
-            this.CBoxColor.Location = new System.Drawing.Point(385, 98);
-            this.CBoxColor.Name = "CBoxColor";
-            this.CBoxColor.Size = new System.Drawing.Size(160, 30);
-            this.CBoxColor.TabIndex = 9;
-            this.CBoxColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.CBoxColor_DrawItem);
+            CBoxColor.DrawMode = DrawMode.OwnerDrawFixed;
+            CBoxColor.DropDownStyle = ComboBoxStyle.DropDownList;
+            CBoxColor.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            CBoxColor.FormattingEnabled = true;
+            CBoxColor.ItemHeight = 24;
+            CBoxColor.Items.AddRange(new object[] { "黒", "赤", "緑", "青", "黄", "マゼンタ", "シアン", "白", "牡丹", "茶", "橙", "薄緑", "明青", "青紫", "明灰", "暗灰" });
+            CBoxColor.Location = new Point(104, 76);
+            CBoxColor.Name = "CBoxColor";
+            CBoxColor.Size = new Size(160, 30);
+            CBoxColor.TabIndex = 3;
+            CBoxColor.DrawItem += CBoxColor_DrawItem;
+            // 
+            // lblMark
+            // 
+            lblMark.BackColor = Color.FromArgb(232, 237, 245);
+            lblMark.BorderStyle = BorderStyle.FixedSingle;
+            lblMark.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblMark.ForeColor = Color.FromArgb(30, 40, 60);
+            lblMark.Location = new Point(16, 118);
+            lblMark.Name = "lblMark";
+            lblMark.Size = new Size(80, 29);
+            lblMark.TabIndex = 4;
+            lblMark.Text = "マーク";
+            lblMark.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CBoxMark
             // 
-            this.CBoxMark.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxMark.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.CBoxMark.FormattingEnabled = true;
-            this.CBoxMark.Items.AddRange(new object[] {
-            "〇",
-            "□",
-            "△",
-            "⦿",
-            "✕",
-            "＋",
-            "◇",
-            "★"});
-            this.CBoxMark.Location = new System.Drawing.Point(385, 142);
-            this.CBoxMark.Name = "CBoxMark";
-            this.CBoxMark.Size = new System.Drawing.Size(130, 29);
-            this.CBoxMark.TabIndex = 10;
+            CBoxMark.DropDownStyle = ComboBoxStyle.DropDownList;
+            CBoxMark.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            CBoxMark.FormattingEnabled = true;
+            CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
+            CBoxMark.Location = new Point(104, 118);
+            CBoxMark.Name = "CBoxMark";
+            CBoxMark.Size = new Size(140, 29);
+            CBoxMark.TabIndex = 5;
+            // 
+            // lblSize
+            // 
+            lblSize.BackColor = Color.FromArgb(232, 237, 245);
+            lblSize.BorderStyle = BorderStyle.FixedSingle;
+            lblSize.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblSize.ForeColor = Color.FromArgb(30, 40, 60);
+            lblSize.Location = new Point(16, 160);
+            lblSize.Name = "lblSize";
+            lblSize.Size = new Size(80, 29);
+            lblSize.TabIndex = 6;
+            lblSize.Text = "サイズ";
+            lblSize.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CBoxSize
             // 
-            this.CBoxSize.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.CBoxSize.FormattingEnabled = true;
-            this.CBoxSize.Items.AddRange(new object[] {
-            "0.5",
-            "1.0",
-            "1.5",
-            "2.0",
-            "3.0",
-            "4.0",
-            "5.0",
-            "6.0",
-            "8.0",
-            "10.0"});
-            this.CBoxSize.Location = new System.Drawing.Point(385, 186);
-            this.CBoxSize.Name = "CBoxSize";
-            this.CBoxSize.Size = new System.Drawing.Size(110, 29);
-            this.CBoxSize.TabIndex = 11;
+            CBoxSize.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            CBoxSize.FormattingEnabled = true;
+            CBoxSize.Items.AddRange(new object[] { "0.5", "1.0", "1.5", "2.0", "3.0", "4.0", "5.0", "6.0", "8.0", "10.0" });
+            CBoxSize.Location = new Point(104, 160);
+            CBoxSize.Name = "CBoxSize";
+            CBoxSize.Size = new Size(120, 29);
+            CBoxSize.TabIndex = 7;
+            // 
+            // lblWidth
+            // 
+            lblWidth.BackColor = Color.FromArgb(232, 237, 245);
+            lblWidth.BorderStyle = BorderStyle.FixedSingle;
+            lblWidth.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblWidth.ForeColor = Color.FromArgb(30, 40, 60);
+            lblWidth.Location = new Point(16, 160);
+            lblWidth.Name = "lblWidth";
+            lblWidth.Size = new Size(80, 29);
+            lblWidth.TabIndex = 8;
+            lblWidth.Text = "線幅";
+            lblWidth.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CBoxWidth
             // 
-            this.CBoxWidth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxWidth.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.CBoxWidth.FormattingEnabled = true;
-            this.CBoxWidth.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
-            this.CBoxWidth.Location = new System.Drawing.Point(385, 230);
-            this.CBoxWidth.Name = "CBoxWidth";
-            this.CBoxWidth.Size = new System.Drawing.Size(110, 29);
-            this.CBoxWidth.TabIndex = 12;
+            CBoxWidth.DropDownStyle = ComboBoxStyle.DropDownList;
+            CBoxWidth.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            CBoxWidth.FormattingEnabled = true;
+            CBoxWidth.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
+            CBoxWidth.Location = new Point(104, 160);
+            CBoxWidth.Name = "CBoxWidth";
+            CBoxWidth.Size = new Size(120, 29);
+            CBoxWidth.TabIndex = 9;
+            // 
+            // lblLineStyle
+            // 
+            lblLineStyle.BackColor = Color.FromArgb(232, 237, 245);
+            lblLineStyle.BorderStyle = BorderStyle.FixedSingle;
+            lblLineStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            lblLineStyle.ForeColor = Color.FromArgb(30, 40, 60);
+            lblLineStyle.Location = new Point(16, 202);
+            lblLineStyle.Name = "lblLineStyle";
+            lblLineStyle.Size = new Size(80, 29);
+            lblLineStyle.TabIndex = 10;
+            lblLineStyle.Text = "線種";
+            lblLineStyle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CBoxLineStyle
             // 
-            this.CBoxLineStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxLineStyle.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.CBoxLineStyle.FormattingEnabled = true;
-            this.CBoxLineStyle.Items.AddRange(new object[] {
-            "折線",
-            "曲線"});
-            this.CBoxLineStyle.Location = new System.Drawing.Point(385, 274);
-            this.CBoxLineStyle.Name = "CBoxLineStyle";
-            this.CBoxLineStyle.Size = new System.Drawing.Size(120, 29);
-            this.CBoxLineStyle.TabIndex = 13;
+            CBoxLineStyle.DropDownStyle = ComboBoxStyle.DropDownList;
+            CBoxLineStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            CBoxLineStyle.FormattingEnabled = true;
+            CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
+            CBoxLineStyle.Location = new Point(104, 202);
+            CBoxLineStyle.Name = "CBoxLineStyle";
+            CBoxLineStyle.Size = new Size(120, 29);
+            CBoxLineStyle.TabIndex = 11;
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(235)))), ((int)(((byte)(245)))));
-            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.button1.Location = new System.Drawing.Point(385, 320);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(180, 36);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "✔ このレイヤに適用";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            button1.BackColor = Color.FromArgb(232, 238, 248);
+            button1.FlatAppearance.BorderColor = Color.FromArgb(170, 190, 220);
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            button1.ForeColor = Color.FromArgb(20, 50, 95);
+            button1.Location = new Point(104, 252);
+            button1.Name = "button1";
+            button1.Size = new Size(242, 38);
+            button1.TabIndex = 12;
+            button1.Text = "✔ このレイヤに適用";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += Button1_Click;
             // 
             // btnExportToMaster
             // 
-            this.btnExportToMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
-            this.btnExportToMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
-            this.btnExportToMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnExportToMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnExportToMaster.Location = new System.Drawing.Point(295, 410);
-            this.btnExportToMaster.Name = "btnExportToMaster";
-            this.btnExportToMaster.Size = new System.Drawing.Size(160, 40);
-            this.btnExportToMaster.TabIndex = 15;
-            this.btnExportToMaster.Text = "📤 マスターへ反映";
-            this.btnExportToMaster.UseVisualStyleBackColor = false;
-            this.btnExportToMaster.Click += new System.EventHandler(this.BtnExportToMaster_Click);
+            btnExportToMaster.BackColor = Color.FromArgb(233, 236, 243);
+            btnExportToMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            btnExportToMaster.FlatStyle = FlatStyle.Flat;
+            btnExportToMaster.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnExportToMaster.ForeColor = Color.FromArgb(25, 45, 80);
+            btnExportToMaster.Location = new Point(292, 400);
+            btnExportToMaster.Name = "btnExportToMaster";
+            btnExportToMaster.Size = new Size(174, 36);
+            btnExportToMaster.TabIndex = 3;
+            btnExportToMaster.Text = "📤 マスターへ反映";
+            btnExportToMaster.UseVisualStyleBackColor = false;
+            btnExportToMaster.Click += BtnExportToMaster_Click;
             // 
             // btnImportFromMaster
             // 
-            this.btnImportFromMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
-            this.btnImportFromMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
-            this.btnImportFromMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnImportFromMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
-            this.btnImportFromMaster.Location = new System.Drawing.Point(465, 410);
-            this.btnImportFromMaster.Name = "btnImportFromMaster";
-            this.btnImportFromMaster.Size = new System.Drawing.Size(160, 40);
-            this.btnImportFromMaster.TabIndex = 16;
-            this.btnImportFromMaster.Text = "📥 マスターから反映";
-            this.btnImportFromMaster.UseVisualStyleBackColor = false;
-            this.btnImportFromMaster.Click += new System.EventHandler(this.BtnImportFromMaster_Click);
+            btnImportFromMaster.BackColor = Color.FromArgb(233, 236, 243);
+            btnImportFromMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
+            btnImportFromMaster.FlatStyle = FlatStyle.Flat;
+            btnImportFromMaster.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnImportFromMaster.ForeColor = Color.FromArgb(25, 45, 80);
+            btnImportFromMaster.Location = new Point(480, 400);
+            btnImportFromMaster.Name = "btnImportFromMaster";
+            btnImportFromMaster.Size = new Size(174, 36);
+            btnImportFromMaster.TabIndex = 4;
+            btnImportFromMaster.Text = "📥 マスターから反映";
+            btnImportFromMaster.UseVisualStyleBackColor = false;
+            btnImportFromMaster.Click += BtnImportFromMaster_Click;
             // 
             // Save_Button
             // 
-            this.Save_Button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))));
-            this.Save_Button.FlatAppearance.BorderSize = 0;
-            this.Save_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_Button.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.Save_Button.ForeColor = System.Drawing.Color.White;
-            this.Save_Button.Location = new System.Drawing.Point(295, 460);
-            this.Save_Button.Name = "Save_Button";
-            this.Save_Button.Size = new System.Drawing.Size(190, 44);
-            this.Save_Button.TabIndex = 17;
-            this.Save_Button.Text = "💾 設定を保存";
-            this.Save_Button.UseVisualStyleBackColor = false;
-            this.Save_Button.Click += new System.EventHandler(this.Save_Button_Click);
+            Save_Button.BackColor = Color.FromArgb(40, 167, 69);
+            Save_Button.FlatAppearance.BorderSize = 0;
+            Save_Button.FlatStyle = FlatStyle.Flat;
+            Save_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            Save_Button.ForeColor = Color.White;
+            Save_Button.Location = new Point(292, 444);
+            Save_Button.Name = "Save_Button";
+            Save_Button.Size = new Size(224, 44);
+            Save_Button.TabIndex = 5;
+            Save_Button.Text = "💾 設定を保存";
+            Save_Button.UseVisualStyleBackColor = false;
+            Save_Button.Click += Save_Button_Click;
             // 
             // Cancel_Button
             // 
-            this.Cancel_Button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(225)))), ((int)(((byte)(235)))));
-            this.Cancel_Button.FlatAppearance.BorderSize = 0;
-            this.Cancel_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Cancel_Button.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
-            this.Cancel_Button.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(60)))));
-            this.Cancel_Button.Location = new System.Drawing.Point(495, 460);
-            this.Cancel_Button.Name = "Cancel_Button";
-            this.Cancel_Button.Size = new System.Drawing.Size(130, 44);
-            this.Cancel_Button.TabIndex = 18;
-            this.Cancel_Button.Text = "閉じる";
-            this.Cancel_Button.UseVisualStyleBackColor = false;
-            this.Cancel_Button.Click += new System.EventHandler(this.Cancel_Button_Click);
+            Cancel_Button.BackColor = Color.FromArgb(220, 225, 235);
+            Cancel_Button.FlatAppearance.BorderSize = 0;
+            Cancel_Button.FlatStyle = FlatStyle.Flat;
+            Cancel_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            Cancel_Button.ForeColor = Color.FromArgb(30, 40, 60);
+            Cancel_Button.Location = new Point(526, 444);
+            Cancel_Button.Name = "Cancel_Button";
+            Cancel_Button.Size = new Size(128, 44);
+            Cancel_Button.TabIndex = 6;
+            Cancel_Button.Text = "閉じる";
+            Cancel_Button.UseVisualStyleBackColor = false;
+            Cancel_Button.Click += Cancel_Button_Click;
             // 
             // FormLayerSettings
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
-            this.ClientSize = new System.Drawing.Size(660, 520);
-            this.Controls.Add(this.Cancel_Button);
-            this.Controls.Add(this.Save_Button);
-            this.Controls.Add(this.btnImportFromMaster);
-            this.Controls.Add(this.btnExportToMaster);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.CBoxLineStyle);
-            this.Controls.Add(this.CBoxWidth);
-            this.Controls.Add(this.CBoxSize);
-            this.Controls.Add(this.CBoxMark);
-            this.Controls.Add(this.CBoxColor);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.lblLineStyle);
-            this.Controls.Add(this.lblWidth);
-            this.Controls.Add(this.lblSize);
-            this.Controls.Add(this.lblMark);
-            this.Controls.Add(this.lblColor);
-            this.Controls.Add(this.lblLayerName);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.comboBoxLayerG);
-            this.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormLayerSettings";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "レイヤ設定";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.None;
+            BackColor = Color.FromArgb(240, 242, 245);
+            ClientSize = new Size(668, 504);
+            Controls.Add(Cancel_Button);
+            Controls.Add(Save_Button);
+            Controls.Add(btnImportFromMaster);
+            Controls.Add(btnExportToMaster);
+            Controls.Add(grpEdit);
+            Controls.Add(listBox1);
+            Controls.Add(comboBoxLayerG);
+            Font = new Font("Yu Gothic UI", 12F);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormLayerSettings";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "レイヤ設定";
+            grpEdit.ResumeLayout(false);
+            grpEdit.PerformLayout();
+            ResumeLayout(false);
 
         }
 
@@ -350,6 +334,7 @@ namespace Site7DbEditor
 
         private System.Windows.Forms.ComboBox comboBoxLayerG;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.GroupBox grpEdit;
         private System.Windows.Forms.Label lblLayerName;
         private System.Windows.Forms.Label lblColor;
         private System.Windows.Forms.Label lblMark;

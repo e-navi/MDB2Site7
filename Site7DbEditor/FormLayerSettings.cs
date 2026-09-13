@@ -65,7 +65,7 @@ namespace Site7DbEditor
                 lblMark.Text = "濃淡";
                 lblMark.Visible = true;
                 CBoxMark.Visible = true;
-                CBoxMark.Size = new Size(130, 30);
+                CBoxMark.Size = new Size(140, 29);
                 SetCBoxMarkItems(new[] { "1 濃い", "2 中間", "3 薄い" });
 
                 lblSize.Visible = false;
@@ -82,7 +82,7 @@ namespace Site7DbEditor
                 lblMark.Text = "マーク";
                 lblMark.Visible = true;
                 CBoxMark.Visible = true;
-                CBoxMark.Size = new Size(110, 30);
+                CBoxMark.Size = new Size(140, 29);
                 SetCBoxMarkItems(new[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
 
                 lblSize.Visible = true;
