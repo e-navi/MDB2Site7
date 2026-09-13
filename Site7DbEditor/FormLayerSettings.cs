@@ -8,30 +8,10 @@ using Site7DbEditor.Services;
 
 namespace Site7DbEditor
 {
-    public class FormLayerSettings : Form
+    public partial class FormLayerSettings : Form
     {
-        private readonly EditorDbManager _db;
+        private readonly EditorDbManager? _db;
         private readonly string? _dbPath;
-
-        private ComboBox comboBoxLayerG = null!;
-        private ListBox listBox1 = null!;
-        private TextBox textBox1 = null!;
-        private ComboBox CBoxColor = null!;
-        private ComboBox CBoxMark = null!;
-        private ComboBox CBoxSize = null!;
-        private ComboBox CBoxWidth = null!;
-        private ComboBox CBoxLineStyle = null!;
-        private Label lblLayerName = null!;
-        private Label lblColor = null!;
-        private Label lblMark = null!;
-        private Label lblSize = null!;
-        private Label lblWidth = null!;
-        private Label lblLineStyle = null!;
-        private Button button1 = null!;
-        private Button btnExportToMaster = null!;
-        private Button btnImportFromMaster = null!;
-        private Button Save_Button = null!;
-        private Button Cancel_Button = null!;
         private bool _isUpdatingUi = false;
 
         public FormLayerSettings(EditorDbManager? db, LayerGroup initialGroup = LayerGroup.Ikou)
@@ -45,6 +25,15 @@ namespace Site7DbEditor
             _dbPath = dbPath;
             LayerDefinitionService.Instance.LoadAll(_dbPath);
             InitializeComponent();
+            SetupUI(initialGroup);
+        }
+
+        private void SetupUI(LayerGroup initialGroup)
+        {
+            bool isMasterMode = string.IsNullOrEmpty(_dbPath);
+            this.Text = isMasterMode ? "マスターレイヤ設定 (システム共通テンプレート)" : "現場レイヤ設定 (現場定義データ)";
+            btnExportToMaster.Visible = !isMasterMode;
+            btnImportFromMaster.Visible = !isMasterMode;
 
             int groupIdx = (int)initialGroup;
             if (groupIdx >= 0 && groupIdx < comboBoxLayerG.Items.Count)
@@ -56,223 +45,6 @@ namespace Site7DbEditor
                 listBox1.SelectedIndex = 0;
             }
             UpdateRightEditControls();
-        }
-
-        private void InitializeComponent()
-        {
-            bool isMasterMode = string.IsNullOrEmpty(_dbPath);
-            this.Text = isMasterMode ? "マスターレイヤ設定 (システム共通テンプレート)" : "現場レイヤ設定 (現場定義データ)";
-            this.AutoScaleMode = AutoScaleMode.None;
-            this.ClientSize = new Size(660, 520);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.BackColor = Color.FromArgb(240, 242, 245);
-            this.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Regular);
-
-            // comboBoxLayerG
-            comboBoxLayerG = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(16, 14),
-                Size = new Size(260, 32),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
-            };
-            comboBoxLayerG.Items.AddRange(new object[] {
-                "🏛 遺構 (Layer遺構.txt)",
-                "🏺 遺物 (Layer遺物.txt)",
-                "📍 基準点 (Layer基準点.txt)",
-                "📏 作図 (Layer作図.txt)"
-            });
-            comboBoxLayerG.SelectedIndexChanged += ComboBoxLayerG_SelectedIndexChanged;
-
-            // listBox1 (16件がスクロールバーなしでぴったり収まる高さ)
-            listBox1 = new ListBox
-            {
-                Location = new Point(16, 56),
-                Size = new Size(260, 448),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Regular),
-                IntegralHeight = true
-            };
-            listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
-
-            // Labels
-            lblLayerName = CreateLabel("レイヤ名", new Point(295, 56));
-            lblColor = CreateLabel("表示色", new Point(295, 100));
-            lblMark = CreateLabel("マーク", new Point(295, 144));
-            lblSize = CreateLabel("サイズ", new Point(295, 188));
-            lblWidth = CreateLabel("線幅", new Point(295, 232));
-            lblLineStyle = CreateLabel("線種", new Point(295, 276));
-
-            // Edit controls
-            textBox1 = new TextBox
-            {
-                Location = new Point(385, 54),
-                Size = new Size(240, 30),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
-            };
-
-            CBoxColor = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                DrawMode = DrawMode.OwnerDrawFixed,
-                Location = new Point(385, 98),
-                Size = new Size(160, 30),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
-                ItemHeight = 24
-            };
-            CBoxColor.Items.AddRange(new object[] {
-                "黒", "赤", "緑", "青", "黄", "マゼンタ", "シアン", "白",
-                "牡丹", "茶", "橙", "薄緑", "明青", "青紫", "明灰", "暗灰"
-            });
-            CBoxColor.DrawItem += CBoxColor_DrawItem;
-
-            CBoxMark = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(385, 142),
-                Size = new Size(130, 30),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
-            };
-            CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
-
-            CBoxSize = new ComboBox
-            {
-                Location = new Point(385, 186),
-                Size = new Size(110, 30),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
-            };
-            CBoxSize.Items.AddRange(new object[] { "0.5", "1.0", "1.5", "2.0", "3.0", "4.0", "5.0", "6.0", "8.0", "10.0" });
-
-            CBoxWidth = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(385, 230),
-                Size = new Size(110, 30),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
-            };
-            CBoxWidth.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
-
-            CBoxLineStyle = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(385, 274),
-                Size = new Size(120, 30),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
-            };
-            CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
-
-            // リアルタイム編集連動
-            textBox1.TextChanged += (s, e) => AutoApplyCurrentItem();
-            CBoxColor.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
-            CBoxMark.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
-            CBoxSize.TextChanged += (s, e) => AutoApplyCurrentItem();
-            CBoxSize.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
-            CBoxWidth.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
-            CBoxLineStyle.SelectedIndexChanged += (s, e) => AutoApplyCurrentItem();
-
-            // Buttons
-            button1 = new Button
-            {
-                Text = "✔ このレイヤに適用",
-                Location = new Point(385, 320),
-                Size = new Size(180, 36),
-                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
-                BackColor = Color.FromArgb(230, 235, 245),
-                UseVisualStyleBackColor = true
-            };
-            button1.Click += Button1_Click;
-
-            btnExportToMaster = new Button
-            {
-                Text = "📤 マスターへ反映",
-                Location = new Point(295, 410),
-                Size = new Size(160, 40),
-                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
-                BackColor = Color.FromArgb(233, 236, 243),
-                ForeColor = Color.FromArgb(25, 45, 80),
-                FlatStyle = FlatStyle.Flat,
-                Visible = !isMasterMode
-            };
-            btnExportToMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
-            btnExportToMaster.Click += BtnExportToMaster_Click;
-
-            btnImportFromMaster = new Button
-            {
-                Text = "📥 マスターから反映",
-                Location = new Point(465, 410),
-                Size = new Size(160, 40),
-                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
-                BackColor = Color.FromArgb(233, 236, 243),
-                ForeColor = Color.FromArgb(25, 45, 80),
-                FlatStyle = FlatStyle.Flat,
-                Visible = !isMasterMode
-            };
-            btnImportFromMaster.FlatAppearance.BorderColor = Color.FromArgb(180, 190, 210);
-            btnImportFromMaster.Click += BtnImportFromMaster_Click;
-
-            Save_Button = new Button
-            {
-                Text = "💾 設定を保存",
-                Location = new Point(295, 460),
-                Size = new Size(190, 44),
-                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
-                BackColor = Color.FromArgb(40, 167, 69),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                UseVisualStyleBackColor = false
-            };
-            Save_Button.FlatAppearance.BorderSize = 0;
-            Save_Button.Click += Save_Button_Click;
-
-            Cancel_Button = new Button
-            {
-                Text = "閉じる",
-                Location = new Point(495, 460),
-                Size = new Size(130, 44),
-                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
-                BackColor = Color.FromArgb(220, 225, 235),
-                ForeColor = Color.FromArgb(30, 40, 60),
-                FlatStyle = FlatStyle.Flat,
-                UseVisualStyleBackColor = false
-            };
-            Cancel_Button.FlatAppearance.BorderSize = 0;
-            Cancel_Button.Click += (s, e) => { this.DialogResult = DialogResult.OK; this.Close(); };
-
-            this.Controls.Add(comboBoxLayerG);
-            this.Controls.Add(listBox1);
-            this.Controls.Add(lblLayerName);
-            this.Controls.Add(lblColor);
-            this.Controls.Add(lblMark);
-            this.Controls.Add(lblSize);
-            this.Controls.Add(lblWidth);
-            this.Controls.Add(lblLineStyle);
-            this.Controls.Add(textBox1);
-            this.Controls.Add(CBoxColor);
-            this.Controls.Add(CBoxMark);
-            this.Controls.Add(CBoxSize);
-            this.Controls.Add(CBoxWidth);
-            this.Controls.Add(CBoxLineStyle);
-            this.Controls.Add(button1);
-            this.Controls.Add(btnExportToMaster);
-            this.Controls.Add(btnImportFromMaster);
-            this.Controls.Add(Save_Button);
-            this.Controls.Add(Cancel_Button);
-        }
-
-        private Label CreateLabel(string text, Point location)
-        {
-            return new Label
-            {
-                Text = text,
-                Location = location,
-                Size = new Size(80, 28),
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.FromArgb(235, 238, 245),
-                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
-                ForeColor = Color.Black
-            };
         }
 
         private LayerGroup GetSelectedGroup()
@@ -477,6 +249,12 @@ namespace Site7DbEditor
             SaveLayers();
             string targetLabel = string.IsNullOrEmpty(_dbPath) ? "マスターレイヤ設定" : "現場レイヤ設定";
             MessageBox.Show(this, $"{targetLabel}（Layer遺構.txt, Layer遺物.txt, Layer基準点.txt, Layer作図.txt）を保存しました。", "レイヤ設定保存", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void Cancel_Button_Click(object? sender, EventArgs e)
+        {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
