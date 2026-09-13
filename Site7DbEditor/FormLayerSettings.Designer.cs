@@ -59,7 +59,7 @@ namespace Site7DbEditor
             listBox1.ItemHeight = 24;
             listBox1.Location = new Point(14, 48);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(264, 404);
+            listBox1.Size = new Size(264, 392);
             listBox1.TabIndex = 1;
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
             // 
@@ -282,7 +282,7 @@ namespace Site7DbEditor
             Save_Button.FlatStyle = FlatStyle.Flat;
             Save_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             Save_Button.ForeColor = Color.White;
-            Save_Button.Location = new Point(292, 390);
+            Save_Button.Location = new Point(292, 388);
             Save_Button.Name = "Save_Button";
             Save_Button.Size = new Size(224, 44);
             Save_Button.TabIndex = 5;
@@ -297,7 +297,7 @@ namespace Site7DbEditor
             Cancel_Button.FlatStyle = FlatStyle.Flat;
             Cancel_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             Cancel_Button.ForeColor = Color.FromArgb(30, 40, 60);
-            Cancel_Button.Location = new Point(526, 390);
+            Cancel_Button.Location = new Point(526, 388);
             Cancel_Button.Name = "Cancel_Button";
             Cancel_Button.Size = new Size(128, 44);
             Cancel_Button.TabIndex = 6;
@@ -309,7 +309,7 @@ namespace Site7DbEditor
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(240, 242, 245);
-            ClientSize = new Size(668, 466);
+            ClientSize = new Size(668, 452);
             Controls.Add(Cancel_Button);
             Controls.Add(Save_Button);
             Controls.Add(btnImportFromMaster);
