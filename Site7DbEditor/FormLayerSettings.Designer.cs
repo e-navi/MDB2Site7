@@ -41,7 +41,7 @@ namespace Site7DbEditor
             // comboBoxLayerG
             // 
             this.comboBoxLayerG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxLayerG.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.comboBoxLayerG.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.comboBoxLayerG.FormattingEnabled = true;
             this.comboBoxLayerG.Items.AddRange(new object[] {
             "🏛 遺構 (Layer遺構.txt)",
@@ -56,7 +56,7 @@ namespace Site7DbEditor
             // 
             // listBox1
             // 
-            this.listBox1.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F);
+            this.listBox1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular);
             this.listBox1.FormattingEnabled = true;
             this.listBox1.IntegralHeight = true;
             this.listBox1.ItemHeight = 21;
@@ -69,7 +69,7 @@ namespace Site7DbEditor
             // lblLayerName
             // 
             this.lblLayerName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblLayerName.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.lblLayerName.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblLayerName.Location = new System.Drawing.Point(295, 56);
             this.lblLayerName.Name = "lblLayerName";
             this.lblLayerName.Size = new System.Drawing.Size(80, 28);
@@ -80,7 +80,7 @@ namespace Site7DbEditor
             // lblColor
             // 
             this.lblColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblColor.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.lblColor.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblColor.Location = new System.Drawing.Point(295, 100);
             this.lblColor.Name = "lblColor";
             this.lblColor.Size = new System.Drawing.Size(80, 28);
@@ -91,7 +91,7 @@ namespace Site7DbEditor
             // lblMark
             // 
             this.lblMark.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblMark.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.lblMark.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblMark.Location = new System.Drawing.Point(295, 144);
             this.lblMark.Name = "lblMark";
             this.lblMark.Size = new System.Drawing.Size(80, 28);
@@ -102,7 +102,7 @@ namespace Site7DbEditor
             // lblSize
             // 
             this.lblSize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblSize.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.lblSize.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblSize.Location = new System.Drawing.Point(295, 188);
             this.lblSize.Name = "lblSize";
             this.lblSize.Size = new System.Drawing.Size(80, 28);
@@ -113,7 +113,7 @@ namespace Site7DbEditor
             // lblWidth
             // 
             this.lblWidth.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblWidth.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.lblWidth.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblWidth.Location = new System.Drawing.Point(295, 232);
             this.lblWidth.Name = "lblWidth";
             this.lblWidth.Size = new System.Drawing.Size(80, 28);
@@ -124,7 +124,7 @@ namespace Site7DbEditor
             // lblLineStyle
             // 
             this.lblLineStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(238)))), ((int)(((byte)(245)))));
-            this.lblLineStyle.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.lblLineStyle.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblLineStyle.Location = new System.Drawing.Point(295, 276);
             this.lblLineStyle.Name = "lblLineStyle";
             this.lblLineStyle.Size = new System.Drawing.Size(80, 28);
@@ -134,17 +134,17 @@ namespace Site7DbEditor
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.textBox1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.textBox1.Location = new System.Drawing.Point(385, 54);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(240, 28);
+            this.textBox1.Size = new System.Drawing.Size(240, 29);
             this.textBox1.TabIndex = 8;
             // 
             // CBoxColor
             // 
             this.CBoxColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.CBoxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxColor.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.CBoxColor.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.CBoxColor.FormattingEnabled = true;
             this.CBoxColor.ItemHeight = 24;
             this.CBoxColor.Items.AddRange(new object[] {
@@ -173,7 +173,7 @@ namespace Site7DbEditor
             // CBoxMark
             // 
             this.CBoxMark.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxMark.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.CBoxMark.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.CBoxMark.FormattingEnabled = true;
             this.CBoxMark.Items.AddRange(new object[] {
             "〇",
@@ -191,7 +191,7 @@ namespace Site7DbEditor
             // 
             // CBoxSize
             // 
-            this.CBoxSize.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.CBoxSize.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.CBoxSize.FormattingEnabled = true;
             this.CBoxSize.Items.AddRange(new object[] {
             "0.5",
@@ -212,7 +212,7 @@ namespace Site7DbEditor
             // CBoxWidth
             // 
             this.CBoxWidth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxWidth.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.CBoxWidth.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.CBoxWidth.FormattingEnabled = true;
             this.CBoxWidth.Items.AddRange(new object[] {
             "1",
@@ -228,7 +228,7 @@ namespace Site7DbEditor
             // CBoxLineStyle
             // 
             this.CBoxLineStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CBoxLineStyle.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold);
+            this.CBoxLineStyle.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.CBoxLineStyle.FormattingEnabled = true;
             this.CBoxLineStyle.Items.AddRange(new object[] {
             "折線",
@@ -241,7 +241,7 @@ namespace Site7DbEditor
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(235)))), ((int)(((byte)(245)))));
-            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
+            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.button1.Location = new System.Drawing.Point(385, 320);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(180, 36);
@@ -255,7 +255,7 @@ namespace Site7DbEditor
             this.btnExportToMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.btnExportToMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
             this.btnExportToMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnExportToMaster.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnExportToMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnExportToMaster.Location = new System.Drawing.Point(295, 410);
             this.btnExportToMaster.Name = "btnExportToMaster";
@@ -270,7 +270,7 @@ namespace Site7DbEditor
             this.btnImportFromMaster.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(236)))), ((int)(((byte)(243)))));
             this.btnImportFromMaster.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(190)))), ((int)(((byte)(210)))));
             this.btnImportFromMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnImportFromMaster.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnImportFromMaster.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(45)))), ((int)(((byte)(80)))));
             this.btnImportFromMaster.Location = new System.Drawing.Point(465, 410);
             this.btnImportFromMaster.Name = "btnImportFromMaster";
@@ -334,7 +334,7 @@ namespace Site7DbEditor
             this.Controls.Add(this.lblLayerName);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.comboBoxLayerG);
-            this.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F);
+            this.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

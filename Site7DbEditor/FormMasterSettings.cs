@@ -109,7 +109,7 @@ namespace Site7DbEditor
                 dgv.EnableHeadersVisualStyles = false;
                 dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(230, 235, 245);
                 dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(25, 45, 80);
-                dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+                dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
                 dgv.DefaultCellStyle.BackColor = Color.White;
                 dgv.DefaultCellStyle.ForeColor = Color.FromArgb(20, 20, 20);
                 dgv.DefaultCellStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular);

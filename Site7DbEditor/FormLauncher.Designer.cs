@@ -332,7 +332,7 @@ namespace Site7DbEditor
             this.dgvSites.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvSites.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSites.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvSites.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F);
+            this.dgvSites.Font = new System.Drawing.Font("Yu Gothic UI", 12F);
             this.dgvSites.Location = new System.Drawing.Point(0, 0);
             this.dgvSites.MultiSelect = false;
             this.dgvSites.Name = "dgvSites";

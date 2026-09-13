@@ -931,7 +931,7 @@ namespace Site7DbEditor
             grpDspTarget.Controls.Add(chkShowScale);
             grpDspTarget.Controls.Add(chkShowDrawingFrame);
             grpDspTarget.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            grpDspTarget.Location = new Point(4, 419);
+            grpDspTarget.Location = new Point(2, 419);
             grpDspTarget.Name = "grpDspTarget";
             grpDspTarget.Size = new Size(124, 248);
             grpDspTarget.TabIndex = 37;
@@ -945,7 +945,7 @@ namespace Site7DbEditor
             chkShowKikai.CheckState = CheckState.Checked;
             chkShowKikai.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowKikai.ForeColor = Color.Blue;
-            chkShowKikai.Location = new Point(6, 36);
+            chkShowKikai.Location = new Point(4, 36);
             chkShowKikai.Name = "chkShowKikai";
             chkShowKikai.Size = new Size(77, 25);
             chkShowKikai.TabIndex = 30;
@@ -988,7 +988,7 @@ namespace Site7DbEditor
             chkShowIkou.CheckState = CheckState.Checked;
             chkShowIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowIkou.ForeColor = Color.Blue;
-            chkShowIkou.Location = new Point(6, 80);
+            chkShowIkou.Location = new Point(4, 80);
             chkShowIkou.Name = "chkShowIkou";
             chkShowIkou.Size = new Size(61, 25);
             chkShowIkou.TabIndex = 28;
@@ -1011,7 +1011,7 @@ namespace Site7DbEditor
             chkShowIbutu.CheckState = CheckState.Checked;
             chkShowIbutu.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowIbutu.ForeColor = Color.Red;
-            chkShowIbutu.Location = new Point(6, 58);
+            chkShowIbutu.Location = new Point(4, 58);
             chkShowIbutu.Name = "chkShowIbutu";
             chkShowIbutu.Size = new Size(61, 25);
             chkShowIbutu.TabIndex = 26;
@@ -1047,7 +1047,7 @@ namespace Site7DbEditor
             chkShowBgImage.CheckState = CheckState.Checked;
             chkShowBgImage.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowBgImage.ForeColor = Color.FromArgb(0, 100, 200);
-            chkShowBgImage.Location = new Point(6, 128);
+            chkShowBgImage.Location = new Point(4, 128);
             chkShowBgImage.Name = "chkShowBgImage";
             chkShowBgImage.Size = new Size(93, 25);
             chkShowBgImage.TabIndex = 35;
@@ -1061,7 +1061,7 @@ namespace Site7DbEditor
             chkShowBgPointCloud.CheckState = CheckState.Checked;
             chkShowBgPointCloud.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowBgPointCloud.ForeColor = Color.FromArgb(0, 150, 100);
-            chkShowBgPointCloud.Location = new Point(6, 150);
+            chkShowBgPointCloud.Location = new Point(4, 150);
             chkShowBgPointCloud.Name = "chkShowBgPointCloud";
             chkShowBgPointCloud.Size = new Size(93, 25);
             chkShowBgPointCloud.TabIndex = 36;
@@ -1075,7 +1075,7 @@ namespace Site7DbEditor
             chkShowGrid.CheckState = CheckState.Checked;
             chkShowGrid.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowGrid.ForeColor = Color.FromArgb(180, 80, 0);
-            chkShowGrid.Location = new Point(6, 172);
+            chkShowGrid.Location = new Point(4, 172);
             chkShowGrid.Name = "chkShowGrid";
             chkShowGrid.Size = new Size(76, 25);
             chkShowGrid.TabIndex = 37;
@@ -1089,7 +1089,7 @@ namespace Site7DbEditor
             chkShowScale.CheckState = CheckState.Checked;
             chkShowScale.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowScale.ForeColor = Color.FromArgb(200, 0, 0);
-            chkShowScale.Location = new Point(6, 194);
+            chkShowScale.Location = new Point(4, 194);
             chkShowScale.Name = "chkShowScale";
             chkShowScale.Size = new Size(79, 25);
             chkShowScale.TabIndex = 38;
@@ -1103,7 +1103,7 @@ namespace Site7DbEditor
             chkShowDrawingFrame.CheckState = CheckState.Checked;
             chkShowDrawingFrame.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowDrawingFrame.ForeColor = Color.FromArgb(0, 100, 180);
-            chkShowDrawingFrame.Location = new Point(6, 216);
+            chkShowDrawingFrame.Location = new Point(4, 216);
             chkShowDrawingFrame.Name = "chkShowDrawingFrame";
             chkShowDrawingFrame.Size = new Size(61, 25);
             chkShowDrawingFrame.TabIndex = 39;
@@ -1113,8 +1113,8 @@ namespace Site7DbEditor
             // grpDisplayOptions
             // 
             grpDisplayOptions.Controls.Add(chkShowCurve);
-            grpDisplayOptions.Controls.Add(chkColorByIkou);
             grpDisplayOptions.Controls.Add(chkWhiteBg);
+            grpDisplayOptions.Controls.Add(chkColorByIkou);
             grpDisplayOptions.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpDisplayOptions.Location = new Point(2, 673);
             grpDisplayOptions.Name = "grpDisplayOptions";
@@ -1130,7 +1130,7 @@ namespace Site7DbEditor
             chkShowCurve.CheckState = CheckState.Checked;
             chkShowCurve.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkShowCurve.ForeColor = Color.Black;
-            chkShowCurve.Location = new Point(6, 20);
+            chkShowCurve.Location = new Point(4, 20);
             chkShowCurve.Name = "chkShowCurve";
             chkShowCurve.Size = new Size(93, 25);
             chkShowCurve.TabIndex = 32;
@@ -1142,7 +1142,7 @@ namespace Site7DbEditor
             chkColorByIkou.AutoSize = true;
             chkColorByIkou.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkColorByIkou.ForeColor = Color.Black;
-            chkColorByIkou.Location = new Point(6, 43);
+            chkColorByIkou.Location = new Point(4, 43);
             chkColorByIkou.Name = "chkColorByIkou";
             chkColorByIkou.Size = new Size(125, 25);
             chkColorByIkou.TabIndex = 33;
@@ -1154,7 +1154,7 @@ namespace Site7DbEditor
             chkWhiteBg.AutoSize = true;
             chkWhiteBg.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             chkWhiteBg.ForeColor = Color.Black;
-            chkWhiteBg.Location = new Point(6, 66);
+            chkWhiteBg.Location = new Point(4, 66);
             chkWhiteBg.Name = "chkWhiteBg";
             chkWhiteBg.Size = new Size(93, 25);
             chkWhiteBg.TabIndex = 34;
@@ -1283,7 +1283,7 @@ namespace Site7DbEditor
             // 
             pnlPrecsRight.Controls.Add(grpCoordValue);
             pnlPrecsRight.Dock = DockStyle.Left;
-            pnlPrecsRight.Location = new Point(1159, 3);
+            pnlPrecsRight.Location = new Point(1160, 3);
             pnlPrecsRight.Name = "pnlPrecsRight";
             pnlPrecsRight.Size = new Size(192, 292);
             pnlPrecsRight.TabIndex = 3;
@@ -1393,7 +1393,7 @@ namespace Site7DbEditor
             btnDeletePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnDeletePointRight.BackColor = Color.FromArgb(190, 45, 60);
             btnDeletePointRight.FlatStyle = FlatStyle.Flat;
-            btnDeletePointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnDeletePointRight.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnDeletePointRight.ForeColor = Color.White;
             btnDeletePointRight.Location = new Point(4, 252);
             btnDeletePointRight.Name = "btnDeletePointRight";
@@ -1407,7 +1407,7 @@ namespace Site7DbEditor
             btnUpdatePointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnUpdatePointRight.BackColor = Color.FromArgb(247, 184, 1);
             btnUpdatePointRight.FlatStyle = FlatStyle.Flat;
-            btnUpdatePointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnUpdatePointRight.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnUpdatePointRight.ForeColor = Color.Black;
             btnUpdatePointRight.Location = new Point(66, 252);
             btnUpdatePointRight.Name = "btnUpdatePointRight";
@@ -1421,7 +1421,7 @@ namespace Site7DbEditor
             btnAddPointRight.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnAddPointRight.BackColor = Color.FromArgb(53, 55, 76);
             btnAddPointRight.FlatStyle = FlatStyle.Flat;
-            btnAddPointRight.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
+            btnAddPointRight.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             btnAddPointRight.ForeColor = Color.White;
             btnAddPointRight.Location = new Point(128, 252);
             btnAddPointRight.Name = "btnAddPointRight";
@@ -1436,9 +1436,9 @@ namespace Site7DbEditor
             grpPrecs.Dock = DockStyle.Left;
             grpPrecs.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             grpPrecs.ForeColor = Color.FromArgb(0, 180, 216);
-            grpPrecs.Location = new Point(813, 3);
+            grpPrecs.Location = new Point(808, 3);
             grpPrecs.Name = "grpPrecs";
-            grpPrecs.Size = new Size(346, 292);
+            grpPrecs.Size = new Size(352, 292);
             grpPrecs.TabIndex = 2;
             grpPrecs.TabStop = false;
             grpPrecs.Text = "構成座標";
@@ -1449,7 +1449,7 @@ namespace Site7DbEditor
             dgvPrecs.Dock = DockStyle.Fill;
             dgvPrecs.Location = new Point(3, 25);
             dgvPrecs.Name = "dgvPrecs";
-            dgvPrecs.Size = new Size(340, 264);
+            dgvPrecs.Size = new Size(346, 264);
             dgvPrecs.TabIndex = 0;
             // 
             // grpIkouL
@@ -1478,7 +1478,7 @@ namespace Site7DbEditor
             grpIkouL.ForeColor = Color.FromArgb(0, 180, 216);
             grpIkouL.Location = new Point(358, 3);
             grpIkouL.Name = "grpIkouL";
-            grpIkouL.Size = new Size(455, 292);
+            grpIkouL.Size = new Size(450, 292);
             grpIkouL.TabIndex = 1;
             grpIkouL.TabStop = false;
             grpIkouL.Text = "遺構線";

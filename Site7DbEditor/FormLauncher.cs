@@ -47,8 +47,8 @@ namespace Site7DbEditor
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Name", HeaderText = "現場名", FillWeight = 45 });
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "UpdatedAt", HeaderText = "最終更新日時", FillWeight = 32 });
             dgvSites.Columns.Add(new DataGridViewTextBoxColumn { Name = "Size", HeaderText = "サイズ", FillWeight = 23 });
-            dgvSites.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
-            dgvSites.DefaultCellStyle.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Regular);
+            dgvSites.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
+            dgvSites.DefaultCellStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular);
             dgvSites.RowTemplate.Height = 52;
             dgvSites.DataError += (s, e) => { e.ThrowException = false; };
         }

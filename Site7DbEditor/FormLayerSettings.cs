@@ -351,7 +351,7 @@ namespace Site7DbEditor
             }
 
             using (var textBrush = new SolidBrush(textColor))
-            using (var font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold))
+            using (var font = new Font("Yu Gothic UI", 12F, FontStyle.Bold))
             {
                 float ym = (e.Bounds.Height - e.Graphics.MeasureString(txt, font).Height) / 2;
                 e.Graphics.DrawString(txt, font, textBrush, boxX + boxSize + 8, e.Bounds.Y + ym);
