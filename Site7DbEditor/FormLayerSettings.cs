@@ -62,21 +62,22 @@ namespace Site7DbEditor
         {
             bool isMasterMode = string.IsNullOrEmpty(_dbPath);
             this.Text = isMasterMode ? "マスターレイヤ設定 (システム共通テンプレート)" : "現場レイヤ設定 (現場定義データ)";
-            this.ClientSize = new Size(540, 400);
+            this.AutoScaleMode = AutoScaleMode.None;
+            this.ClientSize = new Size(660, 520);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.BackColor = Color.FromArgb(240, 242, 245);
-            this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
+            this.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Regular);
 
             // comboBoxLayerG
             comboBoxLayerG = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(16, 12),
-                Size = new Size(215, 26),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold)
+                Location = new Point(16, 14),
+                Size = new Size(260, 32),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
             };
             comboBoxLayerG.Items.AddRange(new object[] {
                 "🏛 遺構 (Layer遺構.txt)",
@@ -89,36 +90,37 @@ namespace Site7DbEditor
             // listBox1 (16件がスクロールバーなしでぴったり収まる高さ)
             listBox1 = new ListBox
             {
-                Location = new Point(16, 45),
-                Size = new Size(215, 305),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular),
+                Location = new Point(16, 56),
+                Size = new Size(260, 448),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Regular),
                 IntegralHeight = true
             };
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
 
             // Labels
-            lblLayerName = CreateLabel("レイヤ名", new Point(245, 45));
-            lblColor = CreateLabel("表示色", new Point(245, 82));
-            lblMark = CreateLabel("マーク", new Point(245, 119));
-            lblSize = CreateLabel("サイズ", new Point(245, 156));
-            lblWidth = CreateLabel("線幅", new Point(245, 193));
-            lblLineStyle = CreateLabel("線種", new Point(245, 230));
+            lblLayerName = CreateLabel("レイヤ名", new Point(295, 56));
+            lblColor = CreateLabel("表示色", new Point(295, 100));
+            lblMark = CreateLabel("マーク", new Point(295, 144));
+            lblSize = CreateLabel("サイズ", new Point(295, 188));
+            lblWidth = CreateLabel("線幅", new Point(295, 232));
+            lblLineStyle = CreateLabel("線種", new Point(295, 276));
 
             // Edit controls
             textBox1 = new TextBox
             {
-                Location = new Point(320, 42),
-                Size = new Size(185, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(385, 54),
+                Size = new Size(240, 30),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
             };
 
             CBoxColor = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 DrawMode = DrawMode.OwnerDrawFixed,
-                Location = new Point(320, 79),
-                Size = new Size(130, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(385, 98),
+                Size = new Size(160, 30),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
+                ItemHeight = 24
             };
             CBoxColor.Items.AddRange(new object[] {
                 "黒", "赤", "緑", "青", "黄", "マゼンタ", "シアン", "白",
@@ -129,35 +131,35 @@ namespace Site7DbEditor
             CBoxMark = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(320, 116),
-                Size = new Size(95, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(385, 142),
+                Size = new Size(130, 30),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
             };
             CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
 
             CBoxSize = new ComboBox
             {
-                Location = new Point(320, 153),
-                Size = new Size(80, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(385, 186),
+                Size = new Size(110, 30),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
             };
             CBoxSize.Items.AddRange(new object[] { "0.5", "1.0", "1.5", "2.0", "3.0", "4.0", "5.0", "6.0", "8.0", "10.0" });
 
             CBoxWidth = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(320, 190),
-                Size = new Size(80, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(385, 230),
+                Size = new Size(110, 30),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
             };
             CBoxWidth.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
 
             CBoxLineStyle = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(320, 227),
-                Size = new Size(95, 26),
-                Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
+                Location = new Point(385, 274),
+                Size = new Size(120, 30),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold)
             };
             CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
 
@@ -174,9 +176,9 @@ namespace Site7DbEditor
             button1 = new Button
             {
                 Text = "✔ このレイヤに適用",
-                Location = new Point(320, 268),
-                Size = new Size(140, 28),
-                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
+                Location = new Point(385, 320),
+                Size = new Size(180, 36),
+                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(230, 235, 245),
                 UseVisualStyleBackColor = true
             };
@@ -185,9 +187,9 @@ namespace Site7DbEditor
             btnExportToMaster = new Button
             {
                 Text = "📤 マスターへ反映",
-                Location = new Point(245, 308),
-                Size = new Size(135, 30),
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                Location = new Point(295, 410),
+                Size = new Size(160, 40),
+                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(233, 236, 243),
                 ForeColor = Color.FromArgb(25, 45, 80),
                 FlatStyle = FlatStyle.Flat,
@@ -199,9 +201,9 @@ namespace Site7DbEditor
             btnImportFromMaster = new Button
             {
                 Text = "📥 マスターから反映",
-                Location = new Point(388, 308),
-                Size = new Size(135, 30),
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                Location = new Point(465, 410),
+                Size = new Size(160, 40),
+                Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(233, 236, 243),
                 ForeColor = Color.FromArgb(25, 45, 80),
                 FlatStyle = FlatStyle.Flat,
@@ -213,9 +215,9 @@ namespace Site7DbEditor
             Save_Button = new Button
             {
                 Text = "💾 設定を保存",
-                Location = new Point(245, 350),
-                Size = new Size(155, 34),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                Location = new Point(295, 460),
+                Size = new Size(190, 44),
+                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
                 BackColor = Color.FromArgb(40, 167, 69),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -227,9 +229,9 @@ namespace Site7DbEditor
             Cancel_Button = new Button
             {
                 Text = "閉じる",
-                Location = new Point(410, 350),
-                Size = new Size(113, 34),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                Location = new Point(495, 460),
+                Size = new Size(130, 44),
+                Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold),
                 BackColor = Color.FromArgb(220, 225, 235),
                 ForeColor = Color.FromArgb(30, 40, 60),
                 FlatStyle = FlatStyle.Flat,
@@ -265,10 +267,10 @@ namespace Site7DbEditor
             {
                 Text = text,
                 Location = location,
-                Size = new Size(68, 22),
+                Size = new Size(80, 28),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.FromArgb(235, 238, 245),
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
                 ForeColor = Color.Black
             };
         }
@@ -291,7 +293,7 @@ namespace Site7DbEditor
                 lblMark.Text = "濃淡";
                 lblMark.Visible = true;
                 CBoxMark.Visible = true;
-                CBoxMark.Size = new Size(95, 26);
+                CBoxMark.Size = new Size(130, 30);
                 SetCBoxMarkItems(new[] { "1 濃い", "2 中間", "3 薄い" });
 
                 lblSize.Visible = false;
@@ -308,7 +310,7 @@ namespace Site7DbEditor
                 lblMark.Text = "マーク";
                 lblMark.Visible = true;
                 CBoxMark.Visible = true;
-                CBoxMark.Size = new Size(80, 26);
+                CBoxMark.Size = new Size(110, 30);
                 SetCBoxMarkItems(new[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
 
                 lblSize.Visible = true;
@@ -551,8 +553,8 @@ namespace Site7DbEditor
                 ? EditorLayerService.LayerTableColors[e.Index + 1]
                 : e.ForeColor;
 
-            int boxSize = 14;
-            int boxX = e.Bounds.X + 4;
+            int boxSize = 18;
+            int boxX = e.Bounds.X + 6;
             int boxY = e.Bounds.Y + (e.Bounds.Height - boxSize) / 2;
 
             using (var b = new SolidBrush(col))
@@ -571,10 +573,10 @@ namespace Site7DbEditor
             }
 
             using (var textBrush = new SolidBrush(textColor))
-            using (var font = new Font("Yu Gothic UI", 10F, FontStyle.Bold))
+            using (var font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold))
             {
                 float ym = (e.Bounds.Height - e.Graphics.MeasureString(txt, font).Height) / 2;
-                e.Graphics.DrawString(txt, font, textBrush, boxX + boxSize + 6, e.Bounds.Y + ym);
+                e.Graphics.DrawString(txt, font, textBrush, boxX + boxSize + 8, e.Bounds.Y + ym);
             }
 
             e.DrawFocusRectangle();
