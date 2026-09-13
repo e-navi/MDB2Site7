@@ -164,11 +164,11 @@ namespace Site7DbEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
-            this.ClientSize = new System.Drawing.Size(1180, 620);
+            this.ClientSize = new System.Drawing.Size(1180, 795);
             this.Controls.Add(this.panelCenter);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.panelBottom);
-            this.MinimumSize = new System.Drawing.Size(1100, 500);
+            this.MinimumSize = new System.Drawing.Size(1100, 600);
             this.Name = "FormMasterSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Def設定 (マスター / 現場)";
