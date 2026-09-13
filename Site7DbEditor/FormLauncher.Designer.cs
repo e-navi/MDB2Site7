@@ -327,6 +327,7 @@ namespace Site7DbEditor
             // 
             this.dgvSites.AllowUserToAddRows = false;
             this.dgvSites.AllowUserToDeleteRows = false;
+            this.dgvSites.AllowUserToResizeRows = false;
             this.dgvSites.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSites.BackgroundColor = System.Drawing.Color.White;
             this.dgvSites.BorderStyle = System.Windows.Forms.BorderStyle.None;

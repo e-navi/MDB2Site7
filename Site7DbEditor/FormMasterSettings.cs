@@ -99,6 +99,7 @@ namespace Site7DbEditor
                     AutoGenerateColumns = false,
                     AllowUserToAddRows = true,
                     AllowUserToDeleteRows = true,
+                    AllowUserToResizeRows = false,
                     SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                     MultiSelect = false,
                     RowHeadersVisible = false,
