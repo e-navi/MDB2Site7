@@ -531,12 +531,12 @@ namespace Site7DbEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
-            this.ClientSize = new System.Drawing.Size(1164, 680);
+            this.ClientSize = new System.Drawing.Size(1164, 868);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelHeader);
             this.Controls.Add(this.panelFooter);
             this.Font = new System.Drawing.Font("Yu Gothic UI", 11F);
-            this.MinimumSize = new System.Drawing.Size(1000, 600);
+            this.MinimumSize = new System.Drawing.Size(1000, 700);
             this.Name = "FormLauncher";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "遺跡調査システム Site7 - 現場選択";
