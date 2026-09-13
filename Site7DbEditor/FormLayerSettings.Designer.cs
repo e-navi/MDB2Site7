@@ -45,7 +45,7 @@ namespace Site7DbEditor
             comboBoxLayerG.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             comboBoxLayerG.FormattingEnabled = true;
             comboBoxLayerG.Items.AddRange(new object[] { "🏛 遺構 (Layer遺構.txt)", "🏺 遺物 (Layer遺物.txt)", "📍 基準点 (Layer基準点.txt)", "📏 作図 (Layer作図.txt)" });
-            comboBoxLayerG.Location = new Point(14, 14);
+            comboBoxLayerG.Location = new Point(14, 12);
             comboBoxLayerG.Name = "comboBoxLayerG";
             comboBoxLayerG.Size = new Size(264, 29);
             comboBoxLayerG.TabIndex = 0;
@@ -55,11 +55,11 @@ namespace Site7DbEditor
             // 
             listBox1.Font = new Font("Yu Gothic UI", 13F);
             listBox1.FormattingEnabled = true;
-            listBox1.IntegralHeight = false;
-            listBox1.ItemHeight = 25;
-            listBox1.Location = new Point(14, 52);
+            listBox1.IntegralHeight = true;
+            listBox1.ItemHeight = 23;
+            listBox1.Location = new Point(14, 48);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(264, 438);
+            listBox1.Size = new Size(264, 372);
             listBox1.TabIndex = 1;
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
             // 
@@ -80,9 +80,9 @@ namespace Site7DbEditor
             grpEdit.Controls.Add(button1);
             grpEdit.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
             grpEdit.ForeColor = Color.FromArgb(40, 60, 90);
-            grpEdit.Location = new Point(292, 8);
+            grpEdit.Location = new Point(292, 6);
             grpEdit.Name = "grpEdit";
-            grpEdit.Size = new Size(362, 380);
+            grpEdit.Size = new Size(362, 276);
             grpEdit.TabIndex = 2;
             grpEdit.TabStop = false;
             grpEdit.Text = " 選択レイヤの設定 ";
@@ -93,7 +93,7 @@ namespace Site7DbEditor
             lblLayerName.BorderStyle = BorderStyle.FixedSingle;
             lblLayerName.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblLayerName.ForeColor = Color.FromArgb(30, 40, 60);
-            lblLayerName.Location = new Point(16, 34);
+            lblLayerName.Location = new Point(14, 26);
             lblLayerName.Name = "lblLayerName";
             lblLayerName.Size = new Size(80, 29);
             lblLayerName.TabIndex = 0;
@@ -103,9 +103,9 @@ namespace Site7DbEditor
             // textBox1
             // 
             textBox1.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
-            textBox1.Location = new Point(104, 34);
+            textBox1.Location = new Point(100, 26);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(242, 29);
+            textBox1.Size = new Size(246, 29);
             textBox1.TabIndex = 1;
             // 
             // lblColor
@@ -114,7 +114,7 @@ namespace Site7DbEditor
             lblColor.BorderStyle = BorderStyle.FixedSingle;
             lblColor.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblColor.ForeColor = Color.FromArgb(30, 40, 60);
-            lblColor.Location = new Point(16, 76);
+            lblColor.Location = new Point(14, 64);
             lblColor.Name = "lblColor";
             lblColor.Size = new Size(80, 30);
             lblColor.TabIndex = 2;
@@ -129,7 +129,7 @@ namespace Site7DbEditor
             CBoxColor.FormattingEnabled = true;
             CBoxColor.ItemHeight = 24;
             CBoxColor.Items.AddRange(new object[] { "黒", "赤", "緑", "青", "黄", "マゼンタ", "シアン", "白", "牡丹", "茶", "橙", "薄緑", "明青", "青紫", "明灰", "暗灰" });
-            CBoxColor.Location = new Point(104, 76);
+            CBoxColor.Location = new Point(100, 64);
             CBoxColor.Name = "CBoxColor";
             CBoxColor.Size = new Size(160, 30);
             CBoxColor.TabIndex = 3;
@@ -141,7 +141,7 @@ namespace Site7DbEditor
             lblMark.BorderStyle = BorderStyle.FixedSingle;
             lblMark.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblMark.ForeColor = Color.FromArgb(30, 40, 60);
-            lblMark.Location = new Point(16, 118);
+            lblMark.Location = new Point(14, 104);
             lblMark.Name = "lblMark";
             lblMark.Size = new Size(80, 29);
             lblMark.TabIndex = 4;
@@ -154,7 +154,7 @@ namespace Site7DbEditor
             CBoxMark.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             CBoxMark.FormattingEnabled = true;
             CBoxMark.Items.AddRange(new object[] { "〇", "□", "△", "⦿", "✕", "＋", "◇", "★" });
-            CBoxMark.Location = new Point(104, 118);
+            CBoxMark.Location = new Point(100, 104);
             CBoxMark.Name = "CBoxMark";
             CBoxMark.Size = new Size(140, 29);
             CBoxMark.TabIndex = 5;
@@ -165,7 +165,7 @@ namespace Site7DbEditor
             lblSize.BorderStyle = BorderStyle.FixedSingle;
             lblSize.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblSize.ForeColor = Color.FromArgb(30, 40, 60);
-            lblSize.Location = new Point(16, 160);
+            lblSize.Location = new Point(14, 144);
             lblSize.Name = "lblSize";
             lblSize.Size = new Size(80, 29);
             lblSize.TabIndex = 6;
@@ -177,7 +177,7 @@ namespace Site7DbEditor
             CBoxSize.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             CBoxSize.FormattingEnabled = true;
             CBoxSize.Items.AddRange(new object[] { "0.5", "1.0", "1.5", "2.0", "3.0", "4.0", "5.0", "6.0", "8.0", "10.0" });
-            CBoxSize.Location = new Point(104, 160);
+            CBoxSize.Location = new Point(100, 144);
             CBoxSize.Name = "CBoxSize";
             CBoxSize.Size = new Size(120, 29);
             CBoxSize.TabIndex = 7;
@@ -188,7 +188,7 @@ namespace Site7DbEditor
             lblWidth.BorderStyle = BorderStyle.FixedSingle;
             lblWidth.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblWidth.ForeColor = Color.FromArgb(30, 40, 60);
-            lblWidth.Location = new Point(16, 160);
+            lblWidth.Location = new Point(14, 144);
             lblWidth.Name = "lblWidth";
             lblWidth.Size = new Size(80, 29);
             lblWidth.TabIndex = 8;
@@ -201,7 +201,7 @@ namespace Site7DbEditor
             CBoxWidth.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             CBoxWidth.FormattingEnabled = true;
             CBoxWidth.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
-            CBoxWidth.Location = new Point(104, 160);
+            CBoxWidth.Location = new Point(100, 144);
             CBoxWidth.Name = "CBoxWidth";
             CBoxWidth.Size = new Size(120, 29);
             CBoxWidth.TabIndex = 9;
@@ -212,7 +212,7 @@ namespace Site7DbEditor
             lblLineStyle.BorderStyle = BorderStyle.FixedSingle;
             lblLineStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             lblLineStyle.ForeColor = Color.FromArgb(30, 40, 60);
-            lblLineStyle.Location = new Point(16, 202);
+            lblLineStyle.Location = new Point(14, 184);
             lblLineStyle.Name = "lblLineStyle";
             lblLineStyle.Size = new Size(80, 29);
             lblLineStyle.TabIndex = 10;
@@ -225,7 +225,7 @@ namespace Site7DbEditor
             CBoxLineStyle.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             CBoxLineStyle.FormattingEnabled = true;
             CBoxLineStyle.Items.AddRange(new object[] { "折線", "曲線" });
-            CBoxLineStyle.Location = new Point(104, 202);
+            CBoxLineStyle.Location = new Point(100, 184);
             CBoxLineStyle.Name = "CBoxLineStyle";
             CBoxLineStyle.Size = new Size(120, 29);
             CBoxLineStyle.TabIndex = 11;
@@ -237,9 +237,9 @@ namespace Site7DbEditor
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             button1.ForeColor = Color.FromArgb(20, 50, 95);
-            button1.Location = new Point(104, 252);
+            button1.Location = new Point(100, 226);
             button1.Name = "button1";
-            button1.Size = new Size(242, 38);
+            button1.Size = new Size(246, 36);
             button1.TabIndex = 12;
             button1.Text = "✔ このレイヤに適用";
             button1.UseVisualStyleBackColor = false;
@@ -252,7 +252,7 @@ namespace Site7DbEditor
             btnExportToMaster.FlatStyle = FlatStyle.Flat;
             btnExportToMaster.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             btnExportToMaster.ForeColor = Color.FromArgb(25, 45, 80);
-            btnExportToMaster.Location = new Point(292, 400);
+            btnExportToMaster.Location = new Point(292, 294);
             btnExportToMaster.Name = "btnExportToMaster";
             btnExportToMaster.Size = new Size(174, 36);
             btnExportToMaster.TabIndex = 3;
@@ -267,7 +267,7 @@ namespace Site7DbEditor
             btnImportFromMaster.FlatStyle = FlatStyle.Flat;
             btnImportFromMaster.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             btnImportFromMaster.ForeColor = Color.FromArgb(25, 45, 80);
-            btnImportFromMaster.Location = new Point(480, 400);
+            btnImportFromMaster.Location = new Point(480, 294);
             btnImportFromMaster.Name = "btnImportFromMaster";
             btnImportFromMaster.Size = new Size(174, 36);
             btnImportFromMaster.TabIndex = 4;
@@ -282,9 +282,9 @@ namespace Site7DbEditor
             Save_Button.FlatStyle = FlatStyle.Flat;
             Save_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             Save_Button.ForeColor = Color.White;
-            Save_Button.Location = new Point(292, 444);
+            Save_Button.Location = new Point(292, 338);
             Save_Button.Name = "Save_Button";
-            Save_Button.Size = new Size(224, 44);
+            Save_Button.Size = new Size(224, 42);
             Save_Button.TabIndex = 5;
             Save_Button.Text = "💾 設定を保存";
             Save_Button.UseVisualStyleBackColor = false;
@@ -297,9 +297,9 @@ namespace Site7DbEditor
             Cancel_Button.FlatStyle = FlatStyle.Flat;
             Cancel_Button.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold);
             Cancel_Button.ForeColor = Color.FromArgb(30, 40, 60);
-            Cancel_Button.Location = new Point(526, 444);
+            Cancel_Button.Location = new Point(526, 338);
             Cancel_Button.Name = "Cancel_Button";
-            Cancel_Button.Size = new Size(128, 44);
+            Cancel_Button.Size = new Size(128, 42);
             Cancel_Button.TabIndex = 6;
             Cancel_Button.Text = "閉じる";
             Cancel_Button.UseVisualStyleBackColor = false;
@@ -309,7 +309,7 @@ namespace Site7DbEditor
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(240, 242, 245);
-            ClientSize = new Size(668, 504);
+            ClientSize = new Size(668, 396);
             Controls.Add(Cancel_Button);
             Controls.Add(Save_Button);
             Controls.Add(btnImportFromMaster);
@@ -327,7 +327,6 @@ namespace Site7DbEditor
             grpEdit.ResumeLayout(false);
             grpEdit.PerformLayout();
             ResumeLayout(false);
-
         }
 
         #endregion
