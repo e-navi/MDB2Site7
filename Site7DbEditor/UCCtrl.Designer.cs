@@ -757,8 +757,7 @@ namespace Site7DbEditor
             // 
             // UCCtrl
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             Controls.Add(panelCtrl);
             Margin = new Padding(4);
             Name = "UCCtrl";

@@ -1453,8 +1453,7 @@ namespace Site7DrawingEditor
             // 
             // FormDrawingEditor
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(245, 246, 248);
             ClientSize = new Size(1520, 960);
             Controls.Add(panelMiddle);

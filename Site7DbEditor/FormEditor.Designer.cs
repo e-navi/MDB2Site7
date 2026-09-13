@@ -2579,8 +2579,7 @@ namespace Site7DbEditor
             // 
             // FormEditor
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(20, 20, 25);
             ClientSize = new Size(1520, 960);
             Controls.Add(panelMain1);
