@@ -864,9 +864,16 @@ namespace Site7DbEditor {
             };
             this.chkScreenInput.CheckedChanged += (s, e) => {
                 picMapCanvas.Cursor = chkScreenInput.Checked ? Cursors.Cross : Cursors.Default;
+                UpdateScreenInputUI();
                 if (chkScreenInput.Checked) {
-                    _clickNotifyToolTip.Show("【画面入力モード】\n・左クリック: 頂点追加\n・右クリック: 1点取消\n・同一点クリック / 左ダブルクリック: 終了\n・矢印キー(↑↓←→): 画面移動(パン)", picMapCanvas, 10, 10, 3500);
+                    string guide = (tabControlData.SelectedIndex == 0 && chkScreenAutoAdd.Checked)
+                        ? "【画面入力（新点自動追加モード）】\n・左クリック: 頂点自動追加\n・右クリック: 1点取消\n・同一点クリック / 左ダブルクリック: 終了\n・矢印キー(↑↓←→): 画面移動"
+                        : "【画面入力（座標取得モード）】\n・左クリック: クリック位置の座標を取得\n・右パネルの「追加」または「更新」で確定\n・矢印キー(↑↓←→): 画面移動";
+                    _clickNotifyToolTip.Show(guide, picMapCanvas, 10, 10, 3500);
                 }
+                picMapCanvas.Invalidate();
+            };
+            this.chkScreenAutoAdd.CheckedChanged += (s, e) => {
                 picMapCanvas.Invalidate();
             };
             this.chkPointGuidance.CheckedChanged += (s, e) => {
@@ -2011,7 +2018,14 @@ namespace Site7DbEditor {
             }
 
             UpdateLayerCheckboxColors();
+            UpdateScreenInputUI();
             picMapCanvas.Invalidate();
+        }
+
+        private void UpdateScreenInputUI() {
+            bool isIkouTab = (tabControlData.SelectedIndex == 0);
+            chkScreenAutoAdd.Visible = isIkouTab;
+            chkScreenAutoAdd.Enabled = chkScreenInput.Checked;
         }
 
         #region DataGridView Double Click & Selection Map Centering
@@ -3108,8 +3122,8 @@ namespace Site7DbEditor {
                 }
             }
 
-            // 画面入力モード中の遺構頂点追加ラバーバンド描画（2点目以降）
-            if (chkScreenInput.Checked && tabControlData.SelectedIndex == 0 && !_isMovingVertex && !_isInsertingVertex) {
+            // 画面入力モード中の遺構頂点追加ラバーバンド描画（新点自動追加ON時のみ、2点目以降）
+            if (chkScreenInput.Checked && chkScreenAutoAdd.Checked && tabControlData.SelectedIndex == 0 && !_isMovingVertex && !_isInsertingVertex) {
                 if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
                     var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
                     if (pts.Count > 0) {
@@ -3467,7 +3481,7 @@ namespace Site7DbEditor {
                 }
             }
 
-            if (chkScreenInput.Checked && e.Button == MouseButtons.Right) {
+            if (chkScreenInput.Checked && chkScreenAutoAdd.Checked && tabControlData.SelectedIndex == 0 && e.Button == MouseButtons.Right) {
                 UndoLastInputPoint(e.Location);
                 return;
             }
@@ -3491,8 +3505,8 @@ namespace Site7DbEditor {
                     double z = zVal ?? (double.TryParse(txtCoordZ.Text.Trim(), out double parsedZ) ? parsedZ : 0.0);
                     txtCoordZ.Text = z.ToString("F3");
 
-                    // 遺構データタブの場合: クリックで頂点を直接追加
-                    if (tabControlData.SelectedIndex == 0) {
+                    // 遺構データタブ かつ 新点自動追加がONの場合: クリックで頂点を直接追加
+                    if (tabControlData.SelectedIndex == 0 && chkScreenAutoAdd.Checked) {
                         if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
                             var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
 
@@ -3542,10 +3556,14 @@ namespace Site7DbEditor {
                         }
                     }
 
+                    // 遺構（自動追加OFF）または遺物・基準点の場合: 座標欄に反映し、追加/更新ボタン操作を案内
                     string defaultNotify = zVal.HasValue
-                        ? $"📌 画面入力: X={clickX:F3}, Y={clickY:F3}, Z={z:F3} を取得しました"
-                        : $"📌 画面入力: X={clickX:F3}, Y={clickY:F3} を取得しました";
+                        ? $"📌 座標取得: X={clickX:F3}, Y={clickY:F3}, Z={z:F3}\n「追加」または「更新」を押してください"
+                        : $"📌 座標取得: X={clickX:F3}, Y={clickY:F3}\n「追加」または「更新」を押してください";
                     _clickNotifyToolTip.Show(defaultNotify, picMapCanvas, e.X + 10, e.Y - 25, 2000);
+
+                    UpdateUIState();
+                    picMapCanvas.Invalidate();
                 }
             }
         }
@@ -3592,7 +3610,7 @@ namespace Site7DbEditor {
                 return;
             }
 
-            if (chkScreenInput.Checked && tabControlData.SelectedIndex == 0) {
+            if (chkScreenInput.Checked && chkScreenAutoAdd.Checked && tabControlData.SelectedIndex == 0) {
                 _currentRubberBandMousePos = e.Location;
                 picMapCanvas.Invalidate();
             }
@@ -4209,8 +4227,8 @@ namespace Site7DbEditor {
 
         private void picMapCanvas_MouseDoubleClick(object? sender, MouseEventArgs e) {
             if (chkScreenInput.Checked && e.Button == MouseButtons.Left) {
-                // ダブルクリックの2回目のMouseDownで追加された重複点を取り消す
-                if (tabControlData.SelectedIndex == 0) {
+                // ダブルクリックの2回目のMouseDownで追加された重複点を取り消す（自動追加時のみ）
+                if (tabControlData.SelectedIndex == 0 && chkScreenAutoAdd.Checked) {
                     if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
                         var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
                         if (pts.Count > 1) {

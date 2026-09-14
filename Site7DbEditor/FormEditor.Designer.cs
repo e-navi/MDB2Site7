@@ -106,6 +106,7 @@ namespace Site7DbEditor
             lblCoordZ = new Label();
             txtCoordZ = new TextBox();
             chkScreenInput = new CheckBox();
+            chkScreenAutoAdd = new CheckBox();
             btnDeletePointRight = new Button();
             btnUpdatePointRight = new Button();
             btnAddPointRight = new Button();
@@ -1297,6 +1298,7 @@ namespace Site7DbEditor
             grpCoordValue.Controls.Add(lblCoordZ);
             grpCoordValue.Controls.Add(txtCoordZ);
             grpCoordValue.Controls.Add(chkScreenInput);
+            grpCoordValue.Controls.Add(chkScreenAutoAdd);
             grpCoordValue.Controls.Add(btnDeletePointRight);
             grpCoordValue.Controls.Add(btnUpdatePointRight);
             grpCoordValue.Controls.Add(btnAddPointRight);
@@ -1387,6 +1389,20 @@ namespace Site7DbEditor
             chkScreenInput.TabIndex = 7;
             chkScreenInput.Text = "📌 画面入力";
             chkScreenInput.UseVisualStyleBackColor = true;
+            // 
+            // chkScreenAutoAdd
+            // 
+            chkScreenAutoAdd.AutoSize = true;
+            chkScreenAutoAdd.Checked = true;
+            chkScreenAutoAdd.CheckState = CheckState.Checked;
+            chkScreenAutoAdd.Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold);
+            chkScreenAutoAdd.ForeColor = Color.FromArgb(53, 55, 76);
+            chkScreenAutoAdd.Location = new Point(8, 156);
+            chkScreenAutoAdd.Name = "chkScreenAutoAdd";
+            chkScreenAutoAdd.Size = new Size(111, 23);
+            chkScreenAutoAdd.TabIndex = 8;
+            chkScreenAutoAdd.Text = "新点自動追加";
+            chkScreenAutoAdd.UseVisualStyleBackColor = true;
             // 
             // btnDeletePointRight
             // 
@@ -2789,6 +2805,7 @@ namespace Site7DbEditor
         private System.Windows.Forms.Label lblCoordZ;
         private System.Windows.Forms.TextBox txtCoordZ;
         private System.Windows.Forms.CheckBox chkScreenInput;
+        private System.Windows.Forms.CheckBox chkScreenAutoAdd;
         private System.Windows.Forms.Button btnUpdatePointRight;
         private System.Windows.Forms.Button btnDeletePointRight;
         private System.Windows.Forms.Button btnAddPointRight;
