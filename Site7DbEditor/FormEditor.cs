@@ -1736,6 +1736,16 @@ namespace Site7DbEditor {
                         }
 
                         UpdateIkouLSelection(selectedLine);
+
+                        // 遺構の名称表示位置または構成点平均がマップ表示範囲外の場合、画面中央に追従表示
+                        if (selectedIkou.X != 0.0 || selectedIkou.Y != 0.0) {
+                            EnsurePointVisibleInMap(selectedIkou.X, selectedIkou.Y);
+                        } else if (lines.Count > 0) {
+                            var allPts = lines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
+                            if (allPts.Count > 0) {
+                                EnsurePointVisibleInMap(allPts.Average(p => p.X), allPts.Average(p => p.Y));
+                            }
+                        }
                     } else {
                         txtIkouNum.Text = "";
                         cmbIkouKind.SelectedIndex = -1;
@@ -1811,6 +1821,13 @@ namespace Site7DbEditor {
                         txtCoordY.Text = "";
                         txtCoordZ.Text = "";
                     }
+
+                    // 遺構線の名称表示位置または始点がマップ表示範囲外の場合、画面中央に追従表示
+                    if (selectedLine.X != 0.0 || selectedLine.Y != 0.0) {
+                        EnsurePointVisibleInMap(selectedLine.X, selectedLine.Y);
+                    } else if (points.Count > 0) {
+                        EnsurePointVisibleInMap(points[0].X, points[0].Y);
+                    }
                 } else {
                     txtLineNum.Text = "";
                     cmbLineKind.SelectedIndex = -1;
@@ -1859,6 +1876,9 @@ namespace Site7DbEditor {
                     txtCoordX.Text = pt.X.ToString("F3");
                     txtCoordY.Text = pt.Y.ToString("F3");
                     txtCoordZ.Text = pt.Z.ToString("F3");
+
+                    // 構成点がマップ表示範囲外の場合、画面中央に追従表示
+                    EnsurePointVisibleInMap(pt.X, pt.Y);
                 } else {
                     txtCoordX.Text = "";
                     txtCoordY.Text = "";
@@ -1892,6 +1912,9 @@ namespace Site7DbEditor {
                         txtCoordX.Text = selectedIbutu.X.ToString("F3");
                         txtCoordY.Text = selectedIbutu.Y.ToString("F3");
                         txtCoordZ.Text = selectedIbutu.Z.ToString("F3");
+
+                        // 遺物の座標がマップ表示範囲外の場合、画面中央に追従表示
+                        EnsurePointVisibleInMap(selectedIbutu.X, selectedIbutu.Y);
                     } else {
                         txtCoordX.Text = "";
                         txtCoordY.Text = "";
@@ -1928,6 +1951,9 @@ namespace Site7DbEditor {
                         txtCoordX.Text = selectedKikai.X.ToString("F3");
                         txtCoordY.Text = selectedKikai.Y.ToString("F3");
                         txtCoordZ.Text = selectedKikai.Z.ToString("F3");
+
+                        // 基準点の座標がマップ表示範囲外の場合、画面中央に追従表示
+                        EnsurePointVisibleInMap(selectedKikai.X, selectedKikai.Y);
                     } else {
                         txtCoordX.Text = "";
                         txtCoordY.Text = "";
@@ -1988,7 +2014,7 @@ namespace Site7DbEditor {
             picMapCanvas.Invalidate();
         }
 
-        #region DataGridView Double Click Map Centering
+        #region DataGridView Double Click & Selection Map Centering
 
         private void CenterMapOnPoint(double surveyX, double surveyY) {
             _vc.UpdateMapBounds(picMapCanvas.ClientSize, _db.IkouLList, _db.IbutuList, _db.KikaiList, chkShowIkou.Checked, chkShowIbutu.Checked, chkShowKikai.Checked);
@@ -1996,23 +2022,30 @@ namespace Site7DbEditor {
             picMapCanvas.Invalidate();
         }
 
+        private void EnsurePointVisibleInMap(double surveyX, double surveyY) {
+            if (_isLoadingDatabase) return;
+            if (surveyX == 0.0 && surveyY == 0.0) return;
+            if (picMapCanvas.ClientSize.Width <= 0 || picMapCanvas.ClientSize.Height <= 0) return;
+
+            _vc.UpdateMapBounds(picMapCanvas.ClientSize, _db.IkouLList, _db.IbutuList, _db.KikaiList, chkShowIkou.Checked, chkShowIbutu.Checked, chkShowKikai.Checked);
+            if (!_vc.IsPointInView(surveyX, surveyY, picMapCanvas.ClientSize, margin: 40f)) {
+                _vc.CenterOnPoint(surveyX, surveyY, picMapCanvas.ClientSize);
+                picMapCanvas.Invalidate();
+            }
+        }
+
         private void dgvIkou_CellDoubleClick(object? sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex < 0)
                 return;
             if (GetSelectedDataBoundItem<IkouModel>(dgvIkou) is IkouModel selected) {
-                var lines = _db.IkouLList.Where(l => l.Id == selected.Id).ToList();
-                double sumX = 0, sumY = 0;
-                int count = 0;
-                foreach (var line in lines) {
-                    var pts = SqliteManager.ParsePrecsText(line.Precs);
-                    foreach (var pt in pts) {
-                        sumX += pt.X;
-                        sumY += pt.Y;
-                        count++;
+                if (selected.X != 0.0 || selected.Y != 0.0) {
+                    CenterMapOnPoint(selected.X, selected.Y);
+                } else {
+                    var lines = _db.IkouLList.Where(l => l.Id == selected.Id).ToList();
+                    var allPts = lines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
+                    if (allPts.Count > 0) {
+                        CenterMapOnPoint(allPts.Average(p => p.X), allPts.Average(p => p.Y));
                     }
-                }
-                if (count > 0) {
-                    CenterMapOnPoint(sumX / count, sumY / count);
                 }
             }
         }
@@ -2021,11 +2054,13 @@ namespace Site7DbEditor {
             if (e.RowIndex < 0)
                 return;
             if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selected) {
-                var pts = SqliteManager.ParsePrecsText(selected.Precs);
-                if (pts.Count > 0) {
-                    double sumX = pts.Average(p => p.X);
-                    double sumY = pts.Average(p => p.Y);
-                    CenterMapOnPoint(sumX, sumY);
+                if (selected.X != 0.0 || selected.Y != 0.0) {
+                    CenterMapOnPoint(selected.X, selected.Y);
+                } else {
+                    var pts = SqliteManager.ParsePrecsText(selected.Precs);
+                    if (pts.Count > 0) {
+                        CenterMapOnPoint(pts[0].X, pts[0].Y);
+                    }
                 }
             }
         }
