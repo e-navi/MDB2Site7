@@ -99,7 +99,7 @@ namespace Site7DbEditor.Services
             return false;
         }
 
-        public bool LoadFile(string path, bool swapXY = false, int maxPoints = 5000000)
+        public bool LoadFile(string path, bool swapXY = false, int maxPoints = 10000000)
         {
             if (!File.Exists(path)) return false;
             SwapXY = swapXY;
