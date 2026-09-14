@@ -60,23 +60,23 @@ namespace Site7DbEditor
             string selectedTable = cmbBatchTable.SelectedItem?.ToString() ?? "";
             if (selectedTable.StartsWith("遺構L"))
             {
-                cmbBatchFilterCol.Items.AddRange(new object[] { "NAME", "LAYER", "MODE", "DATE", "ID", "LID" });
-                cmbBatchUpdateCol.Items.AddRange(new object[] { "LAYER", "MODE", "NAME", "DATE" });
+                cmbBatchFilterCol.Items.AddRange(new object[] { "遺構線名", "レイヤ", "種類", "日付", "ID", "LID" });
+                cmbBatchUpdateCol.Items.AddRange(new object[] { "レイヤ", "種類", "遺構線名", "日付" });
             }
             else if (selectedTable.StartsWith("遺構"))
             {
-                cmbBatchFilterCol.Items.AddRange(new object[] { "NAME", "DATE", "ID" });
-                cmbBatchUpdateCol.Items.AddRange(new object[] { "NAME", "DATE" });
+                cmbBatchFilterCol.Items.AddRange(new object[] { "遺構名", "日付", "ID" });
+                cmbBatchUpdateCol.Items.AddRange(new object[] { "遺構名", "日付" });
             }
             else if (selectedTable.StartsWith("遺物"))
             {
-                cmbBatchFilterCol.Items.AddRange(new object[] { "NAME(Syubetu)", "CHIKU", "SOUI", "SYUBETU", "LAYER", "DATE", "ID" });
-                cmbBatchUpdateCol.Items.AddRange(new object[] { "LAYER", "CHIKU", "SOUI", "SYUBETU", "DATE" });
+                cmbBatchFilterCol.Items.AddRange(new object[] { "種別", "出土地点", "出土層位", "No", "レイヤ", "日付", "ID" });
+                cmbBatchUpdateCol.Items.AddRange(new object[] { "レイヤ", "出土地点", "出土層位", "種別", "No", "日付" });
             }
             else if (selectedTable.StartsWith("基準点"))
             {
-                cmbBatchFilterCol.Items.AddRange(new object[] { "NAME", "LAYER", "DATE", "ID" });
-                cmbBatchUpdateCol.Items.AddRange(new object[] { "LAYER", "NAME", "DATE" });
+                cmbBatchFilterCol.Items.AddRange(new object[] { "基準点名", "レイヤ", "日付", "ID" });
+                cmbBatchUpdateCol.Items.AddRange(new object[] { "レイヤ", "基準点名", "日付" });
             }
 
             if (cmbBatchFilterCol.Items.Count > 0) cmbBatchFilterCol.SelectedIndex = 0;
@@ -175,8 +175,15 @@ namespace Site7DbEditor
                 "S", "V", "H", "KPName", "BPName", "KPH", "MRH", "Precs"
             };
 
+            dgvBatchPreview.AllowUserToResizeColumns = false;
+            dgvBatchPreview.AllowUserToResizeRows = false;
+            dgvBatchPreview.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvBatchPreview.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+
             foreach (DataGridViewColumn col in dgvBatchPreview.Columns)
             {
+                col.Resizable = DataGridViewTriState.False;
+
                 if (hiddenCols.Contains(col.Name))
                 {
                     col.Visible = false;
@@ -184,6 +191,66 @@ namespace Site7DbEditor
                 else if (headers.TryGetValue(col.Name, out var headerText))
                 {
                     col.HeaderText = headerText;
+
+                    // 数値列の右寄せ・書式および列幅の設定
+                    switch (col.Name.ToUpperInvariant())
+                    {
+                        case "ID":
+                            col.Width = 50;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            break;
+                        case "LID":
+                            col.Width = 50;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            break;
+                        case "NO":
+                            col.Width = 50;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            break;
+                        case "MODE":
+                            col.Width = 60;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            break;
+                        case "LAYER":
+                            col.Width = 60;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            break;
+                        case "X":
+                            col.Width = 105;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            col.DefaultCellStyle.Format = "0.000";
+                            break;
+                        case "Y":
+                            col.Width = 105;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            col.DefaultCellStyle.Format = "0.000";
+                            break;
+                        case "Z":
+                            col.Width = 75;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            col.DefaultCellStyle.Format = "0.000";
+                            break;
+                        case "CHIKU":
+                            col.Width = 100;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                            break;
+                        case "SOUI":
+                            col.Width = 100;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                            break;
+                        case "SYUBETU":
+                            col.Width = 90;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                            break;
+                        case "NAME":
+                            col.Width = 110;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                            break;
+                        case "DATE":
+                            col.Width = 100;
+                            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                            break;
+                    }
                 }
             }
 

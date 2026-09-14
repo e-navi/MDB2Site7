@@ -337,10 +337,10 @@ namespace Site7DbEditor.Services
                 {
                     string val = filterCol switch
                     {
-                        "NAME" => item.Name,
-                        "LAYER" => item.Layer.ToString(),
-                        "MODE" => item.Mode.ToString(),
-                        "DATE" => item.Date,
+                        "遺構線名" or "NAME" => item.Name,
+                        "レイヤ" or "LAYER" => item.Layer.ToString(),
+                        "種類" or "MODE" => item.Mode.ToString(),
+                        "日付" or "DATE" => item.Date,
                         "ID" => item.Id.ToString(),
                         "LID" => item.Lid.ToString(),
                         _ => item.Name
@@ -354,8 +354,8 @@ namespace Site7DbEditor.Services
                 {
                     string val = filterCol switch
                     {
-                        "NAME" => item.Name,
-                        "DATE" => item.Date,
+                        "遺構名" or "NAME" => item.Name,
+                        "日付" or "DATE" => item.Date,
                         "ID" => item.Id.ToString(),
                         _ => item.Name
                     };
@@ -368,12 +368,12 @@ namespace Site7DbEditor.Services
                 {
                     string val = filterCol switch
                     {
-                        "CHIKU" => item.Chiku,
-                        "SOUI" => item.Soui,
-                        "SYUBETU" => item.Syubetu,
-                        "NAME(Syubetu)" => item.Syubetu,
-                        "LAYER" => item.Layer.ToString(),
-                        "DATE" => item.Date,
+                        "出土地点" or "CHIKU" => item.Chiku,
+                        "出土層位" or "SOUI" => item.Soui,
+                        "種別" or "SYUBETU" or "NAME(Syubetu)" => item.Syubetu,
+                        "No" or "NO" => item.No.ToString(),
+                        "レイヤ" or "LAYER" => item.Layer.ToString(),
+                        "日付" or "DATE" => item.Date,
                         "ID" => item.Id.ToString(),
                         _ => item.Syubetu
                     };
@@ -386,9 +386,9 @@ namespace Site7DbEditor.Services
                 {
                     string val = filterCol switch
                     {
-                        "NAME" => item.Name,
-                        "LAYER" => item.Layer.ToString(),
-                        "DATE" => item.Date,
+                        "基準点名" or "NAME" => item.Name,
+                        "レイヤ" or "LAYER" => item.Layer.ToString(),
+                        "日付" or "DATE" => item.Date,
                         "ID" => item.Id.ToString(),
                         _ => item.Name
                     };
@@ -407,19 +407,19 @@ namespace Site7DbEditor.Services
             {
                 if (obj is IkouLModel line)
                 {
-                    if (updateCol == "LAYER" && int.TryParse(updateVal, out int layer))
+                    if ((updateCol == "レイヤ" || updateCol == "LAYER") && int.TryParse(updateVal, out int layer))
                     {
                         line.Layer = Math.Clamp(layer, 1, 16);
                     }
-                    else if (updateCol == "MODE" && int.TryParse(updateVal, out int mode))
+                    else if ((updateCol == "種類" || updateCol == "MODE") && int.TryParse(updateVal, out int mode))
                     {
                         line.Mode = mode;
                     }
-                    else if (updateCol == "NAME")
+                    else if (updateCol == "遺構線名" || updateCol == "NAME")
                     {
                         line.Name = updateVal;
                     }
-                    else if (updateCol == "DATE")
+                    else if (updateCol == "日付" || updateCol == "DATE")
                     {
                         line.Date = updateVal;
                     }
@@ -427,30 +427,37 @@ namespace Site7DbEditor.Services
                 }
                 else if (obj is IkouModel ikou)
                 {
-                    if (updateCol == "NAME") ikou.Name = updateVal;
-                    else if (updateCol == "DATE") ikou.Date = updateVal;
+                    if (updateCol == "遺構名" || updateCol == "NAME") ikou.Name = updateVal;
+                    else if (updateCol == "日付" || updateCol == "DATE") ikou.Date = updateVal;
                     successCount++;
                 }
                 else if (obj is IbutuModel ibutu)
                 {
-                    if (updateCol == "LAYER" && int.TryParse(updateVal, out int layer))
+                    if ((updateCol == "レイヤ" || updateCol == "LAYER") && int.TryParse(updateVal, out int layer))
                     {
                         ibutu.Layer = Math.Clamp(layer, 1, 16);
                     }
-                    else if (updateCol == "CHIKU") ibutu.Chiku = updateVal;
-                    else if (updateCol == "SOUI") ibutu.Soui = updateVal;
-                    else if (updateCol == "SYUBETU") ibutu.Syubetu = updateVal;
-                    else if (updateCol == "DATE") ibutu.Date = updateVal;
+                    else if (updateCol == "出土地点" || updateCol == "CHIKU") ibutu.Chiku = updateVal;
+                    else if (updateCol == "出土層位" || updateCol == "SOUI") ibutu.Soui = updateVal;
+                    else if (updateCol == "種別" || updateCol == "SYUBETU") ibutu.Syubetu = updateVal;
+                    else if ((updateCol == "No" || updateCol == "NO") && int.TryParse(updateVal, out int noVal)) ibutu.No = noVal;
+                    else if (updateCol == "日付" || updateCol == "DATE") ibutu.Date = updateVal;
                     successCount++;
                 }
                 else if (obj is KikaiModel kikai)
                 {
-                    if (updateCol == "LAYER" && int.TryParse(updateVal, out int layer))
+                    if ((updateCol == "レイヤ" || updateCol == "LAYER") && int.TryParse(updateVal, out int layer))
                     {
                         kikai.Layer = Math.Clamp(layer, 1, 16);
                     }
-                    else if (updateCol == "NAME") kikai.Name = updateVal;
-                    else if (updateCol == "DATE") kikai.Date = updateVal;
+                    else if (updateCol == "基準点名" || updateCol == "NAME")
+                    {
+                        kikai.Name = updateVal;
+                    }
+                    else if (updateCol == "日付" || updateCol == "DATE")
+                    {
+                        kikai.Date = updateVal;
+                    }
                     successCount++;
                 }
             }
