@@ -124,6 +124,7 @@ namespace Site7DbEditor.Services
         {
             int width = canvasSize.Width;
             int height = canvasSize.Height;
+            if (width <= 0 || height <= 0) return PointF.Empty;
 
             float cx = width / 2f;
             float cy = height / 2f;
@@ -131,11 +132,27 @@ namespace Site7DbEditor.Services
             double posX = surveyY;
             double posY = surveyX;
 
-            float bx = (float)(OffsetX + (posX - PosXMin) * MapScale);
-            float by = (float)(height - OffsetY - (posY - PosYMin) * MapScale);
-            float px = cx + (bx - cx) * ZoomFactorMap + PanOffsetMap.X;
-            float py = cy + (by - cy) * ZoomFactorMap + PanOffsetMap.Y;
-            return new PointF(px, py);
+            if (double.IsNaN(posX) || double.IsInfinity(posX) || double.IsNaN(posY) || double.IsInfinity(posY) ||
+                double.IsNaN(PosXMin) || double.IsInfinity(PosXMin) || double.IsNaN(PosYMin) || double.IsInfinity(PosYMin) ||
+                double.IsNaN(MapScale) || double.IsInfinity(MapScale) || MapScale <= 0)
+            {
+                return new PointF(cx, cy);
+            }
+
+            double bx = OffsetX + (posX - PosXMin) * MapScale;
+            double by = height - OffsetY - (posY - PosYMin) * MapScale;
+            double px = cx + (bx - cx) * ZoomFactorMap + PanOffsetMap.X;
+            double py = cy + (by - cy) * ZoomFactorMap + PanOffsetMap.Y;
+
+            // GDI+ のオーバーフロー防止のため安全値 (-30000 〜 +30000) にクランプ
+            const float SafeLimit = 30000.0f;
+            float safeX = (float)Math.Clamp(px, -SafeLimit, SafeLimit);
+            float safeY = (float)Math.Clamp(py, -SafeLimit, SafeLimit);
+
+            if (float.IsNaN(safeX) || float.IsInfinity(safeX)) safeX = cx;
+            if (float.IsNaN(safeY) || float.IsInfinity(safeY)) safeY = cy;
+
+            return new PointF(safeX, safeY);
         }
 
         public void CenterOnPoint(double surveyX, double surveyY, Size canvasSize)

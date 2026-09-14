@@ -229,45 +229,52 @@ namespace Site7DbEditor.Services
         {
             if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
 
-            var paperCorners = GetPaperCornersSurvey(cx, cy, angleDeg);
-            var outerCorners = GetOuterCornersSurvey(cx, cy, angleDeg);
-            var innerCorners = GetInnerCornersSurvey(cx, cy, angleDeg);
-
-            PointF[] paperScreen = ToScreenPoints(vc, paperCorners, canvasSize);
-            PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
-            PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
-
-            using (var paperPen = new Pen(Color.FromArgb(180, 200, 200, 200), 1.2f) { DashStyle = DashStyle.Dot })
-            using (var outerPen = new Pen(Color.FromArgb(255, 230, 0), 1.6f) { DashStyle = DashStyle.Dash })
-            using (var thickPen = new Pen(Color.FromArgb(255, 230, 0), 3.6f) { DashStyle = DashStyle.Dash })
-            using (var innerPen = new Pen(Color.FromArgb(0, 225, 255), 1.4f) { DashStyle = DashStyle.Dot })
-            using (var centerPen = new Pen(Color.FromArgb(255, 100, 100), 1.8f))
+            try
             {
-                // 1. 図枠（用紙外周）
-                g.DrawPolygon(paperPen, paperScreen);
+                var paperCorners = GetPaperCornersSurvey(cx, cy, angleDeg);
+                var outerCorners = GetOuterCornersSurvey(cx, cy, angleDeg);
+                var innerCorners = GetInnerCornersSurvey(cx, cy, angleDeg);
 
-                // 2. 外枠
-                g.DrawPolygon(outerPen, outerScreen);
-                g.DrawLine(thickPen, outerScreen[0], outerScreen[1]); // 下辺
-                g.DrawLine(thickPen, outerScreen[1], outerScreen[2]); // 右辺
+                PointF[] paperScreen = ToScreenPoints(vc, paperCorners, canvasSize);
+                PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
+                PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
 
-                // 3. 内枠
-                g.DrawPolygon(innerPen, innerScreen);
-
-                // 中心点
-                PointF centerScreen = vc.ToCanvasPoint(cx, cy, canvasSize);
-                g.DrawLine(centerPen, centerScreen.X - 10f, centerScreen.Y, centerScreen.X + 10f, centerScreen.Y);
-                g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 10f, centerScreen.X, centerScreen.Y + 10f);
-                g.DrawEllipse(centerPen, centerScreen.X - 5f, centerScreen.Y - 5f, 10f, 10f);
-
-                if (isRotating)
+                using (var paperPen = new Pen(Color.FromArgb(180, 200, 200, 200), 1.2f) { DashStyle = DashStyle.Dot })
+                using (var outerPen = new Pen(Color.FromArgb(255, 230, 0), 1.6f) { DashStyle = DashStyle.Dash })
+                using (var thickPen = new Pen(Color.FromArgb(255, 230, 0), 3.6f) { DashStyle = DashStyle.Dash })
+                using (var innerPen = new Pen(Color.FromArgb(0, 225, 255), 1.4f) { DashStyle = DashStyle.Dot })
+                using (var centerPen = new Pen(Color.FromArgb(255, 100, 100), 1.8f))
                 {
-                    using (var rayPen = new Pen(Color.FromArgb(255, 80, 80), 2f) { DashStyle = DashStyle.Dash })
+                    // 1. 図枠（用紙外周）
+                    g.DrawPolygon(paperPen, paperScreen);
+
+                    // 2. 外枠
+                    g.DrawPolygon(outerPen, outerScreen);
+                    g.DrawLine(thickPen, outerScreen[0], outerScreen[1]); // 下辺
+                    g.DrawLine(thickPen, outerScreen[1], outerScreen[2]); // 右辺
+
+                    // 3. 内枠
+                    g.DrawPolygon(innerPen, innerScreen);
+
+                    // 中心点
+                    PointF centerScreen = vc.ToCanvasPoint(cx, cy, canvasSize);
+                    g.DrawLine(centerPen, centerScreen.X - 10f, centerScreen.Y, centerScreen.X + 10f, centerScreen.Y);
+                    g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 10f, centerScreen.X, centerScreen.Y + 10f);
+                    g.DrawEllipse(centerPen, centerScreen.X - 5f, centerScreen.Y - 5f, 10f, 10f);
+
+                    if (isRotating)
                     {
-                        g.DrawLine(rayPen, centerScreen, mouseScreenPos);
-                        g.FillEllipse(Brushes.Red, mouseScreenPos.X - 4f, mouseScreenPos.Y - 4f, 8f, 8f);
+                        using (var rayPen = new Pen(Color.FromArgb(255, 80, 80), 2f) { DashStyle = DashStyle.Dash })
+                        {
+                            g.DrawLine(rayPen, centerScreen, mouseScreenPos);
+                            g.FillEllipse(Brushes.Red, mouseScreenPos.X - 4f, mouseScreenPos.Y - 4f, 8f, 8f);
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                // GDI+ 描画オーバーフローや例外を安全に無視
             }
         }
 
@@ -279,85 +286,92 @@ namespace Site7DbEditor.Services
             if (!IsVisible) return;
             if (canvasSize.Width <= 0 || canvasSize.Height <= 0) return;
 
-            var paperCorners = GetPaperCornersSurvey(CenterX, CenterY, RotationAngleDeg);
-            var outerCorners = GetOuterCornersSurvey();
-            var innerCorners = GetInnerCornersSurvey();
-
-            PointF[] paperScreen = ToScreenPoints(vc, paperCorners, canvasSize);
-            PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
-            PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
-
-            // 作図レイヤ設定から配色・線幅を取得
-            Color paperColor = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.FromArgb(160, 160, 170);
-            Color outerColor = EditorLayerService.GetSakuzuColor(1, isDarkBackground);
-            Color innerColor = EditorLayerService.GetSakuzuColor(2, isDarkBackground);
-            Color tomboColor = EditorLayerService.GetSakuzuColor(3, isDarkBackground);
-            Color coordColor = EditorLayerService.GetSakuzuColor(4, isDarkBackground);
-            Color centerColor = isDarkBackground ? Color.FromArgb(255, 180, 0) : Color.FromArgb(220, 100, 0);
-
-            var layerD01 = LayerDefinitionService.Instance.GetLayer(LayerGroup.Sakuzu, 1);
-            var layerD02 = LayerDefinitionService.Instance.GetLayer(LayerGroup.Sakuzu, 2);
-            float outerPenW = (float)Math.Max(1.0, layerD01.Width * 1.5f);
-            float thickPenW = outerPenW * 2.2f;
-            float innerPenW = (float)Math.Max(1.0, layerD02.Width * 1.2f);
-
-            // 1. 図枠（用紙外形）の描画（細線）
-            using (var paperPen = new Pen(paperColor, 1.0f) { DashStyle = DashStyle.Dash })
+            try
             {
-                g.DrawPolygon(paperPen, paperScreen);
+                var paperCorners = GetPaperCornersSurvey(CenterX, CenterY, RotationAngleDeg);
+                var outerCorners = GetOuterCornersSurvey();
+                var innerCorners = GetInnerCornersSurvey();
+
+                PointF[] paperScreen = ToScreenPoints(vc, paperCorners, canvasSize);
+                PointF[] outerScreen = ToScreenPoints(vc, outerCorners, canvasSize);
+                PointF[] innerScreen = ToScreenPoints(vc, innerCorners, canvasSize);
+
+                // 作図レイヤ設定から配色・線幅を取得
+                Color paperColor = isDarkBackground ? Color.FromArgb(120, 130, 150) : Color.FromArgb(160, 160, 170);
+                Color outerColor = EditorLayerService.GetSakuzuColor(1, isDarkBackground);
+                Color innerColor = EditorLayerService.GetSakuzuColor(2, isDarkBackground);
+                Color tomboColor = EditorLayerService.GetSakuzuColor(3, isDarkBackground);
+                Color coordColor = EditorLayerService.GetSakuzuColor(4, isDarkBackground);
+                Color centerColor = isDarkBackground ? Color.FromArgb(255, 180, 0) : Color.FromArgb(220, 100, 0);
+
+                var layerD01 = LayerDefinitionService.Instance.GetLayer(LayerGroup.Sakuzu, 1);
+                var layerD02 = LayerDefinitionService.Instance.GetLayer(LayerGroup.Sakuzu, 2);
+                float outerPenW = (float)Math.Max(1.0, layerD01.Width * 1.5f);
+                float thickPenW = outerPenW * 2.2f;
+                float innerPenW = (float)Math.Max(1.0, layerD02.Width * 1.2f);
+
+                // 1. 図枠（用紙外形）の描画（細線）
+                using (var paperPen = new Pen(paperColor, 1.0f) { DashStyle = DashStyle.Dash })
+                {
+                    g.DrawPolygon(paperPen, paperScreen);
+                }
+
+                // 2. 外枠の描画（通常実線、下辺と右辺は太線で用紙の向きを明示）
+                using (var outerPen = new Pen(outerColor, outerPenW))
+                using (var thickPen = new Pen(outerColor, thickPenW))
+                {
+                    g.DrawPolygon(outerPen, outerScreen);
+                    // 下辺 (0:左下 -> 1:右下) と 右辺 (1:右下 -> 2:右上) を太線で強調
+                    g.DrawLine(thickPen, outerScreen[0], outerScreen[1]);
+                    g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
+                }
+
+                // 3. 内枠の描画 (作図範囲)
+                using (var innerPen = new Pen(innerColor, innerPenW))
+                {
+                    g.DrawPolygon(innerPen, innerScreen);
+                }
+
+                // 4. トンボ (+) & 格子線 & 外枠・内枠間座標値の描画
+                DrawTomboAndCoordinates(g, vc, canvasSize, innerCorners, isDarkBackground, tomboColor, coordColor);
+
+                // 5. 中心マーク（十字線）
+                PointF centerScreen = vc.ToCanvasPoint(CenterX, CenterY, canvasSize);
+                using (var centerPen = new Pen(centerColor, 1.5f))
+                {
+                    g.DrawLine(centerPen, centerScreen.X - 8f, centerScreen.Y, centerScreen.X + 8f, centerScreen.Y);
+                    g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 8f, centerScreen.X, centerScreen.Y + 8f);
+                    g.DrawEllipse(centerPen, centerScreen.X - 4f, centerScreen.Y - 4f, 8f, 8f);
+                }
+
+                // 6. 方位記号 (North Arrow) の描画
+                if (ShowNorthArrow)
+                {
+                    DrawNorthArrow(g, vc, canvasSize, innerScreen, isDarkBackground);
+                }
+
+                // 7. スケールバー (Scale Bar) の描画
+                if (ShowScaleBar)
+                {
+                    DrawScaleBar(g, innerScreen, isDarkBackground);
+                }
+
+                // 8. 図枠情報ラベル（図枠の左上外側に表示）
+                PointF infoPos = paperScreen[3]; // 左上
+                double effectivePitch = GetEffectivePitchMeters();
+                string infoText = $"図枠 [{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} ({RotationAngleDeg:0.0}°)] ピッチ:{effectivePitch:0.#}m";
+                using (var infoFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
+                using (var infoBgBrush = new SolidBrush(Color.FromArgb(180, 20, 20, 25)))
+                using (var infoTextBrush = new SolidBrush(outerColor))
+                {
+                    var sz = g.MeasureString(infoText, infoFont);
+                    g.FillRectangle(infoBgBrush, infoPos.X, infoPos.Y - sz.Height - 4f, sz.Width + 8f, sz.Height + 2f);
+                    g.DrawString(infoText, infoFont, infoTextBrush, infoPos.X + 4f, infoPos.Y - sz.Height - 3f);
+                }
             }
-
-            // 2. 外枠の描画（通常実線、下辺と右辺は太線で用紙の向きを明示）
-            using (var outerPen = new Pen(outerColor, outerPenW))
-            using (var thickPen = new Pen(outerColor, thickPenW))
+            catch (Exception)
             {
-                g.DrawPolygon(outerPen, outerScreen);
-                // 下辺 (0:左下 -> 1:右下) と 右辺 (1:右下 -> 2:右上) を太線で強調
-                g.DrawLine(thickPen, outerScreen[0], outerScreen[1]);
-                g.DrawLine(thickPen, outerScreen[1], outerScreen[2]);
-            }
-
-            // 3. 内枠の描画 (作図範囲)
-            using (var innerPen = new Pen(innerColor, innerPenW))
-            {
-                g.DrawPolygon(innerPen, innerScreen);
-            }
-
-            // 4. トンボ (+) & 格子線 & 外枠・内枠間座標値の描画
-            DrawTomboAndCoordinates(g, vc, canvasSize, innerCorners, isDarkBackground, tomboColor, coordColor);
-
-            // 5. 中心マーク（十字線）
-            PointF centerScreen = vc.ToCanvasPoint(CenterX, CenterY, canvasSize);
-            using (var centerPen = new Pen(centerColor, 1.5f))
-            {
-                g.DrawLine(centerPen, centerScreen.X - 8f, centerScreen.Y, centerScreen.X + 8f, centerScreen.Y);
-                g.DrawLine(centerPen, centerScreen.X, centerScreen.Y - 8f, centerScreen.X, centerScreen.Y + 8f);
-                g.DrawEllipse(centerPen, centerScreen.X - 4f, centerScreen.Y - 4f, 8f, 8f);
-            }
-
-            // 6. 方位記号 (North Arrow) の描画
-            if (ShowNorthArrow)
-            {
-                DrawNorthArrow(g, vc, canvasSize, innerScreen, isDarkBackground);
-            }
-
-            // 7. スケールバー (Scale Bar) の描画
-            if (ShowScaleBar)
-            {
-                DrawScaleBar(g, innerScreen, isDarkBackground);
-            }
-
-            // 8. 図枠情報ラベル（図枠の左上外側に表示）
-            PointF infoPos = paperScreen[3]; // 左上
-            double effectivePitch = GetEffectivePitchMeters();
-            string infoText = $"図枠 [{PaperSizeName} {(IsLandscape ? "横" : "縦")} 1/{Scale:0} ({RotationAngleDeg:0.0}°)] ピッチ:{effectivePitch:0.#}m";
-            using (var infoFont = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
-            using (var infoBgBrush = new SolidBrush(Color.FromArgb(180, 20, 20, 25)))
-            using (var infoTextBrush = new SolidBrush(outerColor))
-            {
-                var sz = g.MeasureString(infoText, infoFont);
-                g.FillRectangle(infoBgBrush, infoPos.X, infoPos.Y - sz.Height - 4f, sz.Width + 8f, sz.Height + 2f);
-                g.DrawString(infoText, infoFont, infoTextBrush, infoPos.X + 4f, infoPos.Y - sz.Height - 3f);
+                // GDI+ 描画オーバーフローや例外を安全に無視
             }
         }
 

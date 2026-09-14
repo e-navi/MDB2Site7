@@ -3056,79 +3056,40 @@ namespace Site7DbEditor {
         }
 
         private void picMapCanvas_Paint(object? sender, PaintEventArgs e) {
-            EditorMapRenderer.DrawMapCanvas(
-                e.Graphics,
-                picMapCanvas.Size,
-                _vc,
-                _db,
-                _selectedIkouId,
-                _selectedLid,
-                _selectedPointIndex,
-                _selectedIbutuId,
-                _selectedKikaiId,
-                tabControlData.SelectedIndex,
-                chkShowIkou.Checked,
-                chkShowIbutu.Checked,
-                chkShowKikai.Checked,
-                chkShowCurve.Checked,
-                chkShowGrid.Checked,
-                chkColorByIkou.Checked,
-                isLayerVisible: IsMapLayerVisible,
-                showIkouName: chkShowIkouName.Checked,
-                showIbutuName: chkShowIbutuName.Checked,
-                showKikaiName: chkShowKikaiName.Checked,
-                isDarkBackground: _isDarkMapBackground,
-                chkShowBgImage: chkShowBgImage.Checked,
-                chkShowBgPointCloud: chkShowBgPointCloud.Checked,
-                chkShowHyoukou: chkShowHyoukou.Checked,
-                chkShowScale: chkShowScale.Checked);
+            try {
+                EditorMapRenderer.DrawMapCanvas(
+                    e.Graphics,
+                    picMapCanvas.Size,
+                    _vc,
+                    _db,
+                    _selectedIkouId,
+                    _selectedLid,
+                    _selectedPointIndex,
+                    _selectedIbutuId,
+                    _selectedKikaiId,
+                    tabControlData.SelectedIndex,
+                    chkShowIkou.Checked,
+                    chkShowIbutu.Checked,
+                    chkShowKikai.Checked,
+                    chkShowCurve.Checked,
+                    chkShowGrid.Checked,
+                    chkColorByIkou.Checked,
+                    isLayerVisible: IsMapLayerVisible,
+                    showIkouName: chkShowIkouName.Checked,
+                    showIbutuName: chkShowIbutuName.Checked,
+                    showKikaiName: chkShowKikaiName.Checked,
+                    isDarkBackground: _isDarkMapBackground,
+                    chkShowBgImage: chkShowBgImage.Checked,
+                    chkShowBgPointCloud: chkShowBgPointCloud.Checked,
+                    chkShowHyoukou: chkShowHyoukou.Checked,
+                    chkShowScale: chkShowScale.Checked);
 
-            // 頂点移動中のラバーバンド描画
-            if (_isMovingVertex && _movingLine != null && _movingVertexIndex >= 0) {
-                var pts = SqliteManager.ParsePrecsText(_movingLine.Precs);
-                if (_movingVertexIndex < pts.Count) {
-                    var origPt = pts[_movingVertexIndex];
-                    PointF startScreenPt = _vc.ToCanvasPoint(origPt.X, origPt.Y, picMapCanvas.Size);
-                    PointF endScreenPt = _currentRubberBandMousePos;
-
-                    using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
-                    using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
-                    using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
-                        e.Graphics.DrawLine(rubberPen, startScreenPt, endScreenPt);
-                        e.Graphics.FillEllipse(targetBrush, endScreenPt.X - 4f, endScreenPt.Y - 4f, 8f, 8f);
-                        e.Graphics.DrawEllipse(targetPen, endScreenPt.X - 7f, endScreenPt.Y - 7f, 14f, 14f);
-                    }
-                }
-            }
-
-            // 頂点追加（挿入）中のラバーバンド描画（前の頂点 -> マウス位置 -> 次の頂点）
-            if (_isInsertingVertex && _insertingLine != null && _insertingSegmentIndex >= 0) {
-                var pts = SqliteManager.ParsePrecsText(_insertingLine.Precs);
-                if (pts.Count > 0) {
-                    IkouPointRecord p1 = pts[_insertingSegmentIndex < pts.Count ? _insertingSegmentIndex : pts.Count - 1];
-                    IkouPointRecord p2 = pts[(_insertingSegmentIndex + 1) % pts.Count];
-                    PointF screenP1 = _vc.ToCanvasPoint(p1.X, p1.Y, picMapCanvas.Size);
-                    PointF screenP2 = _vc.ToCanvasPoint(p2.X, p2.Y, picMapCanvas.Size);
-                    PointF mousePt = _currentRubberBandMousePos;
-
-                    using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
-                    using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
-                    using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
-                        e.Graphics.DrawLine(rubberPen, screenP1, mousePt);
-                        e.Graphics.DrawLine(rubberPen, mousePt, screenP2);
-                        e.Graphics.FillEllipse(targetBrush, mousePt.X - 4f, mousePt.Y - 4f, 8f, 8f);
-                        e.Graphics.DrawEllipse(targetPen, mousePt.X - 7f, mousePt.Y - 7f, 14f, 14f);
-                    }
-                }
-            }
-
-            // 画面入力モード中の遺構頂点追加ラバーバンド描画（新点自動追加ON時のみ、2点目以降）
-            if (chkScreenInput.Checked && chkScreenAutoAdd.Checked && tabControlData.SelectedIndex == 0 && !_isMovingVertex && !_isInsertingVertex) {
-                if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
-                    var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
-                    if (pts.Count > 0) {
-                        var lastPt = pts[pts.Count - 1];
-                        PointF startScreenPt = _vc.ToCanvasPoint(lastPt.X, lastPt.Y, picMapCanvas.Size);
+                // 頂点移動中のラバーバンド描画
+                if (_isMovingVertex && _movingLine != null && _movingVertexIndex >= 0) {
+                    var pts = SqliteManager.ParsePrecsText(_movingLine.Precs);
+                    if (_movingVertexIndex < pts.Count) {
+                        var origPt = pts[_movingVertexIndex];
+                        PointF startScreenPt = _vc.ToCanvasPoint(origPt.X, origPt.Y, picMapCanvas.Size);
                         PointF endScreenPt = _currentRubberBandMousePos;
 
                         using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
@@ -3140,77 +3101,120 @@ namespace Site7DbEditor {
                         }
                     }
                 }
-            }
 
-            // 表示位置指定中のラバーバンド描画（現状の表示位置 -> マウス位置）
-            if (_isSettingLabelPos && !_currentRubberBandMousePos.IsEmpty) {
-                PointF? startPt = null;
-                string labelPreview = "";
-                if (_labelPosTargetLine != null) {
-                    var pts = SqliteManager.ParsePrecsText(_labelPosTargetLine.Precs);
-                    if (_labelPosTargetLine.X != 0.0 || _labelPosTargetLine.Y != 0.0) {
-                        startPt = _vc.ToCanvasPoint(_labelPosTargetLine.X, _labelPosTargetLine.Y, picMapCanvas.Size);
-                    } else if (pts.Count > 0) {
-                        startPt = _vc.ToCanvasPoint(pts[0].X, pts[0].Y, picMapCanvas.Size);
-                    }
-                    labelPreview = _labelPosTargetLine.Name;
-                } else if (_labelPosTargetIkou != null) {
-                    if (_labelPosTargetIkou.X != 0.0 || _labelPosTargetIkou.Y != 0.0) {
-                        startPt = _vc.ToCanvasPoint(_labelPosTargetIkou.X, _labelPosTargetIkou.Y, picMapCanvas.Size);
-                    } else {
-                        var childLines = _db.IkouLList.Where(l => l.Id == _labelPosTargetIkou.Id).ToList();
-                        var allPts = childLines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
-                        if (allPts.Count > 0) {
-                            double avgX = allPts.Average(p => p.X);
-                            double avgY = allPts.Average(p => p.Y);
-                            startPt = _vc.ToCanvasPoint(avgX, avgY, picMapCanvas.Size);
-                        }
-                    }
-                    labelPreview = _labelPosTargetIkou.Name;
-                }
+                // 頂点追加（挿入）中のラバーバンド描画（前の頂点 -> マウス位置 -> 次の頂点）
+                if (_isInsertingVertex && _insertingLine != null && _insertingSegmentIndex >= 0) {
+                    var pts = SqliteManager.ParsePrecsText(_insertingLine.Precs);
+                    if (pts.Count > 0) {
+                        IkouPointRecord p1 = pts[_insertingSegmentIndex < pts.Count ? _insertingSegmentIndex : pts.Count - 1];
+                        IkouPointRecord p2 = pts[(_insertingSegmentIndex + 1) % pts.Count];
+                        PointF screenP1 = _vc.ToCanvasPoint(p1.X, p1.Y, picMapCanvas.Size);
+                        PointF screenP2 = _vc.ToCanvasPoint(p2.X, p2.Y, picMapCanvas.Size);
+                        PointF mousePt = _currentRubberBandMousePos;
 
-                if (startPt.HasValue) {
-                    PointF endPt = _currentRubberBandMousePos;
-                    using (var rubberPen = new Pen(Color.FromArgb(255, 140, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
-                    using (var targetPen = new Pen(Color.FromArgb(255, 140, 0), 2f))
-                    using (var targetBrush = new SolidBrush(Color.FromArgb(200, 255, 140, 0)))
-                    using (var previewFont = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
-                    using (var textBrush = new SolidBrush(Color.FromArgb(255, 240, 200)))
-                    using (var bgBrush = new SolidBrush(Color.FromArgb(200, 30, 30, 30))) {
-                        // 原点（現状位置）からマウス位置へラバーバンド
-                        e.Graphics.DrawLine(rubberPen, startPt.Value, endPt);
-                        e.Graphics.FillEllipse(targetBrush, startPt.Value.X - 4f, startPt.Value.Y - 4f, 8f, 8f);
-
-                        // 先端（ターゲット）
-                        e.Graphics.FillEllipse(targetBrush, endPt.X - 4f, endPt.Y - 4f, 8f, 8f);
-                        e.Graphics.DrawEllipse(targetPen, endPt.X - 8f, endPt.Y - 8f, 16f, 16f);
-
-                        // プレビュー文字描画
-                        if (!string.IsNullOrEmpty(labelPreview)) {
-                            var sz = e.Graphics.MeasureString(labelPreview, previewFont);
-                            e.Graphics.FillRectangle(bgBrush, endPt.X + 12f, endPt.Y - sz.Height / 2f, sz.Width + 6f, sz.Height);
-                            e.Graphics.DrawString(labelPreview, previewFont, textBrush, endPt.X + 15f, endPt.Y - sz.Height / 2f);
+                        using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                        using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
+                        using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
+                            e.Graphics.DrawLine(rubberPen, screenP1, mousePt);
+                            e.Graphics.DrawLine(rubberPen, mousePt, screenP2);
+                            e.Graphics.FillEllipse(targetBrush, mousePt.X - 4f, mousePt.Y - 4f, 8f, 8f);
+                            e.Graphics.DrawEllipse(targetPen, mousePt.X - 7f, mousePt.Y - 7f, 14f, 14f);
                         }
                     }
                 }
-            }
 
-            // 図枠中心移動 / 回転指定中のラバーバンド描画
-            if ((_isSettingFrameCenter || _isSettingFrameRotation) && !_currentRubberBandMousePos.IsEmpty) {
-                double cx = _isSettingFrameCenter ? _previewFrameCenterX : DrawingFrameService.Instance.CenterX;
-                double cy = _isSettingFrameCenter ? _previewFrameCenterY : DrawingFrameService.Instance.CenterY;
-                double angle = _isSettingFrameRotation ? _previewFrameRotation : DrawingFrameService.Instance.RotationAngleDeg;
+                // 画面入力モード中の遺構頂点追加ラバーバンド描画（新点自動追加ON時のみ、2点目以降）
+                if (chkScreenInput.Checked && chkScreenAutoAdd.Checked && tabControlData.SelectedIndex == 0 && !_isMovingVertex && !_isInsertingVertex) {
+                    if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                        var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+                        if (pts.Count > 0) {
+                            var lastPt = pts[pts.Count - 1];
+                            PointF startScreenPt = _vc.ToCanvasPoint(lastPt.X, lastPt.Y, picMapCanvas.Size);
+                            PointF endScreenPt = _currentRubberBandMousePos;
 
-                DrawingFrameService.Instance.DrawRubberBandFrame(
-                    e.Graphics,
-                    _vc,
-                    picMapCanvas.Size,
-                    cx,
-                    cy,
-                    angle,
-                    _currentRubberBandMousePos,
-                    _isSettingFrameRotation
-                );
+                            using (var rubberPen = new Pen(Color.FromArgb(255, 230, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                            using (var targetPen = new Pen(Color.FromArgb(0, 225, 255), 2f))
+                            using (var targetBrush = new SolidBrush(Color.FromArgb(180, 0, 225, 255))) {
+                                e.Graphics.DrawLine(rubberPen, startScreenPt, endScreenPt);
+                                e.Graphics.FillEllipse(targetBrush, endScreenPt.X - 4f, endScreenPt.Y - 4f, 8f, 8f);
+                                e.Graphics.DrawEllipse(targetPen, endScreenPt.X - 7f, endScreenPt.Y - 7f, 14f, 14f);
+                            }
+                        }
+                    }
+                }
+
+                // 表示位置指定中のラバーバンド描画（現状の表示位置 -> マウス位置）
+                if (_isSettingLabelPos && !_currentRubberBandMousePos.IsEmpty) {
+                    PointF? startPt = null;
+                    string labelPreview = "";
+                    if (_labelPosTargetLine != null) {
+                        var pts = SqliteManager.ParsePrecsText(_labelPosTargetLine.Precs);
+                        if (_labelPosTargetLine.X != 0.0 || _labelPosTargetLine.Y != 0.0) {
+                            startPt = _vc.ToCanvasPoint(_labelPosTargetLine.X, _labelPosTargetLine.Y, picMapCanvas.Size);
+                        } else if (pts.Count > 0) {
+                            startPt = _vc.ToCanvasPoint(pts[0].X, pts[0].Y, picMapCanvas.Size);
+                        }
+                        labelPreview = _labelPosTargetLine.Name;
+                    } else if (_labelPosTargetIkou != null) {
+                        if (_labelPosTargetIkou.X != 0.0 || _labelPosTargetIkou.Y != 0.0) {
+                            startPt = _vc.ToCanvasPoint(_labelPosTargetIkou.X, _labelPosTargetIkou.Y, picMapCanvas.Size);
+                        } else {
+                            var childLines = _db.IkouLList.Where(l => l.Id == _labelPosTargetIkou.Id).ToList();
+                            var allPts = childLines.SelectMany(l => SqliteManager.ParsePrecsText(l.Precs)).ToList();
+                            if (allPts.Count > 0) {
+                                double avgX = allPts.Average(p => p.X);
+                                double avgY = allPts.Average(p => p.Y);
+                                startPt = _vc.ToCanvasPoint(avgX, avgY, picMapCanvas.Size);
+                            }
+                        }
+                        labelPreview = _labelPosTargetIkou.Name;
+                    }
+
+                    if (startPt.HasValue) {
+                        PointF endPt = _currentRubberBandMousePos;
+                        using (var rubberPen = new Pen(Color.FromArgb(255, 140, 0), 2f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
+                        using (var targetPen = new Pen(Color.FromArgb(255, 140, 0), 2f))
+                        using (var targetBrush = new SolidBrush(Color.FromArgb(200, 255, 140, 0)))
+                        using (var previewFont = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold))
+                        using (var textBrush = new SolidBrush(Color.FromArgb(255, 240, 200)))
+                        using (var bgBrush = new SolidBrush(Color.FromArgb(200, 30, 30, 30))) {
+                            // 原点（現状位置）からマウス位置へラバーバンド
+                            e.Graphics.DrawLine(rubberPen, startPt.Value, endPt);
+                            e.Graphics.FillEllipse(targetBrush, startPt.Value.X - 4f, startPt.Value.Y - 4f, 8f, 8f);
+
+                            // 先端（ターゲット）
+                            e.Graphics.FillEllipse(targetBrush, endPt.X - 4f, endPt.Y - 4f, 8f, 8f);
+                            e.Graphics.DrawEllipse(targetPen, endPt.X - 8f, endPt.Y - 8f, 16f, 16f);
+
+                            // プレビュー文字描画
+                            if (!string.IsNullOrEmpty(labelPreview)) {
+                                var sz = e.Graphics.MeasureString(labelPreview, previewFont);
+                                e.Graphics.FillRectangle(bgBrush, endPt.X + 12f, endPt.Y - sz.Height / 2f, sz.Width + 6f, sz.Height);
+                                e.Graphics.DrawString(labelPreview, previewFont, textBrush, endPt.X + 15f, endPt.Y - sz.Height / 2f);
+                            }
+                        }
+                    }
+                }
+
+                // 図枠中心移動 / 回転指定中のラバーバンド描画
+                if ((_isSettingFrameCenter || _isSettingFrameRotation) && !_currentRubberBandMousePos.IsEmpty) {
+                    double cx = _isSettingFrameCenter ? _previewFrameCenterX : DrawingFrameService.Instance.CenterX;
+                    double cy = _isSettingFrameCenter ? _previewFrameCenterY : DrawingFrameService.Instance.CenterY;
+                    double angle = _isSettingFrameRotation ? _previewFrameRotation : DrawingFrameService.Instance.RotationAngleDeg;
+
+                    DrawingFrameService.Instance.DrawRubberBandFrame(
+                        e.Graphics,
+                        _vc,
+                        picMapCanvas.Size,
+                        cx,
+                        cy,
+                        angle,
+                        _currentRubberBandMousePos,
+                        _isSettingFrameRotation
+                    );
+                }
+            } catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"[picMapCanvas_Paint] Error: {ex.Message}");
             }
         }
 
