@@ -189,9 +189,11 @@ namespace MdbFdbExporter
                         var pLDate = cmdIkouL.Parameters.Add("@date", SqliteType.Text);
                         var pLPrecs = cmdIkouL.Parameters.Add("@precs", SqliteType.Text);
 
-                        // Group point data by IKOU (Master Feature)
+                        // Group point data by IKOU (Master Feature) and sort naturally
+                        var naturalComparer = new NaturalStringComparer();
                         var ikouGroups = pointData
                             .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikou)
+                            .OrderBy(g => string.IsNullOrEmpty(g.Key) ? "\uFFFF" : g.Key, naturalComparer)
                             .ToList();
 
                         int ikouIdCounter = 1;
@@ -221,9 +223,10 @@ namespace MdbFdbExporter
                             cmdIkou.ExecuteNonQuery();
                             ikouCount++;
 
-                            // Group by IKOULINE (Line Suffix)
+                            // Group by IKOULINE (Line Suffix) and sort naturally
                             var lineGroups = ikouGroup
                                 .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikouLine)
+                                .OrderBy(g => string.IsNullOrEmpty(g.Key) ? "" : g.Key, naturalComparer)
                                 .ToList();
 
                             int lidCounter = 1;
@@ -839,6 +842,33 @@ namespace MdbFdbExporter
 
             log($"Inserted {count:N0} records into '遺物'.");
             return count;
+        }
+    }
+
+    public class NaturalStringComparer : IComparer<string>
+    {
+        [System.Runtime.InteropServices.DllImport("shlwapi.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, ExactSpelling = true)]
+        private static extern int StrCmpLogicalW(string psz1, string psz2);
+
+        public int Compare(string? x, string? y)
+        {
+            if (x == null && y == null) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
+
+            if (OperatingSystem.IsWindows())
+            {
+                try
+                {
+                    return StrCmpLogicalW(x, y);
+                }
+                catch
+                {
+                    // フォールバック
+                }
+            }
+
+            return string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }
