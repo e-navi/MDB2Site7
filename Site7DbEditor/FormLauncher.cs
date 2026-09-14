@@ -61,7 +61,15 @@ namespace Site7DbEditor
             this.Text = $"遺跡調査システム Site7 - 現場選択  {versionStr}";
             lblSubtitle.Text = $"現場管理ランチャー  {versionStr}";
 
-            _currentRootFolder = SiteDiscoveryService.GetDefaultRootPath();
+            string savedRoot = Def.GetIniStr("Site7DbEditor", "SiteRootFolder");
+            if (!string.IsNullOrEmpty(savedRoot) && Directory.Exists(savedRoot))
+            {
+                _currentRootFolder = savedRoot;
+            }
+            else
+            {
+                _currentRootFolder = SiteDiscoveryService.GetDefaultRootPath();
+            }
             lblCurrentFolder.Text = $"現場フォルダ: {_currentRootFolder}";
 
             try
@@ -429,6 +437,7 @@ namespace Site7DbEditor
             if (fbd.ShowDialog(this) == DialogResult.OK)
             {
                 _currentRootFolder = fbd.SelectedPath;
+                Def.SetIniStr("Site7DbEditor", "SiteRootFolder", _currentRootFolder);
                 lblCurrentFolder.Text = $"現場フォルダ: {_currentRootFolder}";
                 RefreshSiteList();
             }
