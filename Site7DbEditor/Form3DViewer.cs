@@ -74,44 +74,49 @@ namespace Site7DbEditor
         private void InitializeComponent()
         {
             this.Text = "3次元立体確認ビューア (3D Surface & Point Cloud Viewer)";
-            this.Size = new Size(1360, 820);
+            this.Size = new Size(1400, 850);
+            this.MinimumSize = new Size(1100, 700);
             this.StartPosition = FormStartPosition.CenterParent;
             this.BackColor = Color.FromArgb(20, 22, 28);
             this.ForeColor = Color.White;
-            this.Font = new Font("Yu Gothic UI", 9F);
+            this.Font = new Font("Yu Gothic UI", 12.0F, FontStyle.Regular);
 
             // Top Toolbar
             pnlToolBar.Dock = DockStyle.Top;
-            pnlToolBar.Height = 44;
+            pnlToolBar.Height = 52;
             pnlToolBar.BackColor = Color.FromArgb(28, 30, 38);
             pnlToolBar.Padding = new Padding(6, 6, 6, 6);
 
             chkShowImageMesh.Text = "画像3D";
             chkShowImageMesh.Checked = true;
-            chkShowImageMesh.Location = new Point(8, 10);
+            chkShowImageMesh.Location = new Point(8, 12);
             chkShowImageMesh.AutoSize = true;
+            chkShowImageMesh.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             chkShowImageMesh.ForeColor = Color.FromArgb(0, 225, 255);
             chkShowImageMesh.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkShowWireframe.Text = "メッシュ線";
             chkShowWireframe.Checked = false;
-            chkShowWireframe.Location = new Point(78, 10);
+            chkShowWireframe.Location = new Point(112, 12);
             chkShowWireframe.AutoSize = true;
+            chkShowWireframe.Font = new Font("Yu Gothic UI", 11.5F);
             chkShowWireframe.ForeColor = Color.FromArgb(120, 220, 255);
             chkShowWireframe.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkOnlyPointCloudArea.Text = "点群範囲のみ";
             chkOnlyPointCloudArea.Checked = true;
-            chkOnlyPointCloudArea.Location = new Point(160, 10);
+            chkOnlyPointCloudArea.Location = new Point(232, 12);
             chkOnlyPointCloudArea.AutoSize = true;
+            chkOnlyPointCloudArea.Font = new Font("Yu Gothic UI", 11.5F);
             chkOnlyPointCloudArea.ForeColor = Color.FromArgb(255, 200, 100);
             chkOnlyPointCloudArea.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             cmbGridSpacing.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbGridSpacing.Items.AddRange(new object[] { "点間: 0.1m", "点間: 0.2m", "点間: 0.5m (標準)", "点間: 1.0m" });
             cmbGridSpacing.SelectedIndex = 2; // デフォルト: 0.5m
-            cmbGridSpacing.Location = new Point(265, 8);
-            cmbGridSpacing.Size = new Size(130, 25);
+            cmbGridSpacing.Location = new Point(375, 9);
+            cmbGridSpacing.Size = new Size(175, 32);
+            cmbGridSpacing.Font = new Font("Yu Gothic UI", 11.5F);
             cmbGridSpacing.BackColor = Color.FromArgb(40, 42, 54);
             cmbGridSpacing.ForeColor = Color.White;
             cmbGridSpacing.SelectedIndexChanged += (s, e) => {
@@ -130,15 +135,17 @@ namespace Site7DbEditor
 
             chkShowPointCloud.Text = "点群";
             chkShowPointCloud.Checked = true;
-            chkShowPointCloud.Location = new Point(405, 10);
+            chkShowPointCloud.Location = new Point(560, 12);
             chkShowPointCloud.AutoSize = true;
+            chkShowPointCloud.Font = new Font("Yu Gothic UI", 11.5F);
             chkShowPointCloud.ForeColor = Color.FromArgb(100, 255, 120);
             chkShowPointCloud.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkSwapXY.Text = "🔄点群XY入替";
             chkSwapXY.Checked = _pcService.SwapXY;
-            chkSwapXY.Location = new Point(460, 10);
+            chkSwapXY.Location = new Point(630, 12);
             chkSwapXY.AutoSize = true;
+            chkSwapXY.Font = new Font("Yu Gothic UI", 11.5F);
             chkSwapXY.ForeColor = Color.FromArgb(255, 230, 100);
             chkSwapXY.CheckedChanged += (s, e) => {
                 if (_pcService.HasPoints)
@@ -151,21 +158,23 @@ namespace Site7DbEditor
 
             chkShowIkouLines.Text = "遺構線";
             chkShowIkouLines.Checked = true;
-            chkShowIkouLines.Location = new Point(570, 10);
+            chkShowIkouLines.Location = new Point(770, 12);
             chkShowIkouLines.AutoSize = true;
+            chkShowIkouLines.Font = new Font("Yu Gothic UI", 11.5F);
             chkShowIkouLines.ForeColor = Color.FromArgb(255, 220, 80);
             chkShowIkouLines.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
             chkShowKikai.Text = "基準点";
             chkShowKikai.Checked = true;
-            chkShowKikai.Location = new Point(635, 10);
+            chkShowKikai.Location = new Point(860, 12);
             chkShowKikai.AutoSize = true;
+            chkShowKikai.Font = new Font("Yu Gothic UI", 11.5F);
             chkShowKikai.ForeColor = Color.FromArgb(255, 100, 100);
             chkShowKikai.CheckedChanged += (s, e) => pic3DCanvas.Invalidate();
 
-            var lblZ = new Label { Text = "高さ強調:", Location = new Point(700, 12), AutoSize = true, ForeColor = Color.LightGray };
-            trkZScale.Location = new Point(760, 8);
-            trkZScale.Size = new Size(85, 30);
+            var lblZ = new Label { Text = "高さ強調:", Location = new Point(945, 14), AutoSize = true, Font = new Font("Yu Gothic UI", 11.5F), ForeColor = Color.LightGray };
+            trkZScale.Location = new Point(1030, 9);
+            trkZScale.Size = new Size(100, 32);
             trkZScale.Minimum = 10;
             trkZScale.Maximum = 50;
             trkZScale.Value = 15;
@@ -177,21 +186,24 @@ namespace Site7DbEditor
             };
 
             lblZScaleVal.Text = "1.5x";
-            lblZScaleVal.Location = new Point(845, 12);
+            lblZScaleVal.Location = new Point(1135, 14);
             lblZScaleVal.AutoSize = true;
+            lblZScaleVal.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             lblZScaleVal.ForeColor = Color.FromArgb(0, 225, 255);
 
             btnResetView.Text = "🔄 視点リセット";
-            btnResetView.Location = new Point(880, 8);
-            btnResetView.Size = new Size(95, 28);
+            btnResetView.Location = new Point(1190, 8);
+            btnResetView.Size = new Size(140, 34);
+            btnResetView.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             btnResetView.BackColor = Color.FromArgb(43, 114, 186);
             btnResetView.ForeColor = Color.White;
             btnResetView.FlatStyle = FlatStyle.Flat;
             btnResetView.Click += (s, e) => ResetView();
 
             lblInfo.Text = "【操作】左ドラッグ: 回転 | 右/中ドラッグ: 移動 | ホイール: ズーム";
-            lblInfo.Location = new Point(985, 12);
+            lblInfo.Location = new Point(1340, 14);
             lblInfo.AutoSize = true;
+            lblInfo.Font = new Font("Yu Gothic UI", 10.5F);
             lblInfo.ForeColor = Color.FromArgb(170, 180, 200);
 
             pnlToolBar.Controls.AddRange(new Control[] {
@@ -571,7 +583,7 @@ namespace Site7DbEditor
             using (var penX = new Pen(Color.FromArgb(255, 75, 75), 2f))
             using (var penY = new Pen(Color.FromArgb(75, 230, 75), 2f))
             using (var penZ = new Pen(Color.FromArgb(60, 160, 255), 2f))
-            using (var font = new Font("Yu Gothic UI", 9F, FontStyle.Bold))
+            using (var font = new Font("Yu Gothic UI", 11.0F, FontStyle.Bold))
             using (var bX = new SolidBrush(Color.FromArgb(255, 100, 100)))
             using (var bY = new SolidBrush(Color.FromArgb(100, 255, 100)))
             using (var bZ = new SolidBrush(Color.FromArgb(100, 180, 255)))
@@ -739,7 +751,7 @@ namespace Site7DbEditor
         {
             using (var brush = new SolidBrush(Color.FromArgb(255, 70, 70)))
             using (var pen = new Pen(Color.White, 1.5f))
-            using (var font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold))
+            using (var font = new Font("Yu Gothic UI", 11.0F, FontStyle.Bold))
             using (var textBrush = new SolidBrush(Color.White))
             {
                 foreach (var k in _db.KikaiList)
@@ -761,11 +773,11 @@ namespace Site7DbEditor
 
         private void DrawHudInfo(Graphics g, int w, int h)
         {
-            using (var font = new Font("Yu Gothic UI", 9F))
+            using (var font = new Font("Yu Gothic UI", 11.5F))
             using (var brush = new SolidBrush(Color.FromArgb(180, 200, 220)))
             {
                 string info = $"方位角: {_camYaw:F0}° | 仰角: {_camPitch:F0}° | 視点距離: {_camDistance:F1}m | 高さ強調: {_zExaggeration:F1}x";
-                g.DrawString(info, font, brush, 12, h - 25);
+                g.DrawString(info, font, brush, 14, h - 32);
             }
         }
     }
