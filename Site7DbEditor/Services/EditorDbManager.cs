@@ -333,10 +333,16 @@ namespace Site7DbEditor.Services
 
             if (selectedTable.Contains("遺構L"))
             {
+                var ikouNameMap = new Dictionary<long, string>();
+                foreach (var ik in IkouList) {
+                    ikouNameMap[ik.Id] = ik.Name;
+                }
+
                 foreach (var item in IkouLList)
                 {
                     string val = filterCol switch
                     {
+                        "遺構名" or "IKOU_NAME" => (ikouNameMap.TryGetValue(item.Id, out var ikName) ? ikName : ""),
                         "遺構線名" or "NAME" => item.Name,
                         "レイヤ" or "LAYER" => item.Layer.ToString(),
                         "種類" or "MODE" => item.Mode.ToString(),

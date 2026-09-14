@@ -4349,7 +4349,7 @@ namespace Site7DbEditor {
 
             string selectedTable = cmbBatchTable.SelectedItem?.ToString() ?? "";
             if (selectedTable.Contains("遺構L")) {
-                cmbBatchFilterCol.Items.AddRange(new object[] { "NAME", "LAYER", "MODE", "DATE", "ID", "LID" });
+                cmbBatchFilterCol.Items.AddRange(new object[] { "IKOU_NAME", "NAME", "LAYER", "MODE", "DATE", "ID", "LID" });
                 cmbBatchUpdateCol.Items.AddRange(new object[] { "LAYER", "MODE", "NAME", "DATE" });
             } else if (selectedTable.Contains("遺構 (マスター)")) {
                 cmbBatchFilterCol.Items.AddRange(new object[] { "NAME", "DATE", "ID" });

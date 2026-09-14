@@ -60,7 +60,7 @@ namespace Site7DbEditor
             string selectedTable = cmbBatchTable.SelectedItem?.ToString() ?? "";
             if (selectedTable.StartsWith("遺構L"))
             {
-                cmbBatchFilterCol.Items.AddRange(new object[] { "遺構線名", "レイヤ", "種類", "日付", "ID", "LID" });
+                cmbBatchFilterCol.Items.AddRange(new object[] { "遺構名", "遺構線名", "レイヤ", "種類", "日付", "ID", "LID" });
                 cmbBatchUpdateCol.Items.AddRange(new object[] { "レイヤ", "種類", "遺構線接頭名", "日付" });
             }
             else if (selectedTable.StartsWith("遺構"))
