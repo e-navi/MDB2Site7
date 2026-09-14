@@ -389,6 +389,7 @@ namespace Site7DrawingEditor
         public string Name { get; set; } = "";
         public int Mode { get; set; }
         public int Layer { get; set; }
+        [System.ComponentModel.Browsable(false)]
         public string Precs { get; set; } = "";
     }
 

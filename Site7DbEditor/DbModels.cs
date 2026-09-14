@@ -25,6 +25,7 @@ namespace Site7DbEditor
         public double Z { get; set; }
         public int Layer { get; set; } = 1; // 1-16
         public string Date { get; set; } = "";
+        [Browsable(false)]
         public string Precs { get; set; } = "";
     }
 

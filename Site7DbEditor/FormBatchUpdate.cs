@@ -124,19 +124,59 @@ namespace Site7DbEditor
                     dgvBatchPreview.DataSource = new BindingList<object>(matchingItems);
                 }
 
-                var hiddenCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                ApplyColumnOrder(selectedTable);
+            }
+            catch { }
+        }
+
+        private void ApplyColumnOrder(string selectedTable)
+        {
+            string[] order;
+            if (selectedTable.Contains("遺構L"))
+            {
+                order = new[] { "Id", "Lid", "Name", "Mode", "X", "Y", "Z", "Layer", "Date" };
+            }
+            else if (selectedTable.Contains("遺構 (マスター)"))
+            {
+                order = new[] { "Id", "Name", "X", "Y", "Z", "Date" };
+            }
+            else if (selectedTable.Contains("遺物"))
+            {
+                order = new[] { "Id", "Chiku", "Soui", "Syubetu", "No", "X", "Y", "Z", "Layer", "Date" };
+            }
+            else if (selectedTable.Contains("基準点"))
+            {
+                order = new[] { "Id", "Name", "X", "Y", "Z", "Layer", "Date" };
+            }
+            else
+            {
+                return;
+            }
+
+            var hiddenCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "S", "V", "H", "KPName", "BPName", "KPH", "MRH", "Precs"
+            };
+
+            foreach (DataGridViewColumn col in dgvBatchPreview.Columns)
+            {
+                if (hiddenCols.Contains(col.Name))
                 {
-                    "S", "V", "H", "KPName", "BPName", "KPH", "MRH"
-                };
-                foreach (DataGridViewColumn col in dgvBatchPreview.Columns)
+                    col.Visible = false;
+                }
+            }
+
+            for (int i = 0; i < order.Length; i++)
+            {
+                if (dgvBatchPreview.Columns.Contains(order[i]))
                 {
-                    if (hiddenCols.Contains(col.Name))
+                    var col = dgvBatchPreview.Columns[order[i]];
+                    if (col != null && col.Visible)
                     {
-                        col.Visible = false;
+                        col.DisplayIndex = i;
                     }
                 }
             }
-            catch { }
         }
 
         private void BtnBatchExecute_Click(object? sender, EventArgs e)
