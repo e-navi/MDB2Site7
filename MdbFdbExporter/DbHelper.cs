@@ -349,8 +349,46 @@ namespace MdbFdbExporter
             return new string(chars);
         }
 
+        private static bool IsIndexProtected(int index, int length, List<(int start, int end)> protectedRanges)
+        {
+            if (protectedRanges == null || protectedRanges.Count == 0) return false;
+            int checkEnd = index + length - 1;
+            foreach (var range in protectedRanges)
+            {
+                if (Math.Max(index, range.start) <= Math.Min(checkEnd, range.end))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static List<(int start, int end)> GetProtectedRanges(string text, string ignoreKeywords)
+        {
+            var ranges = new List<(int start, int end)>();
+            if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(ignoreKeywords))
+                return ranges;
+
+            var words = ignoreKeywords
+                .Split(new[] { ',', '，', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(w => ToHalfWidth(w.Trim()))
+                .Where(w => !string.IsNullOrEmpty(w))
+                .ToList();
+
+            foreach (var word in words)
+            {
+                int idx = text.IndexOf(word, StringComparison.OrdinalIgnoreCase);
+                while (idx != -1)
+                {
+                    ranges.Add((idx, idx + word.Length - 1));
+                    idx = text.IndexOf(word, idx + 1, StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            return ranges;
+        }
+
         // Splitting Logic
-        public static (string ikou, string ikouLine) SplitGroupName(string groupName, SplitRule rule, string customRegexPattern = "")
+        public static (string ikou, string ikouLine) SplitGroupName(string groupName, SplitRule rule, string customRegexPattern = "", string ignoreKeywords = "")
         {
             if (string.IsNullOrWhiteSpace(groupName))
             {
@@ -358,6 +396,7 @@ namespace MdbFdbExporter
             }
 
             groupName = ToHalfWidth(groupName).Trim();
+            var protectedRanges = GetProtectedRanges(groupName, ignoreKeywords);
 
             switch (rule)
             {
@@ -367,7 +406,9 @@ namespace MdbFdbExporter
                     {
                         if (groupName.EndsWith(keyword))
                         {
-                            string prefix = groupName.Substring(0, groupName.Length - keyword.Length).TrimEnd('_', '-').Trim();
+                            int matchIdx = groupName.Length - keyword.Length;
+                            if (IsIndexProtected(matchIdx, keyword.Length, protectedRanges)) continue;
+                            string prefix = groupName.Substring(0, matchIdx).TrimEnd('_', '-').Trim();
                             return (prefix, keyword);
                         }
                     }
@@ -379,27 +420,35 @@ namespace MdbFdbExporter
                     {
                         string ikou = firstNumMatch.Groups["ikou"].Value.Trim();
                         string line = firstNumMatch.Groups["ikouline"].Value.Trim();
+                        if (IsIndexProtected(ikou.Length - 1, 1, protectedRanges))
+                        {
+                            return (groupName, "");
+                        }
                         return (ikou, line);
                     }
                     return (groupName, "");
 
                 case SplitRule.LastHyphen:
-                    int lastHyphen = groupName.LastIndexOf('-');
-                    if (lastHyphen > 0 && lastHyphen < groupName.Length - 1)
+                    for (int i = groupName.Length - 2; i > 0; i--)
                     {
-                        string prefix = groupName.Substring(0, lastHyphen).Trim();
-                        string suffix = groupName.Substring(lastHyphen + 1).Trim();
-                        return (prefix, suffix);
+                        if (groupName[i] == '-' && !IsIndexProtected(i, 1, protectedRanges))
+                        {
+                            string prefix = groupName.Substring(0, i).Trim();
+                            string suffix = groupName.Substring(i + 1).Trim();
+                            return (prefix, suffix);
+                        }
                     }
                     return (groupName, "");
 
                 case SplitRule.LastUnderscore:
-                    int lastUnderscore = groupName.LastIndexOf('_');
-                    if (lastUnderscore > 0 && lastUnderscore < groupName.Length - 1)
+                    for (int i = groupName.Length - 2; i > 0; i--)
                     {
-                        string prefix = groupName.Substring(0, lastUnderscore).Trim();
-                        string suffix = groupName.Substring(lastUnderscore + 1).Trim();
-                        return (prefix, suffix);
+                        if (groupName[i] == '_' && !IsIndexProtected(i, 1, protectedRanges))
+                        {
+                            string prefix = groupName.Substring(0, i).Trim();
+                            string suffix = groupName.Substring(i + 1).Trim();
+                            return (prefix, suffix);
+                        }
                     }
                     return (groupName, "");
 
@@ -441,14 +490,17 @@ namespace MdbFdbExporter
 
                         var normalizedDelimiters = delimiters.Select(d => ToHalfWidth(d)).ToList();
 
-                        // 1. Find all matches of all delimiters
+                        // 1. Find all matches of all delimiters that are NOT inside protected ranges
                         var matches = new List<(int startIndex, int length, string value)>();
                         foreach (var delim in normalizedDelimiters)
                         {
                             int idx = groupName.IndexOf(delim, StringComparison.OrdinalIgnoreCase);
                             while (idx != -1)
                             {
-                                matches.Add((idx, delim.Length, delim));
+                                if (!IsIndexProtected(idx, delim.Length, protectedRanges))
+                                {
+                                    matches.Add((idx, delim.Length, delim));
+                                }
                                 idx = groupName.IndexOf(delim, idx + 1, StringComparison.OrdinalIgnoreCase);
                             }
                         }
@@ -532,9 +584,10 @@ namespace MdbFdbExporter
             SplitRule rule1, string pattern1,
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
-            SplitRule rule4 = SplitRule.NoSplit, string pattern4 = "")
+            SplitRule rule4 = SplitRule.NoSplit, string pattern4 = "",
+            string ignoreKeywords = "")
         {
-            var res1 = SplitGroupName(groupName, rule1, pattern1);
+            var res1 = SplitGroupName(groupName, rule1, pattern1, ignoreKeywords);
             if (!string.IsNullOrEmpty(res1.ikouLine))
             {
                 return res1;
@@ -542,7 +595,7 @@ namespace MdbFdbExporter
 
             if (rule2 != SplitRule.NoSplit)
             {
-                var res2 = SplitGroupName(groupName, rule2, pattern2);
+                var res2 = SplitGroupName(groupName, rule2, pattern2, ignoreKeywords);
                 if (!string.IsNullOrEmpty(res2.ikouLine))
                 {
                     return res2;
@@ -551,7 +604,7 @@ namespace MdbFdbExporter
 
             if (rule3 != SplitRule.NoSplit)
             {
-                var res3 = SplitGroupName(groupName, rule3, pattern3);
+                var res3 = SplitGroupName(groupName, rule3, pattern3, ignoreKeywords);
                 if (!string.IsNullOrEmpty(res3.ikouLine))
                 {
                     return res3;
@@ -560,7 +613,7 @@ namespace MdbFdbExporter
 
             if (rule4 != SplitRule.NoSplit)
             {
-                var res4 = SplitGroupName(groupName, rule4, pattern4);
+                var res4 = SplitGroupName(groupName, rule4, pattern4, ignoreKeywords);
                 if (!string.IsNullOrEmpty(res4.ikouLine))
                 {
                     return res4;
@@ -577,6 +630,7 @@ namespace MdbFdbExporter
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
             SplitRule rule4, string pattern4,
+            string ignoreKeywords = "",
             Action<int>? progressCallback = null)
         {
             var dt = new DataTable();
@@ -610,7 +664,7 @@ namespace MdbFdbExporter
                 foreach (DataRow row in dt.Rows)
                 {
                     string groupVal = row["Group"]?.ToString() ?? "";
-                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
+                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords);
                     row["IKOU"] = splitResult.ikou;
                     row["IKOULINE"] = splitResult.ikouLine;
                 }
@@ -627,6 +681,7 @@ namespace MdbFdbExporter
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
             SplitRule rule4, string pattern4,
+            string ignoreKeywords = "",
             Action<int>? progressCallback = null)
         {
             var dt = new DataTable();
@@ -684,7 +739,7 @@ namespace MdbFdbExporter
                 foreach (DataRow row in dt.Rows)
                 {
                     string groupVal = row["GROUP_NAME"]?.ToString() ?? "";
-                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
+                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords);
                     row["IKOU"] = splitResult.ikou;
                     row["IKOULINE"] = splitResult.ikouLine;
                 }

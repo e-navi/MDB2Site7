@@ -46,6 +46,7 @@ namespace MdbFdbExporter
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
             SplitRule rule4, string pattern4,
+            string ignoreKeywords,
             Action<string> log)
         {
             try
@@ -192,7 +193,7 @@ namespace MdbFdbExporter
                         // Group point data by IKOU (Master Feature) and sort naturally
                         var naturalComparer = new NaturalStringComparer();
                         var ikouGroups = pointData
-                            .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikou)
+                            .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikou)
                             .OrderBy(g => string.IsNullOrEmpty(g.Key) ? "\uFFFF" : g.Key, naturalComparer)
                             .ToList();
 
@@ -225,7 +226,7 @@ namespace MdbFdbExporter
 
                             // Group by IKOULINE (Line Suffix) and sort naturally
                             var lineGroups = ikouGroup
-                                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikouLine)
+                                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikouLine)
                                 .OrderBy(g => string.IsNullOrEmpty(g.Key) ? "" : g.Key, naturalComparer)
                                 .ToList();
 

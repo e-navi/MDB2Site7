@@ -15,6 +15,7 @@ namespace MdbFdbExporter
 
         private SplitRule _rule1, _rule2, _rule3, _rule4;
         private string _pattern1 = "", _pattern2 = "", _pattern3 = "", _pattern4 = "";
+        private string _ignoreKeywords = "";
 
         private List<GroupPointData> _currentIkouPoints = new List<GroupPointData>();
 
@@ -260,7 +261,8 @@ namespace MdbFdbExporter
             SplitRule rule1, string pattern1,
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
-            SplitRule rule4, string pattern4)
+            SplitRule rule4, string pattern4,
+            string ignoreKeywords = "")
         {
             _allPoints = pointData ?? new List<GroupPointData>();
             _allGroups = groupNames ?? new List<string>();
@@ -268,6 +270,7 @@ namespace MdbFdbExporter
             _rule2 = rule2; _pattern2 = pattern2;
             _rule3 = rule3; _pattern3 = pattern3;
             _rule4 = rule4; _pattern4 = pattern4;
+            _ignoreKeywords = ignoreKeywords ?? "";
 
             // Extract all unique IKOU names
             var ikouSet = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -276,7 +279,7 @@ namespace MdbFdbExporter
             {
                 foreach (var pt in _allPoints)
                 {
-                    var split = DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4);
+                    var split = DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords);
                     if (!string.IsNullOrEmpty(split.ikou))
                         ikouSet.Add(split.ikou);
                 }
@@ -285,7 +288,7 @@ namespace MdbFdbExporter
             {
                 foreach (var grp in _allGroups)
                 {
-                    var split = DbHelper.SplitGroupNameChain(grp, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4);
+                    var split = DbHelper.SplitGroupNameChain(grp, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords);
                     if (!string.IsNullOrEmpty(split.ikou))
                         ikouSet.Add(split.ikou);
                 }
@@ -307,6 +310,10 @@ namespace MdbFdbExporter
             {
                 cmbIkouSelect.SelectedIndex = 0;
             }
+
+            // Invalidate canvases
+            picCanvas.Invalidate();
+            picCanvasAll.Invalidate();
         }
 
         private void SetupGridStyle()
@@ -335,7 +342,7 @@ namespace MdbFdbExporter
             // Filter points for selected IKOU
             _currentIkouPoints = _allPoints
                 .Where(pt => string.Equals(
-                    DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4).ikou,
+                    DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikou,
                     selectedIkou, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -355,7 +362,7 @@ namespace MdbFdbExporter
             {
                 foreach (var pt in _currentIkouPoints)
                 {
-                    var split = DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4);
+                    var split = DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords);
                     string lineName = string.IsNullOrEmpty(split.ikouLine) ? "(なし)" : split.ikouLine;
                     lineSet.Add(lineName);
 
@@ -370,13 +377,13 @@ namespace MdbFdbExporter
                 // Fallback using group names
                 var matchingGroups = _allGroups
                     .Where(g => string.Equals(
-                        DbHelper.SplitGroupNameChain(g, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4).ikou,
+                        DbHelper.SplitGroupNameChain(g, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikou,
                         selectedIkou, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
                 foreach (var g in matchingGroups)
                 {
-                    var split = DbHelper.SplitGroupNameChain(g, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4);
+                    var split = DbHelper.SplitGroupNameChain(g, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords);
                     string lineName = string.IsNullOrEmpty(split.ikouLine) ? "(なし)" : split.ikouLine;
                     lineSet.Add(lineName);
 
@@ -474,7 +481,7 @@ namespace MdbFdbExporter
 
             // Group Points by IKOULINE
             var lineGroups = _currentIkouPoints
-                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4).ikouLine)
+                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine)
                 .ToList();
 
             int colorIdx = 0;
@@ -640,7 +647,7 @@ namespace MdbFdbExporter
 
             // Group Points by IKOU
             var ikouGroups = _allPoints
-                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4).ikou)
+                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikou)
                 .ToList();
 
             int colorIdx = 0;
@@ -669,7 +676,7 @@ namespace MdbFdbExporter
 
                     var allScreenPts = new List<PointF>();
                     var lineGroups = ikouGroup
-                        .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4).ikouLine);
+                        .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine);
 
                     foreach (var lineGrp in lineGroups)
                     {
@@ -723,7 +730,7 @@ namespace MdbFdbExporter
 
                     var allScreenPts = new List<PointF>();
                     var lineGroups = ikouGroup
-                        .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4).ikouLine)
+                        .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine)
                         .ToList();
 
                     int lineColorIdx = 0;

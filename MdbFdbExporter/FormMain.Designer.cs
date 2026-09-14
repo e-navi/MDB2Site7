@@ -29,6 +29,8 @@ namespace MdbFdbExporter
             this.cmbPreset = new System.Windows.Forms.ComboBox();
             this.btnSavePreset = new System.Windows.Forms.Button();
             this.btnDeletePreset = new System.Windows.Forms.Button();
+            this.lblIgnoreWords = new System.Windows.Forms.Label();
+            this.txtIgnoreWords = new System.Windows.Forms.TextBox();
             this.lblRegexHint = new System.Windows.Forms.Label();
             this.lblPriority4 = new System.Windows.Forms.Label();
             this.cmbRule4 = new System.Windows.Forms.ComboBox();
@@ -167,6 +169,9 @@ namespace MdbFdbExporter
             // 
             this.grpSplit.BackColor = System.Drawing.Color.White;
             this.grpSplit.Controls.Add(this.btnDeletePreset);
+            this.grpSplit.Controls.Add(this.txtIgnoreWords);
+            this.grpSplit.Controls.Add(this.lblIgnoreWords);
+            this.grpSplit.Controls.Add(this.btnDeletePreset);
             this.grpSplit.Controls.Add(this.btnSavePreset);
             this.grpSplit.Controls.Add(this.cmbPreset);
             this.grpSplit.Controls.Add(this.lblPreset);
@@ -195,9 +200,9 @@ namespace MdbFdbExporter
             // lblPreset
             // 
             this.lblPreset.AutoSize = true;
-            this.lblPreset.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPreset.Font = new System.Drawing.Font("Yu Gothic UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.lblPreset.Location = new System.Drawing.Point(12, 28);
+            this.lblPreset.Location = new System.Drawing.Point(12, 24);
             this.lblPreset.Name = "lblPreset";
             this.lblPreset.Size = new System.Drawing.Size(64, 19);
             this.lblPreset.TabIndex = 11;
@@ -208,23 +213,23 @@ namespace MdbFdbExporter
             this.cmbPreset.BackColor = System.Drawing.Color.White;
             this.cmbPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbPreset.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbPreset.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cmbPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.cmbPreset.FormattingEnabled = true;
-            this.cmbPreset.Location = new System.Drawing.Point(90, 24);
+            this.cmbPreset.Location = new System.Drawing.Point(90, 21);
             this.cmbPreset.Name = "cmbPreset";
-            this.cmbPreset.Size = new System.Drawing.Size(244, 27);
+            this.cmbPreset.Size = new System.Drawing.Size(244, 25);
             this.cmbPreset.TabIndex = 12;
             // 
             // btnSavePreset
             // 
             this.btnSavePreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.btnSavePreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSavePreset.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnSavePreset.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnSavePreset.ForeColor = System.Drawing.Color.White;
-            this.btnSavePreset.Location = new System.Drawing.Point(340, 24);
+            this.btnSavePreset.Location = new System.Drawing.Point(340, 21);
             this.btnSavePreset.Name = "btnSavePreset";
-            this.btnSavePreset.Size = new System.Drawing.Size(68, 27);
+            this.btnSavePreset.Size = new System.Drawing.Size(68, 25);
             this.btnSavePreset.TabIndex = 13;
             this.btnSavePreset.Text = "💾 登録";
             this.btnSavePreset.UseVisualStyleBackColor = false;
@@ -233,168 +238,192 @@ namespace MdbFdbExporter
             // 
             this.btnDeletePreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.btnDeletePreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeletePreset.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnDeletePreset.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDeletePreset.ForeColor = System.Drawing.Color.White;
-            this.btnDeletePreset.Location = new System.Drawing.Point(412, 24);
+            this.btnDeletePreset.Location = new System.Drawing.Point(412, 21);
             this.btnDeletePreset.Name = "btnDeletePreset";
-            this.btnDeletePreset.Size = new System.Drawing.Size(68, 27);
+            this.btnDeletePreset.Size = new System.Drawing.Size(68, 25);
             this.btnDeletePreset.TabIndex = 14;
             this.btnDeletePreset.Text = "🗑 削除";
             this.btnDeletePreset.UseVisualStyleBackColor = false;
             // 
-            // lblRegexHint
+            // lblPriority1
             // 
-            this.lblRegexHint.Font = new System.Drawing.Font("Consolas", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblRegexHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
-            this.lblRegexHint.Location = new System.Drawing.Point(490, 24);
-            this.lblRegexHint.Name = "lblRegexHint";
-            this.lblRegexHint.Size = new System.Drawing.Size(110, 170);
-            this.lblRegexHint.TabIndex = 10;
-            this.lblRegexHint.Text = "【グループ例】\r\n・プレフィックス:\r\n  SK01,Pit12\r\n・サフィックス:\r\n  L,U,上,下\r\n・正規表現:\r\n  (?<ikou>...)\r\n  (?<ikouline>...)\r\n※優先順位順に\r\n判定されます";
-            // 
-            // txtRegexPattern4
-            // 
-            this.txtRegexPattern4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
-            this.txtRegexPattern4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegexPattern4.Enabled = false;
-            this.txtRegexPattern4.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtRegexPattern4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern4.Location = new System.Drawing.Point(340, 166);
-            this.txtRegexPattern4.Name = "txtRegexPattern4";
-            this.txtRegexPattern4.Size = new System.Drawing.Size(140, 26);
-            this.txtRegexPattern4.TabIndex = 8;
-            // 
-            // cmbRule4
-            // 
-            this.cmbRule4.BackColor = System.Drawing.Color.White;
-            this.cmbRule4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbRule4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbRule4.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.cmbRule4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.cmbRule4.FormattingEnabled = true;
-            this.cmbRule4.Location = new System.Drawing.Point(90, 166);
-            this.cmbRule4.Name = "cmbRule4";
-            this.cmbRule4.Size = new System.Drawing.Size(244, 27);
-            this.cmbRule4.TabIndex = 7;
-            // 
-            // lblPriority4
-            // 
-            this.lblPriority4.AutoSize = true;
-            this.lblPriority4.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblPriority4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority4.Location = new System.Drawing.Point(12, 169);
-            this.lblPriority4.Name = "lblPriority4";
-            this.lblPriority4.Size = new System.Drawing.Size(70, 19);
-            this.lblPriority4.TabIndex = 6;
-            this.lblPriority4.Text = "優先度 4:";
-            // 
-            // txtRegexPattern3
-            // 
-            this.txtRegexPattern3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
-            this.txtRegexPattern3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegexPattern3.Enabled = false;
-            this.txtRegexPattern3.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtRegexPattern3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern3.Location = new System.Drawing.Point(340, 130);
-            this.txtRegexPattern3.Name = "txtRegexPattern3";
-            this.txtRegexPattern3.Size = new System.Drawing.Size(140, 26);
-            this.txtRegexPattern3.TabIndex = 5;
-            // 
-            // cmbRule3
-            // 
-            this.cmbRule3.BackColor = System.Drawing.Color.White;
-            this.cmbRule3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbRule3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbRule3.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.cmbRule3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.cmbRule3.FormattingEnabled = true;
-            this.cmbRule3.Location = new System.Drawing.Point(90, 130);
-            this.cmbRule3.Name = "cmbRule3";
-            this.cmbRule3.Size = new System.Drawing.Size(244, 27);
-            this.cmbRule3.TabIndex = 4;
-            // 
-            // lblPriority3
-            // 
-            this.lblPriority3.AutoSize = true;
-            this.lblPriority3.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblPriority3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority3.Location = new System.Drawing.Point(12, 133);
-            this.lblPriority3.Name = "lblPriority3";
-            this.lblPriority3.Size = new System.Drawing.Size(70, 19);
-            this.lblPriority3.TabIndex = 3;
-            this.lblPriority3.Text = "優先度 3:";
-            // 
-            // txtRegexPattern2
-            // 
-            this.txtRegexPattern2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
-            this.txtRegexPattern2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegexPattern2.Enabled = false;
-            this.txtRegexPattern2.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtRegexPattern2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern2.Location = new System.Drawing.Point(340, 94);
-            this.txtRegexPattern2.Name = "txtRegexPattern2";
-            this.txtRegexPattern2.Size = new System.Drawing.Size(140, 26);
-            this.txtRegexPattern2.TabIndex = 2;
-            // 
-            // cmbRule2
-            // 
-            this.cmbRule2.BackColor = System.Drawing.Color.White;
-            this.cmbRule2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbRule2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbRule2.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.cmbRule2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.cmbRule2.FormattingEnabled = true;
-            this.cmbRule2.Location = new System.Drawing.Point(90, 94);
-            this.cmbRule2.Name = "cmbRule2";
-            this.cmbRule2.Size = new System.Drawing.Size(244, 27);
-            this.cmbRule2.TabIndex = 1;
-            // 
-            // lblPriority2
-            // 
-            this.lblPriority2.AutoSize = true;
-            this.lblPriority2.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblPriority2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority2.Location = new System.Drawing.Point(12, 97);
-            this.lblPriority2.Name = "lblPriority2";
-            this.lblPriority2.Size = new System.Drawing.Size(70, 19);
-            this.lblPriority2.TabIndex = 0;
-            this.lblPriority2.Text = "優先度 2:";
-            // 
-            // txtRegexPattern1
-            // 
-            this.txtRegexPattern1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
-            this.txtRegexPattern1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegexPattern1.Enabled = false;
-            this.txtRegexPattern1.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtRegexPattern1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern1.Location = new System.Drawing.Point(340, 58);
-            this.txtRegexPattern1.Name = "txtRegexPattern1";
-            this.txtRegexPattern1.Size = new System.Drawing.Size(140, 26);
-            this.txtRegexPattern1.TabIndex = 2;
+            this.lblPriority1.AutoSize = true;
+            this.lblPriority1.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPriority1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.lblPriority1.Location = new System.Drawing.Point(12, 53);
+            this.lblPriority1.Name = "lblPriority1";
+            this.lblPriority1.Size = new System.Drawing.Size(63, 17);
+            this.lblPriority1.TabIndex = 0;
+            this.lblPriority1.Text = "優先度 1:";
             // 
             // cmbRule1
             // 
             this.cmbRule1.BackColor = System.Drawing.Color.White;
             this.cmbRule1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRule1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbRule1.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbRule1.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cmbRule1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.cmbRule1.FormattingEnabled = true;
-            this.cmbRule1.Location = new System.Drawing.Point(90, 58);
+            this.cmbRule1.Location = new System.Drawing.Point(90, 50);
             this.cmbRule1.Name = "cmbRule1";
-            this.cmbRule1.Size = new System.Drawing.Size(244, 27);
+            this.cmbRule1.Size = new System.Drawing.Size(244, 25);
             this.cmbRule1.TabIndex = 1;
             // 
-            // lblPriority1
+            // txtRegexPattern1
             // 
-            this.lblPriority1.AutoSize = true;
-            this.lblPriority1.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblPriority1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority1.Location = new System.Drawing.Point(12, 61);
-            this.lblPriority1.Name = "lblPriority1";
-            this.lblPriority1.Size = new System.Drawing.Size(70, 19);
-            this.lblPriority1.TabIndex = 0;
-            this.lblPriority1.Text = "優先度 1:";
+            this.txtRegexPattern1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.txtRegexPattern1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtRegexPattern1.Enabled = false;
+            this.txtRegexPattern1.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtRegexPattern1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.txtRegexPattern1.Location = new System.Drawing.Point(340, 50);
+            this.txtRegexPattern1.Name = "txtRegexPattern1";
+            this.txtRegexPattern1.Size = new System.Drawing.Size(140, 24);
+            this.txtRegexPattern1.TabIndex = 2;
+            // 
+            // lblPriority2
+            // 
+            this.lblPriority2.AutoSize = true;
+            this.lblPriority2.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPriority2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.lblPriority2.Location = new System.Drawing.Point(12, 82);
+            this.lblPriority2.Name = "lblPriority2";
+            this.lblPriority2.Size = new System.Drawing.Size(63, 17);
+            this.lblPriority2.TabIndex = 0;
+            this.lblPriority2.Text = "優先度 2:";
+            // 
+            // cmbRule2
+            // 
+            this.cmbRule2.BackColor = System.Drawing.Color.White;
+            this.cmbRule2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRule2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbRule2.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbRule2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.cmbRule2.FormattingEnabled = true;
+            this.cmbRule2.Location = new System.Drawing.Point(90, 79);
+            this.cmbRule2.Name = "cmbRule2";
+            this.cmbRule2.Size = new System.Drawing.Size(244, 25);
+            this.cmbRule2.TabIndex = 1;
+            // 
+            // txtRegexPattern2
+            // 
+            this.txtRegexPattern2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.txtRegexPattern2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtRegexPattern2.Enabled = false;
+            this.txtRegexPattern2.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtRegexPattern2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.txtRegexPattern2.Location = new System.Drawing.Point(340, 79);
+            this.txtRegexPattern2.Name = "txtRegexPattern2";
+            this.txtRegexPattern2.Size = new System.Drawing.Size(140, 24);
+            this.txtRegexPattern2.TabIndex = 2;
+            // 
+            // lblPriority3
+            // 
+            this.lblPriority3.AutoSize = true;
+            this.lblPriority3.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPriority3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.lblPriority3.Location = new System.Drawing.Point(12, 111);
+            this.lblPriority3.Name = "lblPriority3";
+            this.lblPriority3.Size = new System.Drawing.Size(63, 17);
+            this.lblPriority3.TabIndex = 3;
+            this.lblPriority3.Text = "優先度 3:";
+            // 
+            // cmbRule3
+            // 
+            this.cmbRule3.BackColor = System.Drawing.Color.White;
+            this.cmbRule3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRule3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbRule3.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbRule3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.cmbRule3.FormattingEnabled = true;
+            this.cmbRule3.Location = new System.Drawing.Point(90, 108);
+            this.cmbRule3.Name = "cmbRule3";
+            this.cmbRule3.Size = new System.Drawing.Size(244, 25);
+            this.cmbRule3.TabIndex = 4;
+            // 
+            // txtRegexPattern3
+            // 
+            this.txtRegexPattern3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.txtRegexPattern3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtRegexPattern3.Enabled = false;
+            this.txtRegexPattern3.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtRegexPattern3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.txtRegexPattern3.Location = new System.Drawing.Point(340, 108);
+            this.txtRegexPattern3.Name = "txtRegexPattern3";
+            this.txtRegexPattern3.Size = new System.Drawing.Size(140, 24);
+            this.txtRegexPattern3.TabIndex = 5;
+            // 
+            // lblPriority4
+            // 
+            this.lblPriority4.AutoSize = true;
+            this.lblPriority4.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPriority4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.lblPriority4.Location = new System.Drawing.Point(12, 140);
+            this.lblPriority4.Name = "lblPriority4";
+            this.lblPriority4.Size = new System.Drawing.Size(63, 17);
+            this.lblPriority4.TabIndex = 6;
+            this.lblPriority4.Text = "優先度 4:";
+            // 
+            // cmbRule4
+            // 
+            this.cmbRule4.BackColor = System.Drawing.Color.White;
+            this.cmbRule4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRule4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbRule4.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbRule4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.cmbRule4.FormattingEnabled = true;
+            this.cmbRule4.Location = new System.Drawing.Point(90, 137);
+            this.cmbRule4.Name = "cmbRule4";
+            this.cmbRule4.Size = new System.Drawing.Size(244, 25);
+            this.cmbRule4.TabIndex = 7;
+            // 
+            // txtRegexPattern4
+            // 
+            this.txtRegexPattern4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.txtRegexPattern4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtRegexPattern4.Enabled = false;
+            this.txtRegexPattern4.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtRegexPattern4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.txtRegexPattern4.Location = new System.Drawing.Point(340, 137);
+            this.txtRegexPattern4.Name = "txtRegexPattern4";
+            this.txtRegexPattern4.Size = new System.Drawing.Size(140, 24);
+            this.txtRegexPattern4.TabIndex = 8;
+            // 
+            // lblIgnoreWords
+            // 
+            this.lblIgnoreWords.AutoSize = true;
+            this.lblIgnoreWords.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblIgnoreWords.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.lblIgnoreWords.Location = new System.Drawing.Point(12, 169);
+            this.lblIgnoreWords.Name = "lblIgnoreWords";
+            this.lblIgnoreWords.Size = new System.Drawing.Size(63, 17);
+            this.lblIgnoreWords.TabIndex = 9;
+            this.lblIgnoreWords.Text = "除外略称:";
+            // 
+            // txtIgnoreWords
+            // 
+            this.txtIgnoreWords.BackColor = System.Drawing.Color.White;
+            this.txtIgnoreWords.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtIgnoreWords.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtIgnoreWords.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.txtIgnoreWords.Location = new System.Drawing.Point(90, 166);
+            this.txtIgnoreWords.Name = "txtIgnoreWords";
+            this.txtIgnoreWords.Size = new System.Drawing.Size(390, 24);
+            this.txtIgnoreWords.TabIndex = 10;
+            this.txtIgnoreWords.Text = "SK, SD, SI, SB, SX, SE, SP, SC, SH, SA, SR, SN, SM";
+            // 
+            // lblRegexHint
+            // 
+            this.lblRegexHint.Font = new System.Drawing.Font("Consolas", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblRegexHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
+            this.lblRegexHint.Location = new System.Drawing.Point(490, 20);
+            this.lblRegexHint.Name = "lblRegexHint";
+            this.lblRegexHint.Size = new System.Drawing.Size(110, 175);
+            this.lblRegexHint.TabIndex = 10;
+            this.lblRegexHint.Text = "【グループ例】\r\n・略称保護:\r\n  SK,SD,SI...\r\n・区切り文字:\r\n  -,_,NS,U...\r\n・正規表現:\r\n  (?<ikou>...)\r\n  (?<ikouline>...)\r\n※優先度順に\r\n判定されます";
+
             // 
             // grpPreview
             // 
@@ -754,6 +783,8 @@ namespace MdbFdbExporter
         private System.Windows.Forms.Label lblPriority4;
         private System.Windows.Forms.ComboBox cmbRule4;
         private System.Windows.Forms.TextBox txtRegexPattern4;
+        private System.Windows.Forms.Label lblIgnoreWords;
+        private System.Windows.Forms.TextBox txtIgnoreWords;
         private System.Windows.Forms.Label lblRegexHint;
         private System.Windows.Forms.GroupBox grpPreview;
         private System.Windows.Forms.TabControl tabPreview;

@@ -88,6 +88,7 @@ namespace MdbFdbExporter
             public string Pattern3 { get; set; } = "";
             public SplitRule Rule4 { get; set; } = SplitRule.NoSplit;
             public string Pattern4 { get; set; } = "";
+            public string IgnoreKeywords { get; set; } = "SK, SD, SI, SB, SX, SE, SP, SC, SH, SA, SR, SN, SM";
             public bool ShiftJis { get; set; } = true;
 
             public override string ToString()
@@ -126,6 +127,7 @@ namespace MdbFdbExporter
             this.txtRegexPattern2.TextChanged += txtRegexPattern_TextChanged;
             this.txtRegexPattern3.TextChanged += txtRegexPattern_TextChanged;
             this.txtRegexPattern4.TextChanged += txtRegexPattern_TextChanged;
+            this.txtIgnoreWords.TextChanged += (s, e) => { if (!_isLoadingPreset) UpdatePreview(); };
 
             this.lstIkou.SelectedIndexChanged += lstIkou_SelectedIndexChanged;
             this.lstIkouLine.SelectedIndexChanged += lstIkouLine_SelectedIndexChanged;
@@ -567,6 +569,8 @@ namespace MdbFdbExporter
             txtRegexPattern4.Text = preset.Pattern4 ?? "";
             UpdateRulePatternBox(cmbRule4, txtRegexPattern4);
 
+            txtIgnoreWords.Text = string.IsNullOrEmpty(preset.IgnoreKeywords) ? "SK, SD, SI, SB, SX, SE, SP, SC, SH, SA, SR, SN, SM" : preset.IgnoreKeywords;
+
             chkShiftJis.Checked = preset.ShiftJis;
 
             _isLoadingPreset = false;
@@ -629,6 +633,7 @@ namespace MdbFdbExporter
                     existing.Pattern3 = txtRegexPattern3.Text.Trim();
                     if (cmbRule4.SelectedItem is ComboBoxItem i4) existing.Rule4 = i4.Rule;
                     existing.Pattern4 = txtRegexPattern4.Text.Trim();
+                    existing.IgnoreKeywords = txtIgnoreWords.Text.Trim();
                     existing.ShiftJis = chkShiftJis.Checked;
 
                     SavePresets();
@@ -731,6 +736,7 @@ namespace MdbFdbExporter
 
             SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
             string pattern1 = "", pattern2 = "", pattern3 = "", pattern4 = "";
+            string ignoreKeywords = "";
 
             if (cmbRule1.InvokeRequired)
             {
@@ -744,6 +750,7 @@ namespace MdbFdbExporter
                     pattern2 = txtRegexPattern2.Text.Trim();
                     pattern3 = txtRegexPattern3.Text.Trim();
                     pattern4 = txtRegexPattern4.Text.Trim();
+                    ignoreKeywords = txtIgnoreWords.Text.Trim();
                 }));
             }
             else
@@ -756,11 +763,12 @@ namespace MdbFdbExporter
                 pattern2 = txtRegexPattern2.Text.Trim();
                 pattern3 = txtRegexPattern3.Text.Trim();
                 pattern4 = txtRegexPattern4.Text.Trim();
+                ignoreKeywords = txtIgnoreWords.Text.Trim();
             }
 
             foreach (var groupName in _uniqueGroupNames)
             {
-                var split = DbHelper.SplitGroupNameChain(groupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
+                var split = DbHelper.SplitGroupNameChain(groupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords);
                 dt.Rows.Add(groupName, split.ikou, split.ikouLine);
             }
 
@@ -874,20 +882,23 @@ namespace MdbFdbExporter
             dtPoints.Columns.Add("Y", typeof(string));
             dtPoints.Columns.Add("Z", typeof(string));
 
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
-            string pattern1 = "", pattern2 = "", pattern3 = "";
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
+            string pattern1 = "", pattern2 = "", pattern3 = "", pattern4 = "";
+            string ignoreKeywords = txtIgnoreWords.Text.Trim();
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+            if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
             pattern1 = txtRegexPattern1.Text.Trim();
             pattern2 = txtRegexPattern2.Text.Trim();
             pattern3 = txtRegexPattern3.Text.Trim();
+            pattern4 = txtRegexPattern4.Text.Trim();
 
             if (_pointData != null && _pointData.Count > 0)
             {
                 foreach (var pt in _pointData)
                 {
-                    var split = DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3);
+                    var split = DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords);
                     if (string.Equals(split.ikou, selectedIkou, StringComparison.OrdinalIgnoreCase) &&
                         string.Equals(split.ikouLine, selectedLine, StringComparison.OrdinalIgnoreCase))
                     {
@@ -899,7 +910,7 @@ namespace MdbFdbExporter
             {
                 foreach (var groupName in _uniqueGroupNames)
                 {
-                    var split = DbHelper.SplitGroupNameChain(groupName, rule1, pattern1, rule2, pattern2, rule3, pattern3);
+                    var split = DbHelper.SplitGroupNameChain(groupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords);
                     if (string.Equals(split.ikou, selectedIkou, StringComparison.OrdinalIgnoreCase) &&
                         string.Equals(split.ikouLine, selectedLine, StringComparison.OrdinalIgnoreCase))
                     {
@@ -986,6 +997,7 @@ namespace MdbFdbExporter
             string pattern2 = txtRegexPattern2.Text.Trim();
             string pattern3 = txtRegexPattern3.Text.Trim();
             string pattern4 = txtRegexPattern4.Text.Trim();
+            string ignoreKeywords = txtIgnoreWords.Text.Trim();
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
@@ -993,7 +1005,7 @@ namespace MdbFdbExporter
 
             var ikouPoints = _pointData
                 .Where(pt => string.Equals(
-                    DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikou,
+                    DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikou,
                     ikouName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -1128,17 +1140,20 @@ namespace MdbFdbExporter
                 return;
             }
 
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
             string pattern1 = txtRegexPattern1.Text.Trim();
             string pattern2 = txtRegexPattern2.Text.Trim();
             string pattern3 = txtRegexPattern3.Text.Trim();
+            string pattern4 = txtRegexPattern4.Text.Trim();
+            string ignoreKeywords = txtIgnoreWords.Text.Trim();
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+            if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
 
             var ikouPoints = _pointData
                 .Where(pt => string.Equals(
-                    DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikou,
+                    DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikou,
                     selectedIkou, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -1194,7 +1209,7 @@ namespace MdbFdbExporter
                 selectedLine = "";
 
             var lineGroups = ikouPoints
-                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikouLine)
+                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikouLine)
                 .ToList();
 
             int colorIdx = 0;
@@ -1401,13 +1416,16 @@ namespace MdbFdbExporter
                 return;
             }
 
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
             string pattern1 = txtRegexPattern1.Text.Trim();
             string pattern2 = txtRegexPattern2.Text.Trim();
             string pattern3 = txtRegexPattern3.Text.Trim();
+            string pattern4 = txtRegexPattern4.Text.Trim();
+            string ignoreKeywords = txtIgnoreWords.Text.Trim();
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+            if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
 
             // Calculate Bounding Box across ALL points in Japanese Survey Coordinates (X=North, Y=East)
             double posXMin = _pointData.Min(p => p.Y);
@@ -1453,7 +1471,7 @@ namespace MdbFdbExporter
 
             // Group Points by IKOU
             var ikouGroups = _pointData
-                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikou)
+                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikou)
                 .ToList();
 
             using (var ikouFontNorm = new Font("Yu Gothic UI", 8F, FontStyle.Regular))
@@ -1470,7 +1488,7 @@ namespace MdbFdbExporter
                     Color dotClr = Color.FromArgb(95, 105, 120);
 
                     var allScreenPts = new List<PointF>();
-                    var lineGroups = ikouGroup.GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikouLine);
+                    var lineGroups = ikouGroup.GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikouLine);
 
                     foreach (var lineGrp in lineGroups)
                     {
@@ -1521,7 +1539,7 @@ namespace MdbFdbExporter
                     if (!isSelected) continue;
 
                     var allScreenPts = new List<PointF>();
-                    var lineGroups = ikouGroup.GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikouLine).ToList();
+                    var lineGroups = ikouGroup.GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikouLine).ToList();
 
                     int lineColorIdx = 0;
                     foreach (var lineGrp in lineGroups)
@@ -1829,6 +1847,7 @@ namespace MdbFdbExporter
         {
             SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
             string pattern1 = "", pattern2 = "", pattern3 = "", pattern4 = "";
+            string ignoreKeywords = txtIgnoreWords.Text.Trim();
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
@@ -1840,7 +1859,7 @@ namespace MdbFdbExporter
 
             using (var viewer = new FormIkouViewer())
             {
-                viewer.InitializeViewer(ikouName, _pointData, _uniqueGroupNames, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
+                viewer.InitializeViewer(ikouName, _pointData, _uniqueGroupNames, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords);
                 viewer.ShowDialog(this);
             }
         }
@@ -1892,6 +1911,7 @@ namespace MdbFdbExporter
             string pattern2 = txtRegexPattern2.Text.Trim();
             string pattern3 = txtRegexPattern3.Text.Trim();
             string pattern4 = txtRegexPattern4.Text.Trim();
+            string ignoreKeywords = txtIgnoreWords.Text.Trim();
 
             await Task.Run(() =>
             {
@@ -1908,6 +1928,7 @@ namespace MdbFdbExporter
                     rule2, pattern2,
                     rule3, pattern3,
                     rule4, pattern4,
+                    ignoreKeywords,
                     msg => Log(msg));
 
                 UpdateProgress(60);
@@ -1929,7 +1950,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log($"Reading Access MDB IBUTU data...");
-                            var dt = DbHelper.ExportMdb(ibutuPath, "IBUTU", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active records from MDB IBUTU."));
+                            var dt = DbHelper.ExportMdb(ibutuPath, "IBUTU", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords, count => Log($"Loaded {count:N0} active records from MDB IBUTU."));
                             string fileOut = Path.Combine(subFolder, "IBUTU_MDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported MDB IBUTU CSV to {fileOut}");
@@ -1942,7 +1963,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log($"Reading Access MDB IKOU data...");
-                            var dt = DbHelper.ExportMdb(ikouPath, "IKOU", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active records from MDB IKOU."));
+                            var dt = DbHelper.ExportMdb(ikouPath, "IKOU", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords, count => Log($"Loaded {count:N0} active records from MDB IKOU."));
                             string fileOut = Path.Combine(subFolder, "IKOU_MDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported MDB IKOU CSV to {fileOut}");
@@ -1959,7 +1980,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log("Reading Firebird FDB IBUTU_HAND_V data...");
-                            var dt = DbHelper.ExportFdb(fdbPath, "IBUTU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active records from FDB IBUTU."));
+                            var dt = DbHelper.ExportFdb(fdbPath, "IBUTU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords, count => Log($"Loaded {count:N0} active records from FDB IBUTU."));
                             string fileOut = Path.Combine(subFolder, "IBUTU_FDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported FDB IBUTU CSV to {fileOut}");
@@ -1969,7 +1990,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log("Reading Firebird FDB IKOU_HAND_V data...");
-                            var dt = DbHelper.ExportFdb(fdbPath, "IKOU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active joined records from FDB IKOU."));
+                            var dt = DbHelper.ExportFdb(fdbPath, "IKOU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords, count => Log($"Loaded {count:N0} active joined records from FDB IKOU."));
                             string fileOut = Path.Combine(subFolder, "IKOU_FDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported FDB IKOU CSV to {fileOut}");
