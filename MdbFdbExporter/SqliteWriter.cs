@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using Microsoft.Data.Sqlite;
@@ -298,6 +300,10 @@ namespace MdbFdbExporter
                         PopulateDefaultLayers(conn, tx, log);
 
                         tx.Commit();
+
+                        // Process SITE7.png Thumbnail (GENBA_IMG.jpg or template fallback)
+                        ProcessSiteThumbnail(activeDbFolder, targetSubFolder, rootDbFolder, isSite5, log);
+
                         log($"[SUCCESS] SQLite Export Completed successfully: {destDbPath}");
                         return (true, $"Exported {ikouCount} 遺構, {ikouLCount} 遺構L, {ibutuCount} 遺物, {kikaiCount} 基準点 to Site7 SQLite DB.", destDbPath);
                     }
@@ -307,6 +313,108 @@ namespace MdbFdbExporter
             {
                 log($"[ERROR] SQLite export failed: {ex.Message}");
                 return (false, ex.Message, "");
+            }
+        }
+
+        private static void ProcessSiteThumbnail(string activeDbFolder, string targetSubFolder, string rootDbFolder, bool isSite5, Action<string> log)
+        {
+            try
+            {
+                string destPngPath = Path.Combine(targetSubFolder, "SITE7.png");
+
+                // 1. 変換元フォルダ内に GENBA_IMG.jpg (大文字小文字問わず) があるか判定
+                string? genbaImgPath = null;
+                if (Directory.Exists(activeDbFolder))
+                {
+                    var jpgFiles = Directory.GetFiles(activeDbFolder, "*.*")
+                        .Where(f => Path.GetFileName(f).Equals("GENBA_IMG.jpg", StringComparison.OrdinalIgnoreCase) ||
+                                    Path.GetFileName(f).Equals("GENBA_IMG.jpeg", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+
+                    if (jpgFiles.Length > 0)
+                    {
+                        genbaImgPath = jpgFiles[0];
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(genbaImgPath) && File.Exists(genbaImgPath))
+                {
+                    log($"Found '{Path.GetFileName(genbaImgPath)}'. Converting to '{destPngPath}'...");
+                    using (var fs = new FileStream(genbaImgPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var img = Image.FromStream(fs))
+                    {
+                        img.Save(destPngPath, ImageFormat.Png);
+                    }
+                    log($"[SUCCESS] Converted '{Path.GetFileName(genbaImgPath)}' -> '{destPngPath}'.");
+                    return;
+                }
+
+                // 2. なければ NEW\\SITE7_FDB.png または NEW\\SITE7_MDB.png を探す
+                string defaultFileName = isSite5 ? "SITE7_MDB.png" : "SITE7_FDB.png";
+                string fallbackFileName = isSite5 ? "SITE7_FDB.png" : "SITE7_MDB.png";
+
+                string[] candidateDirs = new[]
+                {
+                    @"C:\SITE7\GENBA\NEW",
+                    Path.Combine(rootDbFolder, "NEW"),
+                    Path.GetFullPath(Path.Combine(rootDbFolder, "..", "NEW")),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NEW"),
+                    Path.Combine(activeDbFolder, "NEW")
+                };
+
+                string? templatePngPath = null;
+
+                // 優先テンプレート探索
+                foreach (var dir in candidateDirs)
+                {
+                    if (Directory.Exists(dir))
+                    {
+                        string p = Path.Combine(dir, defaultFileName);
+                        if (File.Exists(p))
+                        {
+                            templatePngPath = p;
+                            break;
+                        }
+                    }
+                }
+
+                // フォールバック探索
+                if (templatePngPath == null)
+                {
+                    foreach (var dir in candidateDirs)
+                    {
+                        if (Directory.Exists(dir))
+                        {
+                            string p1 = Path.Combine(dir, fallbackFileName);
+                            if (File.Exists(p1))
+                            {
+                                templatePngPath = p1;
+                                break;
+                            }
+                            string p2 = Path.Combine(dir, "SITE7.png");
+                            if (File.Exists(p2))
+                            {
+                                templatePngPath = p2;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (templatePngPath != null && File.Exists(templatePngPath))
+                {
+                    log($"Copying template thumbnail '{templatePngPath}' -> '{destPngPath}'...");
+                    File.Copy(templatePngPath, destPngPath, overwrite: true);
+                    log($"[SUCCESS] Stored default thumbnail '{destPngPath}'.");
+                }
+                else
+                {
+                    log($"[INFO] Template thumbnail '{defaultFileName}' not found in candidate folders.");
+                }
+            }
+            catch (Exception ex)
+            {
+                log($"[WARNING] Failed to process thumbnail image: {ex.Message}");
             }
         }
 
