@@ -61,12 +61,12 @@ namespace Site7DbEditor
             if (selectedTable.StartsWith("遺構L"))
             {
                 cmbBatchFilterCol.Items.AddRange(new object[] { "遺構線名", "レイヤ", "種類", "日付", "ID", "LID" });
-                cmbBatchUpdateCol.Items.AddRange(new object[] { "レイヤ", "種類", "遺構線名", "日付" });
+                cmbBatchUpdateCol.Items.AddRange(new object[] { "レイヤ", "種類", "遺構線接頭名", "日付" });
             }
             else if (selectedTable.StartsWith("遺構"))
             {
                 cmbBatchFilterCol.Items.AddRange(new object[] { "遺構名", "日付", "ID" });
-                cmbBatchUpdateCol.Items.AddRange(new object[] { "遺構名", "日付" });
+                cmbBatchUpdateCol.Items.AddRange(new object[] { "遺構接頭名", "日付" });
             }
             else if (selectedTable.StartsWith("遺物"))
             {
@@ -283,8 +283,15 @@ namespace Site7DbEditor
                 return;
             }
 
+            string valueDesc = updateCol switch
+            {
+                "遺構接頭名" => $"接頭名 '{updateVal}' ＋ 2桁連番 (例: {updateVal}01, {updateVal}02...)",
+                "遺構線接頭名" => $"接頭名 '{updateVal}' ＋ 遺構別1桁連番 (例: {updateVal}1, {updateVal}2...)",
+                _ => $"'{updateVal}'"
+            };
+
             var dr = MessageBox.Show(
-                $"対象テーブル: {selectedTable}\n更新対象列: {updateCol}\n変更後の値: '{updateVal}'\n対象件数: {matchingItems.Count} 件\n\n本当に一括更新を実行しますか？",
+                $"対象テーブル: {selectedTable}\n更新対象列: {updateCol}\n変更後の値: {valueDesc}\n対象件数: {matchingItems.Count} 件\n\n本当に一括更新を実行しますか？",
                 "一括更新の確認",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);

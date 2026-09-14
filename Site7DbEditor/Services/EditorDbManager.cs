@@ -403,6 +403,10 @@ namespace Site7DbEditor.Services
         {
             var items = GetBatchMatchingItems(selectedTable, filterCol, filterOp, filterVal);
             int successCount = 0;
+
+            var lineSeqMap = new Dictionary<long, int>();
+            int ikouSeq = 1;
+
             foreach (var obj in items)
             {
                 if (obj is IkouLModel line)
@@ -415,9 +419,14 @@ namespace Site7DbEditor.Services
                     {
                         line.Mode = mode;
                     }
-                    else if (updateCol == "遺構線名" || updateCol == "NAME")
+                    else if (updateCol == "遺構線接頭名" || updateCol == "遺構線名" || updateCol == "NAME")
                     {
-                        line.Name = updateVal;
+                        if (!lineSeqMap.TryGetValue(line.Id, out int curSeq))
+                        {
+                            curSeq = 1;
+                        }
+                        line.Name = $"{updateVal}{curSeq}";
+                        lineSeqMap[line.Id] = curSeq + 1;
                     }
                     else if (updateCol == "日付" || updateCol == "DATE")
                     {
@@ -427,8 +436,15 @@ namespace Site7DbEditor.Services
                 }
                 else if (obj is IkouModel ikou)
                 {
-                    if (updateCol == "遺構名" || updateCol == "NAME") ikou.Name = updateVal;
-                    else if (updateCol == "日付" || updateCol == "DATE") ikou.Date = updateVal;
+                    if (updateCol == "遺構接頭名" || updateCol == "遺構名" || updateCol == "NAME")
+                    {
+                        ikou.Name = $"{updateVal}{ikouSeq:D2}";
+                        ikouSeq++;
+                    }
+                    else if (updateCol == "日付" || updateCol == "DATE")
+                    {
+                        ikou.Date = updateVal;
+                    }
                     successCount++;
                 }
                 else if (obj is IbutuModel ibutu)
