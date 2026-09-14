@@ -82,17 +82,17 @@ namespace Site7DbEditor
         {
             string modeText = _isGaigyoMode ? "【外業】" : "【内業】";
             this.Text = $"外業・内業データ同期＆ポータブルSSD連携 {modeText}";
-            this.Size = new Size(980, 720);
-            this.MinimumSize = new Size(860, 580);
+            this.Size = new Size(1100, 780);
+            this.MinimumSize = new Size(960, 640);
             this.StartPosition = FormStartPosition.CenterParent;
-            this.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular);
+            this.Font = new Font("Yu Gothic UI", 12.0F, FontStyle.Regular);
             this.BackColor = Color.FromArgb(246, 248, 251);
 
             // 1. Header Panel
             panelHeader = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 78,
+                Height = 88,
                 BackColor = Color.FromArgb(28, 35, 48),
                 Padding = new Padding(20, 12, 20, 12)
             };
@@ -100,7 +100,7 @@ namespace Site7DbEditor
             lblHeaderTitle = new Label
             {
                 Text = $"🔌 外業・内業データ同期＆ポータブルSSD連携 {modeText}",
-                Font = new Font("Yu Gothic UI", 12.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 14.0F, FontStyle.Bold),
                 ForeColor = Color.White,
                 AutoSize = true,
                 Location = new Point(18, 12)
@@ -113,10 +113,10 @@ namespace Site7DbEditor
             lblHeaderSubtitle = new Label
             {
                 Text = $"現場: {_siteName} ({Path.GetFileName(_indoorDbPath)})  |  {roleDescription}",
-                Font = new Font("Yu Gothic UI", 9.0F),
+                Font = new Font("Yu Gothic UI", 10.5F),
                 ForeColor = Color.FromArgb(180, 195, 215),
                 AutoSize = true,
-                Location = new Point(20, 44)
+                Location = new Point(20, 48)
             };
 
             panelHeader.Controls.Add(lblHeaderTitle);
@@ -126,7 +126,7 @@ namespace Site7DbEditor
             panelFooter = new Panel
             {
                 Dock = DockStyle.Bottom,
-                Height = 88,
+                Height = 96,
                 BackColor = Color.White,
                 Padding = new Padding(20, 12, 20, 12)
             };
@@ -143,22 +143,22 @@ namespace Site7DbEditor
                 AutoSize = true,
                 Location = new Point(20, 14),
                 ForeColor = Color.FromArgb(40, 50, 70),
-                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold)
+                Font = new Font("Yu Gothic UI", 11.0F, FontStyle.Bold)
             };
 
             lblStatus = new Label
             {
                 Text = "SSD/外部メディアを検出中...",
                 AutoSize = true,
-                Location = new Point(20, 42),
+                Location = new Point(20, 44),
                 ForeColor = Color.FromArgb(100, 110, 130),
-                Font = new Font("Yu Gothic UI", 9.0F)
+                Font = new Font("Yu Gothic UI", 11.0F)
             };
 
             progressBar = new ProgressBar
             {
-                Location = new Point(20, 62),
-                Size = new Size(420, 12),
+                Location = new Point(20, 70),
+                Size = new Size(420, 14),
                 Visible = false,
                 Style = ProgressBarStyle.Continuous
             };
@@ -166,13 +166,13 @@ namespace Site7DbEditor
             btnExportToSsd = new Button
             {
                 Text = "📤 現場データをSSDへ出力...",
-                Size = new Size(185, 42),
-                Location = new Point(panelFooter.Width - 460, 18),
+                Size = new Size(230, 44),
+                Location = new Point(panelFooter.Width - 545, 18),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(240, 244, 250),
                 ForeColor = Color.FromArgb(24, 75, 140),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
                 Cursor = Cursors.Hand
             };
             btnExportToSsd.FlatAppearance.BorderColor = Color.FromArgb(180, 205, 235);
@@ -181,13 +181,13 @@ namespace Site7DbEditor
             btnSync = new Button
             {
                 Text = "📥 差分を取り込み（マージ）",
-                Size = new Size(190, 42),
-                Location = new Point(panelFooter.Width - 265, 18),
+                Size = new Size(220, 44),
+                Location = new Point(panelFooter.Width - 305, 18),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(24, 115, 204),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 10.0F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 12.0F, FontStyle.Bold),
                 Cursor = Cursors.Hand,
                 Enabled = false
             };
@@ -197,13 +197,13 @@ namespace Site7DbEditor
             btnClose = new Button
             {
                 Text = "閉じる",
-                Size = new Size(80, 42),
-                Location = new Point(panelFooter.Width - 65, 18),
+                Size = new Size(85, 44),
+                Location = new Point(panelFooter.Width - 75, 18),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(235, 238, 243),
                 ForeColor = Color.FromArgb(50, 60, 80),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 9.5F),
+                Font = new Font("Yu Gothic UI", 11.5F),
                 Cursor = Cursors.Hand
             };
             btnClose.FlatAppearance.BorderSize = 0;
@@ -220,8 +220,8 @@ namespace Site7DbEditor
             tabMain = new TabControl
             {
                 Dock = DockStyle.Fill,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
-                Padding = new Point(16, 6)
+                Font = new Font("Yu Gothic UI", 12.0F, FontStyle.Bold),
+                Padding = new Point(18, 8)
             };
 
             tabSync = new TabPage("⚡ 差分プレビュー & 同期");
@@ -248,7 +248,7 @@ namespace Site7DbEditor
             panelSource = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 85,
+                Height = 100,
                 BackColor = Color.White,
                 Padding = new Padding(15, 10, 15, 10)
             };
@@ -265,7 +265,7 @@ namespace Site7DbEditor
             var lblSourceTitle = new Label
             {
                 Text = sourcePrompt,
-                Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(40, 50, 70),
                 AutoSize = true,
                 Location = new Point(15, 10)
@@ -274,21 +274,21 @@ namespace Site7DbEditor
             cmbSources = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(15, 34),
-                Size = new Size(590, 28),
-                Font = new Font("Yu Gothic UI", 9.5F)
+                Location = new Point(15, 36),
+                Size = new Size(620, 32),
+                Font = new Font("Yu Gothic UI", 11.5F)
             };
             cmbSources.SelectedIndexChanged += cmbSources_SelectedIndexChanged;
 
             btnRescan = new Button
             {
                 Text = "🔄 再スキャン",
-                Size = new Size(110, 30),
-                Location = new Point(615, 33),
+                Size = new Size(130, 34),
+                Location = new Point(645, 35),
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(40, 50, 70),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 9.0F),
+                Font = new Font("Yu Gothic UI", 11.0F),
                 Cursor = Cursors.Hand
             };
             btnRescan.FlatAppearance.BorderColor = Color.FromArgb(200, 210, 225);
@@ -297,12 +297,12 @@ namespace Site7DbEditor
             btnBrowse = new Button
             {
                 Text = "📁 フォルダ参照...",
-                Size = new Size(130, 30),
-                Location = new Point(735, 33),
+                Size = new Size(150, 34),
+                Location = new Point(785, 35),
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(40, 50, 70),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 9.0F),
+                Font = new Font("Yu Gothic UI", 11.0F),
                 Cursor = Cursors.Hand
             };
             btnBrowse.FlatAppearance.BorderColor = Color.FromArgb(200, 210, 225);
@@ -312,9 +312,9 @@ namespace Site7DbEditor
             {
                 Text = "",
                 AutoSize = true,
-                Location = new Point(15, 64),
+                Location = new Point(15, 72),
                 ForeColor = Color.FromArgb(120, 130, 145),
-                Font = new Font("Yu Gothic UI", 8.5F)
+                Font = new Font("Yu Gothic UI", 10.5F)
             };
 
             panelSource.Controls.Add(lblSourceTitle);
@@ -327,7 +327,7 @@ namespace Site7DbEditor
             panelStats = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 78,
+                Height = 85,
                 BackColor = Color.FromArgb(246, 248, 251),
                 Padding = new Padding(10, 6, 10, 6)
             };
@@ -358,9 +358,9 @@ namespace Site7DbEditor
             panelFilter = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 40,
+                Height = 48,
                 BackColor = Color.White,
-                Padding = new Padding(15, 6, 15, 6)
+                Padding = new Padding(15, 8, 15, 8)
             };
             panelFilter.Paint += (s, e) =>
             {
@@ -371,18 +371,18 @@ namespace Site7DbEditor
             var lblFilter = new Label
             {
                 Text = "絞り込み:",
-                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(70, 80, 100),
                 AutoSize = true,
-                Location = new Point(12, 10)
+                Location = new Point(12, 12)
             };
 
-            radAll = new RadioButton { Text = "すべて", Checked = true, AutoSize = true, Location = new Point(85, 8), Font = new Font("Yu Gothic UI", 9.0F) };
-            radDiffOnly = new RadioButton { Text = "⚡ 差分のみ", AutoSize = true, Location = new Point(155, 8), Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold), ForeColor = Color.FromArgb(200, 80, 0) };
-            radIkou = new RadioButton { Text = "遺構", AutoSize = true, Location = new Point(265, 8), Font = new Font("Yu Gothic UI", 9.0F) };
-            radIkouL = new RadioButton { Text = "遺構線", AutoSize = true, Location = new Point(335, 8), Font = new Font("Yu Gothic UI", 9.0F) };
-            radIbutu = new RadioButton { Text = "遺物", AutoSize = true, Location = new Point(415, 8), Font = new Font("Yu Gothic UI", 9.0F) };
-            radKikai = new RadioButton { Text = "基準点", AutoSize = true, Location = new Point(485, 8), Font = new Font("Yu Gothic UI", 9.0F) };
+            radAll = new RadioButton { Text = "すべて", Checked = true, AutoSize = true, Location = new Point(100, 10), Font = new Font("Yu Gothic UI", 11.5F) };
+            radDiffOnly = new RadioButton { Text = "⚡ 差分のみ", AutoSize = true, Location = new Point(185, 10), Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold), ForeColor = Color.FromArgb(200, 80, 0) };
+            radIkou = new RadioButton { Text = "遺構", AutoSize = true, Location = new Point(310, 10), Font = new Font("Yu Gothic UI", 11.5F) };
+            radIkouL = new RadioButton { Text = "遺構線", AutoSize = true, Location = new Point(390, 10), Font = new Font("Yu Gothic UI", 11.5F) };
+            radIbutu = new RadioButton { Text = "遺物", AutoSize = true, Location = new Point(480, 10), Font = new Font("Yu Gothic UI", 11.5F) };
+            radKikai = new RadioButton { Text = "基準点", AutoSize = true, Location = new Point(560, 10), Font = new Font("Yu Gothic UI", 11.5F) };
 
             radAll.CheckedChanged += (s, e) => RefreshDiffGrid();
             radDiffOnly.CheckedChanged += (s, e) => RefreshDiffGrid();
@@ -412,23 +412,25 @@ namespace Site7DbEditor
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                RowTemplate = { Height = 28 },
+                RowTemplate = { Height = 34 },
+                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
+                ColumnHeadersHeight = 36,
                 EnableHeadersVisualStyles = false,
-                Font = new Font("Yu Gothic UI", 9.0F)
+                Font = new Font("Yu Gothic UI", 11.5F)
             };
 
             dgvDiff.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(50, 60, 80),
-                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
                 Alignment = DataGridViewContentAlignment.MiddleLeft
             };
 
-            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColType", HeaderText = "種別", Width = 90, FillWeight = 12 });
-            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColDiff", HeaderText = "状態", Width = 90, FillWeight = 12 });
-            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColName", HeaderText = "名称 / 項目", Width = 140, FillWeight = 20 });
-            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColOutdoor", HeaderText = "取り込み元データ（SSD側）", FillWeight = 30 });
+            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColType", HeaderText = "種別", Width = 110, FillWeight = 12 });
+            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColDiff", HeaderText = "状態", Width = 100, FillWeight = 11 });
+            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColName", HeaderText = "名称 / 項目", Width = 160, FillWeight = 20 });
+            dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColOutdoor", HeaderText = "取り込み元データ（SSD側）", FillWeight = 31 });
             dgvDiff.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColIndoor", HeaderText = "現在のローカルデータ", FillWeight = 26 });
 
             dgvDiff.CellFormatting += DgvDiff_CellFormatting;
@@ -444,7 +446,7 @@ namespace Site7DbEditor
             panelHistoryTop = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 50,
+                Height = 56,
                 BackColor = Color.White,
                 Padding = new Padding(15, 10, 15, 10)
             };
@@ -457,12 +459,12 @@ namespace Site7DbEditor
             btnRefreshHistory = new Button
             {
                 Text = "🔄 履歴を再読み込み",
-                Size = new Size(140, 30),
+                Size = new Size(180, 36),
                 Location = new Point(15, 10),
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(40, 50, 70),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 9.0F),
+                Font = new Font("Yu Gothic UI", 11.0F),
                 Cursor = Cursors.Hand
             };
             btnRefreshHistory.FlatAppearance.BorderColor = Color.FromArgb(200, 210, 225);
@@ -471,12 +473,12 @@ namespace Site7DbEditor
             btnOpenHistoryLog = new Button
             {
                 Text = "📄 ログファイルを開く (TSV)",
-                Size = new Size(165, 30),
-                Location = new Point(165, 10),
+                Size = new Size(210, 36),
+                Location = new Point(205, 10),
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(40, 50, 70),
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Yu Gothic UI", 9.0F),
+                Font = new Font("Yu Gothic UI", 11.0F),
                 Cursor = Cursors.Hand
             };
             btnOpenHistoryLog.FlatAppearance.BorderColor = Color.FromArgb(200, 210, 225);
@@ -497,25 +499,27 @@ namespace Site7DbEditor
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                RowTemplate = { Height = 28 },
+                RowTemplate = { Height = 34 },
+                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
+                ColumnHeadersHeight = 36,
                 EnableHeadersVisualStyles = false,
-                Font = new Font("Yu Gothic UI", 9.0F)
+                Font = new Font("Yu Gothic UI", 11.5F)
             };
 
             dgvHistory.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.FromArgb(240, 243, 248),
                 ForeColor = Color.FromArgb(50, 60, 80),
-                Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold),
                 Alignment = DataGridViewContentAlignment.MiddleLeft
             };
 
-            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHTime", HeaderText = "日時", Width = 140, FillWeight = 16 });
-            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHAction", HeaderText = "操作区分", Width = 150, FillWeight = 18 });
-            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHMachine", HeaderText = "端末名", Width = 110, FillWeight = 12 });
+            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHTime", HeaderText = "日時", Width = 160, FillWeight = 16 });
+            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHAction", HeaderText = "操作区分", Width = 160, FillWeight = 18 });
+            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHMachine", HeaderText = "端末名", Width = 130, FillWeight = 12 });
             dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHCounts", HeaderText = "同期詳細", FillWeight = 26 });
-            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHDef", HeaderText = "Defファイル", Width = 100, FillWeight = 12 });
-            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHBackup", HeaderText = "バックアップ", Width = 130, FillWeight = 16 });
+            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHDef", HeaderText = "Defファイル", Width = 120, FillWeight = 12 });
+            dgvHistory.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColHBackup", HeaderText = "バックアップ", Width = 140, FillWeight = 16 });
 
             tabHistory.Controls.Add(dgvHistory);
             tabHistory.Controls.Add(panelHistoryTop);
@@ -538,19 +542,19 @@ namespace Site7DbEditor
             var lblT = new Label
             {
                 Text = title,
-                Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+                Font = new Font("Yu Gothic UI", 11.0F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(70, 80, 100),
                 AutoSize = true,
-                Location = new Point(8, 5)
+                Location = new Point(10, 6)
             };
 
             lblValue = new Label
             {
                 Text = "新規: 0件 | 更新: 0件",
-                Font = new Font("Yu Gothic UI", 9.0F),
+                Font = new Font("Yu Gothic UI", 11.5F),
                 ForeColor = Color.FromArgb(100, 110, 130),
                 AutoSize = true,
-                Location = new Point(8, 26)
+                Location = new Point(10, 32)
             };
 
             p.Controls.Add(lblT);
@@ -569,13 +573,13 @@ namespace Site7DbEditor
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(240, 253, 244);
                 row.Cells["ColDiff"].Style.ForeColor = Color.FromArgb(22, 101, 52);
-                row.Cells["ColDiff"].Style.Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold);
+                row.Cells["ColDiff"].Style.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             }
             else if (diffType?.Contains("更新") == true)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(255, 251, 235);
                 row.Cells["ColDiff"].Style.ForeColor = Color.FromArgb(180, 83, 9);
-                row.Cells["ColDiff"].Style.Font = new Font("Yu Gothic UI", 9.0F, FontStyle.Bold);
+                row.Cells["ColDiff"].Style.Font = new Font("Yu Gothic UI", 11.5F, FontStyle.Bold);
             }
             else
             {
