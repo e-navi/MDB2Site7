@@ -339,23 +339,41 @@ CREATE TABLE IF NOT EXISTS '図面遺構' (
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 string[] parts = line.Split('\t');
+                double x = 0, y = 0, z = 0;
+                bool valid = false;
+
                 if (parts.Length >= 4)
                 {
-                    if (double.TryParse(parts[1].Trim(), CultureInfo.InvariantCulture, out double x) &&
-                        double.TryParse(parts[2].Trim(), CultureInfo.InvariantCulture, out double y) &&
-                        double.TryParse(parts[3].Trim(), CultureInfo.InvariantCulture, out double z))
+                    if (double.TryParse(parts[1].Trim(), CultureInfo.InvariantCulture, out x) &&
+                        double.TryParse(parts[2].Trim(), CultureInfo.InvariantCulture, out y) &&
+                        double.TryParse(parts[3].Trim(), CultureInfo.InvariantCulture, out z))
                     {
-                        result.Add(new Point3D(x, y, z));
+                        valid = true;
                     }
                 }
                 else if (parts.Length >= 3)
                 {
-                    if (double.TryParse(parts[0].Trim(), CultureInfo.InvariantCulture, out double x) &&
-                        double.TryParse(parts[1].Trim(), CultureInfo.InvariantCulture, out double y) &&
-                        double.TryParse(parts[2].Trim(), CultureInfo.InvariantCulture, out double z))
+                    if (double.TryParse(parts[0].Trim(), CultureInfo.InvariantCulture, out x) &&
+                        double.TryParse(parts[1].Trim(), CultureInfo.InvariantCulture, out y) &&
+                        double.TryParse(parts[2].Trim(), CultureInfo.InvariantCulture, out z))
                     {
-                        result.Add(new Point3D(x, y, z));
+                        valid = true;
                     }
+                }
+
+                if (valid)
+                {
+                    if (result.Count > 0)
+                    {
+                        var prev = result[result.Count - 1];
+                        if (Math.Abs(x - prev.X) < 0.0005 &&
+                            Math.Abs(y - prev.Y) < 0.0005 &&
+                            Math.Abs(z - prev.Z) < 0.001)
+                        {
+                            continue; // 重複頂点をスキップ
+                        }
+                    }
+                    result.Add(new Point3D(x, y, z));
                 }
             }
             return result;

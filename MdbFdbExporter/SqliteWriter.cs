@@ -230,7 +230,24 @@ namespace MdbFdbExporter
                             foreach (var lineGrp in lineGroups)
                             {
                                 string lineName = string.IsNullOrEmpty(lineGrp.Key) ? "" : lineGrp.Key;
-                                var linePts = lineGrp.ToList();
+                                var rawLinePts = lineGrp.ToList();
+                                if (rawLinePts.Count == 0) continue;
+
+                                // 連続する重複座標の点を取り除く
+                                var linePts = new List<GroupPointData>();
+                                GroupPointData? prevPtRecord = null;
+                                foreach (var pt in rawLinePts)
+                                {
+                                    if (prevPtRecord != null &&
+                                        Math.Abs(pt.X - prevPtRecord.X) < 0.0005 &&
+                                        Math.Abs(pt.Y - prevPtRecord.Y) < 0.0005 &&
+                                        Math.Abs(pt.Z - prevPtRecord.Z) < 0.001)
+                                    {
+                                        continue; // 重複頂点をスキップ
+                                    }
+                                    linePts.Add(pt);
+                                    prevPtRecord = pt;
+                                }
                                 if (linePts.Count == 0) continue;
 
                                 double lineAvgX = linePts.Average(p => p.X);

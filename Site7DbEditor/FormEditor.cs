@@ -2737,6 +2737,16 @@ namespace Site7DbEditor {
             {
                 if (_selectedPointIndex >= 0 && dgvPrecs.DataSource is BindingList<IkouPointRecord> pts && _selectedPointIndex < pts.Count) {
                     if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
+                        // 前後の頂点と同一座標の重複チェック
+                        if (_selectedPointIndex > 0 && SqliteManager.IsSamePoint(x, y, z, pts[_selectedPointIndex - 1].X, pts[_selectedPointIndex - 1].Y, pts[_selectedPointIndex - 1].Z)) {
+                            MessageBox.Show("前の頂点と同じ座標です。重複する頂点座標への更新はできません。", "入力チェック", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        if (_selectedPointIndex < pts.Count - 1 && SqliteManager.IsSamePoint(x, y, z, pts[_selectedPointIndex + 1].X, pts[_selectedPointIndex + 1].Y, pts[_selectedPointIndex + 1].Z)) {
+                            MessageBox.Show("次の頂点と同じ座標です。重複する頂点座標への更新はできません。", "入力チェック", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
                         var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
                         pts[_selectedPointIndex].X = x;
                         pts[_selectedPointIndex].Y = y;
@@ -2907,8 +2917,15 @@ namespace Site7DbEditor {
             if (tabIdx == 0) // 遺構 (構成座標)
             {
                 if (GetSelectedDataBoundItem<IkouLModel>(dgvIkouL) is IkouLModel selectedLine) {
-                    var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
                     var pts = SqliteManager.ParsePrecsText(selectedLine.Precs);
+
+                    // 末尾の頂点と同一座標の重複チェック
+                    if (pts.Count > 0 && SqliteManager.IsSamePoint(x, y, z, pts[pts.Count - 1].X, pts[pts.Count - 1].Y, pts[pts.Count - 1].Z)) {
+                        MessageBox.Show("末尾の頂点と同じ座標です。重複する頂点は追加できません。", "入力チェック", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    var original = (IkouLModel)EditorLogService.CloneRecord(EditorLogService.REC_TYPE_IKOUL, selectedLine);
 
                     int nextPid = pts.Count > 0 ? pts.Max(p => p.Pid) + 1 : 1;
                     pts.Add(new IkouPointRecord {
