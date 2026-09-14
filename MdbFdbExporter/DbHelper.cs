@@ -748,5 +748,78 @@ namespace MdbFdbExporter
             progressCallback?.Invoke(dt.Rows.Count);
             return dt;
         }
+
+        // Export raw table data from Access MDB without filters
+        public static DataTable ExportRawMdb(string mdbPath, string tableName)
+        {
+            var dt = new DataTable();
+            string connStr = GetMdbConnectionString(mdbPath);
+            string query = $"SELECT * FROM [{tableName}] ORDER BY [ID]";
+
+            using (var conn = new OleDbConnection(connStr))
+            {
+                conn.Open();
+                using (var cmd = new OleDbCommand(query, conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+            }
+
+            return dt;
+        }
+
+        // Export raw table or query data from Firebird FDB without filters
+        public static DataTable ExportRawFdb(string fdbPath, string queryOrTable)
+        {
+            var dt = new DataTable();
+            string connStr = GetFdbConnectionString(fdbPath);
+            string query = queryOrTable.Contains(" ") ? queryOrTable : $"SELECT * FROM \"{queryOrTable}\" ORDER BY \"ID\"";
+
+            using (var conn = new FbConnection(connStr))
+            {
+                conn.Open();
+                using (var cmd = new FbCommand(query, conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+            }
+
+            return dt;
+        }
+
+        // Export raw IKOU data from Firebird FDB joining IKOU_HAND_V and IKOU_HAND_G without filters
+        public static DataTable ExportRawFdbIkou(string fdbPath)
+        {
+            var dt = new DataTable();
+            string connStr = GetFdbConnectionString(fdbPath);
+            string query = @"
+                SELECT 
+                    v.*, 
+                    g.""IKOUNAME"" AS ""G_IKOUNAME"", 
+                    g.""GROUPNO"" AS ""G_GROUPNO"", 
+                    g.""CHIKU"" AS ""G_CHIKU"", 
+                    g.""SOUI"" AS ""G_SOUI"", 
+                    g.""GDELETEFLG"", 
+                    g.""GINVISIBLE"",
+                    g.""EX1"" AS ""G_EX1"", 
+                    g.""EX2"" AS ""G_EX2""
+                FROM ""IKOU_HAND_V"" v
+                LEFT JOIN ""IKOU_HAND_G"" g ON v.""IKOU_G_ID"" = g.""ID""
+                ORDER BY v.""ID""";
+
+            using (var conn = new FbConnection(connStr))
+            {
+                conn.Open();
+                using (var cmd = new FbCommand(query, conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+            }
+
+            return dt;
+        }
     }
 }

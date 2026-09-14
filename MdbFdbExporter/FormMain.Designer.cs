@@ -62,6 +62,7 @@ namespace MdbFdbExporter
             this.grpAllIkouCanvas = new System.Windows.Forms.GroupBox();
             this.picAllIkouCanvas = new System.Windows.Forms.PictureBox();
             this.btnAnalyze = new System.Windows.Forms.Button();
+            this.btnRawCsvExport = new System.Windows.Forms.Button();
             this.btnShowLog = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.chkShiftJis = new System.Windows.Forms.CheckBox();
@@ -656,6 +657,19 @@ namespace MdbFdbExporter
             this.btnAnalyze.Text = "🔍 1. 接続確認 && 解析実行";
             this.btnAnalyze.UseVisualStyleBackColor = false;
             // 
+            // btnRawCsvExport
+            // 
+            this.btnRawCsvExport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(124)))), ((int)(((byte)(58)))), ((int)(((byte)(237)))));
+            this.btnRawCsvExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRawCsvExport.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnRawCsvExport.ForeColor = System.Drawing.Color.White;
+            this.btnRawCsvExport.Location = new System.Drawing.Point(440, 846);
+            this.btnRawCsvExport.Name = "btnRawCsvExport";
+            this.btnRawCsvExport.Size = new System.Drawing.Size(126, 40);
+            this.btnRawCsvExport.TabIndex = 7;
+            this.btnRawCsvExport.Text = "🧪 生CSV出力";
+            this.btnRawCsvExport.UseVisualStyleBackColor = false;
+            // 
             // btnShowLog
             // 
             this.btnShowLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
@@ -665,7 +679,7 @@ namespace MdbFdbExporter
             this.btnShowLog.Location = new System.Drawing.Point(574, 846);
             this.btnShowLog.Name = "btnShowLog";
             this.btnShowLog.Size = new System.Drawing.Size(126, 40);
-            this.btnShowLog.TabIndex = 7;
+            this.btnShowLog.TabIndex = 8;
             this.btnShowLog.Text = "📋 ログ表示";
             this.btnShowLog.UseVisualStyleBackColor = false;
             // 
@@ -679,7 +693,7 @@ namespace MdbFdbExporter
             this.btnExport.Location = new System.Drawing.Point(710, 846);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(274, 40);
-            this.btnExport.TabIndex = 9;
+            this.btnExport.TabIndex = 10;
             this.btnExport.Text = "🚀 2. Site7 SQLite DB 変換出力";
             this.btnExport.UseVisualStyleBackColor = false;
             // 
@@ -688,13 +702,13 @@ namespace MdbFdbExporter
             this.chkShiftJis.AutoSize = true;
             this.chkShiftJis.Checked = true;
             this.chkShiftJis.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShiftJis.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkShiftJis.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.chkShiftJis.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
-            this.chkShiftJis.Location = new System.Drawing.Point(250, 854);
+            this.chkShiftJis.Location = new System.Drawing.Point(240, 854);
             this.chkShiftJis.Name = "chkShiftJis";
-            this.chkShiftJis.Size = new System.Drawing.Size(225, 24);
-            this.chkShiftJis.TabIndex = 8;
-            this.chkShiftJis.Text = "Shift-JIS 出力 (Excel互換モード)";
+            this.chkShiftJis.Size = new System.Drawing.Size(195, 23);
+            this.chkShiftJis.TabIndex = 6;
+            this.chkShiftJis.Text = "Shift-JIS 出力 (Excel互換)";
             this.chkShiftJis.UseVisualStyleBackColor = true;
             // 
             // pbProgress
@@ -725,6 +739,7 @@ namespace MdbFdbExporter
             this.Controls.Add(this.chkShiftJis);
             this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnShowLog);
+            this.Controls.Add(this.btnRawCsvExport);
             this.Controls.Add(this.btnAnalyze);
             this.Controls.Add(this.grpAllIkouCanvas);
             this.Controls.Add(this.grpPreview);
@@ -804,6 +819,7 @@ namespace MdbFdbExporter
         private System.Windows.Forms.GroupBox grpAllIkouCanvas;
         private System.Windows.Forms.PictureBox picAllIkouCanvas;
         private System.Windows.Forms.Button btnAnalyze;
+        private System.Windows.Forms.Button btnRawCsvExport;
         private System.Windows.Forms.Button btnShowLog;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.CheckBox chkShiftJis;

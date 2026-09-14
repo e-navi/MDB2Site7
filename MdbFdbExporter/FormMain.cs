@@ -112,6 +112,7 @@ namespace MdbFdbExporter
             this.btnShowLog.Click += (s, e) => FormLog.ShowLogWindow(this);
             this.lstDbFolders.SelectedIndexChanged += lstDbFolders_SelectedIndexChanged;
             this.btnAnalyze.Click += btnAnalyze_Click;
+            this.btnRawCsvExport.Click += btnRawCsvExport_Click;
             this.btnExport.Click += btnExport_Click;
 
             this.cmbPreset.SelectedIndexChanged += cmbPreset_SelectedIndexChanged;
@@ -2030,6 +2031,121 @@ namespace MdbFdbExporter
             }
         }
 
+        private async void btnRawCsvExport_Click(object? sender, EventArgs e)
+        {
+            string folder = _activeDbFolder;
+            string outDir = _outFolder;
+            if (string.IsNullOrEmpty(folder) || !Directory.Exists(folder))
+            {
+                MessageBox.Show("DB格納フォルダが指定されていないか、存在しません。", "フォルダエラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(outDir))
+            {
+                MessageBox.Show("出力先フォルダが指定されていません。", "フォルダエラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string activeFolderName = Path.GetFileName(folder.TrimEnd('\\', '/'));
+            if (string.IsNullOrEmpty(activeFolderName) || activeFolderName == ".")
+                activeFolderName = "Site7_Export";
+
+            string subFolder = Path.Combine(outDir, activeFolderName);
+            try
+            {
+                if (!Directory.Exists(subFolder))
+                {
+                    Directory.CreateDirectory(subFolder);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"出力フォルダを作成できませんでした: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            SetUiEnabled(false);
+            UpdateProgress(0);
+            Log("=== Starting Raw Data CSV Export (Test) ===");
+            bool isSite5 = _isSite5;
+            bool useShiftJis = chkShiftJis.Checked;
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    UpdateProgress(20);
+                    if (isSite5)
+                    {
+                        string ibutuPath = Path.Combine(folder, "IBUTU.MDB");
+                        string ikouPath = Path.Combine(folder, "IKOU.MDB");
+
+                        if (File.Exists(ibutuPath))
+                        {
+                            Log("Reading raw MDB IBUTU data...");
+                            var dtIbutu = DbHelper.ExportRawMdb(ibutuPath, "IBUTU");
+                            string outIbutu = Path.Combine(subFolder, "遺物.csv");
+                            CsvWriter.SaveToCsv(dtIbutu, outIbutu, useShiftJis);
+                            Log($"[SUCCESS] Exported raw MDB IBUTU ({dtIbutu.Rows.Count:N0} records) to '{outIbutu}'");
+                        }
+                        else
+                        {
+                            Log($"[WARNING] '{ibutuPath}' not found.");
+                        }
+
+                        UpdateProgress(60);
+
+                        if (File.Exists(ikouPath))
+                        {
+                            Log("Reading raw MDB IKOU data...");
+                            var dtIkou = DbHelper.ExportRawMdb(ikouPath, "IKOU");
+                            string outIkou = Path.Combine(subFolder, "遺構.csv");
+                            CsvWriter.SaveToCsv(dtIkou, outIkou, useShiftJis);
+                            Log($"[SUCCESS] Exported raw MDB IKOU ({dtIkou.Rows.Count:N0} records) to '{outIkou}'");
+                        }
+                        else
+                        {
+                            Log($"[WARNING] '{ikouPath}' not found.");
+                        }
+                    }
+                    else
+                    {
+                        string fdbPath = Path.Combine(folder, "GENBA_DATA.FDB");
+                        if (File.Exists(fdbPath))
+                        {
+                            Log("Reading raw Firebird FDB IBUTU_HAND_V data...");
+                            var dtIbutu = DbHelper.ExportRawFdb(fdbPath, "IBUTU_HAND_V");
+                            string outIbutu = Path.Combine(subFolder, "遺物.csv");
+                            CsvWriter.SaveToCsv(dtIbutu, outIbutu, useShiftJis);
+                            Log($"[SUCCESS] Exported raw FDB IBUTU ({dtIbutu.Rows.Count:N0} records) to '{outIbutu}'");
+
+                            UpdateProgress(60);
+
+                            Log("Reading raw Firebird FDB IKOU_HAND_V & IKOU_HAND_G data...");
+                            var dtIkou = DbHelper.ExportRawFdbIkou(fdbPath);
+                            string outIkou = Path.Combine(subFolder, "遺構.csv");
+                            CsvWriter.SaveToCsv(dtIkou, outIkou, useShiftJis);
+                            Log($"[SUCCESS] Exported raw FDB IKOU ({dtIkou.Rows.Count:N0} records) to '{outIkou}'");
+                        }
+                        else
+                        {
+                            Log($"[WARNING] '{fdbPath}' not found.");
+                        }
+                    }
+                    UpdateProgress(100);
+                    Log($"=== Raw Data CSV Export Finished: Output to '{subFolder}' ===");
+                }
+                catch (Exception ex)
+                {
+                    Log($"[ERROR] Raw CSV Export failed: {ex.Message}");
+                }
+            });
+
+            SetUiEnabled(true);
+            MessageBox.Show($"生の遺構・遺物データをCSVに出力しました。\n\n出力先: {subFolder}", "生CSV出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void UpdateProgress(int percentage)
         {
             if (pbProgress.InvokeRequired)
@@ -2050,6 +2166,7 @@ namespace MdbFdbExporter
             }
             btnSettings.Enabled = enabled;
             btnShowLog.Enabled = enabled;
+            btnRawCsvExport.Enabled = enabled;
             lstDbFolders.Enabled = enabled;
             btnAnalyze.Enabled = enabled;
             btnExport.Enabled = enabled;
