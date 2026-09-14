@@ -310,15 +310,18 @@ namespace MdbFdbExporter
         private void SetupGridStyle()
         {
             dgvIkouPoints.EnableHeadersVisualStyles = false;
-            dgvIkouPoints.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 45, 66);
-            dgvIkouPoints.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvIkouPoints.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            dgvIkouPoints.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 35);
-            dgvIkouPoints.DefaultCellStyle.ForeColor = Color.White;
-            dgvIkouPoints.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 180, 216);
-            dgvIkouPoints.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvIkouPoints.GridColor = Color.FromArgb(60, 60, 70);
+            dgvIkouPoints.BackgroundColor = Color.FromArgb(248, 250, 252);
+            dgvIkouPoints.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(241, 245, 249);
+            dgvIkouPoints.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(30, 41, 59);
+            dgvIkouPoints.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold);
+            dgvIkouPoints.DefaultCellStyle.BackColor = Color.White;
+            dgvIkouPoints.DefaultCellStyle.ForeColor = Color.FromArgb(15, 23, 42);
+            dgvIkouPoints.DefaultCellStyle.SelectionBackColor = Color.FromArgb(37, 99, 235);
+            dgvIkouPoints.DefaultCellStyle.SelectionForeColor = Color.White;
+            dgvIkouPoints.DefaultCellStyle.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Regular);
+            dgvIkouPoints.GridColor = Color.FromArgb(226, 232, 240);
             dgvIkouPoints.BorderStyle = BorderStyle.None;
+            dgvIkouPoints.RowTemplate.Height = 26;
         }
 
         private void cmbIkouSelect_SelectedIndexChanged(object? sender, EventArgs e)

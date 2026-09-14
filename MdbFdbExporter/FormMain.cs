@@ -277,10 +277,10 @@ namespace MdbFdbExporter
 
         private void btnToggleGrid_Click(object? sender, EventArgs e)
         {
-            btnToggleGrid.BackColor = Color.FromArgb(0, 180, 216);
-            btnToggleGrid.ForeColor = Color.Black;
-            btnToggle2D.BackColor = Color.FromArgb(53, 55, 76);
-            btnToggle2D.ForeColor = Color.White;
+            btnToggleGrid.BackColor = Color.FromArgb(37, 99, 235);
+            btnToggleGrid.ForeColor = Color.White;
+            btnToggle2D.BackColor = Color.FromArgb(226, 232, 240);
+            btnToggle2D.ForeColor = Color.FromArgb(30, 41, 59);
 
             dgvPoints.Visible = true;
             picEmbedded2D.Visible = false;
@@ -288,10 +288,10 @@ namespace MdbFdbExporter
 
         private void btnToggle2D_Click(object? sender, EventArgs e)
         {
-            btnToggle2D.BackColor = Color.FromArgb(0, 180, 216);
-            btnToggle2D.ForeColor = Color.Black;
-            btnToggleGrid.BackColor = Color.FromArgb(53, 55, 76);
-            btnToggleGrid.ForeColor = Color.White;
+            btnToggle2D.BackColor = Color.FromArgb(37, 99, 235);
+            btnToggle2D.ForeColor = Color.White;
+            btnToggleGrid.BackColor = Color.FromArgb(226, 232, 240);
+            btnToggleGrid.ForeColor = Color.FromArgb(30, 41, 59);
 
             picEmbedded2D.Visible = true;
             dgvPoints.Visible = false;
@@ -302,35 +302,40 @@ namespace MdbFdbExporter
         private void SetupDataGridViewStyle()
         {
             dgvPreview.EnableHeadersVisualStyles = false;
-            dgvPreview.BackgroundColor = Color.FromArgb(30, 30, 35);
-            dgvPreview.ForeColor = Color.White;
-            dgvPreview.GridColor = Color.FromArgb(50, 50, 60);
+            dgvPreview.BackgroundColor = Color.FromArgb(248, 250, 252);
+            dgvPreview.ForeColor = Color.FromArgb(15, 23, 42);
+            dgvPreview.GridColor = Color.FromArgb(226, 232, 240);
             dgvPreview.RowHeadersVisible = false;
             dgvPreview.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPreview.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
-            dgvPreview.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 45, 66);
-            dgvPreview.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(0, 180, 216);
-            dgvPreview.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold);
+            dgvPreview.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(241, 245, 249);
+            dgvPreview.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(30, 41, 59);
+            dgvPreview.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold);
 
-            dgvPreview.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 35);
-            dgvPreview.DefaultCellStyle.ForeColor = Color.White;
-            dgvPreview.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 180, 216);
-            dgvPreview.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvPreview.DefaultCellStyle.BackColor = Color.White;
+            dgvPreview.DefaultCellStyle.ForeColor = Color.FromArgb(15, 23, 42);
+            dgvPreview.DefaultCellStyle.SelectionBackColor = Color.FromArgb(37, 99, 235);
+            dgvPreview.DefaultCellStyle.SelectionForeColor = Color.White;
+            dgvPreview.DefaultCellStyle.Font = new Font("Yu Gothic UI", 11F, FontStyle.Regular);
+            dgvPreview.RowTemplate.Height = 30;
         }
 
         private void SetupPointsDataGridViewStyle()
         {
             dgvPoints.EnableHeadersVisualStyles = false;
-            dgvPoints.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(43, 45, 66);
-            dgvPoints.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvPoints.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold);
-            dgvPoints.DefaultCellStyle.BackColor = Color.FromArgb(30, 30, 35);
-            dgvPoints.DefaultCellStyle.ForeColor = Color.White;
-            dgvPoints.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 180, 216);
-            dgvPoints.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvPoints.GridColor = Color.FromArgb(60, 60, 70);
+            dgvPoints.BackgroundColor = Color.FromArgb(248, 250, 252);
+            dgvPoints.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(241, 245, 249);
+            dgvPoints.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(30, 41, 59);
+            dgvPoints.ColumnHeadersDefaultCellStyle.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Bold);
+            dgvPoints.DefaultCellStyle.BackColor = Color.White;
+            dgvPoints.DefaultCellStyle.ForeColor = Color.FromArgb(15, 23, 42);
+            dgvPoints.DefaultCellStyle.SelectionBackColor = Color.FromArgb(37, 99, 235);
+            dgvPoints.DefaultCellStyle.SelectionForeColor = Color.White;
+            dgvPoints.DefaultCellStyle.Font = new Font("Yu Gothic UI", 10.5F, FontStyle.Regular);
+            dgvPoints.GridColor = Color.FromArgb(226, 232, 240);
             dgvPoints.BorderStyle = BorderStyle.None;
+            dgvPoints.RowTemplate.Height = 26;
         }
 
         private void Log(string message)
