@@ -4209,8 +4209,13 @@ namespace Site7DbEditor {
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
-            // テキスト入力中・セル編集中の場合は通常のカーソル操作を優先
-            if (this.ActiveControl is TextBox || this.ActiveControl is ComboBox || (this.ActiveControl is DataGridView dgv && dgv.IsCurrentCellInEditMode)) {
+            // DataGridView、テキスト入力、選択コンボ等にフォーカスがある場合は通常のコントロール操作（行移動・カーソル移動等）を優先
+            Control? active = this.ActiveControl;
+            while (active is ContainerControl container && container.ActiveControl != null && container.ActiveControl != active) {
+                active = container.ActiveControl;
+            }
+
+            if (active is DataGridView || active is TextBox || active is ComboBox || active is ListBox || active is TreeView || (active != null && active.Parent is DataGridView)) {
                 return base.ProcessCmdKey(ref msg, keyData);
             }
 
