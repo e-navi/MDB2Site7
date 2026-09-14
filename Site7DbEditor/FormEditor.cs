@@ -258,9 +258,9 @@ namespace Site7DbEditor {
                 colLid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             var colName = dgvIkouL.Columns["Name"];
-            if (colName != null) { colName.DisplayIndex = 1; colName.HeaderText = "線名"; colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
+            if (colName != null) { colName.DisplayIndex = 1; colName.HeaderText = "遺構線名"; colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
             var colMode = dgvIkouL.Columns["Mode"];
-            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "開閉"; colMode.Width = 52; }
+            if (colMode != null) { colMode.DisplayIndex = 2; colMode.HeaderText = "種類"; colMode.Width = 60; }
             var colLayer = dgvIkouL.Columns["Layer"];
             if (colLayer != null) { colLayer.DisplayIndex = 3; colLayer.HeaderText = "レイヤ"; colLayer.Width = 60; }
         }

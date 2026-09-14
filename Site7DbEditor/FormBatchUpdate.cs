@@ -132,6 +132,23 @@ namespace Site7DbEditor
         private void ApplyColumnOrder(string selectedTable)
         {
             string[] order;
+            Dictionary<string, string> headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Id", "ID" },
+                { "Lid", "LID" },
+                { "Name", selectedTable.Contains("基準点") ? "基準点名" : (selectedTable.Contains("遺構L") ? "遺構線名" : "遺構名") },
+                { "Mode", "種類" },
+                { "Chiku", "出土地点" },
+                { "Soui", "出土層位" },
+                { "Syubetu", "種別" },
+                { "No", "No" },
+                { "X", "X" },
+                { "Y", "Y" },
+                { "Z", "Z" },
+                { "Layer", "レイヤ" },
+                { "Date", "日付" }
+            };
+
             if (selectedTable.Contains("遺構L"))
             {
                 order = new[] { "Id", "Lid", "Name", "Mode", "X", "Y", "Z", "Layer", "Date" };
@@ -163,6 +180,10 @@ namespace Site7DbEditor
                 if (hiddenCols.Contains(col.Name))
                 {
                     col.Visible = false;
+                }
+                else if (headers.TryGetValue(col.Name, out var headerText))
+                {
+                    col.HeaderText = headerText;
                 }
             }
 

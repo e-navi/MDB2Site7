@@ -6,24 +6,39 @@ namespace Site7DbEditor
 {
     public class IkouModel
     {
+        [DisplayName("ID")]
         public long Id { get; set; }
+        [DisplayName("遺構名")]
         public string Name { get; set; } = "";
+        [DisplayName("X")]
         public double X { get; set; }
+        [DisplayName("Y")]
         public double Y { get; set; }
+        [DisplayName("Z")]
         public double Z { get; set; }
+        [DisplayName("日付")]
         public string Date { get; set; } = "";
     }
 
     public class IkouLModel
     {
+        [DisplayName("ID")]
         public long Id { get; set; }
+        [DisplayName("LID")]
         public long Lid { get; set; }
+        [DisplayName("遺構線名")]
         public string Name { get; set; } = "";
+        [DisplayName("種類")]
         public int Mode { get; set; } // 0: 開放, 1: 閉
+        [DisplayName("X")]
         public double X { get; set; }
+        [DisplayName("Y")]
         public double Y { get; set; }
+        [DisplayName("Z")]
         public double Z { get; set; }
+        [DisplayName("レイヤ")]
         public int Layer { get; set; } = 1; // 1-16
+        [DisplayName("日付")]
         public string Date { get; set; } = "";
         [Browsable(false)]
         public string Precs { get; set; } = "";
@@ -31,10 +46,15 @@ namespace Site7DbEditor
 
     public class IkouPointRecord
     {
+        [DisplayName("PID")]
         public int Pid { get; set; }
+        [DisplayName("X")]
         public double X { get; set; }
+        [DisplayName("Y")]
         public double Y { get; set; }
+        [DisplayName("Z")]
         public double Z { get; set; }
+        [DisplayName("日付")]
         public string Date { get; set; } = "";
         [Browsable(false)]
         public double S { get; set; }
@@ -54,15 +74,25 @@ namespace Site7DbEditor
 
     public class IbutuModel
     {
+        [DisplayName("ID")]
         public long Id { get; set; }
+        [DisplayName("出土地点")]
         public string Chiku { get; set; } = "";
+        [DisplayName("出土層位")]
         public string Soui { get; set; } = "";
+        [DisplayName("種別")]
         public string Syubetu { get; set; } = "";
+        [DisplayName("No")]
         public int No { get; set; }
+        [DisplayName("X")]
         public double X { get; set; }
+        [DisplayName("Y")]
         public double Y { get; set; }
+        [DisplayName("Z")]
         public double Z { get; set; }
+        [DisplayName("レイヤ")]
         public int Layer { get; set; } = 1; // 1-16
+        [DisplayName("日付")]
         public string Date { get; set; } = "";
         [Browsable(false)]
         public double S { get; set; }
@@ -82,12 +112,19 @@ namespace Site7DbEditor
 
     public class KikaiModel
     {
+        [DisplayName("ID")]
         public long Id { get; set; }
+        [DisplayName("基準点名")]
         public string Name { get; set; } = "";
+        [DisplayName("X")]
         public double X { get; set; }
+        [DisplayName("Y")]
         public double Y { get; set; }
+        [DisplayName("Z")]
         public double Z { get; set; }
+        [DisplayName("レイヤ")]
         public int Layer { get; set; } = 1; // 1-16
+        [DisplayName("日付")]
         public string Date { get; set; } = "";
         [Browsable(false)]
         public double S { get; set; }

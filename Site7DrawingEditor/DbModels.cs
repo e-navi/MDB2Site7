@@ -375,19 +375,29 @@ namespace Site7DrawingEditor
 
     public class MasterIkouModel
     {
+        [System.ComponentModel.DisplayName("ID")]
         public long Id { get; set; }
+        [System.ComponentModel.DisplayName("遺構名")]
         public string Name { get; set; } = "";
+        [System.ComponentModel.DisplayName("X")]
         public double X { get; set; }
+        [System.ComponentModel.DisplayName("Y")]
         public double Y { get; set; }
+        [System.ComponentModel.DisplayName("Z")]
         public double Z { get; set; }
     }
 
     public class MasterIkouLModel
     {
+        [System.ComponentModel.DisplayName("ID")]
         public long Id { get; set; }
+        [System.ComponentModel.DisplayName("LID")]
         public long Lid { get; set; }
+        [System.ComponentModel.DisplayName("遺構線名")]
         public string Name { get; set; } = "";
+        [System.ComponentModel.DisplayName("種類")]
         public int Mode { get; set; }
+        [System.ComponentModel.DisplayName("レイヤ")]
         public int Layer { get; set; }
         [System.ComponentModel.Browsable(false)]
         public string Precs { get; set; } = "";
@@ -395,24 +405,39 @@ namespace Site7DrawingEditor
 
     public class MasterIbutuModel
     {
+        [System.ComponentModel.DisplayName("ID")]
         public long Id { get; set; }
+        [System.ComponentModel.DisplayName("出土地点")]
         public string Chiku { get; set; } = "";
+        [System.ComponentModel.DisplayName("出土層位")]
         public string Soui { get; set; } = "";
+        [System.ComponentModel.DisplayName("種別")]
         public string Syubetu { get; set; } = "";
+        [System.ComponentModel.DisplayName("No")]
         public long No { get; set; }
+        [System.ComponentModel.DisplayName("X")]
         public double X { get; set; }
+        [System.ComponentModel.DisplayName("Y")]
         public double Y { get; set; }
+        [System.ComponentModel.DisplayName("Z")]
         public double Z { get; set; }
+        [System.ComponentModel.DisplayName("レイヤ")]
         public int Layer { get; set; }
     }
 
     public class MasterKikaiModel
     {
+        [System.ComponentModel.DisplayName("ID")]
         public long Id { get; set; }
+        [System.ComponentModel.DisplayName("基準点名")]
         public string Name { get; set; } = "";
+        [System.ComponentModel.DisplayName("X")]
         public double X { get; set; }
+        [System.ComponentModel.DisplayName("Y")]
         public double Y { get; set; }
+        [System.ComponentModel.DisplayName("Z")]
         public double Z { get; set; }
+        [System.ComponentModel.DisplayName("レイヤ")]
         public int Layer { get; set; } = 1;
         public int Syubetu { get => Layer; set => Layer = value; }
         [System.ComponentModel.Browsable(false)]
