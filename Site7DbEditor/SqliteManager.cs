@@ -9,9 +9,9 @@ namespace Site7DbEditor
     {
         public static bool IsSamePoint(double x1, double y1, double z1, double x2, double y2, double z2)
         {
-            return Math.Abs(x1 - x2) < 0.0005 &&
-                   Math.Abs(y1 - y2) < 0.0005 &&
-                   Math.Abs(z1 - z2) < 0.001;
+            return Math.Round(x1, 3) == Math.Round(x2, 3) &&
+                   Math.Round(y1, 3) == Math.Round(y2, 3) &&
+                   Math.Round(z1, 3) == Math.Round(z2, 3);
         }
 
         public static List<IkouPointRecord> ParsePrecsText(string precsText)

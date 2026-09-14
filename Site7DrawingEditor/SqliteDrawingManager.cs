@@ -366,9 +366,9 @@ CREATE TABLE IF NOT EXISTS '図面遺構' (
                     if (result.Count > 0)
                     {
                         var prev = result[result.Count - 1];
-                        if (Math.Abs(x - prev.X) < 0.0005 &&
-                            Math.Abs(y - prev.Y) < 0.0005 &&
-                            Math.Abs(z - prev.Z) < 0.001)
+                        if (Math.Round(x, 3) == Math.Round(prev.X, 3) &&
+                            Math.Round(y, 3) == Math.Round(prev.Y, 3) &&
+                            Math.Round(z, 3) == Math.Round(prev.Z, 3))
                         {
                             continue; // 重複頂点をスキップ
                         }

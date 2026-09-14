@@ -239,9 +239,9 @@ namespace MdbFdbExporter
                                 foreach (var pt in rawLinePts)
                                 {
                                     if (prevPtRecord != null &&
-                                        Math.Abs(pt.X - prevPtRecord.X) < 0.0005 &&
-                                        Math.Abs(pt.Y - prevPtRecord.Y) < 0.0005 &&
-                                        Math.Abs(pt.Z - prevPtRecord.Z) < 0.001)
+                                        Math.Round(pt.X, 3) == Math.Round(prevPtRecord.X, 3) &&
+                                        Math.Round(pt.Y, 3) == Math.Round(prevPtRecord.Y, 3) &&
+                                        Math.Round(pt.Z, 3) == Math.Round(prevPtRecord.Z, 3))
                                     {
                                         continue; // 重複頂点をスキップ
                                     }
