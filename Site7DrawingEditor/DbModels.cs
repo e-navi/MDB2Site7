@@ -414,7 +414,9 @@ namespace Site7DrawingEditor
         public double Z { get; set; }
         public int Layer { get; set; } = 1;
         public int Syubetu { get => Layer; set => Layer = value; }
+        [System.ComponentModel.Browsable(false)]
         public string KPName { get; set; } = "";
+        [System.ComponentModel.Browsable(false)]
         public string BPName { get; set; } = "";
     }
 }

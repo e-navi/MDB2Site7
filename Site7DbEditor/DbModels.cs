@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Site7DbEditor
 {
@@ -34,12 +35,19 @@ namespace Site7DbEditor
         public double Y { get; set; }
         public double Z { get; set; }
         public string Date { get; set; } = "";
+        [Browsable(false)]
         public double S { get; set; }
+        [Browsable(false)]
         public double V { get; set; }
+        [Browsable(false)]
         public double H { get; set; }
+        [Browsable(false)]
         public string KPName { get; set; } = "";
+        [Browsable(false)]
         public string BPName { get; set; } = "";
+        [Browsable(false)]
         public double KPH { get; set; }
+        [Browsable(false)]
         public double MRH { get; set; }
     }
 
@@ -55,12 +63,19 @@ namespace Site7DbEditor
         public double Z { get; set; }
         public int Layer { get; set; } = 1; // 1-16
         public string Date { get; set; } = "";
+        [Browsable(false)]
         public double S { get; set; }
+        [Browsable(false)]
         public double V { get; set; }
+        [Browsable(false)]
         public double H { get; set; }
+        [Browsable(false)]
         public string KPName { get; set; } = "";
+        [Browsable(false)]
         public string BPName { get; set; } = "";
+        [Browsable(false)]
         public double KPH { get; set; }
+        [Browsable(false)]
         public double MRH { get; set; }
     }
 
@@ -73,12 +88,19 @@ namespace Site7DbEditor
         public double Z { get; set; }
         public int Layer { get; set; } = 1; // 1-16
         public string Date { get; set; } = "";
+        [Browsable(false)]
         public double S { get; set; }
+        [Browsable(false)]
         public double V { get; set; }
+        [Browsable(false)]
         public double H { get; set; }
+        [Browsable(false)]
         public string KPName { get; set; } = "";
+        [Browsable(false)]
         public string BPName { get; set; } = "";
+        [Browsable(false)]
         public double KPH { get; set; }
+        [Browsable(false)]
         public double MRH { get; set; }
     }
 

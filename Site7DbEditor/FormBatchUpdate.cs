@@ -101,7 +101,40 @@ namespace Site7DbEditor
             {
                 var matchingItems = GetBatchMatchingItems();
                 lblBatchPreviewCount.Text = $"対象件数: {matchingItems.Count} 件";
-                dgvBatchPreview.DataSource = new BindingList<object>(matchingItems);
+
+                string selectedTable = cmbBatchTable.SelectedItem?.ToString() ?? "";
+                if (selectedTable.Contains("遺構L"))
+                {
+                    dgvBatchPreview.DataSource = new BindingList<IkouLModel>(matchingItems.Cast<IkouLModel>().ToList());
+                }
+                else if (selectedTable.Contains("遺構 (マスター)"))
+                {
+                    dgvBatchPreview.DataSource = new BindingList<IkouModel>(matchingItems.Cast<IkouModel>().ToList());
+                }
+                else if (selectedTable.Contains("遺物"))
+                {
+                    dgvBatchPreview.DataSource = new BindingList<IbutuModel>(matchingItems.Cast<IbutuModel>().ToList());
+                }
+                else if (selectedTable.Contains("基準点"))
+                {
+                    dgvBatchPreview.DataSource = new BindingList<KikaiModel>(matchingItems.Cast<KikaiModel>().ToList());
+                }
+                else
+                {
+                    dgvBatchPreview.DataSource = new BindingList<object>(matchingItems);
+                }
+
+                var hiddenCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    "S", "V", "H", "KPName", "BPName", "KPH", "MRH"
+                };
+                foreach (DataGridViewColumn col in dgvBatchPreview.Columns)
+                {
+                    if (hiddenCols.Contains(col.Name))
+                    {
+                        col.Visible = false;
+                    }
+                }
             }
             catch { }
         }
