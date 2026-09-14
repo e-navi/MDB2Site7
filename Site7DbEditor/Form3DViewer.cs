@@ -18,6 +18,7 @@ namespace Site7DbEditor
         // UI Controls
         private PictureBox pic3DCanvas = new PictureBox();
         private Panel pnlToolBar = new Panel();
+        private Panel pnlBottomStatus = new Panel();
         private CheckBox chkShowImageMesh = new CheckBox();
         private CheckBox chkShowWireframe = new CheckBox();
         private CheckBox chkOnlyPointCloudArea = new CheckBox();
@@ -200,17 +201,24 @@ namespace Site7DbEditor
             btnResetView.FlatStyle = FlatStyle.Flat;
             btnResetView.Click += (s, e) => ResetView();
 
-            lblInfo.Text = "【操作】左ドラッグ: 回転 | 右/中ドラッグ: 移動 | ホイール: ズーム";
-            lblInfo.Location = new Point(1340, 14);
-            lblInfo.AutoSize = true;
-            lblInfo.Font = new Font("Yu Gothic UI", 10.5F);
-            lblInfo.ForeColor = Color.FromArgb(170, 180, 200);
-
             pnlToolBar.Controls.AddRange(new Control[] {
                 chkShowImageMesh, chkShowWireframe, chkOnlyPointCloudArea, cmbGridSpacing,
                 chkShowPointCloud, chkSwapXY, chkShowIkouLines, chkShowKikai,
-                lblZ, trkZScale, lblZScaleVal, btnResetView, lblInfo
+                lblZ, trkZScale, lblZScaleVal, btnResetView
             });
+
+            // Bottom Status / Help Bar
+            pnlBottomStatus.Dock = DockStyle.Bottom;
+            pnlBottomStatus.Height = 36;
+            pnlBottomStatus.BackColor = Color.FromArgb(20, 22, 28);
+            pnlBottomStatus.Padding = new Padding(10, 4, 10, 4);
+
+            lblInfo.Text = "💡【操作】 左ドラッグ: 視点回転  |  右/中ドラッグ: 平行移動 (パン)  |  ホイール: ズームイン/アウト";
+            lblInfo.Location = new Point(12, 7);
+            lblInfo.AutoSize = true;
+            lblInfo.Font = new Font("Yu Gothic UI", 11.0F);
+            lblInfo.ForeColor = Color.FromArgb(170, 195, 230);
+            pnlBottomStatus.Controls.Add(lblInfo);
 
             // 3D Canvas
             pic3DCanvas.Dock = DockStyle.Fill;
@@ -223,6 +231,7 @@ namespace Site7DbEditor
             pic3DCanvas.Resize += (s, e) => pic3DCanvas.Invalidate();
 
             this.Controls.Add(pic3DCanvas);
+            this.Controls.Add(pnlBottomStatus);
             this.Controls.Add(pnlToolBar);
         }
 
