@@ -12,6 +12,7 @@ namespace MdbFdbExporter
     {
         JapaneseSuffix,
         FeatureNumberEnd,
+        PrefixList,
         LastHyphen,
         LastUnderscore,
         CustomRegex,
@@ -497,6 +498,29 @@ namespace MdbFdbExporter
                     }
                     return (groupName, "");
 
+                case SplitRule.PrefixList:
+                    if (!string.IsNullOrEmpty(customRegexPattern))
+                    {
+                        var prefixes = customRegexPattern
+                            .Split(new[] { ',', '，' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(p => p.Trim())
+                            .Where(p => !string.IsNullOrEmpty(p))
+                            .ToList();
+
+                        var normalizedPrefixes = prefixes.Select(p => ToHalfWidth(p)).OrderByDescending(p => p.Length).ToList();
+
+                        foreach (var prefix in normalizedPrefixes)
+                        {
+                            if (groupName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                            {
+                                string ikou = prefix;
+                                string line = groupName.Substring(prefix.Length).TrimStart('-', '_', ' ').Trim();
+                                return (ikou, line);
+                            }
+                        }
+                    }
+                    return (groupName, "");
+
                 case SplitRule.NoSplit:
                 default:
                     return (groupName, "");
@@ -507,7 +531,8 @@ namespace MdbFdbExporter
             string groupName,
             SplitRule rule1, string pattern1,
             SplitRule rule2, string pattern2,
-            SplitRule rule3, string pattern3)
+            SplitRule rule3, string pattern3,
+            SplitRule rule4 = SplitRule.NoSplit, string pattern4 = "")
         {
             var res1 = SplitGroupName(groupName, rule1, pattern1);
             if (!string.IsNullOrEmpty(res1.ikouLine))
@@ -533,6 +558,15 @@ namespace MdbFdbExporter
                 }
             }
 
+            if (rule4 != SplitRule.NoSplit)
+            {
+                var res4 = SplitGroupName(groupName, rule4, pattern4);
+                if (!string.IsNullOrEmpty(res4.ikouLine))
+                {
+                    return res4;
+                }
+            }
+
             return res1;
         }
 
@@ -542,7 +576,8 @@ namespace MdbFdbExporter
             SplitRule rule1, string pattern1,
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
-            Action<int>? progressCallback)
+            SplitRule rule4, string pattern4,
+            Action<int>? progressCallback = null)
         {
             var dt = new DataTable();
             string connStr = GetMdbConnectionString(mdbPath);
@@ -575,7 +610,7 @@ namespace MdbFdbExporter
                 foreach (DataRow row in dt.Rows)
                 {
                     string groupVal = row["Group"]?.ToString() ?? "";
-                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3);
+                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
                     row["IKOU"] = splitResult.ikou;
                     row["IKOULINE"] = splitResult.ikouLine;
                 }
@@ -591,7 +626,8 @@ namespace MdbFdbExporter
             SplitRule rule1, string pattern1,
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
-            Action<int>? progressCallback)
+            SplitRule rule4, string pattern4,
+            Action<int>? progressCallback = null)
         {
             var dt = new DataTable();
             string connStr = GetFdbConnectionString(fdbPath);
@@ -648,7 +684,7 @@ namespace MdbFdbExporter
                 foreach (DataRow row in dt.Rows)
                 {
                     string groupVal = row["GROUP_NAME"]?.ToString() ?? "";
-                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3);
+                    var splitResult = SplitGroupNameChain(groupVal, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
                     row["IKOU"] = splitResult.ikou;
                     row["IKOULINE"] = splitResult.ikouLine;
                 }

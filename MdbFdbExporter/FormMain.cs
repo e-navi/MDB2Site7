@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -38,6 +39,7 @@ namespace MdbFdbExporter
         private Point _lastMousePosAll;
 
         private bool _isSyncingSelection = false;
+        private bool _isLoadingPreset = false;
 
         private readonly Dictionary<string, RectangleF> _ikouLabelRectsAll = new Dictionary<string, RectangleF>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<PointF>> _ikouScreenPointsAll = new Dictionary<string, List<PointF>>(StringComparer.OrdinalIgnoreCase);
@@ -75,6 +77,28 @@ namespace MdbFdbExporter
             }
         }
 
+        public class SplitRulePreset
+        {
+            public string Name { get; set; } = "";
+            public SplitRule Rule1 { get; set; } = SplitRule.FeatureNumberEnd;
+            public string Pattern1 { get; set; } = "";
+            public SplitRule Rule2 { get; set; } = SplitRule.JapaneseSuffix;
+            public string Pattern2 { get; set; } = "";
+            public SplitRule Rule3 { get; set; } = SplitRule.NoSplit;
+            public string Pattern3 { get; set; } = "";
+            public SplitRule Rule4 { get; set; } = SplitRule.NoSplit;
+            public string Pattern4 { get; set; } = "";
+            public bool ShiftJis { get; set; } = true;
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        private List<SplitRulePreset> _presets = new List<SplitRulePreset>();
+        private string PresetFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "split_rule_presets.json");
+
         public FormMain()
         {
             InitializeComponent();
@@ -89,12 +113,19 @@ namespace MdbFdbExporter
             this.btnAnalyze.Click += btnAnalyze_Click;
             this.btnExport.Click += btnExport_Click;
 
+            this.cmbPreset.SelectedIndexChanged += cmbPreset_SelectedIndexChanged;
+            this.btnSavePreset.Click += btnSavePreset_Click;
+            this.btnDeletePreset.Click += btnDeletePreset_Click;
+
             this.cmbRule1.SelectedIndexChanged += cmbRule_SelectedIndexChanged;
             this.cmbRule2.SelectedIndexChanged += cmbRule_SelectedIndexChanged;
             this.cmbRule3.SelectedIndexChanged += cmbRule_SelectedIndexChanged;
+            this.cmbRule4.SelectedIndexChanged += cmbRule_SelectedIndexChanged;
+
             this.txtRegexPattern1.TextChanged += txtRegexPattern_TextChanged;
             this.txtRegexPattern2.TextChanged += txtRegexPattern_TextChanged;
             this.txtRegexPattern3.TextChanged += txtRegexPattern_TextChanged;
+            this.txtRegexPattern4.TextChanged += txtRegexPattern_TextChanged;
 
             this.lstIkou.SelectedIndexChanged += lstIkou_SelectedIndexChanged;
             this.lstIkouLine.SelectedIndexChanged += lstIkouLine_SelectedIndexChanged;
@@ -184,8 +215,10 @@ namespace MdbFdbExporter
 
         private void PopulateRuleComboBox(ComboBox cmb, bool isFallbackRule)
         {
+            cmb.Items.Clear();
             cmb.Items.Add(new ComboBoxItem { Text = "最初の数字の終わりで分割 (P46S2U➡P46/S2Uなど)", Rule = SplitRule.FeatureNumberEnd });
             cmb.Items.Add(new ComboBoxItem { Text = "日本語サフィックス (上端/下端など)", Rule = SplitRule.JapaneseSuffix });
+            cmb.Items.Add(new ComboBoxItem { Text = "指定プレフィックスで分割 (例: SK01,Pit12 ➡ 遺構:SK01 / 線名:残り)", Rule = SplitRule.PrefixList });
             cmb.Items.Add(new ComboBoxItem { Text = "区切り文字・単語を指定して分割", Rule = SplitRule.DelimiterList });
             cmb.Items.Add(new ComboBoxItem { Text = "最後のハイフン (-) で分割", Rule = SplitRule.LastHyphen });
             cmb.Items.Add(new ComboBoxItem { Text = "最後のアンダースコア (_) で分割", Rule = SplitRule.LastUnderscore });
@@ -208,10 +241,9 @@ namespace MdbFdbExporter
             PopulateRuleComboBox(cmbRule1, false);
             PopulateRuleComboBox(cmbRule2, true);
             PopulateRuleComboBox(cmbRule3, true);
+            PopulateRuleComboBox(cmbRule4, true);
 
-            cmbRule1.SelectedIndex = 0; // Default to Feature Number End
-            cmbRule2.SelectedIndex = 1; // Default to Japanese Suffix
-            cmbRule3.SelectedIndex = 5; // Default to NoSplit / なし
+            LoadPresets();
 
             if (lstDbFolders.Items.Count == 0)
             {
@@ -411,49 +443,282 @@ namespace MdbFdbExporter
             SetUiEnabled(true);
         }
 
+        private void LoadPresets()
+        {
+            _presets.Clear();
+
+            try
+            {
+                if (File.Exists(PresetFilePath))
+                {
+                    string json = File.ReadAllText(PresetFilePath);
+                    var loaded = JsonSerializer.Deserialize<List<SplitRulePreset>>(json);
+                    if (loaded != null && loaded.Count > 0)
+                    {
+                        _presets.AddRange(loaded);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"[WARNING] Failed to load presets: {ex.Message}");
+            }
+
+            if (_presets.Count == 0)
+            {
+                // Add default built-in presets
+                _presets.Add(new SplitRulePreset
+                {
+                    Name = "標準 (数字末尾 ➡ 日本語サフィックス)",
+                    Rule1 = SplitRule.FeatureNumberEnd, Pattern1 = "",
+                    Rule2 = SplitRule.JapaneseSuffix, Pattern2 = "",
+                    Rule3 = SplitRule.NoSplit, Pattern3 = "",
+                    Rule4 = SplitRule.NoSplit, Pattern4 = "",
+                    ShiftJis = true
+                });
+                _presets.Add(new SplitRulePreset
+                {
+                    Name = "プレフィックス優先 (SK01,Pit12 ➡ 遺構名)",
+                    Rule1 = SplitRule.PrefixList, Pattern1 = "SK01,SK02,SD,Pit",
+                    Rule2 = SplitRule.JapaneseSuffix, Pattern2 = "",
+                    Rule3 = SplitRule.FeatureNumberEnd, Pattern3 = "",
+                    Rule4 = SplitRule.NoSplit, Pattern4 = "",
+                    ShiftJis = true
+                });
+                _presets.Add(new SplitRulePreset
+                {
+                    Name = "日本語サフィックス優先 (上端/下端/断面)",
+                    Rule1 = SplitRule.JapaneseSuffix, Pattern1 = "",
+                    Rule2 = SplitRule.FeatureNumberEnd, Pattern2 = "",
+                    Rule3 = SplitRule.NoSplit, Pattern3 = "",
+                    Rule4 = SplitRule.NoSplit, Pattern4 = "",
+                    ShiftJis = true
+                });
+                _presets.Add(new SplitRulePreset
+                {
+                    Name = "区切り文字優先 (L,U,上,下)",
+                    Rule1 = SplitRule.DelimiterList, Pattern1 = "L,U,上,下",
+                    Rule2 = SplitRule.FeatureNumberEnd, Pattern2 = "",
+                    Rule3 = SplitRule.NoSplit, Pattern3 = "",
+                    Rule4 = SplitRule.NoSplit, Pattern4 = "",
+                    ShiftJis = true
+                });
+                _presets.Add(new SplitRulePreset
+                {
+                    Name = "ハイフン/アンダースコア分割 (- / _)",
+                    Rule1 = SplitRule.LastHyphen, Pattern1 = "",
+                    Rule2 = SplitRule.LastUnderscore, Pattern2 = "",
+                    Rule3 = SplitRule.NoSplit, Pattern3 = "",
+                    Rule4 = SplitRule.NoSplit, Pattern4 = "",
+                    ShiftJis = true
+                });
+                SavePresets();
+            }
+
+            _isLoadingPreset = true;
+            cmbPreset.BeginUpdate();
+            cmbPreset.Items.Clear();
+            foreach (var p in _presets)
+            {
+                cmbPreset.Items.Add(p);
+            }
+            cmbPreset.EndUpdate();
+            _isLoadingPreset = false;
+
+            if (cmbPreset.Items.Count > 0)
+            {
+                cmbPreset.SelectedIndex = 0;
+            }
+        }
+
+        private void SavePresets()
+        {
+            try
+            {
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(_presets, options);
+                File.WriteAllText(PresetFilePath, json);
+            }
+            catch (Exception ex)
+            {
+                Log($"[ERROR] Failed to save presets: {ex.Message}");
+            }
+        }
+
+        private void ApplyPreset(SplitRulePreset preset)
+        {
+            if (preset == null) return;
+
+            _isLoadingPreset = true;
+
+            SetComboRule(cmbRule1, preset.Rule1);
+            txtRegexPattern1.Text = preset.Pattern1 ?? "";
+            UpdateRulePatternBox(cmbRule1, txtRegexPattern1);
+
+            SetComboRule(cmbRule2, preset.Rule2);
+            txtRegexPattern2.Text = preset.Pattern2 ?? "";
+            UpdateRulePatternBox(cmbRule2, txtRegexPattern2);
+
+            SetComboRule(cmbRule3, preset.Rule3);
+            txtRegexPattern3.Text = preset.Pattern3 ?? "";
+            UpdateRulePatternBox(cmbRule3, txtRegexPattern3);
+
+            SetComboRule(cmbRule4, preset.Rule4);
+            txtRegexPattern4.Text = preset.Pattern4 ?? "";
+            UpdateRulePatternBox(cmbRule4, txtRegexPattern4);
+
+            chkShiftJis.Checked = preset.ShiftJis;
+
+            _isLoadingPreset = false;
+            UpdatePreview();
+        }
+
+        private void SetComboRule(ComboBox cmb, SplitRule rule)
+        {
+            for (int i = 0; i < cmb.Items.Count; i++)
+            {
+                if (cmb.Items[i] is ComboBoxItem item && item.Rule == rule)
+                {
+                    cmb.SelectedIndex = i;
+                    return;
+                }
+            }
+            if (cmb.Items.Count > 0) cmb.SelectedIndex = 0;
+        }
+
+        private void cmbPreset_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_isLoadingPreset) return;
+            if (cmbPreset.SelectedItem is SplitRulePreset preset)
+            {
+                ApplyPreset(preset);
+                Log($"Applied preset: '{preset.Name}'");
+            }
+        }
+
+        private void btnSavePreset_Click(object? sender, EventArgs e)
+        {
+            string defaultName = (cmbPreset.SelectedItem is SplitRulePreset cur) ? cur.Name : "新規プリセット";
+
+            using (var dlg = new FormPresetPrompt(defaultName))
+            {
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    string name = dlg.PresetName.Trim();
+                    if (string.IsNullOrEmpty(name)) return;
+
+                    var existing = _presets.FirstOrDefault(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
+                    if (existing != null)
+                    {
+                        var confirm = MessageBox.Show($"プリセット「{name}」は既に存在します。上書きしますか？", "上書き確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (confirm != DialogResult.Yes) return;
+                    }
+                    else
+                    {
+                        existing = new SplitRulePreset { Name = name };
+                        _presets.Add(existing);
+                    }
+
+                    // Store current UI values into preset
+                    existing.Name = name;
+                    if (cmbRule1.SelectedItem is ComboBoxItem i1) existing.Rule1 = i1.Rule;
+                    existing.Pattern1 = txtRegexPattern1.Text.Trim();
+                    if (cmbRule2.SelectedItem is ComboBoxItem i2) existing.Rule2 = i2.Rule;
+                    existing.Pattern2 = txtRegexPattern2.Text.Trim();
+                    if (cmbRule3.SelectedItem is ComboBoxItem i3) existing.Rule3 = i3.Rule;
+                    existing.Pattern3 = txtRegexPattern3.Text.Trim();
+                    if (cmbRule4.SelectedItem is ComboBoxItem i4) existing.Rule4 = i4.Rule;
+                    existing.Pattern4 = txtRegexPattern4.Text.Trim();
+                    existing.ShiftJis = chkShiftJis.Checked;
+
+                    SavePresets();
+
+                    // Refresh ComboBox
+                    _isLoadingPreset = true;
+                    cmbPreset.BeginUpdate();
+                    cmbPreset.Items.Clear();
+                    foreach (var p in _presets) cmbPreset.Items.Add(p);
+                    cmbPreset.SelectedItem = existing;
+                    cmbPreset.EndUpdate();
+                    _isLoadingPreset = false;
+
+                    Log($"Preset saved: '{name}'");
+                    MessageBox.Show($"プリセット「{name}」を登録・保存しました。", "登録完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void btnDeletePreset_Click(object? sender, EventArgs e)
+        {
+            if (cmbPreset.SelectedItem is SplitRulePreset preset)
+            {
+                if (_presets.Count <= 1)
+                {
+                    MessageBox.Show("最低1つのプリセットが必要です。削除できません。", "削除不可", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var confirm = MessageBox.Show($"プリセット「{preset.Name}」を削除しますか？", "削除確認", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (confirm == DialogResult.Yes)
+                {
+                    _presets.Remove(preset);
+                    SavePresets();
+
+                    _isLoadingPreset = true;
+                    cmbPreset.BeginUpdate();
+                    cmbPreset.Items.Clear();
+                    foreach (var p in _presets) cmbPreset.Items.Add(p);
+                    if (cmbPreset.Items.Count > 0) cmbPreset.SelectedIndex = 0;
+                    cmbPreset.EndUpdate();
+                    _isLoadingPreset = false;
+
+                    if (cmbPreset.SelectedItem is SplitRulePreset first)
+                    {
+                        ApplyPreset(first);
+                    }
+
+                    Log($"Preset deleted: '{preset.Name}'");
+                }
+            }
+        }
+
+        private void UpdateRulePatternBox(ComboBox cmb, TextBox txt)
+        {
+            if (cmb.SelectedItem is ComboBoxItem item)
+            {
+                bool needsInput = (item.Rule == SplitRule.CustomRegex || item.Rule == SplitRule.DelimiterList || item.Rule == SplitRule.PrefixList);
+                txt.Enabled = needsInput;
+
+                if (item.Rule == SplitRule.CustomRegex && (string.IsNullOrEmpty(txt.Text) || txt.Text == "L,U,上,下" || txt.Text == "SK01,SK02,SD,Pit"))
+                {
+                    txt.Text = @"^(?<ikou>.*?)[-_]?(?<ikouline>[UuLl]|[上中下]端|底面|断面|底)$";
+                }
+                else if (item.Rule == SplitRule.DelimiterList && (string.IsNullOrEmpty(txt.Text) || txt.Text.StartsWith("^") || txt.Text == "SK01,SK02,SD,Pit"))
+                {
+                    txt.Text = "L,U,上,下";
+                }
+                else if (item.Rule == SplitRule.PrefixList && (string.IsNullOrEmpty(txt.Text) || txt.Text.StartsWith("^") || txt.Text == "L,U,上,下"))
+                {
+                    txt.Text = "SK01,SK02,SD,Pit";
+                }
+            }
+        }
+
         private void cmbRule_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbRule1.SelectedItem is ComboBoxItem item1)
-            {
-                txtRegexPattern1.Enabled = (item1.Rule == SplitRule.CustomRegex || item1.Rule == SplitRule.DelimiterList);
-                if (item1.Rule == SplitRule.CustomRegex && (string.IsNullOrEmpty(txtRegexPattern1.Text) || txtRegexPattern1.Text == "L,U,上,下"))
-                {
-                    txtRegexPattern1.Text = @"^(?<ikou>.*?)[-_]?(?<ikouline>[UuLl]|[上中下]端|底面|断面|底)$";
-                }
-                else if (item1.Rule == SplitRule.DelimiterList && (string.IsNullOrEmpty(txtRegexPattern1.Text) || txtRegexPattern1.Text.StartsWith("^")))
-                {
-                    txtRegexPattern1.Text = "L,U,上,下";
-                }
-            }
-            if (cmbRule2.SelectedItem is ComboBoxItem item2)
-            {
-                txtRegexPattern2.Enabled = (item2.Rule == SplitRule.CustomRegex || item2.Rule == SplitRule.DelimiterList);
-                if (item2.Rule == SplitRule.CustomRegex && (string.IsNullOrEmpty(txtRegexPattern2.Text) || txtRegexPattern2.Text == "L,U,上,下"))
-                {
-                    txtRegexPattern2.Text = @"^(?<ikou>.*?)[-_]?(?<ikouline>[UuLl]|[上中下]端|底面|断面|底)$";
-                }
-                else if (item2.Rule == SplitRule.DelimiterList && (string.IsNullOrEmpty(txtRegexPattern2.Text) || txtRegexPattern2.Text.StartsWith("^")))
-                {
-                    txtRegexPattern2.Text = "L,U,上,下";
-                }
-            }
-            if (cmbRule3.SelectedItem is ComboBoxItem item3)
-            {
-                txtRegexPattern3.Enabled = (item3.Rule == SplitRule.CustomRegex || item3.Rule == SplitRule.DelimiterList);
-                if (item3.Rule == SplitRule.CustomRegex && (string.IsNullOrEmpty(txtRegexPattern3.Text) || txtRegexPattern3.Text == "L,U,上,下"))
-                {
-                    txtRegexPattern3.Text = @"^(?<ikou>.*?)[-_]?(?<ikouline>[UuLl]|[上中下]端|底面|断面|底)$";
-                }
-                else if (item3.Rule == SplitRule.DelimiterList && (string.IsNullOrEmpty(txtRegexPattern3.Text) || txtRegexPattern3.Text.StartsWith("^")))
-                {
-                    txtRegexPattern3.Text = "L,U,上,下";
-                }
-            }
+            if (_isLoadingPreset) return;
+
+            UpdateRulePatternBox(cmbRule1, txtRegexPattern1);
+            UpdateRulePatternBox(cmbRule2, txtRegexPattern2);
+            UpdateRulePatternBox(cmbRule3, txtRegexPattern3);
+            UpdateRulePatternBox(cmbRule4, txtRegexPattern4);
+
             UpdatePreview();
         }
 
         private void txtRegexPattern_TextChanged(object? sender, EventArgs e)
         {
+            if (_isLoadingPreset) return;
             UpdatePreview();
         }
 
@@ -464,8 +729,8 @@ namespace MdbFdbExporter
             dt.Columns.Add("IKOU (Feature)", typeof(string));
             dt.Columns.Add("IKOULINE (Line Suffix)", typeof(string));
 
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
-            string pattern1 = "", pattern2 = "", pattern3 = "";
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
+            string pattern1 = "", pattern2 = "", pattern3 = "", pattern4 = "";
 
             if (cmbRule1.InvokeRequired)
             {
@@ -474,9 +739,11 @@ namespace MdbFdbExporter
                     if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
                     if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
                     if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+                    if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
                     pattern1 = txtRegexPattern1.Text.Trim();
                     pattern2 = txtRegexPattern2.Text.Trim();
                     pattern3 = txtRegexPattern3.Text.Trim();
+                    pattern4 = txtRegexPattern4.Text.Trim();
                 }));
             }
             else
@@ -484,14 +751,16 @@ namespace MdbFdbExporter
                 if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
                 if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
                 if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+                if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
                 pattern1 = txtRegexPattern1.Text.Trim();
                 pattern2 = txtRegexPattern2.Text.Trim();
                 pattern3 = txtRegexPattern3.Text.Trim();
+                pattern4 = txtRegexPattern4.Text.Trim();
             }
 
             foreach (var groupName in _uniqueGroupNames)
             {
-                var split = DbHelper.SplitGroupNameChain(groupName, rule1, pattern1, rule2, pattern2, rule3, pattern3);
+                var split = DbHelper.SplitGroupNameChain(groupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
                 dt.Rows.Add(groupName, split.ikou, split.ikouLine);
             }
 
@@ -712,17 +981,19 @@ namespace MdbFdbExporter
         {
             if (string.IsNullOrEmpty(ikouName) || _pointData.Count == 0) return;
 
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
             string pattern1 = txtRegexPattern1.Text.Trim();
             string pattern2 = txtRegexPattern2.Text.Trim();
             string pattern3 = txtRegexPattern3.Text.Trim();
+            string pattern4 = txtRegexPattern4.Text.Trim();
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+            if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
 
             var ikouPoints = _pointData
                 .Where(pt => string.Equals(
-                    DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikou,
+                    DbHelper.SplitGroupNameChain(pt.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikou,
                     ikouName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -1556,18 +1827,20 @@ namespace MdbFdbExporter
 
         private void OpenIkouViewer(string ikouName)
         {
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
-            string pattern1 = "", pattern2 = "", pattern3 = "";
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
+            string pattern1 = "", pattern2 = "", pattern3 = "", pattern4 = "";
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+            if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
             pattern1 = txtRegexPattern1.Text.Trim();
             pattern2 = txtRegexPattern2.Text.Trim();
             pattern3 = txtRegexPattern3.Text.Trim();
+            pattern4 = txtRegexPattern4.Text.Trim();
 
             using (var viewer = new FormIkouViewer())
             {
-                viewer.InitializeViewer(ikouName, _pointData, _uniqueGroupNames, rule1, pattern1, rule2, pattern2, rule3, pattern3);
+                viewer.InitializeViewer(ikouName, _pointData, _uniqueGroupNames, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4);
                 viewer.ShowDialog(this);
             }
         }
@@ -1609,14 +1882,16 @@ namespace MdbFdbExporter
             bool isSite5 = _isSite5;
             bool useShiftJis = chkShiftJis.Checked;
 
-            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit;
+            SplitRule rule1 = SplitRule.NoSplit, rule2 = SplitRule.NoSplit, rule3 = SplitRule.NoSplit, rule4 = SplitRule.NoSplit;
             if (cmbRule1.SelectedItem is ComboBoxItem item1) rule1 = item1.Rule;
             if (cmbRule2.SelectedItem is ComboBoxItem item2) rule2 = item2.Rule;
             if (cmbRule3.SelectedItem is ComboBoxItem item3) rule3 = item3.Rule;
+            if (cmbRule4.SelectedItem is ComboBoxItem item4) rule4 = item4.Rule;
 
             string pattern1 = txtRegexPattern1.Text.Trim();
             string pattern2 = txtRegexPattern2.Text.Trim();
             string pattern3 = txtRegexPattern3.Text.Trim();
+            string pattern4 = txtRegexPattern4.Text.Trim();
 
             await Task.Run(() =>
             {
@@ -1632,6 +1907,7 @@ namespace MdbFdbExporter
                     rule1, pattern1,
                     rule2, pattern2,
                     rule3, pattern3,
+                    rule4, pattern4,
                     msg => Log(msg));
 
                 UpdateProgress(60);
@@ -1653,7 +1929,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log($"Reading Access MDB IBUTU data...");
-                            var dt = DbHelper.ExportMdb(ibutuPath, "IBUTU", rule1, pattern1, rule2, pattern2, rule3, pattern3, count => Log($"Loaded {count:N0} active records from MDB IBUTU."));
+                            var dt = DbHelper.ExportMdb(ibutuPath, "IBUTU", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active records from MDB IBUTU."));
                             string fileOut = Path.Combine(subFolder, "IBUTU_MDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported MDB IBUTU CSV to {fileOut}");
@@ -1666,7 +1942,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log($"Reading Access MDB IKOU data...");
-                            var dt = DbHelper.ExportMdb(ikouPath, "IKOU", rule1, pattern1, rule2, pattern2, rule3, pattern3, count => Log($"Loaded {count:N0} active records from MDB IKOU."));
+                            var dt = DbHelper.ExportMdb(ikouPath, "IKOU", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active records from MDB IKOU."));
                             string fileOut = Path.Combine(subFolder, "IKOU_MDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported MDB IKOU CSV to {fileOut}");
@@ -1683,7 +1959,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log("Reading Firebird FDB IBUTU_HAND_V data...");
-                            var dt = DbHelper.ExportFdb(fdbPath, "IBUTU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, count => Log($"Loaded {count:N0} active records from FDB IBUTU."));
+                            var dt = DbHelper.ExportFdb(fdbPath, "IBUTU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active records from FDB IBUTU."));
                             string fileOut = Path.Combine(subFolder, "IBUTU_FDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported FDB IBUTU CSV to {fileOut}");
@@ -1693,7 +1969,7 @@ namespace MdbFdbExporter
                         try
                         {
                             Log("Reading Firebird FDB IKOU_HAND_V data...");
-                            var dt = DbHelper.ExportFdb(fdbPath, "IKOU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, count => Log($"Loaded {count:N0} active joined records from FDB IKOU."));
+                            var dt = DbHelper.ExportFdb(fdbPath, "IKOU_HAND_V", rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, count => Log($"Loaded {count:N0} active joined records from FDB IKOU."));
                             string fileOut = Path.Combine(subFolder, "IKOU_FDB.csv");
                             CsvWriter.SaveToCsv(dt, fileOut, useShiftJis);
                             Log($"[SUCCESS] Exported FDB IKOU CSV to {fileOut}");
@@ -1758,6 +2034,74 @@ namespace MdbFdbExporter
             btnExport.Enabled = enabled;
             chkShiftJis.Enabled = enabled;
             grpSplit.Enabled = enabled;
+        }
+    }
+
+    public class FormPresetPrompt : Form
+    {
+        private TextBox txtInput;
+        private Button btnOk;
+        private Button btnCancel;
+        private Label lblTitle;
+
+        public string PresetName => txtInput.Text;
+
+        public FormPresetPrompt(string currentName)
+        {
+            this.Text = "プリセット登録・保存";
+            this.ClientSize = new Size(380, 140);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.StartPosition = FormStartPosition.CenterParent;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.BackColor = Color.White;
+            this.Font = new Font("Yu Gothic UI", 10.5F);
+
+            lblTitle = new Label
+            {
+                Text = "保存するプリセット名を入力してください:",
+                Location = new Point(16, 16),
+                AutoSize = true,
+                ForeColor = Color.FromArgb(30, 41, 59)
+            };
+
+            txtInput = new TextBox
+            {
+                Text = currentName,
+                Location = new Point(16, 46),
+                Size = new Size(346, 26),
+                Font = new Font("Yu Gothic UI", 10.5F)
+            };
+
+            btnOk = new Button
+            {
+                Text = "保存",
+                DialogResult = DialogResult.OK,
+                Location = new Point(184, 88),
+                Size = new Size(86, 32),
+                BackColor = Color.FromArgb(37, 99, 235),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            btnCancel = new Button
+            {
+                Text = "キャンセル",
+                DialogResult = DialogResult.Cancel,
+                Location = new Point(276, 88),
+                Size = new Size(86, 32),
+                BackColor = Color.FromArgb(226, 232, 240),
+                ForeColor = Color.FromArgb(30, 41, 59),
+                FlatStyle = FlatStyle.Flat
+            };
+
+            this.Controls.Add(lblTitle);
+            this.Controls.Add(txtInput);
+            this.Controls.Add(btnOk);
+            this.Controls.Add(btnCancel);
+
+            this.AcceptButton = btnOk;
+            this.CancelButton = btnCancel;
         }
     }
 }

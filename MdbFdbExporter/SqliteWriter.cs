@@ -43,6 +43,7 @@ namespace MdbFdbExporter
             SplitRule rule1, string pattern1,
             SplitRule rule2, string pattern2,
             SplitRule rule3, string pattern3,
+            SplitRule rule4, string pattern4,
             Action<string> log)
         {
             try
@@ -188,7 +189,7 @@ namespace MdbFdbExporter
 
                         // Group point data by IKOU (Master Feature)
                         var ikouGroups = pointData
-                            .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikou)
+                            .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikou)
                             .ToList();
 
                         int ikouIdCounter = 1;
@@ -220,7 +221,7 @@ namespace MdbFdbExporter
 
                             // Group by IKOULINE (Line Suffix)
                             var lineGroups = ikouGroup
-                                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3).ikouLine)
+                                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4).ikouLine)
                                 .ToList();
 
                             int lidCounter = 1;

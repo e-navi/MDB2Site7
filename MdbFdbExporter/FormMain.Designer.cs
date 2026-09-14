@@ -25,7 +25,14 @@ namespace MdbFdbExporter
             this.lblSelectedDbStatus = new System.Windows.Forms.Label();
             this.lstDbFolders = new System.Windows.Forms.ListBox();
             this.grpSplit = new System.Windows.Forms.GroupBox();
+            this.lblPreset = new System.Windows.Forms.Label();
+            this.cmbPreset = new System.Windows.Forms.ComboBox();
+            this.btnSavePreset = new System.Windows.Forms.Button();
+            this.btnDeletePreset = new System.Windows.Forms.Button();
             this.lblRegexHint = new System.Windows.Forms.Label();
+            this.lblPriority4 = new System.Windows.Forms.Label();
+            this.cmbRule4 = new System.Windows.Forms.ComboBox();
+            this.txtRegexPattern4 = new System.Windows.Forms.TextBox();
             this.txtRegexPattern3 = new System.Windows.Forms.TextBox();
             this.cmbRule3 = new System.Windows.Forms.ComboBox();
             this.lblPriority3 = new System.Windows.Forms.Label();
@@ -128,7 +135,7 @@ namespace MdbFdbExporter
             this.grpDbList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
             this.grpDbList.Location = new System.Drawing.Point(16, 84);
             this.grpDbList.Name = "grpDbList";
-            this.grpDbList.Size = new System.Drawing.Size(350, 150);
+            this.grpDbList.Size = new System.Drawing.Size(350, 205);
             this.grpDbList.TabIndex = 2;
             this.grpDbList.TabStop = false;
             this.grpDbList.Text = "DB 格納フォルダ一覧";
@@ -137,7 +144,7 @@ namespace MdbFdbExporter
             // 
             this.lblSelectedDbStatus.Font = new System.Drawing.Font("Yu Gothic UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lblSelectedDbStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
-            this.lblSelectedDbStatus.Location = new System.Drawing.Point(10, 120);
+            this.lblSelectedDbStatus.Location = new System.Drawing.Point(10, 172);
             this.lblSelectedDbStatus.Name = "lblSelectedDbStatus";
             this.lblSelectedDbStatus.Size = new System.Drawing.Size(330, 24);
             this.lblSelectedDbStatus.TabIndex = 1;
@@ -153,13 +160,20 @@ namespace MdbFdbExporter
             this.lstDbFolders.ItemHeight = 20;
             this.lstDbFolders.Location = new System.Drawing.Point(10, 26);
             this.lstDbFolders.Name = "lstDbFolders";
-            this.lstDbFolders.Size = new System.Drawing.Size(330, 82);
+            this.lstDbFolders.Size = new System.Drawing.Size(330, 142);
             this.lstDbFolders.TabIndex = 0;
             // 
             // grpSplit
             // 
             this.grpSplit.BackColor = System.Drawing.Color.White;
+            this.grpSplit.Controls.Add(this.btnDeletePreset);
+            this.grpSplit.Controls.Add(this.btnSavePreset);
+            this.grpSplit.Controls.Add(this.cmbPreset);
+            this.grpSplit.Controls.Add(this.lblPreset);
             this.grpSplit.Controls.Add(this.lblRegexHint);
+            this.grpSplit.Controls.Add(this.txtRegexPattern4);
+            this.grpSplit.Controls.Add(this.cmbRule4);
+            this.grpSplit.Controls.Add(this.lblPriority4);
             this.grpSplit.Controls.Add(this.txtRegexPattern3);
             this.grpSplit.Controls.Add(this.cmbRule3);
             this.grpSplit.Controls.Add(this.lblPriority3);
@@ -173,10 +187,60 @@ namespace MdbFdbExporter
             this.grpSplit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
             this.grpSplit.Location = new System.Drawing.Point(376, 84);
             this.grpSplit.Name = "grpSplit";
-            this.grpSplit.Size = new System.Drawing.Size(608, 150);
+            this.grpSplit.Size = new System.Drawing.Size(608, 205);
             this.grpSplit.TabIndex = 3;
             this.grpSplit.TabStop = false;
             this.grpSplit.Text = "遺構名 / 遺構線名 分割ルール (IKOU / IKOULINE)";
+            // 
+            // lblPreset
+            // 
+            this.lblPreset.AutoSize = true;
+            this.lblPreset.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.lblPreset.Location = new System.Drawing.Point(12, 28);
+            this.lblPreset.Name = "lblPreset";
+            this.lblPreset.Size = new System.Drawing.Size(64, 19);
+            this.lblPreset.TabIndex = 11;
+            this.lblPreset.Text = "プリセット:";
+            // 
+            // cmbPreset
+            // 
+            this.cmbPreset.BackColor = System.Drawing.Color.White;
+            this.cmbPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbPreset.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbPreset.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.cmbPreset.FormattingEnabled = true;
+            this.cmbPreset.Location = new System.Drawing.Point(90, 24);
+            this.cmbPreset.Name = "cmbPreset";
+            this.cmbPreset.Size = new System.Drawing.Size(244, 27);
+            this.cmbPreset.TabIndex = 12;
+            // 
+            // btnSavePreset
+            // 
+            this.btnSavePreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.btnSavePreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSavePreset.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnSavePreset.ForeColor = System.Drawing.Color.White;
+            this.btnSavePreset.Location = new System.Drawing.Point(340, 24);
+            this.btnSavePreset.Name = "btnSavePreset";
+            this.btnSavePreset.Size = new System.Drawing.Size(68, 27);
+            this.btnSavePreset.TabIndex = 13;
+            this.btnSavePreset.Text = "💾 登録";
+            this.btnSavePreset.UseVisualStyleBackColor = false;
+            // 
+            // btnDeletePreset
+            // 
+            this.btnDeletePreset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
+            this.btnDeletePreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeletePreset.Font = new System.Drawing.Font("Yu Gothic UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnDeletePreset.ForeColor = System.Drawing.Color.White;
+            this.btnDeletePreset.Location = new System.Drawing.Point(412, 24);
+            this.btnDeletePreset.Name = "btnDeletePreset";
+            this.btnDeletePreset.Size = new System.Drawing.Size(68, 27);
+            this.btnDeletePreset.TabIndex = 14;
+            this.btnDeletePreset.Text = "🗑 削除";
+            this.btnDeletePreset.UseVisualStyleBackColor = false;
             // 
             // lblRegexHint
             // 
@@ -184,9 +248,45 @@ namespace MdbFdbExporter
             this.lblRegexHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
             this.lblRegexHint.Location = new System.Drawing.Point(490, 24);
             this.lblRegexHint.Name = "lblRegexHint";
-            this.lblRegexHint.Size = new System.Drawing.Size(110, 115);
+            this.lblRegexHint.Size = new System.Drawing.Size(110, 170);
             this.lblRegexHint.TabIndex = 10;
-            this.lblRegexHint.Text = "正規表現グループ:\r\n(?<ikou>...)\r\n(?<ikouline>...)\r\n\r\n※優先順位順に\r\n判定されます";
+            this.lblRegexHint.Text = "【グループ例】\r\n・プレフィックス:\r\n  SK01,Pit12\r\n・サフィックス:\r\n  L,U,上,下\r\n・正規表現:\r\n  (?<ikou>...)\r\n  (?<ikouline>...)\r\n※優先順位順に\r\n判定されます";
+            // 
+            // txtRegexPattern4
+            // 
+            this.txtRegexPattern4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.txtRegexPattern4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtRegexPattern4.Enabled = false;
+            this.txtRegexPattern4.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtRegexPattern4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.txtRegexPattern4.Location = new System.Drawing.Point(340, 166);
+            this.txtRegexPattern4.Name = "txtRegexPattern4";
+            this.txtRegexPattern4.Size = new System.Drawing.Size(140, 26);
+            this.txtRegexPattern4.TabIndex = 8;
+            // 
+            // cmbRule4
+            // 
+            this.cmbRule4.BackColor = System.Drawing.Color.White;
+            this.cmbRule4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRule4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbRule4.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmbRule4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.cmbRule4.FormattingEnabled = true;
+            this.cmbRule4.Location = new System.Drawing.Point(90, 166);
+            this.cmbRule4.Name = "cmbRule4";
+            this.cmbRule4.Size = new System.Drawing.Size(244, 27);
+            this.cmbRule4.TabIndex = 7;
+            // 
+            // lblPriority4
+            // 
+            this.lblPriority4.AutoSize = true;
+            this.lblPriority4.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPriority4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.lblPriority4.Location = new System.Drawing.Point(12, 169);
+            this.lblPriority4.Name = "lblPriority4";
+            this.lblPriority4.Size = new System.Drawing.Size(70, 19);
+            this.lblPriority4.TabIndex = 6;
+            this.lblPriority4.Text = "優先度 4:";
             // 
             // txtRegexPattern3
             // 
@@ -195,10 +295,10 @@ namespace MdbFdbExporter
             this.txtRegexPattern3.Enabled = false;
             this.txtRegexPattern3.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtRegexPattern3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern3.Location = new System.Drawing.Point(340, 106);
+            this.txtRegexPattern3.Location = new System.Drawing.Point(340, 130);
             this.txtRegexPattern3.Name = "txtRegexPattern3";
             this.txtRegexPattern3.Size = new System.Drawing.Size(140, 26);
-            this.txtRegexPattern3.TabIndex = 8;
+            this.txtRegexPattern3.TabIndex = 5;
             // 
             // cmbRule3
             // 
@@ -208,20 +308,20 @@ namespace MdbFdbExporter
             this.cmbRule3.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cmbRule3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.cmbRule3.FormattingEnabled = true;
-            this.cmbRule3.Location = new System.Drawing.Point(90, 106);
+            this.cmbRule3.Location = new System.Drawing.Point(90, 130);
             this.cmbRule3.Name = "cmbRule3";
             this.cmbRule3.Size = new System.Drawing.Size(244, 27);
-            this.cmbRule3.TabIndex = 7;
+            this.cmbRule3.TabIndex = 4;
             // 
             // lblPriority3
             // 
             this.lblPriority3.AutoSize = true;
             this.lblPriority3.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblPriority3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority3.Location = new System.Drawing.Point(12, 109);
+            this.lblPriority3.Location = new System.Drawing.Point(12, 133);
             this.lblPriority3.Name = "lblPriority3";
             this.lblPriority3.Size = new System.Drawing.Size(70, 19);
-            this.lblPriority3.TabIndex = 6;
+            this.lblPriority3.TabIndex = 3;
             this.lblPriority3.Text = "優先度 3:";
             // 
             // txtRegexPattern2
@@ -231,10 +331,10 @@ namespace MdbFdbExporter
             this.txtRegexPattern2.Enabled = false;
             this.txtRegexPattern2.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtRegexPattern2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern2.Location = new System.Drawing.Point(340, 68);
+            this.txtRegexPattern2.Location = new System.Drawing.Point(340, 94);
             this.txtRegexPattern2.Name = "txtRegexPattern2";
             this.txtRegexPattern2.Size = new System.Drawing.Size(140, 26);
-            this.txtRegexPattern2.TabIndex = 5;
+            this.txtRegexPattern2.TabIndex = 2;
             // 
             // cmbRule2
             // 
@@ -244,20 +344,20 @@ namespace MdbFdbExporter
             this.cmbRule2.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cmbRule2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.cmbRule2.FormattingEnabled = true;
-            this.cmbRule2.Location = new System.Drawing.Point(90, 68);
+            this.cmbRule2.Location = new System.Drawing.Point(90, 94);
             this.cmbRule2.Name = "cmbRule2";
             this.cmbRule2.Size = new System.Drawing.Size(244, 27);
-            this.cmbRule2.TabIndex = 4;
+            this.cmbRule2.TabIndex = 1;
             // 
             // lblPriority2
             // 
             this.lblPriority2.AutoSize = true;
             this.lblPriority2.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblPriority2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority2.Location = new System.Drawing.Point(12, 71);
+            this.lblPriority2.Location = new System.Drawing.Point(12, 97);
             this.lblPriority2.Name = "lblPriority2";
             this.lblPriority2.Size = new System.Drawing.Size(70, 19);
-            this.lblPriority2.TabIndex = 3;
+            this.lblPriority2.TabIndex = 0;
             this.lblPriority2.Text = "優先度 2:";
             // 
             // txtRegexPattern1
@@ -267,7 +367,7 @@ namespace MdbFdbExporter
             this.txtRegexPattern1.Enabled = false;
             this.txtRegexPattern1.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtRegexPattern1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.txtRegexPattern1.Location = new System.Drawing.Point(340, 30);
+            this.txtRegexPattern1.Location = new System.Drawing.Point(340, 58);
             this.txtRegexPattern1.Name = "txtRegexPattern1";
             this.txtRegexPattern1.Size = new System.Drawing.Size(140, 26);
             this.txtRegexPattern1.TabIndex = 2;
@@ -280,7 +380,7 @@ namespace MdbFdbExporter
             this.cmbRule1.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cmbRule1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.cmbRule1.FormattingEnabled = true;
-            this.cmbRule1.Location = new System.Drawing.Point(90, 30);
+            this.cmbRule1.Location = new System.Drawing.Point(90, 58);
             this.cmbRule1.Name = "cmbRule1";
             this.cmbRule1.Size = new System.Drawing.Size(244, 27);
             this.cmbRule1.TabIndex = 1;
@@ -290,7 +390,7 @@ namespace MdbFdbExporter
             this.lblPriority1.AutoSize = true;
             this.lblPriority1.Font = new System.Drawing.Font("Yu Gothic UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblPriority1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
-            this.lblPriority1.Location = new System.Drawing.Point(12, 33);
+            this.lblPriority1.Location = new System.Drawing.Point(12, 61);
             this.lblPriority1.Name = "lblPriority1";
             this.lblPriority1.Size = new System.Drawing.Size(70, 19);
             this.lblPriority1.TabIndex = 0;
@@ -302,9 +402,9 @@ namespace MdbFdbExporter
             this.grpPreview.Controls.Add(this.tabPreview);
             this.grpPreview.Font = new System.Drawing.Font("Yu Gothic UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.grpPreview.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
-            this.grpPreview.Location = new System.Drawing.Point(16, 244);
+            this.grpPreview.Location = new System.Drawing.Point(16, 298);
             this.grpPreview.Name = "grpPreview";
-            this.grpPreview.Size = new System.Drawing.Size(968, 350);
+            this.grpPreview.Size = new System.Drawing.Size(968, 330);
             this.grpPreview.TabIndex = 4;
             this.grpPreview.TabStop = false;
             this.grpPreview.Text = "データ解析 & プレビュー (Preview)";
@@ -625,23 +725,6 @@ namespace MdbFdbExporter
             ((System.ComponentModel.ISupportInitialize)(this.picAllIkouCanvas)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.panelHeader.ResumeLayout(false);
-            this.panelHeader.PerformLayout();
-            this.grpDbList.ResumeLayout(false);
-            this.grpSplit.ResumeLayout(false);
-            this.grpSplit.PerformLayout();
-            this.grpPreview.ResumeLayout(false);
-            this.tabPreview.ResumeLayout(false);
-            this.tabList.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPreview)).EndInit();
-            this.tabDetail.ResumeLayout(false);
-            this.tabDetail.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picEmbedded2D)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPoints)).EndInit();
-            this.grpAllIkouCanvas.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picAllIkouCanvas)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -655,6 +738,10 @@ namespace MdbFdbExporter
         private System.Windows.Forms.ListBox lstDbFolders;
         private System.Windows.Forms.Label lblSelectedDbStatus;
         private System.Windows.Forms.GroupBox grpSplit;
+        private System.Windows.Forms.Label lblPreset;
+        private System.Windows.Forms.ComboBox cmbPreset;
+        private System.Windows.Forms.Button btnSavePreset;
+        private System.Windows.Forms.Button btnDeletePreset;
         private System.Windows.Forms.Label lblPriority1;
         private System.Windows.Forms.ComboBox cmbRule1;
         private System.Windows.Forms.TextBox txtRegexPattern1;
@@ -664,6 +751,9 @@ namespace MdbFdbExporter
         private System.Windows.Forms.Label lblPriority3;
         private System.Windows.Forms.ComboBox cmbRule3;
         private System.Windows.Forms.TextBox txtRegexPattern3;
+        private System.Windows.Forms.Label lblPriority4;
+        private System.Windows.Forms.ComboBox cmbRule4;
+        private System.Windows.Forms.TextBox txtRegexPattern4;
         private System.Windows.Forms.Label lblRegexHint;
         private System.Windows.Forms.GroupBox grpPreview;
         private System.Windows.Forms.TabControl tabPreview;
