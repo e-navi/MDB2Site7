@@ -1,32 +1,99 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Windows.Forms;
 
 namespace MdbFdbExporter
 {
     public partial class FormConfig : Form
     {
+        public class AppSettings
+        {
+            public string DbFolder { get; set; } = "";
+            public string OutFolder { get; set; } = "";
+            public bool IsSite5 { get; set; } = true;
+        }
+
+        private static string SettingsFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exporter_settings.json");
+
         public FormConfig()
         {
             InitializeComponent();
 
-            // Set default initial paths
-            string defaultWorkspace = @"c:\Proj\Antigravity\MDB2Site7";
-            if (Directory.Exists(defaultWorkspace))
-            {
-                txtDbFolder.Text = defaultWorkspace;
-                txtOutFolder.Text = Path.Combine(defaultWorkspace, "Exported_CSV");
-            }
-            else
-            {
-                txtDbFolder.Text = AppDomain.CurrentDomain.BaseDirectory;
-                txtOutFolder.Text = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Exported_CSV");
-            }
+            LoadSettings();
 
             btnBrowseDb.Click += BtnBrowseDb_Click;
             btnBrowseOut.Click += BtnBrowseOut_Click;
             btnOpenConverter.Click += BtnOpenConverter_Click;
             btnExit.Click += BtnExit_Click;
+            this.FormClosing += FormConfig_FormClosing;
+        }
+
+        private void LoadSettings()
+        {
+            bool loaded = false;
+            try
+            {
+                if (File.Exists(SettingsFilePath))
+                {
+                    string json = File.ReadAllText(SettingsFilePath);
+                    var settings = JsonSerializer.Deserialize<AppSettings>(json);
+                    if (settings != null)
+                    {
+                        if (!string.IsNullOrEmpty(settings.DbFolder))
+                            txtDbFolder.Text = settings.DbFolder;
+                        if (!string.IsNullOrEmpty(settings.OutFolder))
+                            txtOutFolder.Text = settings.OutFolder;
+
+                        if (settings.IsSite5)
+                            rdoSite5.Checked = true;
+                        else
+                            rdoSite6.Checked = true;
+
+                        loaded = true;
+                    }
+                }
+            }
+            catch { }
+
+            if (!loaded)
+            {
+                // Set default initial paths
+                string defaultWorkspace = @"c:\Proj\Antigravity\MDB2Site7";
+                if (Directory.Exists(defaultWorkspace))
+                {
+                    txtDbFolder.Text = defaultWorkspace;
+                    txtOutFolder.Text = Path.Combine(defaultWorkspace, "Exported_CSV");
+                }
+                else
+                {
+                    txtDbFolder.Text = AppDomain.CurrentDomain.BaseDirectory;
+                    txtOutFolder.Text = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Exported_CSV");
+                }
+            }
+        }
+
+        private void SaveSettings()
+        {
+            try
+            {
+                var settings = new AppSettings
+                {
+                    DbFolder = txtDbFolder.Text.Trim(),
+                    OutFolder = txtOutFolder.Text.Trim(),
+                    IsSite5 = rdoSite5.Checked
+                };
+
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(settings, options);
+                File.WriteAllText(SettingsFilePath, json);
+            }
+            catch { }
+        }
+
+        private void FormConfig_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
         }
 
         private void BtnBrowseDb_Click(object? sender, EventArgs e)
@@ -39,6 +106,7 @@ namespace MdbFdbExporter
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 txtDbFolder.Text = dlg.SelectedPath;
+                SaveSettings();
             }
         }
 
@@ -52,6 +120,7 @@ namespace MdbFdbExporter
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 txtOutFolder.Text = dlg.SelectedPath;
+                SaveSettings();
             }
         }
 
@@ -88,6 +157,8 @@ namespace MdbFdbExporter
                 }
             }
 
+            SaveSettings();
+
             bool isSite5 = rdoSite5.Checked;
 
             // Hide Config form and launch FormMain as modal
@@ -102,6 +173,7 @@ namespace MdbFdbExporter
 
         private void BtnExit_Click(object? sender, EventArgs e)
         {
+            SaveSettings();
             this.Close();
         }
     }
