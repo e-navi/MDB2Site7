@@ -11,6 +11,7 @@
     <Product>Site7</Product>
     <AssemblyTitle>Site7 遺跡調査システム</AssemblyTitle>
     <Description>遺跡調査システム Site7</Description>
+    <ApplicationHighDpiMode>DpiUnaware</ApplicationHighDpiMode>
   </PropertyGroup>
 
   <ItemGroup>
