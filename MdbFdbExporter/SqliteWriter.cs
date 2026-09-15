@@ -224,9 +224,14 @@ namespace MdbFdbExporter
                             cmdIkou.ExecuteNonQuery();
                             ikouCount++;
 
-                            // Group by IKOULINE (Line Suffix) and sort naturally
+                            // Group by resolved IKOULINE (Line Suffix + Branch Number if multiple blocks exist)
+                            bool hasMultipleBlocks = ikouGroup.Select(p => p.SourceBlockId).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count() > 1;
+
                             var lineGroups = ikouGroup
-                                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikouLine)
+                                .GroupBy(p => DbHelper.ResolveIkouLineName(
+                                    DbHelper.SplitGroupNameChain(p.GroupName, rule1, pattern1, rule2, pattern2, rule3, pattern3, rule4, pattern4, ignoreKeywords).ikouLine,
+                                    p.SourceBlockId,
+                                    hasMultipleBlocks))
                                 .OrderBy(g => string.IsNullOrEmpty(g.Key) ? "" : g.Key, naturalComparer)
                                 .ToList();
 

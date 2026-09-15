@@ -24,6 +24,7 @@ namespace MdbFdbExporter
     {
         public string GroupName { get; set; } = "";
         public string PointNo { get; set; } = "";
+        public string SourceBlockId { get; set; } = "";
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
@@ -255,20 +256,29 @@ namespace MdbFdbExporter
                     using (var conn = new OleDbConnection(GetMdbConnectionString(mdbIkouPath)))
                     {
                         conn.Open();
-                        using (var cmd = new OleDbCommand("SELECT [Group], [No], [X], [Y], [Z] FROM [IKOU] WHERE [DELETEFLG] = False AND [INVISIBLE] = False AND [Group] IS NOT NULL ORDER BY [ID]", conn))
+                        using (var cmd = new OleDbCommand("SELECT [ID], [Group], [No], [X], [Y], [Z] FROM [IKOU] WHERE [DELETEFLG] = False AND [INVISIBLE] = False AND [Group] IS NOT NULL ORDER BY [ID]", conn))
                         using (var reader = cmd.ExecuteReader())
                         {
+                            string prevGrp = "";
+                            string currentBlockId = "";
+
                             while (reader.Read())
                             {
-                                string grp = reader[0]?.ToString()?.Trim() ?? "";
-                                string no = reader[1]?.ToString()?.Trim() ?? "";
-                                double.TryParse(reader[2]?.ToString(), out double x);
-                                double.TryParse(reader[3]?.ToString(), out double y);
-                                double.TryParse(reader[4]?.ToString(), out double z);
+                                string idStr = reader[0]?.ToString()?.Trim() ?? "";
+                                string grp = reader[1]?.ToString()?.Trim() ?? "";
+                                string no = reader[2]?.ToString()?.Trim() ?? "";
+                                double.TryParse(reader[3]?.ToString(), out double x);
+                                double.TryParse(reader[4]?.ToString(), out double y);
+                                double.TryParse(reader[5]?.ToString(), out double z);
 
                                 if (!string.IsNullOrEmpty(grp))
                                 {
-                                    list.Add(new GroupPointData { GroupName = grp, PointNo = no, X = x, Y = y, Z = z });
+                                    if (!string.Equals(grp, prevGrp, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        currentBlockId = idStr;
+                                        prevGrp = grp;
+                                    }
+                                    list.Add(new GroupPointData { GroupName = grp, PointNo = no, SourceBlockId = currentBlockId, X = x, Y = y, Z = z });
                                 }
                             }
                         }
@@ -285,7 +295,7 @@ namespace MdbFdbExporter
                     {
                         conn.Open();
                         string query = @"
-                            SELECT g.""IKOUNAME"", v.""ORGPNO"", v.""X"", v.""Y"", v.""Z""
+                            SELECT g.""IKOUNAME"", v.""ORGPNO"", v.""X"", v.""Y"", v.""Z"", v.""IKOU_G_ID"", g.""GROUPNO"", v.""SUBID""
                             FROM ""IKOU_HAND_V"" v
                             INNER JOIN ""IKOU_HAND_G"" g ON v.""IKOU_G_ID"" = g.""ID""
                             WHERE g.""GDELETEFLG"" = 0 AND g.""GINVISIBLE"" = 0
@@ -301,10 +311,19 @@ namespace MdbFdbExporter
                                 double.TryParse(reader[2]?.ToString(), out double x);
                                 double.TryParse(reader[3]?.ToString(), out double y);
                                 double.TryParse(reader[4]?.ToString(), out double z);
+                                string gid = reader[5]?.ToString()?.Trim() ?? "";
+                                string grpNo = reader[6]?.ToString()?.Trim() ?? "";
+                                string subId = reader[7]?.ToString()?.Trim() ?? "";
+
+                                string blockId = !string.IsNullOrEmpty(gid) ? gid : grpNo;
+                                if (!string.IsNullOrEmpty(subId) && subId != "0" && subId != "1")
+                                {
+                                    blockId = $"{blockId}_{subId}";
+                                }
 
                                 if (!string.IsNullOrEmpty(grp))
                                 {
-                                    list.Add(new GroupPointData { GroupName = grp, PointNo = no, X = x, Y = y, Z = z });
+                                    list.Add(new GroupPointData { GroupName = grp, PointNo = no, SourceBlockId = blockId, X = x, Y = y, Z = z });
                                 }
                             }
                         }
@@ -314,6 +333,22 @@ namespace MdbFdbExporter
             }
 
             return list;
+        }
+
+        public static string ResolveIkouLineName(string ikouLine, string sourceBlockId, bool hasMultipleBlocks)
+        {
+            ikouLine = ikouLine ?? "";
+            if (!hasMultipleBlocks || string.IsNullOrEmpty(sourceBlockId))
+            {
+                return ikouLine;
+            }
+
+            if (string.IsNullOrEmpty(ikouLine))
+            {
+                return sourceBlockId;
+            }
+
+            return $"{ikouLine}-{sourceBlockId}";
         }
 
         public static string ToHalfWidth(string input)

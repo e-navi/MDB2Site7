@@ -360,10 +360,13 @@ namespace MdbFdbExporter
 
             if (_currentIkouPoints.Count > 0)
             {
+                bool hasMultipleBlocks = _currentIkouPoints.Select(p => p.SourceBlockId).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count() > 1;
+
                 foreach (var pt in _currentIkouPoints)
                 {
                     var split = DbHelper.SplitGroupNameChain(pt.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords);
-                    string lineName = string.IsNullOrEmpty(split.ikouLine) ? "(なし)" : split.ikouLine;
+                    string lineName = DbHelper.ResolveIkouLineName(split.ikouLine, pt.SourceBlockId, hasMultipleBlocks);
+                    if (string.IsNullOrEmpty(lineName)) lineName = "(なし)";
                     lineSet.Add(lineName);
 
                     if (pt.Z < zMin) zMin = pt.Z;
@@ -480,8 +483,12 @@ namespace MdbFdbExporter
             }
 
             // Group Points by IKOULINE
+            bool hasMultipleBlocksSel = _currentIkouPoints.Select(p => p.SourceBlockId).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count() > 1;
             var lineGroups = _currentIkouPoints
-                .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine)
+                .GroupBy(p => DbHelper.ResolveIkouLineName(
+                    DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine,
+                    p.SourceBlockId,
+                    hasMultipleBlocksSel))
                 .ToList();
 
             int colorIdx = 0;
@@ -675,8 +682,12 @@ namespace MdbFdbExporter
                     Color dotClr = Color.FromArgb(95, 105, 120);
 
                     var allScreenPts = new List<PointF>();
+                    bool hasMultipleBlocks = ikouGroup.Select(p => p.SourceBlockId).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count() > 1;
                     var lineGroups = ikouGroup
-                        .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine);
+                        .GroupBy(p => DbHelper.ResolveIkouLineName(
+                            DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine,
+                            p.SourceBlockId,
+                            hasMultipleBlocks));
 
                     foreach (var lineGrp in lineGroups)
                     {
@@ -729,8 +740,12 @@ namespace MdbFdbExporter
                     if (!isSelected) continue;
 
                     var allScreenPts = new List<PointF>();
+                    bool hasMultipleBlocks = ikouGroup.Select(p => p.SourceBlockId).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count() > 1;
                     var lineGroups = ikouGroup
-                        .GroupBy(p => DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine)
+                        .GroupBy(p => DbHelper.ResolveIkouLineName(
+                            DbHelper.SplitGroupNameChain(p.GroupName, _rule1, _pattern1, _rule2, _pattern2, _rule3, _pattern3, _rule4, _pattern4, _ignoreKeywords).ikouLine,
+                            p.SourceBlockId,
+                            hasMultipleBlocks))
                         .ToList();
 
                     int lineColorIdx = 0;
