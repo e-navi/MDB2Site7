@@ -313,13 +313,8 @@ namespace MdbFdbExporter
                                 double.TryParse(reader[4]?.ToString(), out double z);
                                 string gid = reader[5]?.ToString()?.Trim() ?? "";
                                 string grpNo = reader[6]?.ToString()?.Trim() ?? "";
-                                string subId = reader[7]?.ToString()?.Trim() ?? "";
 
                                 string blockId = !string.IsNullOrEmpty(gid) ? gid : grpNo;
-                                if (!string.IsNullOrEmpty(subId) && subId != "0" && subId != "1")
-                                {
-                                    blockId = $"{blockId}_{subId}";
-                                }
 
                                 if (!string.IsNullOrEmpty(grp))
                                 {
