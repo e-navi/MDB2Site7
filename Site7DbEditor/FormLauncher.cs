@@ -18,6 +18,7 @@ namespace Site7DbEditor
         [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool IsGaigyoMode { get; private set; } = false;
 
+        private static string? s_lastRootFolder = null;
         private string _currentRootFolder = "";
         private List<SiteItem> _allSites = new List<SiteItem>();
         private List<SiteItem> _filteredSites = new List<SiteItem>();
@@ -61,7 +62,21 @@ namespace Site7DbEditor
             this.Text = $"遺跡調査システム Site7 - 現場選択  {versionStr}";
             lblSubtitle.Text = $"現場管理ランチャー  {versionStr}";
 
-            string savedRoot = Def.GetIniStr("Site7DbEditor", "SiteRootFolder");
+            string configIni = Def.GetAppConfigIniFileName();
+            string savedRoot = "";
+            if (!string.IsNullOrEmpty(s_lastRootFolder) && Directory.Exists(s_lastRootFolder))
+            {
+                savedRoot = s_lastRootFolder;
+            }
+            else
+            {
+                savedRoot = Def.GetIniStr(configIni, "Site7DbEditor", "SiteRootFolder");
+                if (string.IsNullOrEmpty(savedRoot) || !Directory.Exists(savedRoot))
+                {
+                    savedRoot = Def.GetIniStr(Def.iniFileName0, "Site7DbEditor", "SiteRootFolder");
+                }
+            }
+
             if (!string.IsNullOrEmpty(savedRoot) && Directory.Exists(savedRoot))
             {
                 _currentRootFolder = savedRoot;
@@ -70,6 +85,7 @@ namespace Site7DbEditor
             {
                 _currentRootFolder = SiteDiscoveryService.GetDefaultRootPath();
             }
+            s_lastRootFolder = _currentRootFolder;
             lblCurrentFolder.Text = $"現場フォルダ: {_currentRootFolder}";
 
             try
@@ -437,7 +453,8 @@ namespace Site7DbEditor
             if (fbd.ShowDialog(this) == DialogResult.OK)
             {
                 _currentRootFolder = fbd.SelectedPath;
-                Def.SetIniStr("Site7DbEditor", "SiteRootFolder", _currentRootFolder);
+                s_lastRootFolder = _currentRootFolder;
+                Def.SetIniStr(Def.GetAppConfigIniFileName(), "Site7DbEditor", "SiteRootFolder", _currentRootFolder);
                 lblCurrentFolder.Text = $"現場フォルダ: {_currentRootFolder}";
                 RefreshSiteList();
             }

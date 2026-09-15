@@ -25,6 +25,12 @@ namespace Site7DbEditor
             return p1;
         }
 
+        public static string GetAppConfigIniFileName()
+        {
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+            return Path.Combine(appDir, "Site7Config.ini");
+        }
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern uint GetPrivateProfileString(
             string lpAppName,
